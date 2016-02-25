@@ -1,0 +1,16 @@
+[
+{
+  "modid": "survivalist",
+  "name": "Survivalist",
+  "description": "The toolkit for the rustic adventurer.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["gigaherz"],
+  "credits": "The Forge and FML guys, for making the example this is based on",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
