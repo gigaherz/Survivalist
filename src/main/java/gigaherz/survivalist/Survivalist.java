@@ -1,20 +1,27 @@
 package gigaherz.survivalist;
 
+import gigaherz.survivalist.rack.BlockRack;
+import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.entitydata.ItemBreakingTracker;
 import gigaherz.survivalist.items.ItemOreRock;
 import gigaherz.survivalist.items.ItemRock;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -38,12 +45,21 @@ public class Survivalist
 
     public static Logger logger;
 
+    private GuiHandler guiHandler = new GuiHandler();
+
     public static EnchantmentScraping scraping;
 
     public static Item chainmail;
+    public static Item tanned_leather;
+    public static Item jerky;
     public static Item iron_nugget;
     public static Item rock;
     public static Item rock_ore;
+
+    public static Item tanned_helmet;
+    public static Item tanned_chestplate;
+    public static Item tanned_leggings;
+    public static Item tanned_boots;
 
     public static ItemStack rock_normal;
     public static ItemStack rock_andesite;
@@ -52,6 +68,12 @@ public class Survivalist
 
     public static ItemStack iron_ore_rock;
     public static ItemStack gold_ore_rock;
+
+    public static Block rack;
+
+    public static ItemArmor.ArmorMaterial TANNED_LEATHER =
+            EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
+                    new int[]{2, 4, 3, 1}, 15);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -65,8 +87,30 @@ public class Survivalist
 
         scraping = EnchantmentScraping.register();
 
-        chainmail = new Item().setUnlocalizedName(Survivalist.MODID + ".chainmail").setCreativeTab(CreativeTabs.tabMaterials);
+        rack = new BlockRack();
+        GameRegistry.registerBlock(rack, "rack");
+        GameRegistry.registerTileEntity(TileRack.class, "tileRack");
+
+        chainmail = new Item().setUnlocalizedName(MODID + ".chainmail").setCreativeTab(CreativeTabs.tabMaterials);
         GameRegistry.registerItem(chainmail, "chainmail");
+
+        tanned_leather = new Item().setUnlocalizedName(MODID + ".tanned_leather").setCreativeTab(CreativeTabs.tabMaterials);
+        GameRegistry.registerItem(tanned_leather, "tanned_leather");
+        OreDictionary.registerOre("materialLeather", tanned_leather);
+        OreDictionary.registerOre("materialTannedLeather", tanned_leather);
+        OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
+
+        tanned_helmet = new ItemArmor(TANNED_LEATHER, 0, 0).setUnlocalizedName(MODID + ".helmetLeather").setCreativeTab(CreativeTabs.tabCombat);
+        GameRegistry.registerItem(tanned_helmet, "tanned_helmet");
+        tanned_chestplate = new ItemArmor(TANNED_LEATHER, 0, 1).setUnlocalizedName(MODID + ".chestplateLeather").setCreativeTab(CreativeTabs.tabCombat);
+        GameRegistry.registerItem(tanned_chestplate, "tanned_chestplate");
+        tanned_leggings = new ItemArmor(TANNED_LEATHER, 0, 2).setUnlocalizedName(MODID + ".leggingsLeather").setCreativeTab(CreativeTabs.tabCombat);
+        GameRegistry.registerItem(tanned_leggings, "tanned_leggings");
+        tanned_boots = new ItemArmor(TANNED_LEATHER, 0, 3).setUnlocalizedName(MODID + ".bootsLeather").setCreativeTab(CreativeTabs.tabCombat);
+        GameRegistry.registerItem(tanned_boots, "tanned_boots");
+
+        jerky = new ItemFood(4, 1, true).setUnlocalizedName(Survivalist.MODID + ".jerky").setCreativeTab(CreativeTabs.tabFood);
+        GameRegistry.registerItem(jerky, "jerky");
 
         iron_nugget = new Item().setUnlocalizedName(Survivalist.MODID + ".iron_nugget").setCreativeTab(CreativeTabs.tabMaterials);
         GameRegistry.registerItem(iron_nugget, "iron_nugget");
@@ -101,6 +145,8 @@ public class Survivalist
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
+
         List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
         for (int i = 0; i < recipes.size();)
         {

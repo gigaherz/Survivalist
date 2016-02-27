@@ -7,11 +7,13 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 
 public class ClientProxy implements ISidedProxy
 {
     public void preInit()
     {
+        OBJLoader.instance.addDomain(Survivalist.MODID);
         registerModels();
     }
 
@@ -20,6 +22,13 @@ public class ClientProxy implements ISidedProxy
     {
         registerItemModel(Survivalist.iron_nugget, "iron_nugget");
         registerItemModel(Survivalist.chainmail, "chainmail");
+        registerItemModel(Survivalist.tanned_leather, "tanned_leather");
+        registerItemModel(Survivalist.jerky, "jerky");
+
+        registerItemModel(Survivalist.tanned_helmet, 0, "tanned_armor", "part=helmet");
+        registerItemModel(Survivalist.tanned_chestplate, 0, "tanned_armor", "part=chestplate");
+        registerItemModel(Survivalist.tanned_leggings, 0, "tanned_armor", "part=leggings");
+        registerItemModel(Survivalist.tanned_boots, 0, "tanned_armor", "part=boots");
 
         registerItemModel(Survivalist.rock_normal, "rock", "rock=normal");
         registerItemModel(Survivalist.rock_andesite, "rock", "rock=andesite");
@@ -28,6 +37,8 @@ public class ClientProxy implements ISidedProxy
 
         registerItemModel(Survivalist.iron_ore_rock, "rock_ore", "ore=iron");
         registerItemModel(Survivalist.gold_ore_rock, "rock_ore", "ore=gold");
+
+        registerBlockModelAsItem(Survivalist.rack, "rack");
     }
 
     public void registerBlockModelAsItem(final Block block, final String blockName)

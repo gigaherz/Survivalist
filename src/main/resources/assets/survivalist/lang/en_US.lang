@@ -6,5 +6,15 @@ item.survivalist.rock_diorite.name=Diorite Rock
 item.survivalist.rock_granite.name=Granite Rock
 item.survivalist.iron_rock.name=Iron Ore Rock
 item.survivalist.gold_rock.name=Gold Ore Rock
+item.survivalist.tanned_leather.name=Tanned Leather
+item.survivalist.jerky.name=Dry Jerky
+
+item.survivalist.helmetLeather.name=Tanned Leather Cap
+item.survivalist.chestplateLeather.name=Tanned Leather Jacket
+item.survivalist.leggingsLeather.name=Tanned Leather Pants
+item.survivalist.bootsLeather.name=Tanned Leather Boots
 
 enchantment.survivalist.scraping=Scraping
+
+tile.survivalist.rack.name=Drying Rack
+text.survivalist.rack.title=Drying Rack
