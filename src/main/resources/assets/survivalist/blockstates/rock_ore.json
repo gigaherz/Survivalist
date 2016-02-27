@@ -5,15 +5,9 @@
     "transform": "forge:default-item"
   },
   "variants": {
-    "ore=iron": [{
-      "textures": {
-        "layer0": "survivalist:item/iron_ore_rock"
-      }
-    }],
-    "ore=gold": [{
-      "textures": {
-        "layer0": "survivalist:item/gold_ore_rock"
-      }
-    }]
+    "ore": {
+      "iron": { "textures": { "layer0": "survivalist:item/iron_ore_rock" } },
+      "gold": { "textures": { "layer0": "survivalist:item/gold_ore_rock" } }
+    }
   }
 }

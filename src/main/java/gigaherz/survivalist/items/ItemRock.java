@@ -7,13 +7,13 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class ItemOreRock extends Item
+public class ItemRock extends Item
 {
     static final String[] subNames = {
-            ".iron_rock", ".gold_rock"
+            ".rock", ".rock_andesite", ".rock_diorite", ".rock_granite"
     };
 
-    public ItemOreRock()
+    public ItemRock()
     {
         setHasSubtypes(true);
         setUnlocalizedName(Survivalist.MODID + ".rock");

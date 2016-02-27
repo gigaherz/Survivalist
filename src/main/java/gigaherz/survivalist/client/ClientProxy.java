@@ -19,8 +19,12 @@ public class ClientProxy implements ISidedProxy
     public void registerModels()
     {
         registerItemModel(Survivalist.iron_nugget, "iron_nugget");
-        registerItemModel(Survivalist.rock, "rock");
         registerItemModel(Survivalist.chainmail, "chainmail");
+
+        registerItemModel(Survivalist.rock_normal, "rock", "rock=normal");
+        registerItemModel(Survivalist.rock_andesite, "rock", "rock=andesite");
+        registerItemModel(Survivalist.rock_diorite, "rock", "rock=diorite");
+        registerItemModel(Survivalist.rock_granite, "rock", "rock=granite");
 
         registerItemModel(Survivalist.iron_ore_rock, "rock_ore", "ore=iron");
         registerItemModel(Survivalist.gold_ore_rock, "rock_ore", "ore=gold");

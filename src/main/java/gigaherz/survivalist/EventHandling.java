@@ -25,10 +25,21 @@ public class EventHandling
         if (!ev.isSilkTouching)
         {
             Block block = ev.state.getBlock();
-            if(block == Blocks.cobblestone || (block == Blocks.stone && ev.state.getValue(BlockStone.VARIANT) == BlockStone.EnumType.STONE))
+            if(block == Blocks.cobblestone)
             {
                 ev.drops.clear();
                 ev.drops.add(new ItemStack(Survivalist.rock, 4));
+            }
+            else if(block == Blocks.stone)
+            {
+                switch(ev.state.getValue(BlockStone.VARIANT))
+                {
+                    case STONE: ev.drops.clear(); ev.drops.add(new ItemStack(Survivalist.rock, 4, 0)); break;
+                    case ANDESITE: ev.drops.clear(); ev.drops.add(new ItemStack(Survivalist.rock, 4, 1)); break;
+                    case DIORITE: ev.drops.clear(); ev.drops.add(new ItemStack(Survivalist.rock, 4, 2)); break;
+                    case GRANITE: ev.drops.clear(); ev.drops.add(new ItemStack(Survivalist.rock, 4, 3)); break;
+                }
+
             }
             else if(block == Blocks.iron_ore)
             {

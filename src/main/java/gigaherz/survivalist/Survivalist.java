@@ -2,6 +2,7 @@ package gigaherz.survivalist;
 
 import gigaherz.survivalist.entitydata.ItemBreakingTracker;
 import gigaherz.survivalist.items.ItemOreRock;
+import gigaherz.survivalist.items.ItemRock;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -44,6 +45,11 @@ public class Survivalist
     public static Item rock;
     public static Item rock_ore;
 
+    public static ItemStack rock_normal;
+    public static ItemStack rock_andesite;
+    public static ItemStack rock_diorite;
+    public static ItemStack rock_granite;
+
     public static ItemStack iron_ore_rock;
     public static ItemStack gold_ore_rock;
 
@@ -66,7 +72,7 @@ public class Survivalist
         GameRegistry.registerItem(iron_nugget, "iron_nugget");
         OreDictionary.registerOre("nuggetIron", iron_nugget);
 
-        rock = new Item().setUnlocalizedName(Survivalist.MODID + ".rock").setCreativeTab(CreativeTabs.tabMaterials);
+        rock = new ItemRock().setCreativeTab(CreativeTabs.tabMaterials);
         GameRegistry.registerItem(rock, "rock");
 
         rock_ore = new ItemOreRock().setCreativeTab(CreativeTabs.tabMaterials);
@@ -74,6 +80,20 @@ public class Survivalist
 
         iron_ore_rock = new ItemStack(rock_ore, 1, 0);
         gold_ore_rock = new ItemStack(rock_ore, 1, 1);
+        OreDictionary.registerOre("rockOreIron", iron_ore_rock);
+        OreDictionary.registerOre("rockOreGold", gold_ore_rock);
+
+        rock_normal = new ItemStack(rock, 1, 0);
+        rock_andesite = new ItemStack(rock, 1, 1);
+        rock_diorite = new ItemStack(rock, 1, 2);
+        rock_granite = new ItemStack(rock, 1, 3);
+        OreDictionary.registerOre("rock", rock_normal);
+        OreDictionary.registerOre("rock", rock_andesite);
+        OreDictionary.registerOre("rock", rock_diorite);
+        OreDictionary.registerOre("rock", rock_granite);
+        OreDictionary.registerOre("rockAndesite", rock_andesite);
+        OreDictionary.registerOre("rockDiorite", rock_diorite);
+        OreDictionary.registerOre("rockGranite", rock_granite);
 
         proxy.preInit();
     }
@@ -143,12 +163,36 @@ public class Survivalist
                 "rrr",
                 "rcr",
                 "rrr",
-                'r', rock,
+                'r', rock_normal,
                 'c', Items.clay_ball);
 
-        GameRegistry.addRecipe(new ItemStack(Blocks.gravel),
+        GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 5),
+                "rrr",
+                "rcr",
+                "rrr",
+                'r', rock_andesite,
+                'c', Items.clay_ball);
+
+        GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 3),
+                "rrr",
+                "rcr",
+                "rrr",
+                'r', rock_diorite,
+                'c', Items.clay_ball);
+
+        GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 1),
+                "rrr",
+                "rcr",
+                "rrr",
+                'r', rock_granite,
+                'c', Items.clay_ball);
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gravel),
                 "rr",
                 "rr",
-                'r', rock);
+                'r', "rock"));
+
+        GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.gravel);
+        GameRegistry.addShapelessRecipe(new ItemStack(Items.flint), Blocks.gravel, Blocks.gravel, Blocks.gravel, Blocks.gravel);
     }
 }

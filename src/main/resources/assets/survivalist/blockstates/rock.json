@@ -1,12 +1,15 @@
 {
   "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
   "variants": {
-    "inventory": [{
-      "model": "builtin/generated",
-      "transform": "forge:default-item",
-      "textures": {
-        "layer0": "survivalist:item/rock"
-      }
-    }]
+    "rock": {
+      "normal": { "textures": { "layer0": "survivalist:item/rock" } },
+      "granite": { "textures": { "layer0": "survivalist:item/rock_granite" } },
+      "andesite": { "textures": { "layer0": "survivalist:item/rock_andesite" } },
+      "diorite": { "textures": { "layer0": "survivalist:item/rock_diorite" } }
+    }
   }
 }
