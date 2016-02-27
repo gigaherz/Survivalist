@@ -164,6 +164,13 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
             {
                 ret = new ItemStack(Items.leather, fortune ? 2 : 1);
             }
+            else if (item == Survivalist.tanned_boots ||
+                    item == Survivalist.tanned_helmet ||
+                    item == Survivalist.tanned_chestplate ||
+                    item == Survivalist.tanned_leggings)
+            {
+                ret = new ItemStack(Survivalist.tanned_leather, fortune ? 2 : 1);
+            }
             else if (item == Items.chainmail_boots ||
                     item == Items.chainmail_helmet ||
                     item == Items.chainmail_chestplate ||
