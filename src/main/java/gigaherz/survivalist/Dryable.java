@@ -1,26 +1,60 @@
 package gigaherz.survivalist;
 
+import com.google.common.collect.Lists;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import org.apache.commons.lang3.tuple.Triple;
+
+import java.util.List;
 
 public class Dryable
 {
+    public static final List<Triple<ItemStack, Integer, ItemStack>> dryingRegistry = Lists.newArrayList();
+
+    public static void register()
+    {
+        if (ConfigManager.instance.enableLeatherTanning)
+        {
+            dryingRegistry.add(Triple.of(new ItemStack(Items.leather), 30 * 20, new ItemStack(Survivalist.tanned_leather)));
+        }
+        if (ConfigManager.instance.enableMeatRotting)
+        {
+            dryingRegistry.add(Triple.of(new ItemStack(Items.beef), 15 * 20, new ItemStack(Items.rotten_flesh)));
+            dryingRegistry.add(Triple.of(new ItemStack(Items.mutton), 15 * 20, new ItemStack(Items.rotten_flesh)));
+            dryingRegistry.add(Triple.of(new ItemStack(Items.porkchop), 15 * 20, new ItemStack(Items.rotten_flesh)));
+        }
+
+        if(ConfigManager.instance.enableJerky)
+        {
+            if (ConfigManager.instance.enableRottenDrying)
+            {
+                dryingRegistry.add(Triple.of(new ItemStack(Items.rotten_flesh), 15 * 20, new ItemStack(Survivalist.jerky)));
+            }
+            if (ConfigManager.instance.enableMeatDrying)
+            {
+                dryingRegistry.add(Triple.of(new ItemStack(Items.cooked_beef), 15 * 20, new ItemStack(Survivalist.jerky)));
+                dryingRegistry.add(Triple.of(new ItemStack(Items.cooked_mutton), 15 * 20, new ItemStack(Survivalist.jerky)));
+                dryingRegistry.add(Triple.of(new ItemStack(Items.cooked_porkchop), 15 * 20, new ItemStack(Survivalist.jerky)));
+            }
+        }
+    }
+
     public static int getDryingTime(ItemStack stack)
     {
         if(stack==null)
             return 0;
-        Item item = stack.getItem();
-        if (item == Items.leather)
-            return 30 * 20;
-        if(item == Items.rotten_flesh
-                || item == Items.beef
-                || item == Items.mutton
-                || item == Items.porkchop
-                || item == Items.cooked_beef
-                || item == Items.cooked_mutton
-                || item == Items.cooked_porkchop)
-            return 15 * 20;
+
+        for(Triple<ItemStack, Integer, ItemStack> scraping : dryingRegistry)
+        {
+            ItemStack source = scraping.getLeft();
+
+            if(!ItemStack.areItemsEqual(source, stack))
+                continue;
+
+            return scraping.getMiddle();
+        }
+
         return 0;
     }
 
@@ -28,18 +62,17 @@ public class Dryable
     {
         if(stack==null)
             return null;
-        Item item = stack.getItem();
-        if (item == Items.leather)
-            return new ItemStack(Survivalist.tanned_leather);
-        if (item == Items.beef
-                || item == Items.mutton
-                || item == Items.porkchop)
-            return new ItemStack(Items.rotten_flesh);
-        if (item == Items.rotten_flesh
-                || item == Items.cooked_beef
-                || item == Items.cooked_mutton
-                || item == Items.cooked_porkchop)
-            return new ItemStack(Survivalist.jerky);
+
+        for(Triple<ItemStack, Integer, ItemStack> scraping : dryingRegistry)
+        {
+            ItemStack source = scraping.getLeft();
+
+            if(!ItemStack.areItemsEqual(source, stack))
+                continue;
+
+            return scraping.getRight().copy();
+        }
+
         return null;
     }
 }

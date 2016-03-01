@@ -1,5 +1,7 @@
-package gigaherz.survivalist;
+package gigaherz.survivalist.enchantment;
 
+import gigaherz.survivalist.ConfigManager;
+import gigaherz.survivalist.Survivalist;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.util.ResourceLocation;
@@ -9,7 +11,7 @@ public class EnchantmentScraping extends Enchantment
     public static EnchantmentScraping register()
     {
         int enchId;
-        if(ConfigManager.instance.scrapingProp.isDefault())
+        if(ConfigManager.instance.idScraping.isDefault())
         {
             boolean found;
             int firstFree = 0;
@@ -29,11 +31,12 @@ public class EnchantmentScraping extends Enchantment
             }
             while(found);
             enchId = firstFree;
-            ConfigManager.instance.scrapingProp.set(enchId);
+            ConfigManager.instance.idScraping.set(enchId);
+            ConfigManager.instance.save();
         }
         else
         {
-            enchId = ConfigManager.instance.scrapingProp.getInt();
+            enchId = ConfigManager.instance.idScraping.getInt();
         }
 
         EnchantmentScraping scraping = new EnchantmentScraping(enchId, new ResourceLocation(Survivalist.MODID, "scraping"), 1);

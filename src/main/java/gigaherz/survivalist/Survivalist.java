@@ -1,5 +1,6 @@
 package gigaherz.survivalist;
 
+import gigaherz.survivalist.enchantment.EnchantmentScraping;
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.entitydata.ItemBreakingTracker;
@@ -82,62 +83,84 @@ public class Survivalist
 
         ConfigManager.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
 
-        EventHandling.register();
-        ItemBreakingTracker.register();
+        if (ConfigManager.instance.enableScraping)
+        {
+            ItemBreakingTracker.register();
 
-        scraping = EnchantmentScraping.register();
+            scraping = EnchantmentScraping.register();
+        }
 
-        rack = new BlockRack();
-        GameRegistry.registerBlock(rack, "rack");
-        GameRegistry.registerTileEntity(TileRack.class, "tileRack");
+        if (ConfigManager.instance.enableChainmailCrafting)
+        {
+            chainmail = new Item().setUnlocalizedName(MODID + ".chainmail").setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.registerItem(chainmail, "chainmail");
+        }
 
-        chainmail = new Item().setUnlocalizedName(MODID + ".chainmail").setCreativeTab(CreativeTabs.tabMaterials);
-        GameRegistry.registerItem(chainmail, "chainmail");
+        if (ConfigManager.instance.enableDryingRack)
+        {
+            rack = new BlockRack();
+            GameRegistry.registerBlock(rack, "rack");
+            GameRegistry.registerTileEntity(TileRack.class, "tileRack");
+        }
 
-        tanned_leather = new Item().setUnlocalizedName(MODID + ".tanned_leather").setCreativeTab(CreativeTabs.tabMaterials);
-        GameRegistry.registerItem(tanned_leather, "tanned_leather");
-        OreDictionary.registerOre("materialLeather", tanned_leather);
-        OreDictionary.registerOre("materialTannedLeather", tanned_leather);
-        OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
+        if(ConfigManager.instance.enableLeatherTanning)
+        {
+            tanned_leather = new Item().setUnlocalizedName(MODID + ".tanned_leather").setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.registerItem(tanned_leather, "tanned_leather");
+            OreDictionary.registerOre("materialLeather", tanned_leather);
+            OreDictionary.registerOre("materialTannedLeather", tanned_leather);
+            OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
 
-        tanned_helmet = new ItemArmor(TANNED_LEATHER, 0, 0).setUnlocalizedName(MODID + ".helmetLeather").setCreativeTab(CreativeTabs.tabCombat);
-        GameRegistry.registerItem(tanned_helmet, "tanned_helmet");
-        tanned_chestplate = new ItemArmor(TANNED_LEATHER, 0, 1).setUnlocalizedName(MODID + ".chestplateLeather").setCreativeTab(CreativeTabs.tabCombat);
-        GameRegistry.registerItem(tanned_chestplate, "tanned_chestplate");
-        tanned_leggings = new ItemArmor(TANNED_LEATHER, 0, 2).setUnlocalizedName(MODID + ".leggingsLeather").setCreativeTab(CreativeTabs.tabCombat);
-        GameRegistry.registerItem(tanned_leggings, "tanned_leggings");
-        tanned_boots = new ItemArmor(TANNED_LEATHER, 0, 3).setUnlocalizedName(MODID + ".bootsLeather").setCreativeTab(CreativeTabs.tabCombat);
-        GameRegistry.registerItem(tanned_boots, "tanned_boots");
+            tanned_helmet = new ItemArmor(TANNED_LEATHER, 0, 0).setUnlocalizedName(MODID + ".helmetLeather").setCreativeTab(CreativeTabs.tabCombat);
+            GameRegistry.registerItem(tanned_helmet, "tanned_helmet");
+            tanned_chestplate = new ItemArmor(TANNED_LEATHER, 0, 1).setUnlocalizedName(MODID + ".chestplateLeather").setCreativeTab(CreativeTabs.tabCombat);
+            GameRegistry.registerItem(tanned_chestplate, "tanned_chestplate");
+            tanned_leggings = new ItemArmor(TANNED_LEATHER, 0, 2).setUnlocalizedName(MODID + ".leggingsLeather").setCreativeTab(CreativeTabs.tabCombat);
+            GameRegistry.registerItem(tanned_leggings, "tanned_leggings");
+            tanned_boots = new ItemArmor(TANNED_LEATHER, 0, 3).setUnlocalizedName(MODID + ".bootsLeather").setCreativeTab(CreativeTabs.tabCombat);
+            GameRegistry.registerItem(tanned_boots, "tanned_boots");
+        }
 
-        jerky = new ItemFood(4, 1, true).setUnlocalizedName(Survivalist.MODID + ".jerky").setCreativeTab(CreativeTabs.tabFood);
-        GameRegistry.registerItem(jerky, "jerky");
+        if(ConfigManager.instance.enableJerky)
+        {
+            jerky = new ItemFood(4, 1, true).setUnlocalizedName(Survivalist.MODID + ".jerky").setCreativeTab(CreativeTabs.tabFood);
+            GameRegistry.registerItem(jerky, "jerky");
+        }
 
-        iron_nugget = new Item().setUnlocalizedName(Survivalist.MODID + ".iron_nugget").setCreativeTab(CreativeTabs.tabMaterials);
-        GameRegistry.registerItem(iron_nugget, "iron_nugget");
-        OreDictionary.registerOre("nuggetIron", iron_nugget);
+        if(ConfigManager.instance.enableIronNugget)
+        {
+            iron_nugget = new Item().setUnlocalizedName(Survivalist.MODID + ".iron_nugget").setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.registerItem(iron_nugget, "iron_nugget");
+            OreDictionary.registerOre("nuggetIron", iron_nugget);
+        }
 
-        rock = new ItemRock().setCreativeTab(CreativeTabs.tabMaterials);
-        GameRegistry.registerItem(rock, "rock");
+        if(ConfigManager.instance.enableRocks)
+        {
+            EventHandling.register();
 
-        rock_ore = new ItemOreRock().setCreativeTab(CreativeTabs.tabMaterials);
-        GameRegistry.registerItem(rock_ore, "rock_ore");
+            rock = new ItemRock().setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.registerItem(rock, "rock");
 
-        iron_ore_rock = new ItemStack(rock_ore, 1, 0);
-        gold_ore_rock = new ItemStack(rock_ore, 1, 1);
-        OreDictionary.registerOre("rockOreIron", iron_ore_rock);
-        OreDictionary.registerOre("rockOreGold", gold_ore_rock);
+            rock_ore = new ItemOreRock().setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.registerItem(rock_ore, "rock_ore");
 
-        rock_normal = new ItemStack(rock, 1, 0);
-        rock_andesite = new ItemStack(rock, 1, 1);
-        rock_diorite = new ItemStack(rock, 1, 2);
-        rock_granite = new ItemStack(rock, 1, 3);
-        OreDictionary.registerOre("rock", rock_normal);
-        OreDictionary.registerOre("rock", rock_andesite);
-        OreDictionary.registerOre("rock", rock_diorite);
-        OreDictionary.registerOre("rock", rock_granite);
-        OreDictionary.registerOre("rockAndesite", rock_andesite);
-        OreDictionary.registerOre("rockDiorite", rock_diorite);
-        OreDictionary.registerOre("rockGranite", rock_granite);
+            iron_ore_rock = new ItemStack(rock_ore, 1, 0);
+            gold_ore_rock = new ItemStack(rock_ore, 1, 1);
+            OreDictionary.registerOre("rockOreIron", iron_ore_rock);
+            OreDictionary.registerOre("rockOreGold", gold_ore_rock);
+
+            rock_normal = new ItemStack(rock, 1, 0);
+            rock_andesite = new ItemStack(rock, 1, 1);
+            rock_diorite = new ItemStack(rock, 1, 2);
+            rock_granite = new ItemStack(rock, 1, 3);
+            OreDictionary.registerOre("rock", rock_normal);
+            OreDictionary.registerOre("rock", rock_andesite);
+            OreDictionary.registerOre("rock", rock_diorite);
+            OreDictionary.registerOre("rock", rock_granite);
+            OreDictionary.registerOre("rockAndesite", rock_andesite);
+            OreDictionary.registerOre("rockDiorite", rock_diorite);
+            OreDictionary.registerOre("rockGranite", rock_granite);
+        }
 
         proxy.preInit();
     }
@@ -147,98 +170,134 @@ public class Survivalist
     {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
-        List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-        for (int i = 0; i < recipes.size();)
+        if(ConfigManager.instance.removeSticksFromPlanks)
         {
-            boolean removed = false;
-            IRecipe r = recipes.get(i);
-            if(r instanceof ShapedOreRecipe)
+            List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+            for (int i = 0; i < recipes.size(); )
             {
-                if (r.getRecipeOutput().getItem() == Items.stick)
+                boolean removed = false;
+                IRecipe r = recipes.get(i);
+                if (r instanceof ShapedOreRecipe)
                 {
-                    recipes.remove(r);
-                    removed = true;
+                    if (r.getRecipeOutput().getItem() == Items.stick)
+                    {
+                        recipes.remove(r);
+                        removed = true;
+                    }
                 }
-            }
 
-            if(!removed) i++;
+                if (!removed) i++;
+            }
         }
 
-        GameRegistry.addSmelting(iron_ore_rock, new ItemStack(iron_nugget), 0.1f);
-        GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.gold_nugget), 0.1f);
+        if(ConfigManager.instance.enableDryingRack)
+        {
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rack),
+                    "sss",
+                    " p ",
+                    "p p",
+                    's', "stickWood",
+                    'p', "plankWood"));
 
-        GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick,"treeLeaves"));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick,"treeSapling"));
+            Dryable.register();
+        }
 
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(iron_nugget, 9),"ingotIron"));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.iron_ingot),
-                "nnn",
-                "nnn",
-                "nnn",
-                'n',"nuggetIron"));
+        if(ConfigManager.instance.sticksFromLeaves)
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick,"treeLeaves"));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chainmail),
-                " n ",
-                "n n",
-                " n ",
-                'n',"nuggetIron"));
+        if(ConfigManager.instance.sticksFromSaplings)
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick,"treeSapling"));
 
-        GameRegistry.addRecipe(new ItemStack(Items.chainmail_helmet),
-                "ccc",
-                "c c",
-                'c', chainmail);
+        if(ConfigManager.instance.enableIronNugget)
+        {
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(iron_nugget, 9), "ingotIron"));
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.iron_ingot),
+                    "nnn",
+                    "nnn",
+                    "nnn",
+                    'n', "nuggetIron"));
+        }
 
-        GameRegistry.addRecipe(new ItemStack(Items.chainmail_chestplate),
-                "c c",
-                "ccc",
-                "ccc",
-                'c', chainmail);
+        if(ConfigManager.instance.enableChainmailCrafting)
+        {
+            if(ConfigManager.instance.enableIronNugget)
+            {
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chainmail),
+                        " n ",
+                        "n n",
+                        " n ",
+                        'n', "nuggetIron"));
+            }
 
-        GameRegistry.addRecipe(new ItemStack(Items.chainmail_leggings),
-                "ccc",
-                "c c",
-                "c c",
-                'c', chainmail);
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chainmail, 9),
+                    " n ",
+                    "n n",
+                    " n ",
+                    'n', "ingotIron"));
 
-        GameRegistry.addRecipe(new ItemStack(Items.chainmail_boots),
-                "c c",
-                "c c",
-                'c', chainmail);
+            GameRegistry.addRecipe(new ItemStack(Items.chainmail_helmet),
+                    "ccc",
+                    "c c",
+                    'c', chainmail);
 
-        GameRegistry.addRecipe(new ItemStack(Blocks.cobblestone),
-                "rrr",
-                "rcr",
-                "rrr",
-                'r', rock_normal,
-                'c', Items.clay_ball);
+            GameRegistry.addRecipe(new ItemStack(Items.chainmail_chestplate),
+                    "c c",
+                    "ccc",
+                    "ccc",
+                    'c', chainmail);
 
-        GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 5),
-                "rrr",
-                "rcr",
-                "rrr",
-                'r', rock_andesite,
-                'c', Items.clay_ball);
+            GameRegistry.addRecipe(new ItemStack(Items.chainmail_leggings),
+                    "ccc",
+                    "c c",
+                    "c c",
+                    'c', chainmail);
 
-        GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 3),
-                "rrr",
-                "rcr",
-                "rrr",
-                'r', rock_diorite,
-                'c', Items.clay_ball);
+            GameRegistry.addRecipe(new ItemStack(Items.chainmail_boots),
+                    "c c",
+                    "c c",
+                    'c', chainmail);
+        }
 
-        GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 1),
-                "rrr",
-                "rcr",
-                "rrr",
-                'r', rock_granite,
-                'c', Items.clay_ball);
+        if(ConfigManager.instance.enableRocks)
+        {
+            GameRegistry.addSmelting(iron_ore_rock, new ItemStack(iron_nugget), 0.1f);
+            GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.gold_nugget), 0.1f);
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gravel),
-                "rr",
-                "rr",
-                'r', "rock"));
+            GameRegistry.addRecipe(new ItemStack(Blocks.cobblestone),
+                    "rrr",
+                    "rcr",
+                    "rrr",
+                    'r', rock_normal,
+                    'c', Items.clay_ball);
 
-        GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.gravel);
-        GameRegistry.addShapelessRecipe(new ItemStack(Items.flint), Blocks.gravel, Blocks.gravel, Blocks.gravel, Blocks.gravel);
+            GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 5),
+                    "rrr",
+                    "rcr",
+                    "rrr",
+                    'r', rock_andesite,
+                    'c', Items.clay_ball);
+
+            GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 3),
+                    "rrr",
+                    "rcr",
+                    "rrr",
+                    'r', rock_diorite,
+                    'c', Items.clay_ball);
+
+            GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 1),
+                    "rrr",
+                    "rcr",
+                    "rrr",
+                    'r', rock_granite,
+                    'c', Items.clay_ball);
+
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gravel),
+                    "rr",
+                    "rr",
+                    'r', "rock"));
+
+            GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.gravel);
+            GameRegistry.addShapelessRecipe(new ItemStack(Items.flint), Blocks.gravel, Blocks.gravel, Blocks.gravel, Blocks.gravel);
+        }
     }
 }

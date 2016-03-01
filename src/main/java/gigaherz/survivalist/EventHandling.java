@@ -25,12 +25,12 @@ public class EventHandling
         if (!ev.isSilkTouching)
         {
             Block block = ev.state.getBlock();
-            if(block == Blocks.cobblestone)
+            if(block == Blocks.cobblestone && ConfigManager.instance.replaceStoneDrops)
             {
                 ev.drops.clear();
                 ev.drops.add(new ItemStack(Survivalist.rock, 4));
             }
-            else if(block == Blocks.stone)
+            else if(block == Blocks.stone && ConfigManager.instance.replaceStoneDrops)
             {
                 switch(ev.state.getValue(BlockStone.VARIANT))
                 {
@@ -41,12 +41,12 @@ public class EventHandling
                 }
 
             }
-            else if(block == Blocks.iron_ore)
+            else if(block == Blocks.iron_ore && ConfigManager.instance.replaceIronOreDrops)
             {
                 ev.drops.clear();
                 ev.drops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 0));
             }
-            else if(block == Blocks.gold_ore)
+            else if(block == Blocks.gold_ore && ConfigManager.instance.replaceGoldOreDrops)
             {
                 ev.drops.clear();
                 ev.drops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 1));

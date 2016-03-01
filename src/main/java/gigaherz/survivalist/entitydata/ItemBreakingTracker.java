@@ -1,6 +1,7 @@
 package gigaherz.survivalist.entitydata;
 
 import com.google.common.collect.Lists;
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -26,6 +27,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.Collection;
 import java.util.List;
@@ -103,105 +105,104 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
 
         public static Handler instance;
 
+        List<Triple<ItemStack, ItemStack, ItemStack>> scrapingRegistry = Lists.newArrayList();
+
         public Handler()
         {
             instance = this;
+
+            registerScrapoingConversions();
+        }
+
+        void registerScrapoingConversions()
+        {
+            if(ConfigManager.instance.enableToolScraping)
+            {
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_shovel), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_hoe), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_axe), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_pickaxe), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_sword), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_shovel), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_hoe), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_axe), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_pickaxe), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_sword), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_shovel), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_hoe), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_axe), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_pickaxe), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_sword), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_shovel), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_hoe), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_axe), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_pickaxe), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_sword), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_shovel), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_hoe), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_axe), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_pickaxe), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_sword), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
+            }
+
+            if(ConfigManager.instance.enableArmorScraping)
+            {
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_boots), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_helmet), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_chestplate), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_leggings), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_boots), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_helmet), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_chestplate), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_leggings), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.chainmail_boots), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.chainmail_helmet), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.chainmail_chestplate), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.chainmail_leggings), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_boots), new ItemStack(Items.iron_ingot, 2), new ItemStack(Items.iron_ingot)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_helmet), new ItemStack(Items.iron_ingot, 2), new ItemStack(Items.iron_ingot)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_chestplate), new ItemStack(Items.iron_ingot, 2), new ItemStack(Items.iron_ingot)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_leggings), new ItemStack(Items.iron_ingot, 2), new ItemStack(Items.iron_ingot)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_boots), new ItemStack(Items.gold_ingot, 2), new ItemStack(Items.gold_ingot)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_helmet), new ItemStack(Items.gold_ingot, 2), new ItemStack(Items.gold_ingot)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_chestplate), new ItemStack(Items.gold_ingot, 2), new ItemStack(Items.gold_ingot)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_leggings), new ItemStack(Items.gold_ingot, 2), new ItemStack(Items.gold_ingot)));
+
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_boots), new ItemStack(Items.diamond, 2), new ItemStack(Items.diamond)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_helmet), new ItemStack(Items.diamond, 2), new ItemStack(Items.diamond)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_chestplate), new ItemStack(Items.diamond, 2), new ItemStack(Items.diamond)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_leggings), new ItemStack(Items.diamond, 2), new ItemStack(Items.diamond)));
+            }
         }
 
         private void onItemBroken(EntityPlayer player, ItemStack stack)
         {
-            Item item = stack.getItem();
-
             int survivalism = EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping.effectId, stack);
             boolean fortune = rnd.nextDouble() > 0.9/(1+survivalism);
 
             ItemStack ret = null;
 
-            if (item == Items.wooden_shovel ||
-                    item == Items.wooden_hoe ||
-                    item == Items.wooden_axe ||
-                    item == Items.wooden_pickaxe ||
-                    item == Items.wooden_sword)
+            for(Triple<ItemStack, ItemStack, ItemStack> scraping : scrapingRegistry)
             {
-                ret = fortune ? new ItemStack(Blocks.planks) : new ItemStack(Items.stick);
-            }
-            else if (item == Items.stone_shovel ||
-                    item == Items.stone_hoe ||
-                    item == Items.stone_axe ||
-                    item == Items.stone_pickaxe ||
-                    item == Items.stone_sword)
-            {
-                ret = fortune ? new ItemStack(Blocks.cobblestone) : new ItemStack(Items.stick);
-            }
-            else if (item == Items.iron_shovel ||
-                    item == Items.iron_hoe ||
-                    item == Items.iron_axe ||
-                    item == Items.iron_pickaxe ||
-                    item == Items.iron_sword)
-            {
-                ret = fortune ? new ItemStack(Items.iron_ingot) : new ItemStack(Items.stick);
-            }
-            else if (item == Items.golden_shovel ||
-                    item == Items.golden_hoe ||
-                    item == Items.golden_axe ||
-                    item == Items.golden_pickaxe ||
-                    item == Items.golden_sword)
-            {
-                ret = fortune ? new ItemStack(Items.gold_ingot) : new ItemStack(Items.stick);
-            }
-            else if (item == Items.diamond_shovel ||
-                    item == Items.diamond_hoe ||
-                    item == Items.diamond_axe ||
-                    item == Items.diamond_pickaxe ||
-                    item == Items.diamond_sword)
-            {
-                ret = fortune ? new ItemStack(Items.diamond) : new ItemStack(Items.stick);
-            }
-            else if (item == Items.leather_boots ||
-                    item == Items.leather_helmet ||
-                    item == Items.leather_chestplate ||
-                    item == Items.leather_leggings)
-            {
-                ret = new ItemStack(Items.leather, fortune ? 2 : 1);
-            }
-            else if (item == Survivalist.tanned_boots ||
-                    item == Survivalist.tanned_helmet ||
-                    item == Survivalist.tanned_chestplate ||
-                    item == Survivalist.tanned_leggings)
-            {
-                ret = new ItemStack(Survivalist.tanned_leather, fortune ? 2 : 1);
-            }
-            else if (item == Items.chainmail_boots ||
-                    item == Items.chainmail_helmet ||
-                    item == Items.chainmail_chestplate ||
-                    item == Items.chainmail_leggings)
-            {
-                ret = new ItemStack(Survivalist.chainmail, fortune ? 2 : 1);
-            }
-            else if (item == Items.iron_boots ||
-                    item == Items.iron_helmet ||
-                    item == Items.iron_chestplate ||
-                    item == Items.iron_leggings)
-            {
-                ret = new ItemStack(Items.iron_ingot, fortune ? 2 : 1);
-            }
-            else if(item == Items.golden_boots ||
-                    item == Items.golden_helmet ||
-                    item == Items.golden_chestplate ||
-                    item == Items.golden_leggings)
-            {
-                ret = new ItemStack(Items.gold_ingot, fortune ? 2 : 1);
-            }
-            else if(item == Items.diamond_boots ||
-                    item == Items.diamond_helmet ||
-                    item == Items.diamond_chestplate ||
-                    item == Items.diamond_leggings)
-            {
-                ret = new ItemStack(Items.diamond, fortune ? 2 : 1);
-            }
-            else
-            {
-                Survivalist.logger.warn("Unknown item broken! " + stack);
+                ItemStack source = scraping.getLeft();
+
+                if(!ItemStack.areItemsEqual(source, stack))
+                    continue;
+
+                ItemStack good = scraping.getMiddle();
+                ItemStack bad = scraping.getRight();
+
+                ret = fortune ? good.copy() : bad.copy();
+
+                break;
             }
 
             if(ret != null)
@@ -221,8 +222,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         @SubscribeEvent
         public void onPlayerDestroyItem(PlayerDestroyItemEvent ev)
         {
-            EntityPlayer player = ev.entityPlayer;
-            if(player.worldObj.isRemote)
+            if(ev.entityPlayer.worldObj.isRemote)
                 return;
 
             ItemStack stack = ev.original;
@@ -231,13 +231,16 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
             if(!(item instanceof ItemTool))
                 return;
 
-            onItemBroken(player, stack);
+            onItemBroken(ev.entityPlayer, stack);
         }
 
         @SubscribeEvent
         public void onLivingHurt(LivingHurtEvent ev)
         {
-            if(ev.entity instanceof EntityPlayer && !ev.entity.worldObj.isRemote)
+            if(ev.entity.worldObj.isRemote)
+                return;
+
+            if(ev.entity instanceof EntityPlayer)
             {
                 EntityPlayer player = (EntityPlayer)ev.entityLiving;
 
@@ -246,9 +249,12 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         }
 
         @SubscribeEvent
-        public void onEntityConstructing(EntityJoinWorldEvent ev)
+        public void entityJoinWorld(EntityJoinWorldEvent ev)
         {
-            if(ev.entity instanceof EntityPlayer && !ev.entity.worldObj.isRemote)
+            if(ev.entity.worldObj.isRemote)
+                return;
+
+            if(ev.entity instanceof EntityPlayer)
             {
                 EntityPlayer player = (EntityPlayer)ev.entity;
 
@@ -270,7 +276,10 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         @SubscribeEvent
         public void entityConstruct(EntityEvent.EntityConstructing e)
         {
-            if (e.entity instanceof EntityPlayer && !e.entity.worldObj.isRemote)
+            if(e.entity.worldObj.isRemote)
+                return;
+
+            if (e.entity instanceof EntityPlayer)
             {
                 if (e.entity.getExtendedProperties(PROP_NAME) == null)
                     e.entity.registerExtendedProperties(PROP_NAME, new ItemBreakingTracker());

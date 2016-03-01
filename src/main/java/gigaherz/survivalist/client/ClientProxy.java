@@ -20,25 +20,41 @@ public class ClientProxy implements ISidedProxy
     // ----------------------------------------------------------- Item/Block Models
     public void registerModels()
     {
-        registerItemModel(Survivalist.iron_nugget, "iron_nugget");
-        registerItemModel(Survivalist.chainmail, "chainmail");
-        registerItemModel(Survivalist.tanned_leather, "tanned_leather");
-        registerItemModel(Survivalist.jerky, "jerky");
+        if (Survivalist.iron_nugget != null)
+            registerItemModel(Survivalist.iron_nugget, "iron_nugget");
 
-        registerItemModel(Survivalist.tanned_helmet, 0, "tanned_armor", "part=helmet");
-        registerItemModel(Survivalist.tanned_chestplate, 0, "tanned_armor", "part=chestplate");
-        registerItemModel(Survivalist.tanned_leggings, 0, "tanned_armor", "part=leggings");
-        registerItemModel(Survivalist.tanned_boots, 0, "tanned_armor", "part=boots");
+        if (Survivalist.chainmail != null)
+            registerItemModel(Survivalist.chainmail, "chainmail");
+        if (Survivalist.tanned_leather != null)
+            registerItemModel(Survivalist.tanned_leather, "tanned_leather");
+        if (Survivalist.jerky != null)
+            registerItemModel(Survivalist.jerky, "jerky");
 
-        registerItemModel(Survivalist.rock_normal, "rock", "rock=normal");
-        registerItemModel(Survivalist.rock_andesite, "rock", "rock=andesite");
-        registerItemModel(Survivalist.rock_diorite, "rock", "rock=diorite");
-        registerItemModel(Survivalist.rock_granite, "rock", "rock=granite");
+        if (Survivalist.tanned_helmet != null)
+            registerItemModel(Survivalist.tanned_helmet, 0, "tanned_armor", "part=helmet");
+        if (Survivalist.tanned_chestplate != null)
+            registerItemModel(Survivalist.tanned_chestplate, 0, "tanned_armor", "part=chestplate");
+        if (Survivalist.tanned_leggings != null)
+            registerItemModel(Survivalist.tanned_leggings, 0, "tanned_armor", "part=leggings");
+        if (Survivalist.tanned_boots != null)
+            registerItemModel(Survivalist.tanned_boots, 0, "tanned_armor", "part=boots");
 
-        registerItemModel(Survivalist.iron_ore_rock, "rock_ore", "ore=iron");
-        registerItemModel(Survivalist.gold_ore_rock, "rock_ore", "ore=gold");
+        if (Survivalist.rock_normal != null)
+            registerItemModel(Survivalist.rock_normal, "rock", "rock=normal");
+        if (Survivalist.rock_andesite != null)
+            registerItemModel(Survivalist.rock_andesite, "rock", "rock=andesite");
+        if (Survivalist.rock_diorite != null)
+            registerItemModel(Survivalist.rock_diorite, "rock", "rock=diorite");
+        if (Survivalist.rock_granite != null)
+            registerItemModel(Survivalist.rock_granite, "rock", "rock=granite");
 
-        registerBlockModelAsItem(Survivalist.rack, "rack");
+        if (Survivalist.iron_ore_rock != null)
+            registerItemModel(Survivalist.iron_ore_rock, "rock_ore", "ore=iron");
+        if (Survivalist.gold_ore_rock != null)
+            registerItemModel(Survivalist.gold_ore_rock, "rock_ore", "ore=gold");
+
+        if (Survivalist.rack != null)
+            registerBlockModelAsItem(Survivalist.rack, "rack");
     }
 
     public void registerBlockModelAsItem(final Block block, final String blockName)
