@@ -1,4 +1,4 @@
-package gigaherz.survivalist.entitydata;
+package gigaherz.survivalist.scraping;
 
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;

@@ -1,5 +1,7 @@
-package gigaherz.survivalist;
+package gigaherz.survivalist.rocks;
 
+import gigaherz.survivalist.ConfigManager;
+import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStone;
 import net.minecraft.init.Blocks;
@@ -10,13 +12,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Random;
 
-public class EventHandling
+public class RocksEventHandling
 {
     Random rnd = new Random();
 
     public static void register()
     {
-        MinecraftForge.EVENT_BUS.register(new EventHandling());
+        MinecraftForge.EVENT_BUS.register(new RocksEventHandling());
     }
 
     @SubscribeEvent

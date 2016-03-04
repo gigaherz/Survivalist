@@ -1,11 +1,13 @@
 package gigaherz.survivalist;
 
-import gigaherz.survivalist.enchantment.EnchantmentScraping;
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.TileRack;
-import gigaherz.survivalist.entitydata.ItemBreakingTracker;
-import gigaherz.survivalist.items.ItemOreRock;
-import gigaherz.survivalist.items.ItemRock;
+import gigaherz.survivalist.rocks.RocksEventHandling;
+import gigaherz.survivalist.scraping.EnchantmentScraping;
+import gigaherz.survivalist.scraping.ItemBreakingTracker;
+import gigaherz.survivalist.rocks.ItemOreRock;
+import gigaherz.survivalist.rocks.ItemRock;
+import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -90,6 +92,11 @@ public class Survivalist
             scraping = EnchantmentScraping.register();
         }
 
+        if(ConfigManager.instance.enableTorchFire)
+        {
+            TorchFireEventHandling.register();
+        }
+
         if (ConfigManager.instance.enableChainmailCrafting)
         {
             chainmail = new Item().setUnlocalizedName(MODID + ".chainmail").setCreativeTab(CreativeTabs.tabMaterials);
@@ -136,7 +143,7 @@ public class Survivalist
 
         if(ConfigManager.instance.enableRocks)
         {
-            EventHandling.register();
+            RocksEventHandling.register();
 
             rock = new ItemRock().setCreativeTab(CreativeTabs.tabMaterials);
             GameRegistry.registerItem(rock, "rock");

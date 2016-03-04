@@ -1,4 +1,4 @@
-package gigaherz.survivalist.enchantment;
+package gigaherz.survivalist.scraping;
 
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;

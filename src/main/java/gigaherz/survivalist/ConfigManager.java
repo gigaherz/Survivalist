@@ -29,6 +29,7 @@ public class ConfigManager
     public final boolean enableLeatherTanning;
     public final boolean enableIronNugget;
     public final boolean enableChainmailCrafting;
+    public final boolean enableTorchFire;
 
     public static void loadConfig(Configuration configuration)
     {
@@ -70,6 +71,9 @@ public class ConfigManager
         Property p_enableIronNugget = config.get("Chainmail", "EnableIronNugget", true);
         Property p_enableChainmailCrafting = config.get("Chainmail", "EnableChainmailCrafting", true);
 
+        config.addCustomCategoryComment("TorchFire", "Settings for the torch setting fire to entities");
+        Property p_enableTorchFire = config.get("TorchFire", "Enable", true);
+
         config.load();
 
         sticksFromLeaves = p_sticksFromLeaves.getBoolean();
@@ -90,6 +94,7 @@ public class ConfigManager
         enableLeatherTanning = p_enableLeatherTanning.getBoolean();
         enableIronNugget = p_enableIronNugget.getBoolean();
         enableChainmailCrafting = p_enableChainmailCrafting.getBoolean();
+        enableTorchFire = p_enableTorchFire.getBoolean();
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
         anyDefault = anyDefault || !p_sticksFromSaplings.wasRead();
@@ -109,6 +114,7 @@ public class ConfigManager
         anyDefault = anyDefault || !p_enableLeatherTanning.wasRead();
         anyDefault = anyDefault || !p_enableIronNugget.wasRead();
         anyDefault = anyDefault || !p_enableChainmailCrafting.wasRead();
+        anyDefault = anyDefault || !p_enableTorchFire.wasRead();
 
         if (anyDefault)
             config.save();

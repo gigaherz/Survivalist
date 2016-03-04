@@ -1,4 +1,4 @@
-package gigaherz.survivalist.items;
+package gigaherz.survivalist.rocks;
 
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.creativetab.CreativeTabs;
@@ -7,13 +7,13 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class ItemRock extends Item
+public class ItemOreRock extends Item
 {
     static final String[] subNames = {
-            ".rock", ".rock_andesite", ".rock_diorite", ".rock_granite"
+            ".iron_rock", ".gold_rock"
     };
 
-    public ItemRock()
+    public ItemOreRock()
     {
         setHasSubtypes(true);
         setUnlocalizedName(Survivalist.MODID + ".rock");
