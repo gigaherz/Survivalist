@@ -14,7 +14,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.3.1"
+version = "1.3.2"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Survivalist"
 
@@ -23,9 +23,9 @@ minecraft {
     runDir = "run"
 
     mappings = "stable_22"
-}
 
-dependencies {
+    replace "@VERSION@", project.version
+    replaceIn "Survivalist.java"
 }
 
 processResources

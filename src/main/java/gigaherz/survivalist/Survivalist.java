@@ -37,7 +37,7 @@ import java.util.List;
 public class Survivalist
 {
     public static final String MODID = "survivalist";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "@VERSION@";
 
     // The instance of your mod that Forge uses.
     @Mod.Instance(value = Survivalist.MODID)
