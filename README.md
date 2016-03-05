@@ -16,3 +16,4 @@ Spicing up the early game, without making it tedious
   * Turn meat into jerky: not too nutritive, but highly saturating.
   * Turn leather (which really, should be called hide), into tanned leather, for improved armour.
 * Craft chainmail pieces with iron nuggets in a diamond shape, then use these diamond pieces to craft chainmail armor!
+* Torches can set mobs on fire, but they have a high chance of breaking in the process.
