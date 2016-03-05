@@ -14,7 +14,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.3.0"
+version = "1.3.1"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Survivalist"
 
@@ -22,7 +22,7 @@ minecraft {
     version = "1.8.9-11.15.1.1764"
     runDir = "run"
 
-    mappings = "snapshot_20160301"
+    mappings = "stable_22"
 }
 
 dependencies {

@@ -20,17 +20,17 @@ public class TorchFireEventHandling
         if (!ev.target.isImmuneToFire() && !ev.target.worldObj.isRemote)
         {
             ItemStack stack = ev.entityPlayer.getHeldItem();
-            if(stack.getItem() instanceof ItemBlock)
+            if (stack.getItem() instanceof ItemBlock)
             {
-                ItemBlock b = (ItemBlock)stack.getItem();
+                ItemBlock b = (ItemBlock) stack.getItem();
                 Block bl = b.getBlock();
-                if(bl == Blocks.torch)
+                if (bl == Blocks.torch)
                 {
                     ev.target.setFire(2);
-                    if(rnd.nextFloat() > 0.25)
+                    if (rnd.nextFloat() > 0.25)
                     {
                         stack.stackSize--;
-                        if(stack.stackSize <= 0)
+                        if (stack.stackSize <= 0)
                         {
                             ev.entityPlayer.inventory.setInventorySlotContents(ev.entityPlayer.inventory.currentItem, null);
                         }

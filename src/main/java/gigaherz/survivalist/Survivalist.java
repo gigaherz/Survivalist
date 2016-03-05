@@ -2,11 +2,11 @@ package gigaherz.survivalist;
 
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.TileRack;
+import gigaherz.survivalist.rocks.ItemOreRock;
+import gigaherz.survivalist.rocks.ItemRock;
 import gigaherz.survivalist.rocks.RocksEventHandling;
 import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
-import gigaherz.survivalist.rocks.ItemOreRock;
-import gigaherz.survivalist.rocks.ItemRock;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -92,7 +92,7 @@ public class Survivalist
             scraping = EnchantmentScraping.register();
         }
 
-        if(ConfigManager.instance.enableTorchFire)
+        if (ConfigManager.instance.enableTorchFire)
         {
             TorchFireEventHandling.register();
         }
@@ -110,7 +110,7 @@ public class Survivalist
             GameRegistry.registerTileEntity(TileRack.class, "tileRack");
         }
 
-        if(ConfigManager.instance.enableLeatherTanning)
+        if (ConfigManager.instance.enableLeatherTanning)
         {
             tanned_leather = new Item().setUnlocalizedName(MODID + ".tanned_leather").setCreativeTab(CreativeTabs.tabMaterials);
             GameRegistry.registerItem(tanned_leather, "tanned_leather");
@@ -128,20 +128,20 @@ public class Survivalist
             GameRegistry.registerItem(tanned_boots, "tanned_boots");
         }
 
-        if(ConfigManager.instance.enableJerky)
+        if (ConfigManager.instance.enableJerky)
         {
             jerky = new ItemFood(4, 1, true).setUnlocalizedName(Survivalist.MODID + ".jerky").setCreativeTab(CreativeTabs.tabFood);
             GameRegistry.registerItem(jerky, "jerky");
         }
 
-        if(ConfigManager.instance.enableIronNugget)
+        if (ConfigManager.instance.enableIronNugget)
         {
             iron_nugget = new Item().setUnlocalizedName(Survivalist.MODID + ".iron_nugget").setCreativeTab(CreativeTabs.tabMaterials);
             GameRegistry.registerItem(iron_nugget, "iron_nugget");
             OreDictionary.registerOre("nuggetIron", iron_nugget);
         }
 
-        if(ConfigManager.instance.enableRocks)
+        if (ConfigManager.instance.enableRocks)
         {
             RocksEventHandling.register();
 
@@ -177,7 +177,7 @@ public class Survivalist
     {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
-        if(ConfigManager.instance.removeSticksFromPlanks)
+        if (ConfigManager.instance.removeSticksFromPlanks)
         {
             List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
             for (int i = 0; i < recipes.size(); )
@@ -197,7 +197,7 @@ public class Survivalist
             }
         }
 
-        if(ConfigManager.instance.enableDryingRack)
+        if (ConfigManager.instance.enableDryingRack)
         {
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rack),
                     "sss",
@@ -209,13 +209,13 @@ public class Survivalist
             Dryable.register();
         }
 
-        if(ConfigManager.instance.sticksFromLeaves)
-            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick,"treeLeaves"));
+        if (ConfigManager.instance.sticksFromLeaves)
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick, "treeLeaves"));
 
-        if(ConfigManager.instance.sticksFromSaplings)
-            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick,"treeSapling"));
+        if (ConfigManager.instance.sticksFromSaplings)
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick, "treeSapling"));
 
-        if(ConfigManager.instance.enableIronNugget)
+        if (ConfigManager.instance.enableIronNugget)
         {
             GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(iron_nugget, 9), "ingotIron"));
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.iron_ingot),
@@ -225,9 +225,9 @@ public class Survivalist
                     'n', "nuggetIron"));
         }
 
-        if(ConfigManager.instance.enableChainmailCrafting)
+        if (ConfigManager.instance.enableChainmailCrafting)
         {
-            if(ConfigManager.instance.enableIronNugget)
+            if (ConfigManager.instance.enableIronNugget)
             {
                 GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chainmail),
                         " n ",
@@ -265,7 +265,7 @@ public class Survivalist
                     'c', chainmail);
         }
 
-        if(ConfigManager.instance.enableRocks)
+        if (ConfigManager.instance.enableRocks)
         {
             GameRegistry.addSmelting(iron_ore_rock, new ItemStack(iron_nugget), 0.1f);
             GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.gold_nugget), 0.1f);

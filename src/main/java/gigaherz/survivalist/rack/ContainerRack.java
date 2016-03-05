@@ -49,7 +49,7 @@ public class ContainerRack extends Container
     {
         super.detectAndSendChanges();
 
-        for(int j = 0;j<prevRemaining.length;j++)
+        for (int j = 0; j < prevRemaining.length; j++)
         {
             if (prevRemaining[j] != tile.dryTimeRemaining[j])
             {
@@ -65,7 +65,7 @@ public class ContainerRack extends Container
     @Override
     public void updateProgressBar(int id, int data)
     {
-        if(id < this.tile.dryTimeRemaining.length)
+        if (id < this.tile.dryTimeRemaining.length)
             this.tile.dryTimeRemaining[id] = data;
     }
 

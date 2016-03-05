@@ -44,20 +44,19 @@ public class GuiRack extends GuiContainer
         mc.renderEngine.bindTexture(guiTextureLocation);
         this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-        for(int s = 0; s < tile.dryTimeRemaining.length; s++)
+        for (int s = 0; s < tile.dryTimeRemaining.length; s++)
         {
             int mt = Dryable.getDryingTime(inventorySlots.getSlot(s).getStack());
             int ct = tile.dryTimeRemaining[s];
 
-            if(ct > 0 && mt > 0)
+            if (ct > 0 && mt > 0)
             {
                 int sx = x + 44 + 36 * s;
-                int ny = (int)Math.ceil(ct * 20.0 / mt);
+                int ny = (int) Math.ceil(ct * 20.0 / mt);
                 int sy = 20 - ny;
 
                 this.drawTexturedModalRect(sx, y + 32 + sy, 176, sy, 9, ny);
             }
         }
     }
-
 }

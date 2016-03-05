@@ -73,7 +73,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
     {
         ItemStack[] equipment = player.getInventory();
         equipmentSlots = new ItemStack[equipment.length];
-        for(int i=0;i<equipment.length;i++)
+        for (int i = 0; i < equipment.length; i++)
         {
             ItemStack stack = equipment[i];
             equipmentSlots[i] = stack != null ? stack.copy() : null;
@@ -84,10 +84,10 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
     {
         List<ItemStack> changes = Lists.newArrayList();
         ItemStack[] equipment = player.getInventory();
-        for(int i=0;i<equipment.length;i++)
+        for (int i = 0; i < equipment.length; i++)
         {
             ItemStack stack2 = equipmentSlots[i];
-            if(stack2 != null)
+            if (stack2 != null)
             {
                 ItemStack stack = equipment[i];
                 if (stack == null)
@@ -116,7 +116,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
 
         void registerScrapoingConversions()
         {
-            if(ConfigManager.instance.enableToolScraping)
+            if (ConfigManager.instance.enableToolScraping)
             {
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_shovel), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_hoe), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
@@ -149,7 +149,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_sword), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
             }
 
-            if(ConfigManager.instance.enableArmorScraping)
+            if (ConfigManager.instance.enableArmorScraping)
             {
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_boots), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_helmet), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
@@ -186,15 +186,15 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         private void onItemBroken(EntityPlayer player, ItemStack stack)
         {
             int survivalism = EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping.effectId, stack);
-            boolean fortune = rnd.nextDouble() > 0.9/(1+survivalism);
+            boolean fortune = rnd.nextDouble() > 0.9 / (1 + survivalism);
 
             ItemStack ret = null;
 
-            for(Triple<ItemStack, ItemStack, ItemStack> scraping : scrapingRegistry)
+            for (Triple<ItemStack, ItemStack, ItemStack> scraping : scrapingRegistry)
             {
                 ItemStack source = scraping.getLeft();
 
-                if(!ItemStack.areItemsEqual(source, stack))
+                if (!ItemStack.areItemsEqual(source, stack))
                     continue;
 
                 ItemStack good = scraping.getMiddle();
@@ -205,7 +205,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
                 break;
             }
 
-            if(ret != null)
+            if (ret != null)
             {
                 Survivalist.logger.warn("Item broke (" + stack + ") and the player got " + ret + " in return!");
 
@@ -222,13 +222,13 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         @SubscribeEvent
         public void onPlayerDestroyItem(PlayerDestroyItemEvent ev)
         {
-            if(ev.entityPlayer.worldObj.isRemote)
+            if (ev.entityPlayer.worldObj.isRemote)
                 return;
 
             ItemStack stack = ev.original;
 
             Item item = stack.getItem();
-            if(!(item instanceof ItemTool))
+            if (!(item instanceof ItemTool))
                 return;
 
             onItemBroken(ev.entityPlayer, stack);
@@ -237,12 +237,12 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         @SubscribeEvent
         public void onLivingHurt(LivingHurtEvent ev)
         {
-            if(ev.entity.worldObj.isRemote)
+            if (ev.entity.worldObj.isRemote)
                 return;
 
-            if(ev.entity instanceof EntityPlayer)
+            if (ev.entity instanceof EntityPlayer)
             {
-                EntityPlayer player = (EntityPlayer)ev.entityLiving;
+                EntityPlayer player = (EntityPlayer) ev.entityLiving;
 
                 ItemBreakingTracker.get(player).before();
             }
@@ -251,12 +251,12 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         @SubscribeEvent
         public void entityJoinWorld(EntityJoinWorldEvent ev)
         {
-            if(ev.entity.worldObj.isRemote)
+            if (ev.entity.worldObj.isRemote)
                 return;
 
-            if(ev.entity instanceof EntityPlayer)
+            if (ev.entity instanceof EntityPlayer)
             {
-                EntityPlayer player = (EntityPlayer)ev.entity;
+                EntityPlayer player = (EntityPlayer) ev.entity;
 
                 CombatTrackerIntercept interceptTracker = new CombatTrackerIntercept(player);
                 ReflectionHelper.setPrivateValue(EntityLivingBase.class, player, interceptTracker,
@@ -267,7 +267,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         public void onTrackDamage(EntityPlayer player)
         {
             Collection<ItemStack> missing = ItemBreakingTracker.get(player).after();
-            for(ItemStack broken : missing)
+            for (ItemStack broken : missing)
             {
                 onItemBroken(player, broken);
             }
@@ -276,7 +276,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         @SubscribeEvent
         public void entityConstruct(EntityEvent.EntityConstructing e)
         {
-            if(e.entity.worldObj.isRemote)
+            if (e.entity.worldObj.isRemote)
                 return;
 
             if (e.entity instanceof EntityPlayer)

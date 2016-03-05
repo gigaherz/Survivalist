@@ -11,7 +11,7 @@ public class EnchantmentScraping extends Enchantment
     public static EnchantmentScraping register()
     {
         int enchId;
-        if(ConfigManager.instance.idScraping.isDefault())
+        if (ConfigManager.instance.idScraping.isDefault())
         {
             boolean found;
             int firstFree = 0;
@@ -26,10 +26,10 @@ public class EnchantmentScraping extends Enchantment
                         break;
                     }
                 }
-                if(found)
+                if (found)
                     firstFree++;
             }
-            while(found);
+            while (found);
             enchId = firstFree;
             ConfigManager.instance.idScraping.set(enchId);
             ConfigManager.instance.save();
@@ -68,5 +68,4 @@ public class EnchantmentScraping extends Enchantment
     {
         return 3;
     }
-
 }

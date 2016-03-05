@@ -91,5 +91,4 @@ public class ClientProxy implements ISidedProxy
     {
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Survivalist.MODID + ":" + itemName, variantName));
     }
-    
 }

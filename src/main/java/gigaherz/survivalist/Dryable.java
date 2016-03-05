@@ -2,7 +2,6 @@ package gigaherz.survivalist;
 
 import com.google.common.collect.Lists;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -25,7 +24,7 @@ public class Dryable
             dryingRegistry.add(Triple.of(new ItemStack(Items.porkchop), 15 * 20, new ItemStack(Items.rotten_flesh)));
         }
 
-        if(ConfigManager.instance.enableJerky)
+        if (ConfigManager.instance.enableJerky)
         {
             if (ConfigManager.instance.enableRottenDrying)
             {
@@ -42,14 +41,14 @@ public class Dryable
 
     public static int getDryingTime(ItemStack stack)
     {
-        if(stack==null)
+        if (stack == null)
             return 0;
 
-        for(Triple<ItemStack, Integer, ItemStack> scraping : dryingRegistry)
+        for (Triple<ItemStack, Integer, ItemStack> scraping : dryingRegistry)
         {
             ItemStack source = scraping.getLeft();
 
-            if(!ItemStack.areItemsEqual(source, stack))
+            if (!ItemStack.areItemsEqual(source, stack))
                 continue;
 
             return scraping.getMiddle();
@@ -60,14 +59,14 @@ public class Dryable
 
     public static ItemStack getDryingResult(ItemStack stack)
     {
-        if(stack==null)
+        if (stack == null)
             return null;
 
-        for(Triple<ItemStack, Integer, ItemStack> scraping : dryingRegistry)
+        for (Triple<ItemStack, Integer, ItemStack> scraping : dryingRegistry)
         {
             ItemStack source = scraping.getLeft();
 
-            if(!ItemStack.areItemsEqual(source, stack))
+            if (!ItemStack.areItemsEqual(source, stack))
                 continue;
 
             return scraping.getRight().copy();

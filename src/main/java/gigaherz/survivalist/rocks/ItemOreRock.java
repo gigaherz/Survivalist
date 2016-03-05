@@ -24,7 +24,7 @@ public class ItemOreRock extends Item
     {
         int meta = stack.getMetadata();
 
-        if(meta > subNames.length)
+        if (meta > subNames.length)
             return getUnlocalizedName();
 
         return "item." + Survivalist.MODID + subNames[meta];
@@ -33,7 +33,7 @@ public class ItemOreRock extends Item
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
-        for(int i=0;i<subNames.length;i++)
-            subItems.add(new ItemStack(this, 1, i));
+        for (int i = 0; i < subNames.length; i++)
+        { subItems.add(new ItemStack(this, 1, i)); }
     }
 }

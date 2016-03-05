@@ -34,23 +34,23 @@ public class TileRack extends TileEntity implements ITickable
     @Override
     public void update()
     {
-        if(worldObj.isRemote)
+        if (worldObj.isRemote)
             return;
 
-        for(int i=0;i<4;i++)
+        for (int i = 0; i < 4; i++)
         {
             ItemStack stack = items.getStackInSlot(i);
             int dryTime = Dryable.getDryingTime(stack);
-            if(dryTime >= 0)
+            if (dryTime >= 0)
             {
-                if(dryTimeRemaining[i] <= 0)
+                if (dryTimeRemaining[i] <= 0)
                 {
                     dryTimeRemaining[i] = dryTime;
                 }
                 else
                 {
                     dryTimeRemaining[i]--;
-                    if(dryTimeRemaining[i] <= 0)
+                    if (dryTimeRemaining[i] <= 0)
                     {
                         stack = Dryable.getDryingResult(stack);
                         items.setStackInSlot(i, stack);
@@ -59,7 +59,7 @@ public class TileRack extends TileEntity implements ITickable
             }
             else
             {
-                dryTimeRemaining[i]=0;
+                dryTimeRemaining[i] = 0;
             }
         }
     }
@@ -67,7 +67,7 @@ public class TileRack extends TileEntity implements ITickable
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return true;
         return super.hasCapability(capability, facing);
     }
@@ -76,8 +76,8 @@ public class TileRack extends TileEntity implements ITickable
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return (T)items;
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return (T) items;
         return super.getCapability(capability, facing);
     }
 
