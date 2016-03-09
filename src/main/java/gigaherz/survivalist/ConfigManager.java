@@ -30,6 +30,8 @@ public class ConfigManager
     public final boolean enableIronNugget;
     public final boolean enableChainmailCrafting;
     public final boolean enableTorchFire;
+    public final boolean enableBread;
+    public final boolean removeVanillaBread;
 
     public static void loadConfig(Configuration configuration)
     {
@@ -74,6 +76,10 @@ public class ConfigManager
         config.addCustomCategoryComment("TorchFire", "Settings for the torch setting fire to entities");
         Property p_enableTorchFire = config.get("TorchFire", "Enable", true);
 
+        config.addCustomCategoryComment("Bread", "Settings for the dough/bread replacements");
+        Property p_enableBread = config.get("Bread", "Enable", true);
+        Property p_removeVanillaBread = config.get("Bread", "RemoveVanillaBread", true);
+
         config.load();
 
         sticksFromLeaves = p_sticksFromLeaves.getBoolean();
@@ -95,6 +101,8 @@ public class ConfigManager
         enableIronNugget = p_enableIronNugget.getBoolean();
         enableChainmailCrafting = p_enableChainmailCrafting.getBoolean();
         enableTorchFire = p_enableTorchFire.getBoolean();
+        enableBread = p_enableBread.getBoolean();
+        removeVanillaBread = p_removeVanillaBread.getBoolean();
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
         anyDefault = anyDefault || !p_sticksFromSaplings.wasRead();
@@ -115,6 +123,8 @@ public class ConfigManager
         anyDefault = anyDefault || !p_enableIronNugget.wasRead();
         anyDefault = anyDefault || !p_enableChainmailCrafting.wasRead();
         anyDefault = anyDefault || !p_enableTorchFire.wasRead();
+        anyDefault = anyDefault || !p_enableBread.wasRead();
+        anyDefault = anyDefault || !p_removeVanillaBread.wasRead();
 
         if (anyDefault)
             config.save();

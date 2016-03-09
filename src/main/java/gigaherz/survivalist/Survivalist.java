@@ -58,6 +58,8 @@ public class Survivalist
     public static Item iron_nugget;
     public static Item rock;
     public static Item rock_ore;
+    public static Item dough;
+    public static Item round_bread;
 
     public static Item tanned_helmet;
     public static Item tanned_chestplate;
@@ -169,6 +171,15 @@ public class Survivalist
             OreDictionary.registerOre("rockGranite", rock_granite);
         }
 
+        if (ConfigManager.instance.enableBread)
+        {
+            dough = new ItemFood(5, 0.6f, true).setUnlocalizedName(Survivalist.MODID + ".dough").setCreativeTab(CreativeTabs.tabFood);
+            GameRegistry.registerItem(dough, "dough");
+
+            round_bread = new ItemFood(8, 0.6f, true).setUnlocalizedName(Survivalist.MODID + ".round_bread").setCreativeTab(CreativeTabs.tabFood);
+            GameRegistry.registerItem(round_bread, "round_bread");
+        }
+
         proxy.preInit();
     }
 
@@ -195,6 +206,33 @@ public class Survivalist
 
                 if (!removed) i++;
             }
+        }
+
+
+        if (ConfigManager.instance.enableBread)
+        {
+            if (ConfigManager.instance.removeVanillaBread)
+            {
+                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+                for (int i = 0; i < recipes.size(); )
+                {
+                    boolean removed = false;
+                    IRecipe r = recipes.get(i);
+                    if (r instanceof ShapedOreRecipe)
+                    {
+                        if (r.getRecipeOutput().getItem() == Items.bread)
+                        {
+                            recipes.remove(r);
+                            removed = true;
+                        }
+                    }
+
+                    if (!removed) i++;
+                }
+            }
+
+            GameRegistry.addShapelessRecipe(new ItemStack(dough), Items.wheat, Items.wheat, Items.wheat, Items.wheat);
+            GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
         }
 
         if (ConfigManager.instance.enableDryingRack)

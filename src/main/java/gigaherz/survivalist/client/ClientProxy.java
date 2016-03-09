@@ -55,6 +55,12 @@ public class ClientProxy implements ISidedProxy
 
         if (Survivalist.rack != null)
             registerBlockModelAsItem(Survivalist.rack, "rack");
+
+        if (Survivalist.dough != null)
+            registerItemModel(Survivalist.dough, "dough");
+
+        if (Survivalist.round_bread != null)
+            registerItemModel(Survivalist.round_bread, "round_bread");
     }
 
     public void registerBlockModelAsItem(final Block block, final String blockName)
