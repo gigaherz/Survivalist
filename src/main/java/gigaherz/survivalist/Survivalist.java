@@ -12,6 +12,8 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemFood;
@@ -78,7 +80,7 @@ public class Survivalist
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
-                    new int[]{2, 4, 3, 1}, 15);
+                    new int[]{2, 4, 3, 1}, 15, SoundEvents.item_armor_equip_leather);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -120,13 +122,13 @@ public class Survivalist
             OreDictionary.registerOre("materialTannedLeather", tanned_leather);
             OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
 
-            tanned_helmet = new ItemArmor(TANNED_LEATHER, 0, 0).setUnlocalizedName(MODID + ".helmetLeather").setCreativeTab(CreativeTabs.tabCombat);
+            tanned_helmet = new ItemArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD).setUnlocalizedName(MODID + ".helmetLeather").setCreativeTab(CreativeTabs.tabCombat);
             GameRegistry.registerItem(tanned_helmet, "tanned_helmet");
-            tanned_chestplate = new ItemArmor(TANNED_LEATHER, 0, 1).setUnlocalizedName(MODID + ".chestplateLeather").setCreativeTab(CreativeTabs.tabCombat);
+            tanned_chestplate = new ItemArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST).setUnlocalizedName(MODID + ".chestplateLeather").setCreativeTab(CreativeTabs.tabCombat);
             GameRegistry.registerItem(tanned_chestplate, "tanned_chestplate");
-            tanned_leggings = new ItemArmor(TANNED_LEATHER, 0, 2).setUnlocalizedName(MODID + ".leggingsLeather").setCreativeTab(CreativeTabs.tabCombat);
+            tanned_leggings = new ItemArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS).setUnlocalizedName(MODID + ".leggingsLeather").setCreativeTab(CreativeTabs.tabCombat);
             GameRegistry.registerItem(tanned_leggings, "tanned_leggings");
-            tanned_boots = new ItemArmor(TANNED_LEATHER, 0, 3).setUnlocalizedName(MODID + ".bootsLeather").setCreativeTab(CreativeTabs.tabCombat);
+            tanned_boots = new ItemArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.FEET).setUnlocalizedName(MODID + ".bootsLeather").setCreativeTab(CreativeTabs.tabCombat);
             GameRegistry.registerItem(tanned_boots, "tanned_boots");
         }
 

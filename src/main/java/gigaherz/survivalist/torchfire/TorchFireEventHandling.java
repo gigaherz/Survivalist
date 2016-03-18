@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,7 +20,7 @@ public class TorchFireEventHandling
     {
         if (!ev.target.isImmuneToFire() && !ev.target.worldObj.isRemote)
         {
-            ItemStack stack = ev.entityPlayer.getHeldItem();
+            ItemStack stack = ev.entityPlayer.getHeldItem(EnumHand.MAIN_HAND);
             if (stack.getItem() instanceof ItemBlock)
             {
                 ItemBlock b = (ItemBlock) stack.getItem();

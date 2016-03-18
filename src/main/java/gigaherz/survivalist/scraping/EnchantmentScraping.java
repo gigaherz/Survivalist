@@ -4,6 +4,7 @@ import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 
 public class EnchantmentScraping extends Enchantment
@@ -18,9 +19,9 @@ public class EnchantmentScraping extends Enchantment
             do
             {
                 found = false;
-                for (Enchantment ench : Enchantment.enchantmentsBookList)
+                for (Enchantment ench : Enchantment.enchantmentRegistry)
                 {
-                    if (ench.effectId == firstFree)
+                    if (Enchantment.enchantmentRegistry.getIDForObject(ench) == firstFree)
                     {
                         found = true;
                         break;
@@ -39,15 +40,16 @@ public class EnchantmentScraping extends Enchantment
             enchId = ConfigManager.instance.idScraping.getInt();
         }
 
-        EnchantmentScraping scraping = new EnchantmentScraping(enchId, new ResourceLocation(Survivalist.MODID, "scraping"), 1);
-        Enchantment.addToBookList(scraping);
+
+        EnchantmentScraping scraping = new EnchantmentScraping(Rarity.COMMON, EnumEnchantmentType.ALL, EntityEquipmentSlot.values());
+        Enchantment.enchantmentRegistry.register(enchId, new ResourceLocation(Survivalist.MODID, "EnchantmentScraping"), scraping);
 
         return scraping;
     }
 
-    protected EnchantmentScraping(int enchID, ResourceLocation enchName, int enchWeight)
+    protected EnchantmentScraping(Enchantment.Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot... slots)
     {
-        super(enchID, enchName, enchWeight, EnumEnchantmentType.ALL);
+        super(rarityIn, typeIn, slots);
         setName(Survivalist.MODID + ".scraping");
     }
 

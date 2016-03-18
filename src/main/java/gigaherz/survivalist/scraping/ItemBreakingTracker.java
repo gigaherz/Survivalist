@@ -13,15 +13,20 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.CombatTracker;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
@@ -32,10 +37,11 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 
-public class ItemBreakingTracker implements IExtendedEntityProperties
+public class ItemBreakingTracker
 {
-    public static final String PROP_NAME = Survivalist.MODID + "_ItemBreakingTracker";
+    public static final ResourceLocation PROP_KEY = new ResourceLocation(Survivalist.MODID, "ItemBreakingTracker");
 
     EntityPlayer player;
     World world;
@@ -44,7 +50,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
 
     public static ItemBreakingTracker get(EntityPlayer p)
     {
-        return (ItemBreakingTracker) p.getExtendedProperties(PROP_NAME);
+        return p.getCapability(Handler.TRACKER, null);
     }
 
     public static void register()
@@ -52,17 +58,6 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         MinecraftForge.EVENT_BUS.register(new Handler());
     }
 
-    @Override
-    public void saveNBTData(NBTTagCompound compound)
-    {
-    }
-
-    @Override
-    public void loadNBTData(NBTTagCompound compound)
-    {
-    }
-
-    @Override
     public void init(Entity entity, World world)
     {
         this.player = (EntityPlayer) entity;
@@ -71,11 +66,11 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
 
     public void before()
     {
-        ItemStack[] equipment = player.getInventory();
-        equipmentSlots = new ItemStack[equipment.length];
-        for (int i = 0; i < equipment.length; i++)
+        List<ItemStack> equipment = Lists.newArrayList(player.getArmorInventoryList());
+        equipmentSlots = new ItemStack[equipment.size()];
+        for (int i = 0; i < equipment.size(); i++)
         {
-            ItemStack stack = equipment[i];
+            ItemStack stack = equipment.get(i);
             equipmentSlots[i] = stack != null ? stack.copy() : null;
         }
     }
@@ -83,13 +78,13 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
     public Collection<ItemStack> after()
     {
         List<ItemStack> changes = Lists.newArrayList();
-        ItemStack[] equipment = player.getInventory();
-        for (int i = 0; i < equipment.length; i++)
+        List<ItemStack> equipment = Lists.newArrayList(player.getArmorInventoryList());
+        for (int i = 0; i < equipment.size(); i++)
         {
             ItemStack stack2 = equipmentSlots[i];
             if (stack2 != null)
             {
-                ItemStack stack = equipment[i];
+                ItemStack stack = equipment.get(i);
                 if (stack == null)
                 {
                     changes.add(stack2);
@@ -103,6 +98,9 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
     {
         final Random rnd = new Random();
 
+        @CapabilityInject(ItemBreakingTracker.class)
+        public static Capability<ItemBreakingTracker> TRACKER;
+
         public static Handler instance;
 
         List<Triple<ItemStack, ItemStack, ItemStack>> scrapingRegistry = Lists.newArrayList();
@@ -110,6 +108,28 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         public Handler()
         {
             instance = this;
+
+            CapabilityManager.INSTANCE.register(ItemBreakingTracker.class, new Capability.IStorage<ItemBreakingTracker>()
+            {
+                @Override
+                public NBTBase writeNBT(Capability<ItemBreakingTracker> capability, ItemBreakingTracker instance, EnumFacing side)
+                {
+                    return null;
+                }
+
+                @Override
+                public void readNBT(Capability<ItemBreakingTracker> capability, ItemBreakingTracker instance, EnumFacing side, NBTBase nbt)
+                {
+
+                }
+            }, new Callable<ItemBreakingTracker>()
+            {
+                @Override
+                public ItemBreakingTracker call() throws Exception
+                {
+                    return null;
+                }
+            });
 
             registerScrapoingConversions();
         }
@@ -185,7 +205,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
 
         private void onItemBroken(EntityPlayer player, ItemStack stack)
         {
-            int survivalism = EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping.effectId, stack);
+            int survivalism = EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping, stack);
             boolean fortune = rnd.nextDouble() > 0.9 / (1 + survivalism);
 
             ItemStack ret = null;
@@ -209,7 +229,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
             {
                 Survivalist.logger.warn("Item broke (" + stack + ") and the player got " + ret + " in return!");
 
-                player.addChatMessage(new ChatComponentText("Item broke (" + stack + ") and the player got " + ret + " in return!"));
+                player.addChatMessage(new TextComponentString("Item broke (" + stack + ") and the player got " + ret + " in return!"));
 
                 EntityItem entityitem = new EntityItem(player.worldObj, player.posX, player.posY + 0.5, player.posZ, ret);
                 entityitem.motionX = 0;
@@ -225,7 +245,7 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
             if (ev.entityPlayer.worldObj.isRemote)
                 return;
 
-            ItemStack stack = ev.original;
+            ItemStack stack = ev.getOriginal();
 
             Item item = stack.getItem();
             if (!(item instanceof ItemTool))
@@ -274,15 +294,41 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         }
 
         @SubscribeEvent
-        public void entityConstruct(EntityEvent.EntityConstructing e)
+        public void attachCapabilities(AttachCapabilitiesEvent.Entity e)
         {
-            if (e.entity.worldObj.isRemote)
+            final Entity entity = e.getEntity();
+
+            if (entity.worldObj.isRemote)
                 return;
 
-            if (e.entity instanceof EntityPlayer)
+            if (entity instanceof EntityPlayer)
             {
-                if (e.entity.getExtendedProperties(PROP_NAME) == null)
-                    e.entity.registerExtendedProperties(PROP_NAME, new ItemBreakingTracker());
+                if (entity.getCapability(TRACKER, null) == null)
+                {
+                    e.addCapability(PROP_KEY, new ICapabilityProvider()
+                    {
+                        ItemBreakingTracker cap = new ItemBreakingTracker();
+
+                        {
+                            cap.init(entity, entity.worldObj);
+                        }
+
+                        @Override
+                        public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+                        {
+                            return capability == TRACKER;
+                        }
+
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+                        {
+                            if (capability == TRACKER)
+                                return (T)cap;
+                            return null;
+                        }
+                    });
+                }
             }
         }
     }
@@ -315,19 +361,19 @@ public class ItemBreakingTracker implements IExtendedEntityProperties
         }
 
         @Override
-        public void func_94545_a()
-        {
-            inner.func_94545_a();
-        }
-
-        @Override
         public EntityLivingBase func_94550_c()
         {
             return inner.func_94550_c();
         }
 
         @Override
-        public IChatComponent getDeathMessage()
+        public void calculateFallSuffix()
+        {
+            inner.calculateFallSuffix();
+        }
+
+        @Override
+        public ITextComponent getDeathMessage()
         {
             return inner.getDeathMessage();
         }
