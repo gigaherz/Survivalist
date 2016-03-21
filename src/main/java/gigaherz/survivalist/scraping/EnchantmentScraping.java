@@ -14,23 +14,11 @@ public class EnchantmentScraping extends Enchantment
         int enchId;
         if (ConfigManager.instance.idScraping.isDefault())
         {
-            boolean found;
             int firstFree = 0;
-            do
+            while(Enchantment.getEnchantmentByID(firstFree) != null)
             {
-                found = false;
-                for (Enchantment ench : Enchantment.enchantmentRegistry)
-                {
-                    if (Enchantment.enchantmentRegistry.getIDForObject(ench) == firstFree)
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found)
-                    firstFree++;
+                firstFree++;
             }
-            while (found);
             enchId = firstFree;
             ConfigManager.instance.idScraping.set(enchId);
             ConfigManager.instance.save();
