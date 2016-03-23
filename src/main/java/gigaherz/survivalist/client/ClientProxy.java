@@ -20,7 +20,7 @@ public class ClientProxy implements ISidedProxy
 {
     public void preInit()
     {
-        OBJLoader.instance.addDomain(Survivalist.MODID);
+        OBJLoader.INSTANCE.addDomain(Survivalist.MODID);
         registerModels();
 
         RenderingRegistry.registerEntityRenderingHandler(EntityRock.class, new IRenderFactory<EntityRock>()

@@ -324,7 +324,7 @@ public class ItemBreakingTracker
                         public <T> T getCapability(Capability<T> capability, EnumFacing facing)
                         {
                             if (capability == TRACKER)
-                                return (T)cap;
+                                return (T) cap;
                             return null;
                         }
                     });

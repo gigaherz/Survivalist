@@ -2,10 +2,14 @@ package gigaherz.survivalist.scraping;
 
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
+
+import javax.management.openmbean.KeyAlreadyExistsException;
 
 public class EnchantmentScraping extends Enchantment
 {
@@ -15,7 +19,7 @@ public class EnchantmentScraping extends Enchantment
         if (ConfigManager.instance.idScraping.isDefault())
         {
             int firstFree = 0;
-            while(Enchantment.getEnchantmentByID(firstFree) != null)
+            while (Enchantment.getEnchantmentByID(firstFree) != null)
             {
                 firstFree++;
             }
@@ -26,8 +30,12 @@ public class EnchantmentScraping extends Enchantment
         else
         {
             enchId = ConfigManager.instance.idScraping.getInt();
+            if (Enchantment.getEnchantmentByID(enchId) != null)
+            {
+                throw new ReportedException(new CrashReport("Error registering enchantment",
+                        new KeyAlreadyExistsException("The configured enchantment id, " + enchId + ", is already in use.")));
+            }
         }
-
 
         EnchantmentScraping scraping = new EnchantmentScraping(Rarity.COMMON, EnumEnchantmentType.ALL, EntityEquipmentSlot.values());
         Enchantment.enchantmentRegistry.register(enchId, new ResourceLocation(Survivalist.MODID, "EnchantmentScraping"), scraping);
@@ -39,18 +47,6 @@ public class EnchantmentScraping extends Enchantment
     {
         super(rarityIn, typeIn, slots);
         setName(Survivalist.MODID + ".scraping");
-    }
-
-    @Override
-    public int getMinEnchantability(int enchantmentLevel)
-    {
-        return 10 + 20 * (enchantmentLevel - 1);
-    }
-
-    @Override
-    public int getMaxEnchantability(int enchantmentLevel)
-    {
-        return super.getMinEnchantability(enchantmentLevel) + 50;
     }
 
     @Override

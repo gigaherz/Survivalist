@@ -311,7 +311,7 @@ public class Survivalist
 
         if (ConfigManager.instance.enableRocks)
         {
-            EntityRegistry.registerModEntity(EntityRock.class, "SpellBall", entityId++, this, 80, 3, true);
+            EntityRegistry.registerModEntity(EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
 
             GameRegistry.addSmelting(iron_ore_rock, new ItemStack(iron_nugget), 0.1f);
             GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.gold_nugget), 0.1f);
