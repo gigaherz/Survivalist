@@ -214,7 +214,7 @@ public class ItemBreakingTracker
             {
                 ItemStack source = scraping.getLeft();
 
-                if (!ItemStack.areItemsEqual(source, stack))
+                if (source.getItem() != stack.getItem())
                     continue;
 
                 ItemStack good = scraping.getMiddle();
@@ -303,7 +303,7 @@ public class ItemBreakingTracker
 
             if (entity instanceof EntityPlayer)
             {
-                if (entity.getCapability(TRACKER, null) == null)
+                if (!entity.hasCapability(TRACKER, null))
                 {
                     e.addCapability(PROP_KEY, new ICapabilityProvider()
                     {
