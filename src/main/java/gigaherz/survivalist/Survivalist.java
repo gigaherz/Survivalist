@@ -2,6 +2,7 @@ package gigaherz.survivalist;
 
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.TileRack;
+import gigaherz.survivalist.rocks.EntityRock;
 import gigaherz.survivalist.rocks.ItemOreRock;
 import gigaherz.survivalist.rocks.ItemRock;
 import gigaherz.survivalist.rocks.RocksEventHandling;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -186,6 +188,8 @@ public class Survivalist
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
+        int entityId = 1;
+
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
         if (ConfigManager.instance.removeSticksFromPlanks)
@@ -305,6 +309,8 @@ public class Survivalist
 
         if (ConfigManager.instance.enableRocks)
         {
+            EntityRegistry.registerModEntity(EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
+
             GameRegistry.addSmelting(iron_ore_rock, new ItemStack(iron_nugget), 0.1f);
             GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.gold_nugget), 0.1f);
 

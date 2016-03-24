@@ -2,9 +2,13 @@ package gigaherz.survivalist.scraping;
 
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
+
+import javax.management.openmbean.KeyAlreadyExistsException;
 
 public class EnchantmentScraping extends Enchantment
 {
@@ -13,23 +17,11 @@ public class EnchantmentScraping extends Enchantment
         int enchId;
         if (ConfigManager.instance.idScraping.isDefault())
         {
-            boolean found;
             int firstFree = 0;
-            do
+            while (Enchantment.getEnchantmentById(firstFree) != null)
             {
-                found = false;
-                for (Enchantment ench : Enchantment.enchantmentsBookList)
-                {
-                    if (ench.effectId == firstFree)
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found)
-                    firstFree++;
+                firstFree++;
             }
-            while (found);
             enchId = firstFree;
             ConfigManager.instance.idScraping.set(enchId);
             ConfigManager.instance.save();
@@ -37,6 +29,11 @@ public class EnchantmentScraping extends Enchantment
         else
         {
             enchId = ConfigManager.instance.idScraping.getInt();
+            if (Enchantment.getEnchantmentById(enchId) != null)
+            {
+                throw new ReportedException(new CrashReport("Error registering enchantment",
+                        new KeyAlreadyExistsException("The configured enchantment id, " + enchId + ", is already in use.")));
+            }
         }
 
         EnchantmentScraping scraping = new EnchantmentScraping(enchId, new ResourceLocation(Survivalist.MODID, "scraping"), 1);
@@ -49,18 +46,6 @@ public class EnchantmentScraping extends Enchantment
     {
         super(enchID, enchName, enchWeight, EnumEnchantmentType.ALL);
         setName(Survivalist.MODID + ".scraping");
-    }
-
-    @Override
-    public int getMinEnchantability(int enchantmentLevel)
-    {
-        return 10 + 20 * (enchantmentLevel - 1);
-    }
-
-    @Override
-    public int getMaxEnchantability(int enchantmentLevel)
-    {
-        return super.getMinEnchantability(enchantmentLevel) + 50;
     }
 
     @Override
