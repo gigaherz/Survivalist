@@ -2,6 +2,8 @@ package gigaherz.survivalist.client;
 
 import gigaherz.survivalist.ISidedProxy;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.rack.RenderRack;
+import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.EntityRock;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -13,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
@@ -31,6 +34,8 @@ public class ClientProxy implements ISidedProxy
                 return new RenderSnowball<EntityRock>(manager, Survivalist.rock, Minecraft.getMinecraft().getRenderItem());
             }
         });
+
+        ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
     }
 
     // ----------------------------------------------------------- Item/Block Models
