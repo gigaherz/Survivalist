@@ -242,7 +242,7 @@ public class ItemBreakingTracker
         @SubscribeEvent
         public void onPlayerDestroyItem(PlayerDestroyItemEvent ev)
         {
-            if (ev.entityPlayer.worldObj.isRemote)
+            if (ev.getEntityPlayer().worldObj.isRemote)
                 return;
 
             ItemStack stack = ev.getOriginal();
@@ -251,18 +251,18 @@ public class ItemBreakingTracker
             if (!(item instanceof ItemTool))
                 return;
 
-            onItemBroken(ev.entityPlayer, stack);
+            onItemBroken(ev.getEntityPlayer(), stack);
         }
 
         @SubscribeEvent
         public void onLivingHurt(LivingHurtEvent ev)
         {
-            if (ev.entity.worldObj.isRemote)
+            if (ev.getEntity().worldObj.isRemote)
                 return;
 
-            if (ev.entity instanceof EntityPlayer)
+            if (ev.getEntity() instanceof EntityPlayer)
             {
-                EntityPlayer player = (EntityPlayer) ev.entityLiving;
+                EntityPlayer player = (EntityPlayer) ev.getEntityLiving();
 
                 ItemBreakingTracker.get(player).before();
             }
@@ -271,12 +271,12 @@ public class ItemBreakingTracker
         @SubscribeEvent
         public void entityJoinWorld(EntityJoinWorldEvent ev)
         {
-            if (ev.entity.worldObj.isRemote)
+            if (ev.getEntity().worldObj.isRemote)
                 return;
 
-            if (ev.entity instanceof EntityPlayer)
+            if (ev.getEntity() instanceof EntityPlayer)
             {
-                EntityPlayer player = (EntityPlayer) ev.entity;
+                EntityPlayer player = (EntityPlayer) ev.getEntity();
 
                 CombatTrackerIntercept interceptTracker = new CombatTrackerIntercept(player);
                 ReflectionHelper.setPrivateValue(EntityLivingBase.class, player, interceptTracker,

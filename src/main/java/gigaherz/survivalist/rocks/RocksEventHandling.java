@@ -24,45 +24,45 @@ public class RocksEventHandling
     @SubscribeEvent
     public void onHarvestBlock(BlockEvent.HarvestDropsEvent ev)
     {
-        if (!ev.isSilkTouching)
+        if (!ev.isSilkTouching())
         {
-            Block block = ev.state.getBlock();
+            Block block = ev.getState().getBlock();
             if (block == Blocks.cobblestone && ConfigManager.instance.replaceStoneDrops)
             {
-                ev.drops.clear();
-                ev.drops.add(new ItemStack(Survivalist.rock, 4));
+                ev.getDrops().clear();
+                ev.getDrops().add(new ItemStack(Survivalist.rock, 4));
             }
             else if (block == Blocks.stone && ConfigManager.instance.replaceStoneDrops)
             {
-                switch (ev.state.getValue(BlockStone.VARIANT))
+                switch (ev.getState().getValue(BlockStone.VARIANT))
                 {
                     case STONE:
-                        ev.drops.clear();
-                        ev.drops.add(new ItemStack(Survivalist.rock, 4, 0));
+                        ev.getDrops().clear();
+                        ev.getDrops().add(new ItemStack(Survivalist.rock, 4, 0));
                         break;
                     case ANDESITE:
-                        ev.drops.clear();
-                        ev.drops.add(new ItemStack(Survivalist.rock, 4, 1));
+                        ev.getDrops().clear();
+                        ev.getDrops().add(new ItemStack(Survivalist.rock, 4, 1));
                         break;
                     case DIORITE:
-                        ev.drops.clear();
-                        ev.drops.add(new ItemStack(Survivalist.rock, 4, 2));
+                        ev.getDrops().clear();
+                        ev.getDrops().add(new ItemStack(Survivalist.rock, 4, 2));
                         break;
                     case GRANITE:
-                        ev.drops.clear();
-                        ev.drops.add(new ItemStack(Survivalist.rock, 4, 3));
+                        ev.getDrops().clear();
+                        ev.getDrops().add(new ItemStack(Survivalist.rock, 4, 3));
                         break;
                 }
             }
             else if (block == Blocks.iron_ore && ConfigManager.instance.replaceIronOreDrops)
             {
-                ev.drops.clear();
-                ev.drops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 0));
+                ev.getDrops().clear();
+                ev.getDrops().add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 0));
             }
             else if (block == Blocks.gold_ore && ConfigManager.instance.replaceGoldOreDrops)
             {
-                ev.drops.clear();
-                ev.drops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 1));
+                ev.getDrops().clear();
+                ev.getDrops().add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 1));
             }
         }
     }
