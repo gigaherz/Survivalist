@@ -11,10 +11,10 @@ item.survivalist.jerky.name=Dry Jerky
 item.survivalist.dough.name=Bread Dough
 item.survivalist.round_bread.name=Round Bread
 
-item.survivalist.helmetLeather.name=Tanned Leather Cap
-item.survivalist.chestplateLeather.name=Tanned Leather Jacket
-item.survivalist.leggingsLeather.name=Tanned Leather Pants
-item.survivalist.bootsLeather.name=Tanned Leather Boots
+item.survivalist.tanned_helmet.name=Tanned Leather Cap
+item.survivalist.tanned_chestplate.name=Tanned Leather Jacket
+item.survivalist.tanned_leggings.name=Tanned Leather Pants
+item.survivalist.tanned_boots.name=Tanned Leather Boots
 
 enchantment.survivalist.scraping=Scraping
 

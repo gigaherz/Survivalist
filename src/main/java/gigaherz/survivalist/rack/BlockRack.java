@@ -1,5 +1,6 @@
 package gigaherz.survivalist.rack;
 
+import gigaherz.survivalist.BlockRegistered;
 import gigaherz.survivalist.GuiHandler;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;
@@ -18,16 +19,16 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockRack extends Block
+public class BlockRack extends BlockRegistered
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
-    public BlockRack()
+    public BlockRack(String name)
     {
-        super(Material.wood);
+        super(name, Material.wood);
         setUnlocalizedName(Survivalist.MODID + ".rack");
         setCreativeTab(CreativeTabs.tabBlock);
-        setStepSound(SoundType.WOOD);
+        setSoundType(SoundType.WOOD);
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         setHardness(1.0F);
         setResistance(1.0F);

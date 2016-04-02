@@ -9,7 +9,6 @@ import gigaherz.survivalist.rocks.RocksEventHandling;
 import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -17,7 +16,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -37,7 +35,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION)
+@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, dependencies = "required-after:Forge@[12.16.0.1809,)")
 public class Survivalist
 {
     public static final String MODID = "survivalist";
@@ -78,7 +76,7 @@ public class Survivalist
     public static ItemStack iron_ore_rock;
     public static ItemStack gold_ore_rock;
 
-    public static Block rack;
+    public static BlockRegistered rack;
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
@@ -105,45 +103,49 @@ public class Survivalist
 
         if (ConfigManager.instance.enableChainmailCrafting)
         {
-            chainmail = new Item().setUnlocalizedName(MODID + ".chainmail").setCreativeTab(CreativeTabs.tabMaterials);
-            GameRegistry.registerItem(chainmail, "chainmail");
+            chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.register(chainmail);
         }
 
         if (ConfigManager.instance.enableDryingRack)
         {
-            rack = new BlockRack();
-            GameRegistry.registerBlock(rack, "rack");
+            rack = new BlockRack("rack");
+            GameRegistry.register(rack);
+            GameRegistry.register(rack.createItemBlock());
             GameRegistry.registerTileEntity(TileRack.class, "tileRack");
         }
 
         if (ConfigManager.instance.enableLeatherTanning)
         {
-            tanned_leather = new Item().setUnlocalizedName(MODID + ".tanned_leather").setCreativeTab(CreativeTabs.tabMaterials);
-            GameRegistry.registerItem(tanned_leather, "tanned_leather");
+            tanned_leather = new ItemRegistered("tanned_leather").setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.register(tanned_leather);
             OreDictionary.registerOre("materialLeather", tanned_leather);
             OreDictionary.registerOre("materialTannedLeather", tanned_leather);
             OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
 
-            tanned_helmet = new ItemArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD).setUnlocalizedName(MODID + ".helmetLeather").setCreativeTab(CreativeTabs.tabCombat);
-            GameRegistry.registerItem(tanned_helmet, "tanned_helmet");
-            tanned_chestplate = new ItemArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST).setUnlocalizedName(MODID + ".chestplateLeather").setCreativeTab(CreativeTabs.tabCombat);
-            GameRegistry.registerItem(tanned_chestplate, "tanned_chestplate");
-            tanned_leggings = new ItemArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS).setUnlocalizedName(MODID + ".leggingsLeather").setCreativeTab(CreativeTabs.tabCombat);
-            GameRegistry.registerItem(tanned_leggings, "tanned_leggings");
-            tanned_boots = new ItemArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.FEET).setUnlocalizedName(MODID + ".bootsLeather").setCreativeTab(CreativeTabs.tabCombat);
-            GameRegistry.registerItem(tanned_boots, "tanned_boots");
+            tanned_helmet = new ItemRegisteredArmor("tanned_helmet", TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD);
+            GameRegistry.register(tanned_helmet);
+
+            tanned_chestplate = new ItemRegisteredArmor("tanned_chestplate", TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST);
+            GameRegistry.register(tanned_chestplate);
+
+            tanned_leggings = new ItemRegisteredArmor("tanned_leggings", TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS);
+            GameRegistry.register(tanned_leggings);
+
+            tanned_boots = new ItemRegisteredArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET);
+            GameRegistry.register(tanned_boots);
         }
 
         if (ConfigManager.instance.enableJerky)
         {
-            jerky = new ItemFood(4, 1, true).setUnlocalizedName(Survivalist.MODID + ".jerky").setCreativeTab(CreativeTabs.tabFood);
-            GameRegistry.registerItem(jerky, "jerky");
+            jerky = new ItemRegisteredFood("jerky", 4, 1, true);
+            GameRegistry.register(jerky);
         }
 
         if (ConfigManager.instance.enableIronNugget)
         {
-            iron_nugget = new Item().setUnlocalizedName(Survivalist.MODID + ".iron_nugget").setCreativeTab(CreativeTabs.tabMaterials);
-            GameRegistry.registerItem(iron_nugget, "iron_nugget");
+            iron_nugget = new ItemRegistered("iron_nugget").setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.register(iron_nugget);
             OreDictionary.registerOre("nuggetIron", iron_nugget);
         }
 
@@ -151,11 +153,11 @@ public class Survivalist
         {
             RocksEventHandling.register();
 
-            rock = new ItemRock().setCreativeTab(CreativeTabs.tabMaterials);
-            GameRegistry.registerItem(rock, "rock");
+            rock = new ItemRock("rock").setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.register(rock);
 
-            rock_ore = new ItemOreRock().setCreativeTab(CreativeTabs.tabMaterials);
-            GameRegistry.registerItem(rock_ore, "rock_ore");
+            rock_ore = new ItemOreRock("rock_ore").setCreativeTab(CreativeTabs.tabMaterials);
+            GameRegistry.register(rock_ore);
 
             iron_ore_rock = new ItemStack(rock_ore, 1, 0);
             gold_ore_rock = new ItemStack(rock_ore, 1, 1);
@@ -177,11 +179,11 @@ public class Survivalist
 
         if (ConfigManager.instance.enableBread)
         {
-            dough = new ItemFood(5, 0.6f, true).setUnlocalizedName(Survivalist.MODID + ".dough").setCreativeTab(CreativeTabs.tabFood);
-            GameRegistry.registerItem(dough, "dough");
+            dough = new ItemRegisteredFood("dough", 5, 0.6f, true);
+            GameRegistry.register(dough);
 
-            round_bread = new ItemFood(8, 0.6f, true).setUnlocalizedName(Survivalist.MODID + ".round_bread").setCreativeTab(CreativeTabs.tabFood);
-            GameRegistry.registerItem(round_bread, "round_bread");
+            round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true);
+            GameRegistry.register(round_bread);
         }
 
         proxy.preInit();
@@ -312,6 +314,7 @@ public class Survivalist
         if (ConfigManager.instance.enableRocks)
         {
             EntityRegistry.registerModEntity(EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
+            logger.debug("Last used id: %i", entityId);
 
             GameRegistry.addSmelting(iron_ore_rock, new ItemStack(iron_nugget), 0.1f);
             GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.gold_nugget), 0.1f);

@@ -37,7 +37,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Callable;
 
 public class ItemBreakingTracker
 {
@@ -122,14 +121,7 @@ public class ItemBreakingTracker
                 {
 
                 }
-            }, new Callable<ItemBreakingTracker>()
-            {
-                @Override
-                public ItemBreakingTracker call() throws Exception
-                {
-                    return null;
-                }
-            });
+            }, () -> null);
 
             registerScrapoingConversions();
         }
@@ -361,9 +353,9 @@ public class ItemBreakingTracker
         }
 
         @Override
-        public EntityLivingBase func_94550_c()
+        public EntityLivingBase getBestAttacker()
         {
-            return inner.func_94550_c();
+            return inner.getBestAttacker();
         }
 
         @Override
