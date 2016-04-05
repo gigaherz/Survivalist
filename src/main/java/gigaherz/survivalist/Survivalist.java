@@ -1,6 +1,8 @@
 package gigaherz.survivalist;
 
+import gigaherz.survivalist.base.*;
 import gigaherz.survivalist.rack.BlockRack;
+import gigaherz.survivalist.rack.Dryable;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.EntityRock;
 import gigaherz.survivalist.rocks.ItemOreRock;

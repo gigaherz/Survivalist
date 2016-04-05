@@ -1,5 +1,6 @@
-package gigaherz.survivalist;
+package gigaherz.survivalist.base;
 
+import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -23,6 +24,6 @@ public class BlockRegistered extends Block
 
     public ItemBlock createItemBlock()
     {
-        return (ItemBlock)new ItemBlock(this).setRegistryName(getRegistryName());
+        return (ItemBlock) new ItemBlock(this).setRegistryName(getRegistryName());
     }
 }

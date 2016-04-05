@@ -1,6 +1,5 @@
 package gigaherz.survivalist.rack;
 
-import gigaherz.survivalist.Dryable;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;

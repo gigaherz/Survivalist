@@ -1,6 +1,8 @@
-package gigaherz.survivalist;
+package gigaherz.survivalist.rack;
 
 import com.google.common.collect.Lists;
+import gigaherz.survivalist.ConfigManager;
+import gigaherz.survivalist.Survivalist;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;

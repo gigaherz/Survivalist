@@ -9,8 +9,6 @@ public class ConfigManager
 
     private final Configuration config;
 
-    public final Property idScraping;
-
     public final boolean sticksFromLeaves;
     public final boolean sticksFromSaplings;
     public final boolean removeSticksFromPlanks;
@@ -41,9 +39,6 @@ public class ConfigManager
     public ConfigManager(Configuration configuration)
     {
         config = configuration;
-
-        config.addCustomCategoryComment("Ids", "Internal IDs, DO NOT CHANGE");
-        idScraping = config.get("Ids", "EnchantmentScraping", -1);
 
         config.addCustomCategoryComment("Sticks", "Settings for stick crafting");
         Property p_sticksFromLeaves = config.get("Sticks", "CraftSticksFromLeaves", true);

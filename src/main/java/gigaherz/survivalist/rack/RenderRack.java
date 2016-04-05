@@ -17,7 +17,7 @@ public class RenderRack extends TileEntitySpecialRenderer<TileRack>
     public void renderTileEntityAt(TileRack te, double x, double y, double z, float partialTicks, int destroyStage)
     {
         IBlockState state = te.getWorld().getBlockState(te.getPos());
-        if(state.getBlock() != Survivalist.rack)
+        if (state.getBlock() != Survivalist.rack)
             return;
 
         bindTexture(TextureMap.locationBlocksTexture);
@@ -32,14 +32,14 @@ public class RenderRack extends TileEntitySpecialRenderer<TileRack>
         GlStateManager.translate(x + 0.5, y + 0.65, z + 0.5);
         GlStateManager.rotate(angle, 0, 1, 0);
 
-        for (int i=0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack != null)
             {
                 GlStateManager.pushMatrix();
 
-                float zz = (i-1.5f) * 0.1875f;
+                float zz = (i - 1.5f) * 0.1875f;
 
                 GlStateManager.translate(0, 0, zz);
 
@@ -56,6 +56,5 @@ public class RenderRack extends TileEntitySpecialRenderer<TileRack>
         GlStateManager.popMatrix();
 
         GlStateManager.enableLighting();
-
     }
 }

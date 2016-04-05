@@ -1,7 +1,7 @@
 package gigaherz.survivalist.rocks;
 
-import gigaherz.survivalist.ItemRegistered;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.base.ItemRegistered;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

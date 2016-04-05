@@ -1,5 +1,6 @@
-package gigaherz.survivalist;
+package gigaherz.survivalist.base;
 
+import gigaherz.survivalist.Survivalist;
 import net.minecraft.item.Item;
 
 public class ItemRegistered extends Item

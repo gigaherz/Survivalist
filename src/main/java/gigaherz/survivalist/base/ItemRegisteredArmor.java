@@ -1,5 +1,6 @@
-package gigaherz.survivalist;
+package gigaherz.survivalist.base;
 
+import gigaherz.survivalist.Survivalist;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
