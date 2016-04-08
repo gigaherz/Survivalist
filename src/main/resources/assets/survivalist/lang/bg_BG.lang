@@ -1,0 +1,22 @@
+item.survivalist.chainmail.name=Ризница
+item.survivalist.iron_nugget.name=Железен Къшей
+item.survivalist.rock.name=Скала
+item.survivalist.rock_andesite.name=Скала от Андезит
+item.survivalist.rock_diorite.name=Скала от Диорит
+item.survivalist.rock_granite.name=Скала от Гранит
+item.survivalist.iron_rock.name=Скала от Желязна Руда
+item.survivalist.gold_rock.name=Скала от Златна Руда
+item.survivalist.tanned_leather.name=Загоряла Кожа
+item.survivalist.jerky.name=Суха Пастарма
+item.survivalist.dough.name=Хлебно Тесто
+item.survivalist.round_bread.name=Кръгъл хляб
+
+item.survivalist.tanned_helmet.name=Загоряли Кожена Шапка
+item.survivalist.tanned_chestplate.name=Загоряли Кожена Туника
+item.survivalist.tanned_leggings.name=Загоряли Кожени Панталони
+item.survivalist.tanned_boots.name=Загоряли Кожени Ботуши
+
+enchantment.survivalist.scraping=Остъргване
+
+tile.survivalist.rack.name=Изсъхващ Багажник
+text.survivalist.rack.title=Изсъхващ Багажник
