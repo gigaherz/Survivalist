@@ -11,6 +11,6 @@ public class ItemRegisteredFood extends ItemFood
         super(amount, saturation, isWolfFood);
         setRegistryName(name);
         setUnlocalizedName(Survivalist.MODID + "." + name);
-        setCreativeTab(CreativeTabs.tabFood);
+        setCreativeTab(CreativeTabs.FOOD);
     }
 }

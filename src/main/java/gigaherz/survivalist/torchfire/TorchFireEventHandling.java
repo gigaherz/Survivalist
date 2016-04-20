@@ -25,7 +25,7 @@ public class TorchFireEventHandling
             {
                 ItemBlock b = (ItemBlock) stack.getItem();
                 Block bl = b.getBlock();
-                if (bl == Blocks.torch)
+                if (bl == Blocks.TORCH)
                 {
                     ev.getTarget().setFire(2);
                     if (rnd.nextFloat() > 0.25)

@@ -24,9 +24,9 @@ public class BlockRack extends BlockRegistered
 
     public BlockRack(String name)
     {
-        super(name, Material.wood);
+        super(name, Material.WOOD);
         setUnlocalizedName(Survivalist.MODID + ".rack");
-        setCreativeTab(CreativeTabs.tabBlock);
+        setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
         setSoundType(SoundType.WOOD);
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         setHardness(1.0F);

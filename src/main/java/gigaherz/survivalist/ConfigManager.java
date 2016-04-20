@@ -30,6 +30,7 @@ public class ConfigManager
     public final boolean enableTorchFire;
     public final boolean enableBread;
     public final boolean removeVanillaBread;
+    public final boolean enableSaddleCrafting;
 
     public static void loadConfig(Configuration configuration)
     {
@@ -63,6 +64,7 @@ public class ConfigManager
         Property p_enableJerky = config.get("DryingRack", "EnableJerky", true);
         Property p_enableMeatDrying = config.get("DryingRack", "EnableMeatDrying", true);
         Property p_enableLeatherTanning = config.get("DryingRack", "EnableLeatherTanning", true);
+        Property p_enableSaddleCrafting = config.get("DryingRack", "EnableSaddleCrafting", true);
 
         config.addCustomCategoryComment("Chainmail", "Settings for the chainmail crafting");
         Property p_enableIronNugget = config.get("Chainmail", "EnableIronNugget", true);
@@ -93,6 +95,7 @@ public class ConfigManager
         enableRottenDrying = p_enableRottenDrying.getBoolean();
         enableMeatDrying = p_enableMeatDrying.getBoolean();
         enableLeatherTanning = p_enableLeatherTanning.getBoolean();
+        enableSaddleCrafting = p_enableSaddleCrafting.getBoolean();
         enableIronNugget = p_enableIronNugget.getBoolean();
         enableChainmailCrafting = p_enableChainmailCrafting.getBoolean();
         enableTorchFire = p_enableTorchFire.getBoolean();
@@ -115,6 +118,7 @@ public class ConfigManager
         anyDefault = anyDefault || !p_enableRottenDrying.wasRead();
         anyDefault = anyDefault || !p_enableMeatDrying.wasRead();
         anyDefault = anyDefault || !p_enableLeatherTanning.wasRead();
+        anyDefault = anyDefault || !p_enableSaddleCrafting.wasRead();
         anyDefault = anyDefault || !p_enableIronNugget.wasRead();
         anyDefault = anyDefault || !p_enableChainmailCrafting.wasRead();
         anyDefault = anyDefault || !p_enableTorchFire.wasRead();

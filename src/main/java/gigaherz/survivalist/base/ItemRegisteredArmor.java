@@ -12,6 +12,6 @@ public class ItemRegisteredArmor extends ItemArmor
         super(materialIn, renderIndexIn, equipmentSlotIn);
         setRegistryName(name);
         setUnlocalizedName(Survivalist.MODID + "." + name);
-        setCreativeTab(CreativeTabs.tabCombat);
+        setCreativeTab(CreativeTabs.COMBAT);
     }
 }

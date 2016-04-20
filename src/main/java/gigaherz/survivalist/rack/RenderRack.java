@@ -20,7 +20,7 @@ public class RenderRack extends TileEntitySpecialRenderer<TileRack>
         if (state.getBlock() != Survivalist.rack)
             return;
 
-        bindTexture(TextureMap.locationBlocksTexture);
+        bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         GlStateManager.disableLighting();
 
@@ -46,7 +46,7 @@ public class RenderRack extends TileEntitySpecialRenderer<TileRack>
                 GlStateManager.color(1f, 1f, 1f, 1f);
 
                 Minecraft mc = Minecraft.getMinecraft();
-                mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+                mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 mc.getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
 
                 GlStateManager.popMatrix();

@@ -27,12 +27,12 @@ public class RocksEventHandling
         if (!ev.isSilkTouching())
         {
             Block block = ev.getState().getBlock();
-            if (block == Blocks.cobblestone && ConfigManager.instance.replaceStoneDrops)
+            if (block == Blocks.COBBLESTONE && ConfigManager.instance.replaceStoneDrops)
             {
                 ev.getDrops().clear();
                 ev.getDrops().add(new ItemStack(Survivalist.rock, 4));
             }
-            else if (block == Blocks.stone && ConfigManager.instance.replaceStoneDrops)
+            else if (block == Blocks.STONE && ConfigManager.instance.replaceStoneDrops)
             {
                 switch (ev.getState().getValue(BlockStone.VARIANT))
                 {
@@ -54,12 +54,12 @@ public class RocksEventHandling
                         break;
                 }
             }
-            else if (block == Blocks.iron_ore && ConfigManager.instance.replaceIronOreDrops)
+            else if (block == Blocks.IRON_ORE && ConfigManager.instance.replaceIronOreDrops)
             {
                 ev.getDrops().clear();
                 ev.getDrops().add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 0));
             }
-            else if (block == Blocks.gold_ore && ConfigManager.instance.replaceGoldOreDrops)
+            else if (block == Blocks.GOLD_ORE && ConfigManager.instance.replaceGoldOreDrops)
             {
                 ev.getDrops().clear();
                 ev.getDrops().add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 1));

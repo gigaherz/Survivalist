@@ -17,26 +17,26 @@ public class Dryable
     {
         if (ConfigManager.instance.enableLeatherTanning)
         {
-            dryingRegistry.add(Triple.of(new ItemStack(Items.leather), 30 * 20, new ItemStack(Survivalist.tanned_leather)));
+            dryingRegistry.add(Triple.of(new ItemStack(Items.LEATHER), 30 * 20, new ItemStack(Survivalist.tanned_leather)));
         }
         if (ConfigManager.instance.enableMeatRotting)
         {
-            dryingRegistry.add(Triple.of(new ItemStack(Items.beef), 15 * 20, new ItemStack(Items.rotten_flesh)));
-            dryingRegistry.add(Triple.of(new ItemStack(Items.mutton), 15 * 20, new ItemStack(Items.rotten_flesh)));
-            dryingRegistry.add(Triple.of(new ItemStack(Items.porkchop), 15 * 20, new ItemStack(Items.rotten_flesh)));
+            dryingRegistry.add(Triple.of(new ItemStack(Items.BEEF), 15 * 20, new ItemStack(Items.ROTTEN_FLESH)));
+            dryingRegistry.add(Triple.of(new ItemStack(Items.MUTTON), 15 * 20, new ItemStack(Items.ROTTEN_FLESH)));
+            dryingRegistry.add(Triple.of(new ItemStack(Items.PORKCHOP), 15 * 20, new ItemStack(Items.ROTTEN_FLESH)));
         }
 
         if (ConfigManager.instance.enableJerky)
         {
             if (ConfigManager.instance.enableRottenDrying)
             {
-                dryingRegistry.add(Triple.of(new ItemStack(Items.rotten_flesh), 15 * 20, new ItemStack(Survivalist.jerky)));
+                dryingRegistry.add(Triple.of(new ItemStack(Items.ROTTEN_FLESH), 15 * 20, new ItemStack(Survivalist.jerky)));
             }
             if (ConfigManager.instance.enableMeatDrying)
             {
-                dryingRegistry.add(Triple.of(new ItemStack(Items.cooked_beef), 15 * 20, new ItemStack(Survivalist.jerky)));
-                dryingRegistry.add(Triple.of(new ItemStack(Items.cooked_mutton), 15 * 20, new ItemStack(Survivalist.jerky)));
-                dryingRegistry.add(Triple.of(new ItemStack(Items.cooked_porkchop), 15 * 20, new ItemStack(Survivalist.jerky)));
+                dryingRegistry.add(Triple.of(new ItemStack(Items.COOKED_BEEF), 15 * 20, new ItemStack(Survivalist.jerky)));
+                dryingRegistry.add(Triple.of(new ItemStack(Items.COOKED_MUTTON), 15 * 20, new ItemStack(Survivalist.jerky)));
+                dryingRegistry.add(Triple.of(new ItemStack(Items.COOKED_PORKCHOP), 15 * 20, new ItemStack(Survivalist.jerky)));
             }
         }
     }

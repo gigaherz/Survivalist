@@ -130,68 +130,68 @@ public class ItemBreakingTracker
         {
             if (ConfigManager.instance.enableToolScraping)
             {
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_shovel), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_hoe), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_axe), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_pickaxe), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.wooden_sword), new ItemStack(Blocks.planks), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_SHOVEL), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_HOE), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_AXE), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_PICKAXE), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_SWORD), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_shovel), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_hoe), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_axe), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_pickaxe), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.stone_sword), new ItemStack(Blocks.cobblestone), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.STONE_SHOVEL), new ItemStack(Blocks.COBBLESTONE), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.STONE_HOE), new ItemStack(Blocks.COBBLESTONE), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.STONE_AXE), new ItemStack(Blocks.COBBLESTONE), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.STONE_PICKAXE), new ItemStack(Blocks.COBBLESTONE), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.STONE_SWORD), new ItemStack(Blocks.COBBLESTONE), new ItemStack(Items.STICK)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_shovel), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_hoe), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_axe), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_pickaxe), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_sword), new ItemStack(Items.iron_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_SHOVEL), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_HOE), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_AXE), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_PICKAXE), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_SWORD), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.STICK)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_shovel), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_hoe), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_axe), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_pickaxe), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_sword), new ItemStack(Items.gold_ingot), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_SHOVEL), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_HOE), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_AXE), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_PICKAXE), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_SWORD), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.STICK)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_shovel), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_hoe), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_axe), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_pickaxe), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_sword), new ItemStack(Items.diamond), new ItemStack(Items.stick)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_SHOVEL), new ItemStack(Items.DIAMOND), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_HOE), new ItemStack(Items.DIAMOND), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_AXE), new ItemStack(Items.DIAMOND), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_PICKAXE), new ItemStack(Items.DIAMOND), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_SWORD), new ItemStack(Items.DIAMOND), new ItemStack(Items.STICK)));
             }
 
             if (ConfigManager.instance.enableArmorScraping)
             {
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_boots), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_helmet), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_chestplate), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.leather_leggings), new ItemStack(Items.leather, 2), new ItemStack(Items.leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_BOOTS), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_HELMET), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_CHESTPLATE), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_LEGGINGS), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
 
                 scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_boots), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_helmet), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_chestplate), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_leggings), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.chainmail_boots), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.chainmail_helmet), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.chainmail_chestplate), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.chainmail_leggings), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_boots), new ItemStack(Items.iron_ingot, 2), new ItemStack(Items.iron_ingot)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_helmet), new ItemStack(Items.iron_ingot, 2), new ItemStack(Items.iron_ingot)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_chestplate), new ItemStack(Items.iron_ingot, 2), new ItemStack(Items.iron_ingot)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.iron_leggings), new ItemStack(Items.iron_ingot, 2), new ItemStack(Items.iron_ingot)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_BOOTS), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_HELMET), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_CHESTPLATE), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_LEGGINGS), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_boots), new ItemStack(Items.gold_ingot, 2), new ItemStack(Items.gold_ingot)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_helmet), new ItemStack(Items.gold_ingot, 2), new ItemStack(Items.gold_ingot)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_chestplate), new ItemStack(Items.gold_ingot, 2), new ItemStack(Items.gold_ingot)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.golden_leggings), new ItemStack(Items.gold_ingot, 2), new ItemStack(Items.gold_ingot)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_BOOTS), new ItemStack(Items.GOLD_INGOT, 2), new ItemStack(Items.GOLD_INGOT)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_HELMET), new ItemStack(Items.GOLD_INGOT, 2), new ItemStack(Items.GOLD_INGOT)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_CHESTPLATE), new ItemStack(Items.GOLD_INGOT, 2), new ItemStack(Items.GOLD_INGOT)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.GOLDEN_LEGGINGS), new ItemStack(Items.GOLD_INGOT, 2), new ItemStack(Items.GOLD_INGOT)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_boots), new ItemStack(Items.diamond, 2), new ItemStack(Items.diamond)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_helmet), new ItemStack(Items.diamond, 2), new ItemStack(Items.diamond)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_chestplate), new ItemStack(Items.diamond, 2), new ItemStack(Items.diamond)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.diamond_leggings), new ItemStack(Items.diamond, 2), new ItemStack(Items.diamond)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_BOOTS), new ItemStack(Items.DIAMOND, 2), new ItemStack(Items.DIAMOND)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_HELMET), new ItemStack(Items.DIAMOND, 2), new ItemStack(Items.DIAMOND)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_CHESTPLATE), new ItemStack(Items.DIAMOND, 2), new ItemStack(Items.DIAMOND)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_LEGGINGS), new ItemStack(Items.DIAMOND, 2), new ItemStack(Items.DIAMOND)));
             }
         }
 
@@ -347,9 +347,9 @@ public class ItemBreakingTracker
         }
 
         @Override
-        public int func_180134_f()
+        public int getCombatDuration()
         {
-            return inner.func_180134_f();
+            return inner.getCombatDuration();
         }
 
         @Override

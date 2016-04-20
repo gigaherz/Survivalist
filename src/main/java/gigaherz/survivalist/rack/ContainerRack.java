@@ -53,7 +53,7 @@ public class ContainerRack extends Container
         {
             if (prevRemaining[j] != tile.dryTimeRemaining[j])
             {
-                for (ICrafting icrafting : this.crafters)
+                for (ICrafting icrafting : this.listeners)
                 {
                     icrafting.sendProgressBarUpdate(this, j, tile.dryTimeRemaining[j]);
                 }

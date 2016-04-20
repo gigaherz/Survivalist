@@ -82,7 +82,7 @@ public class Survivalist
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
-                    new int[]{2, 4, 3, 1}, 15, SoundEvents.item_armor_equip_leather);
+                    new int[]{2, 4, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -105,7 +105,7 @@ public class Survivalist
 
         if (ConfigManager.instance.enableChainmailCrafting)
         {
-            chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.tabMaterials);
+            chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.MATERIALS);
             GameRegistry.register(chainmail);
         }
 
@@ -119,7 +119,7 @@ public class Survivalist
 
         if (ConfigManager.instance.enableLeatherTanning)
         {
-            tanned_leather = new ItemRegistered("tanned_leather").setCreativeTab(CreativeTabs.tabMaterials);
+            tanned_leather = new ItemRegistered("tanned_leather").setCreativeTab(CreativeTabs.MATERIALS);
             GameRegistry.register(tanned_leather);
             OreDictionary.registerOre("materialLeather", tanned_leather);
             OreDictionary.registerOre("materialTannedLeather", tanned_leather);
@@ -146,7 +146,7 @@ public class Survivalist
 
         if (ConfigManager.instance.enableIronNugget)
         {
-            iron_nugget = new ItemRegistered("iron_nugget").setCreativeTab(CreativeTabs.tabMaterials);
+            iron_nugget = new ItemRegistered("iron_nugget").setCreativeTab(CreativeTabs.MATERIALS);
             GameRegistry.register(iron_nugget);
             OreDictionary.registerOre("nuggetIron", iron_nugget);
         }
@@ -155,10 +155,10 @@ public class Survivalist
         {
             RocksEventHandling.register();
 
-            rock = new ItemRock("rock").setCreativeTab(CreativeTabs.tabMaterials);
+            rock = new ItemRock("rock").setCreativeTab(CreativeTabs.MATERIALS);
             GameRegistry.register(rock);
 
-            rock_ore = new ItemOreRock("rock_ore").setCreativeTab(CreativeTabs.tabMaterials);
+            rock_ore = new ItemOreRock("rock_ore").setCreativeTab(CreativeTabs.MATERIALS);
             GameRegistry.register(rock_ore);
 
             iron_ore_rock = new ItemStack(rock_ore, 1, 0);
@@ -207,7 +207,7 @@ public class Survivalist
                 IRecipe r = recipes.get(i);
                 if (r instanceof ShapedOreRecipe)
                 {
-                    if (r.getRecipeOutput().getItem() == Items.stick)
+                    if (r.getRecipeOutput().getItem() == Items.STICK)
                     {
                         recipes.remove(r);
                         removed = true;
@@ -230,7 +230,7 @@ public class Survivalist
                     IRecipe r = recipes.get(i);
                     if (r instanceof ShapedOreRecipe)
                     {
-                        if (r.getRecipeOutput().getItem() == Items.bread)
+                        if (r.getRecipeOutput().getItem() == Items.BREAD)
                         {
                             recipes.remove(r);
                             removed = true;
@@ -241,7 +241,7 @@ public class Survivalist
                 }
             }
 
-            GameRegistry.addShapelessRecipe(new ItemStack(dough), Items.wheat, Items.wheat, Items.wheat, Items.wheat);
+            GameRegistry.addShapelessRecipe(new ItemStack(dough), Items.WHEAT, Items.WHEAT, Items.WHEAT, Items.WHEAT);
             GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
         }
 
@@ -255,18 +255,30 @@ public class Survivalist
                     'p', "plankWood"));
 
             Dryable.register();
+
+            if (ConfigManager.instance.enableLeatherTanning &&
+                    ConfigManager.instance.enableSaddleCrafting)
+            {
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.SADDLE),
+                        "ttt",
+                        "tst",
+                        "i i",
+                        't', "materialTannedLeather",
+                        's', new ItemStack(Items.STRING),
+                        'i', "ingotIron"));
+            }
         }
 
         if (ConfigManager.instance.sticksFromLeaves)
-            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick, "treeLeaves"));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.STICK, "treeLeaves"));
 
         if (ConfigManager.instance.sticksFromSaplings)
-            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.stick, "treeSapling"));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.STICK, "treeSapling"));
 
         if (ConfigManager.instance.enableIronNugget)
         {
             GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(iron_nugget, 9), "ingotIron"));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.iron_ingot),
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.IRON_INGOT),
                     "nnn",
                     "nnn",
                     "nnn",
@@ -290,24 +302,24 @@ public class Survivalist
                     " n ",
                     'n', "ingotIron"));
 
-            GameRegistry.addRecipe(new ItemStack(Items.chainmail_helmet),
+            GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_HELMET),
                     "ccc",
                     "c c",
                     'c', chainmail);
 
-            GameRegistry.addRecipe(new ItemStack(Items.chainmail_chestplate),
+            GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_CHESTPLATE),
                     "c c",
                     "ccc",
                     "ccc",
                     'c', chainmail);
 
-            GameRegistry.addRecipe(new ItemStack(Items.chainmail_leggings),
+            GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_LEGGINGS),
                     "ccc",
                     "c c",
                     "c c",
                     'c', chainmail);
 
-            GameRegistry.addRecipe(new ItemStack(Items.chainmail_boots),
+            GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_BOOTS),
                     "c c",
                     "c c",
                     'c', chainmail);
@@ -319,43 +331,43 @@ public class Survivalist
             logger.debug("Last used id: %i", entityId);
 
             GameRegistry.addSmelting(iron_ore_rock, new ItemStack(iron_nugget), 0.1f);
-            GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.gold_nugget), 0.1f);
+            GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.GOLD_NUGGET), 0.1f);
 
-            GameRegistry.addRecipe(new ItemStack(Blocks.cobblestone),
+            GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
                     "rrr",
                     "rcr",
                     "rrr",
                     'r', rock_normal,
-                    'c', Items.clay_ball);
+                    'c', Items.CLAY_BALL);
 
-            GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 5),
+            GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 5),
                     "rrr",
                     "rcr",
                     "rrr",
                     'r', rock_andesite,
-                    'c', Items.clay_ball);
+                    'c', Items.CLAY_BALL);
 
-            GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 3),
+            GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 3),
                     "rrr",
                     "rcr",
                     "rrr",
                     'r', rock_diorite,
-                    'c', Items.clay_ball);
+                    'c', Items.CLAY_BALL);
 
-            GameRegistry.addRecipe(new ItemStack(Blocks.stone, 1, 1),
+            GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 1),
                     "rrr",
                     "rcr",
                     "rrr",
                     'r', rock_granite,
-                    'c', Items.clay_ball);
+                    'c', Items.CLAY_BALL);
 
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gravel),
+            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.GRAVEL),
                     "rr",
                     "rr",
                     'r', "rock"));
 
-            GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.gravel);
-            GameRegistry.addShapelessRecipe(new ItemStack(Items.flint), Blocks.gravel, Blocks.gravel, Blocks.gravel, Blocks.gravel);
+            GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.GRAVEL);
+            GameRegistry.addShapelessRecipe(new ItemStack(Items.FLINT), Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL);
         }
     }
 }
