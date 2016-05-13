@@ -14,9 +14,9 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.4.0"
+version = "1.5.0"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Survivalist"
+archivesBaseName = "Survivalist-1.8.9"
 
 minecraft {
     version = "1.8.9-11.15.1.1794"

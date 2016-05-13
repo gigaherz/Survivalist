@@ -10,6 +10,7 @@ public class ConfigManager
     private final Configuration config;
 
     public final Property idScraping;
+    public final Property idMending;
 
     public final boolean sticksFromLeaves;
     public final boolean sticksFromSaplings;
@@ -32,6 +33,7 @@ public class ConfigManager
     public final boolean enableTorchFire;
     public final boolean enableBread;
     public final boolean removeVanillaBread;
+    public final boolean enableMending;
 
     public static void loadConfig(Configuration configuration)
     {
@@ -44,6 +46,7 @@ public class ConfigManager
 
         config.addCustomCategoryComment("Ids", "Internal IDs, DO NOT CHANGE");
         idScraping = config.get("Ids", "EnchantmentScraping", -1);
+        idMending = config.get("Ids", "EnchantmentMending", -1);
 
         config.addCustomCategoryComment("Sticks", "Settings for stick crafting");
         Property p_sticksFromLeaves = config.get("Sticks", "CraftSticksFromLeaves", true);
@@ -80,6 +83,9 @@ public class ConfigManager
         Property p_enableBread = config.get("Bread", "Enable", true);
         Property p_removeVanillaBread = config.get("Bread", "RemoveVanillaBread", true);
 
+        config.addCustomCategoryComment("Mending", "Settings for the mending enchant backport");
+        Property p_enableMending = config.get("Mending", "Enable", true);
+
         config.load();
 
         sticksFromLeaves = p_sticksFromLeaves.getBoolean();
@@ -103,6 +109,7 @@ public class ConfigManager
         enableTorchFire = p_enableTorchFire.getBoolean();
         enableBread = p_enableBread.getBoolean();
         removeVanillaBread = p_removeVanillaBread.getBoolean();
+        enableMending = p_enableMending.getBoolean();
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
         anyDefault = anyDefault || !p_sticksFromSaplings.wasRead();
@@ -125,6 +132,7 @@ public class ConfigManager
         anyDefault = anyDefault || !p_enableTorchFire.wasRead();
         anyDefault = anyDefault || !p_enableBread.wasRead();
         anyDefault = anyDefault || !p_removeVanillaBread.wasRead();
+        anyDefault = anyDefault || !p_enableMending.wasRead();
 
         if (anyDefault)
             config.save();

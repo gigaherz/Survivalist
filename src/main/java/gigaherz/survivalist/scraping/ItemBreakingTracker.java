@@ -293,7 +293,7 @@ public class ItemBreakingTracker
         {
             final Entity entity = e.getEntity();
 
-            if (entity.worldObj.isRemote)
+            if (entity.worldObj != null && entity.worldObj.isRemote)
                 return;
 
             if (entity instanceof EntityPlayer)

@@ -1,5 +1,7 @@
 package gigaherz.survivalist;
 
+import gigaherz.survivalist.mending.EnchantmentMending;
+import gigaherz.survivalist.mending.MendingTracker;
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.EntityRock;
@@ -53,6 +55,7 @@ public class Survivalist
     private GuiHandler guiHandler = new GuiHandler();
 
     public static EnchantmentScraping scraping;
+    public static EnchantmentMending mending;
 
     public static Item chainmail;
     public static Item tanned_leather;
@@ -94,6 +97,13 @@ public class Survivalist
             ItemBreakingTracker.register();
 
             scraping = EnchantmentScraping.register();
+        }
+
+        if (ConfigManager.instance.enableMending)
+        {
+            MendingTracker.register();
+
+            mending = EnchantmentMending.register();
         }
 
         if (ConfigManager.instance.enableTorchFire)
