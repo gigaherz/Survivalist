@@ -10,6 +10,7 @@ import gigaherz.survivalist.rocks.ItemRock;
 import gigaherz.survivalist.rocks.RocksEventHandling;
 import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
+import gigaherz.survivalist.scraping.MessageScraping;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -28,8 +29,10 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -42,6 +45,7 @@ public class Survivalist
 {
     public static final String MODID = "survivalist";
     public static final String VERSION = "@VERSION@";
+    private static final String CHANNEL = "survivalist";
 
     // The instance of your mod that Forge uses.
     @Mod.Instance(value = Survivalist.MODID)
@@ -82,7 +86,9 @@ public class Survivalist
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
-                    new int[]{2, 4, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER);
+                    new int[]{2, 4, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 1);
+
+    public static SimpleNetworkWrapper channel;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -188,7 +194,20 @@ public class Survivalist
             GameRegistry.register(round_bread);
         }
 
+        registerNetwork();
+
         proxy.preInit();
+    }
+
+    private void registerNetwork()
+    {
+        logger.info("Registering network channel...");
+
+        channel = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL);
+
+        int messageNumber = 0;
+        channel.registerMessage(MessageScraping.Handler.class, MessageScraping.class, messageNumber++, Side.CLIENT);
+        logger.debug("Final message number: " + messageNumber);
     }
 
     @Mod.EventHandler
@@ -207,7 +226,8 @@ public class Survivalist
                 IRecipe r = recipes.get(i);
                 if (r instanceof ShapedOreRecipe)
                 {
-                    if (r.getRecipeOutput().getItem() == Items.STICK)
+                    ItemStack output = r.getRecipeOutput();
+                    if (output != null && output.getItem() == Items.STICK)
                     {
                         recipes.remove(r);
                         removed = true;
@@ -230,7 +250,8 @@ public class Survivalist
                     IRecipe r = recipes.get(i);
                     if (r instanceof ShapedOreRecipe)
                     {
-                        if (r.getRecipeOutput().getItem() == Items.BREAD)
+                        ItemStack output = r.getRecipeOutput();
+                        if (output != null && output.getItem() == Items.BREAD)
                         {
                             recipes.remove(r);
                             removed = true;

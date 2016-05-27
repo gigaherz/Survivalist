@@ -8,18 +8,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.CombatTracker;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -113,7 +115,7 @@ public class ItemBreakingTracker
                 @Override
                 public NBTBase writeNBT(Capability<ItemBreakingTracker> capability, ItemBreakingTracker instance, EnumFacing side)
                 {
-                    return null;
+                    return new NBTTagCompound();
                 }
 
                 @Override
@@ -219,9 +221,9 @@ public class ItemBreakingTracker
 
             if (ret != null)
             {
-                Survivalist.logger.warn("Item broke (" + stack + ") and the player got " + ret + " in return!");
+                Survivalist.logger.debug("Item broke (" + stack + ") and the player got " + ret + " in return!");
 
-                player.addChatMessage(new TextComponentString("Item broke (" + stack + ") and the player got " + ret + " in return!"));
+                Survivalist.channel.sendTo(new MessageScraping(stack, ret), (EntityPlayerMP) player);
 
                 EntityItem entityitem = new EntityItem(player.worldObj, player.posX, player.posY + 0.5, player.posZ, ret);
                 entityitem.motionX = 0;
@@ -240,7 +242,8 @@ public class ItemBreakingTracker
             ItemStack stack = ev.getOriginal();
 
             Item item = stack.getItem();
-            if (!(item instanceof ItemTool))
+
+            if (!(item instanceof ItemTool) && !(item instanceof ItemSword))
                 return;
 
             onItemBroken(ev.getEntityPlayer(), stack);

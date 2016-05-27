@@ -3,7 +3,7 @@ package gigaherz.survivalist.rack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
@@ -53,7 +53,7 @@ public class ContainerRack extends Container
         {
             if (prevRemaining[j] != tile.dryTimeRemaining[j])
             {
-                for (ICrafting icrafting : this.listeners)
+                for (IContainerListener icrafting : this.listeners)
                 {
                     icrafting.sendProgressBarUpdate(this, j, tile.dryTimeRemaining[j]);
                 }
@@ -85,6 +85,7 @@ public class ContainerRack extends Container
         }
 
         ItemStack stack = slot.getStack();
+        assert stack != null;
         ItemStack stackCopy = stack.copy();
 
         int startIndex;

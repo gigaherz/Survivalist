@@ -3,9 +3,9 @@ package gigaherz.survivalist.rack;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 
 public class GuiRack extends GuiContainer
 {
@@ -27,9 +27,9 @@ public class GuiRack extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j)
     {
-        String name = I18n.translateToLocal(titleString);
+        String name = I18n.format(titleString);
         mc.fontRendererObj.drawString(name, (xSize - mc.fontRendererObj.getStringWidth(name)) / 2, 6, 0x404040);
-        mc.fontRendererObj.drawString(I18n.translateToLocal(this.player.getName()), 8, ySize - 96 + 2, 0x404040);
+        mc.fontRendererObj.drawString(I18n.format(this.player.getName()), 8, ySize - 96 + 2, 0x404040);
     }
 
     @Override

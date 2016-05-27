@@ -7,6 +7,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class Dryable
@@ -41,7 +42,7 @@ public class Dryable
         }
     }
 
-    public static int getDryingTime(ItemStack stack)
+    public static int getDryingTime(@Nullable ItemStack stack)
     {
         if (stack == null)
             return 0;
@@ -59,7 +60,8 @@ public class Dryable
         return 0;
     }
 
-    public static ItemStack getDryingResult(ItemStack stack)
+    @Nullable
+    public static ItemStack getDryingResult(@Nullable ItemStack stack)
     {
         if (stack == null)
             return null;

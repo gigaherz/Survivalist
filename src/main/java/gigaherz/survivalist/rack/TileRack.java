@@ -38,11 +38,17 @@ public class TileRack extends TileEntity implements ITickable
     };
 
     @Override
-    public Packet<?> getDescriptionPacket()
+    public SPacketUpdateTileEntity getUpdatePacket()
     {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
         return new SPacketUpdateTileEntity(pos, 0, tag);
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag()
+    {
+        return this.writeToNBT(new NBTTagCompound());
     }
 
     @Override
@@ -112,10 +118,11 @@ public class TileRack extends TileEntity implements ITickable
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound)
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
-        super.writeToNBT(compound);
+        compound = super.writeToNBT(compound);
         compound.setTag("Items", items.serializeNBT());
+        return compound;
     }
 
     @Override

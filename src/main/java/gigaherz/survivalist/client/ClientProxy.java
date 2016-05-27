@@ -89,11 +89,6 @@ public class ClientProxy implements ISidedProxy
         registerBlockModelAsItem(block, 0, blockName);
     }
 
-    public void registerBlockModelAsItem(final Block block, final String blockName, final String variantName)
-    {
-        registerBlockModelAsItem(block, 0, blockName, variantName);
-    }
-
     public void registerBlockModelAsItem(final Block block, int meta, final String blockName)
     {
         registerBlockModelAsItem(block, meta, blockName, "inventory");
@@ -101,7 +96,9 @@ public class ClientProxy implements ISidedProxy
 
     public void registerBlockModelAsItem(final Block block, int meta, final String blockName, final String variantName)
     {
-        registerItemModel(Item.getItemFromBlock(block), meta, blockName, variantName);
+        Item item = Item.getItemFromBlock(block);
+        assert item != null;
+        registerItemModel(item, meta, blockName, variantName);
     }
 
     public void registerItemModel(final ItemStack stack, final String itemName, final String variantName)

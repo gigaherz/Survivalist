@@ -21,7 +21,7 @@ public class TorchFireEventHandling
         if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().worldObj.isRemote)
         {
             ItemStack stack = ev.getEntityPlayer().getHeldItem(EnumHand.MAIN_HAND);
-            if (stack.getItem() instanceof ItemBlock)
+            if (stack != null && stack.getItem() instanceof ItemBlock)
             {
                 ItemBlock b = (ItemBlock) stack.getItem();
                 Block bl = b.getBlock();
