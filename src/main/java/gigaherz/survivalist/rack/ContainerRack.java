@@ -95,16 +95,21 @@ public class ContainerRack extends Container
         {
             startIndex = 4;
             endIndex = startIndex + 4 * 9;
+
+            if (!mergeItemStack(stack, startIndex, endIndex, false))
+            {
+                return null;
+            }
         }
         else
         {
             startIndex = 0;
             endIndex = startIndex + 4;
-        }
 
-        if (!this.mergeItemStack(stack, startIndex, endIndex, false))
-        {
-            return null;
+            if (!mergeItemStack(stack, startIndex, endIndex))
+            {
+                return null;
+            }
         }
 
         if (stack.stackSize == 0)
@@ -123,5 +128,33 @@ public class ContainerRack extends Container
 
         slot.onPickupFromSlot(player, stack);
         return stackCopy;
+    }
+
+    protected boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex)
+    {
+        boolean transferred = false;
+        for (int i = startIndex; i < endIndex; i++)
+        {
+            Slot slot = this.inventorySlots.get(i);
+            ItemStack existing = slot.getStack();
+
+            if (existing == null && slot.isItemValid(stack))
+            {
+                slot.putStack(copyWithSize(stack, 1));
+                slot.onSlotChanged();
+                stack.stackSize--;
+                transferred = true;
+                if (stack.stackSize <= 0)
+                    break;
+            }
+        }
+        return transferred;
+    }
+
+    private ItemStack copyWithSize(ItemStack stack, int count)
+    {
+        ItemStack stack1 = stack.copy();
+        stack1.stackSize = count;
+        return stack1;
     }
 }
