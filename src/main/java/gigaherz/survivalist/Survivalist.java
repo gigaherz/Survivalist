@@ -40,7 +40,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, dependencies = "required-after:Forge@[12.16.0.1825,)")
+@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, dependencies = "required-after:Forge@[12.17.0.1916,)")
 public class Survivalist
 {
     public static final String MODID = "survivalist";

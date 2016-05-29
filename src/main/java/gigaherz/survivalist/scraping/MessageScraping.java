@@ -4,6 +4,7 @@ import gigaherz.survivalist.Survivalist;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -52,11 +53,17 @@ public class MessageScraping
             Minecraft.getMinecraft().addScheduledTask(() ->
                     Minecraft.getMinecraft().thePlayer.addChatMessage(
                         new TextComponentTranslation("text." + Survivalist.MODID + ".scraping.message1",
-                                message.stack.getTextComponent(),
+                                makeClickable(message.stack.getTextComponent()),
                                 new TextComponentString("" + message.ret.stackSize),
-                                message.ret.getTextComponent())));
+                                makeClickable(message.ret.getTextComponent()))));
 
             return null; // no response in this case
+        }
+
+        private ITextComponent makeClickable(ITextComponent textComponent)
+        {
+            //textComponent.getStyle().setClickEvent()
+            return textComponent;
         }
     }
 }
