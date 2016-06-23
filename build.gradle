@@ -16,13 +16,13 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.4.5"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Survivalist-1.9.4"
+archivesBaseName = "Survivalist-1.10"
 
 minecraft {
-    version = "1.9.4-12.17.0.1922-1.9.4"
+    version = "1.10-12.18.0.1983-1.10.0"
     runDir = "run"
 
-    mappings = "snapshot_20160528"
+    mappings = "snapshot_20160623"
 
     replace "@VERSION@", project.version
     replaceIn "Survivalist.java"
