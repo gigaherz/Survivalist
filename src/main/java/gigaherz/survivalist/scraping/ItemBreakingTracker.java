@@ -42,7 +42,7 @@ import java.util.Random;
 
 public class ItemBreakingTracker
 {
-    public static final ResourceLocation PROP_KEY = new ResourceLocation(Survivalist.MODID, "ItemBreakingTracker");
+    public static final ResourceLocation PROP_KEY = Survivalist.location("ItemBreakingTracker");
 
     EntityPlayer player;
     World world;

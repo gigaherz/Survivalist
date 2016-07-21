@@ -1,7 +1,11 @@
 package gigaherz.survivalist.client;
 
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.ISidedProxy;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.chopblock.BlockChopping;
+import gigaherz.survivalist.chopblock.RenderChoppingBlock;
+import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.RenderRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.EntityRock;
@@ -13,11 +17,13 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ClientProxy implements ISidedProxy
 {
@@ -36,83 +42,93 @@ public class ClientProxy implements ISidedProxy
         });
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileChopping.class, new RenderChoppingBlock());
+
     }
 
     // ----------------------------------------------------------- Item/Block Models
     public void registerModels()
     {
         if (Survivalist.iron_nugget != null)
-            registerItemModel(Survivalist.iron_nugget, "iron_nugget");
+            registerItemModel(Survivalist.iron_nugget);
 
         if (Survivalist.chainmail != null)
-            registerItemModel(Survivalist.chainmail, "chainmail");
+            registerItemModel(Survivalist.chainmail);
         if (Survivalist.tanned_leather != null)
-            registerItemModel(Survivalist.tanned_leather, "tanned_leather");
+            registerItemModel(Survivalist.tanned_leather);
         if (Survivalist.jerky != null)
-            registerItemModel(Survivalist.jerky, "jerky");
+            registerItemModel(Survivalist.jerky);
 
         if (Survivalist.tanned_helmet != null)
-            registerItemModel(Survivalist.tanned_helmet, 0, "tanned_armor", "part=helmet");
+            registerItemModel(Survivalist.tanned_helmet, 0, Survivalist.location("tanned_armor"), "part=helmet");
         if (Survivalist.tanned_chestplate != null)
-            registerItemModel(Survivalist.tanned_chestplate, 0, "tanned_armor", "part=chestplate");
+            registerItemModel(Survivalist.tanned_chestplate, 0, Survivalist.location("tanned_armor"), "part=chestplate");
         if (Survivalist.tanned_leggings != null)
-            registerItemModel(Survivalist.tanned_leggings, 0, "tanned_armor", "part=leggings");
+            registerItemModel(Survivalist.tanned_leggings, 0, Survivalist.location("tanned_armor"), "part=leggings");
         if (Survivalist.tanned_boots != null)
-            registerItemModel(Survivalist.tanned_boots, 0, "tanned_armor", "part=boots");
+            registerItemModel(Survivalist.tanned_boots, 0, Survivalist.location("tanned_armor"), "part=boots");
 
         if (Survivalist.rock_normal != null)
-            registerItemModel(Survivalist.rock_normal, "rock", "rock=normal");
+            registerItemModel(Survivalist.rock_normal, "rock=normal");
         if (Survivalist.rock_andesite != null)
-            registerItemModel(Survivalist.rock_andesite, "rock", "rock=andesite");
+            registerItemModel(Survivalist.rock_andesite, "rock=andesite");
         if (Survivalist.rock_diorite != null)
-            registerItemModel(Survivalist.rock_diorite, "rock", "rock=diorite");
+            registerItemModel(Survivalist.rock_diorite, "rock=diorite");
         if (Survivalist.rock_granite != null)
-            registerItemModel(Survivalist.rock_granite, "rock", "rock=granite");
+            registerItemModel(Survivalist.rock_granite, "rock=granite");
 
         if (Survivalist.iron_ore_rock != null)
-            registerItemModel(Survivalist.iron_ore_rock, "rock_ore", "ore=iron");
+            registerItemModel(Survivalist.iron_ore_rock, "ore=iron");
         if (Survivalist.gold_ore_rock != null)
-            registerItemModel(Survivalist.gold_ore_rock, "rock_ore", "ore=gold");
+            registerItemModel(Survivalist.gold_ore_rock, "ore=gold");
 
         if (Survivalist.rack != null)
-            registerBlockModelAsItem(Survivalist.rack, "rack");
+            registerBlockModelAsItem(Survivalist.rack);
 
         if (Survivalist.dough != null)
-            registerItemModel(Survivalist.dough, "dough");
+            registerItemModel(Survivalist.dough);
 
         if (Survivalist.round_bread != null)
-            registerItemModel(Survivalist.round_bread, "round_bread");
+            registerItemModel(Survivalist.round_bread);
+
+        if (Survivalist.chopping_block != null)
+            registerBlockModelAsItem(Survivalist.chopping_block);
     }
 
-    public void registerBlockModelAsItem(final Block block, final String blockName)
+    public void registerBlockModelAsItem(final Block block)
     {
-        registerBlockModelAsItem(block, 0, blockName);
+        registerBlockModelAsItem(block, 0);
     }
 
-    public void registerBlockModelAsItem(final Block block, int meta, final String blockName)
+    public void registerBlockModelAsItem(final Block block, int meta)
     {
-        registerBlockModelAsItem(block, meta, blockName, "inventory");
+        registerBlockModelAsItem(block, meta, "inventory");
     }
 
-    public void registerBlockModelAsItem(final Block block, int meta, final String blockName, final String variantName)
+    public void registerBlockModelAsItem(final Block block, int meta, final String variantName)
     {
         Item item = Item.getItemFromBlock(block);
         assert item != null;
-        registerItemModel(item, meta, blockName, variantName);
+        registerItemModel(item, meta, variantName);
     }
 
-    public void registerItemModel(final ItemStack stack, final String itemName, final String variantName)
+    public void registerItemModel(final Item item)
     {
-        registerItemModel(stack.getItem(), stack.getMetadata(), itemName, variantName);
+        registerItemModel(item, 0, "inventory");
     }
 
-    public void registerItemModel(final Item item, final String itemName)
+    public void registerItemModel(final ItemStack stack, final String variantName)
     {
-        registerItemModel(item, 0, itemName, "inventory");
+        registerItemModel(stack.getItem(), stack.getMetadata(), variantName);
     }
 
-    public void registerItemModel(final Item item, int meta, final String itemName, final String variantName)
+    public void registerItemModel(final Item item, int meta, String variantName)
     {
-        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Survivalist.MODID + ":" + itemName, variantName));
+        registerItemModel(item, meta, item.getRegistryName(), variantName);
+    }
+
+    public void registerItemModel(final Item item, int meta, ResourceLocation blockstatesLocation, String variantName)
+    {
+        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(blockstatesLocation, variantName));
     }
 }

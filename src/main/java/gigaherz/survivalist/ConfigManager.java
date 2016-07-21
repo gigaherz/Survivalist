@@ -31,6 +31,8 @@ public class ConfigManager
     public final boolean enableBread;
     public final boolean removeVanillaBread;
     public final boolean enableSaddleCrafting;
+    public final boolean enableChopping;
+    public final boolean replacePlanksRecipes;
 
     public static void loadConfig(Configuration configuration)
     {
@@ -77,6 +79,10 @@ public class ConfigManager
         Property p_enableBread = config.get("Bread", "Enable", true);
         Property p_removeVanillaBread = config.get("Bread", "RemoveVanillaBread", true);
 
+        config.addCustomCategoryComment("Chopping", "Settings for the chopping block");
+        Property p_enableChopping = config.get("Chopping", "Enable", true);
+        Property p_replacePlanksRecipes = config.get("Chopping", "ReplacePlanksRecipes", true);
+
         config.load();
 
         sticksFromLeaves = p_sticksFromLeaves.getBoolean();
@@ -101,6 +107,8 @@ public class ConfigManager
         enableTorchFire = p_enableTorchFire.getBoolean();
         enableBread = p_enableBread.getBoolean();
         removeVanillaBread = p_removeVanillaBread.getBoolean();
+        enableChopping = p_enableChopping.getBoolean();
+        replacePlanksRecipes = p_replacePlanksRecipes.getBoolean();
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
         anyDefault = anyDefault || !p_sticksFromSaplings.wasRead();
@@ -124,6 +132,8 @@ public class ConfigManager
         anyDefault = anyDefault || !p_enableTorchFire.wasRead();
         anyDefault = anyDefault || !p_enableBread.wasRead();
         anyDefault = anyDefault || !p_removeVanillaBread.wasRead();
+        anyDefault = anyDefault || !p_enableChopping.wasRead();
+        anyDefault = anyDefault || !p_replacePlanksRecipes.wasRead();
 
         if (anyDefault)
             config.save();

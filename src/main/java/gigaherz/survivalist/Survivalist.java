@@ -1,6 +1,8 @@
 package gigaherz.survivalist;
 
 import gigaherz.survivalist.base.*;
+import gigaherz.survivalist.chopblock.BlockChopping;
+import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.Dryable;
 import gigaherz.survivalist.rack.TileRack;
@@ -22,6 +24,8 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
@@ -83,6 +87,8 @@ public class Survivalist
     public static ItemStack gold_ore_rock;
 
     public static BlockRegistered rack;
+
+    public static BlockRegistered chopping_block;
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
@@ -194,6 +200,14 @@ public class Survivalist
             GameRegistry.register(round_bread);
         }
 
+        if (ConfigManager.instance.enableChopping)
+        {
+            chopping_block = new BlockChopping("chopping_block");
+            GameRegistry.register(chopping_block);
+            GameRegistry.register(chopping_block.createItemBlock());
+            GameRegistry.registerTileEntity(TileChopping.class, "tile_chopping_block");
+        }
+
         registerNetwork();
 
         proxy.preInit();
@@ -208,6 +222,16 @@ public class Survivalist
         int messageNumber = 0;
         channel.registerMessage(MessageScraping.Handler.class, MessageScraping.class, messageNumber++, Side.CLIENT);
         logger.debug("Final message number: " + messageNumber);
+    }
+
+    public static boolean hasOreName(ItemStack stack, String oreName)
+    {
+        int id = OreDictionary.getOreID(oreName);
+        for(int i : OreDictionary.getOreIDs(stack))
+        {
+            if (i == id) return true;
+        }
+        return false;
     }
 
     @Mod.EventHandler
@@ -238,6 +262,58 @@ public class Survivalist
             }
         }
 
+        if (ConfigManager.instance.enableChopping)
+        {
+            if (ConfigManager.instance.replacePlanksRecipes)
+            {
+                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+                for (int i = 0; i < recipes.size(); )
+                {
+                    boolean removed = false;
+                    IRecipe r = recipes.get(i);
+
+                    ItemStack output = r.getRecipeOutput();
+                    if (output != null && hasOreName(output, "plankWood"))
+                    {
+                        if (r instanceof ShapedRecipes)
+                        {
+                            ShapedRecipes rcp = (ShapedRecipes)r;
+
+                            ItemStack[] inputs = rcp.recipeItems;
+
+                            ItemStack logInput = null;
+                            for(ItemStack input : inputs)
+                            {
+                                if (!hasOreName(input, "logWood") || logInput != null)
+                                {
+                                    logInput = null;
+                                    break;
+                                }
+
+                                logInput = input;
+                            }
+
+                            if (logInput != null)
+                            {
+                                recipes.remove(r);
+                                TileChopping.registerRecipe(logInput.copy(), output.copy());
+                                removed = true;
+                            }
+                        }
+                    }
+
+                    if (!removed) i++;
+                }
+
+
+                GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(chopping_block), "logWood"));
+            }
+
+            if (ConfigManager.instance.removeSticksFromPlanks)
+            {
+                TileChopping.registerSticksRecipe();
+            }
+        }
 
         if (ConfigManager.instance.enableBread)
         {
@@ -390,5 +466,10 @@ public class Survivalist
             GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.GRAVEL);
             GameRegistry.addShapelessRecipe(new ItemStack(Items.FLINT), Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL);
         }
+    }
+
+    public static ResourceLocation location(String path)
+    {
+        return new ResourceLocation(MODID, path);
     }
 }

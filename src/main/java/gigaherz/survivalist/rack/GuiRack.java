@@ -11,7 +11,7 @@ public class GuiRack extends GuiContainer
 {
     protected static final String titleString = "text." + Survivalist.MODID + ".rack.title";
 
-    protected ResourceLocation guiTextureLocation;
+    protected ResourceLocation guiTextureLocation = Survivalist.location("textures/gui/rack.png");
     protected InventoryPlayer player;
     protected TileRack tile;
 
@@ -21,7 +21,6 @@ public class GuiRack extends GuiContainer
         this.player = inventory;
         this.tile = tileEntity;
         this.ySize = 165;
-        guiTextureLocation = new ResourceLocation(Survivalist.MODID, "textures/gui/rack.png");
     }
 
     @Override
