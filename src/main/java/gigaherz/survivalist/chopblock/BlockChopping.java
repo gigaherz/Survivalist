@@ -1,21 +1,13 @@
 package gigaherz.survivalist.chopblock;
 
-import gigaherz.survivalist.GuiHandler;
-import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.base.BlockRegistered;
-import gigaherz.survivalist.rack.TileRack;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -79,11 +71,11 @@ public class BlockChopping extends BlockRegistered
         if (!(tileEntity instanceof TileChopping) || playerIn.isSneaking())
             return false;
 
-        TileChopping chopper = (TileChopping)tileEntity;
+        TileChopping chopper = (TileChopping) tileEntity;
 
-        if(heldItem == null)
+        if (heldItem == null)
         {
-            ItemStack extracted = chopper.getSlot().extractItem(0, 1, false);
+            ItemStack extracted = chopper.getSlotInventory().extractItem(0, 1, false);
             if (extracted != null && extracted.stackSize > 0)
             {
                 ItemHandlerHelper.giveItemToPlayer(playerIn, extracted);
@@ -95,7 +87,7 @@ public class BlockChopping extends BlockRegistered
 
         if (TileChopping.isValidInput(heldItem))
         {
-            ItemStack remaining = chopper.getSlot().insertItem(0, heldItem, false);
+            ItemStack remaining = chopper.getSlotInventory().insertItem(0, heldItem, false);
             if (!playerIn.isCreative())
             {
                 if (remaining != null && remaining.stackSize > 0)
@@ -120,7 +112,7 @@ public class BlockChopping extends BlockRegistered
 
         if (tileentity instanceof TileChopping)
         {
-            TileChopping chopper = (TileChopping)tileentity;
+            TileChopping chopper = (TileChopping) tileentity;
             ItemStack heldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
             assert heldItem != null;
 
@@ -135,12 +127,6 @@ public class BlockChopping extends BlockRegistered
     }
 
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
-    {
-        return super.removedByPlayer(state, world, pos, player, false);
-    }
-
-    @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -148,9 +134,9 @@ public class BlockChopping extends BlockRegistered
         if (!(tileentity instanceof TileChopping))
             return;
 
-        TileChopping chopper = (TileChopping)tileentity;
+        TileChopping chopper = (TileChopping) tileentity;
 
-        dropInventoryItems(worldIn, pos, chopper.getSlot());
+        dropInventoryItems(worldIn, pos, chopper.getSlotInventory());
         worldIn.updateComparatorOutputLevel(pos, this);
 
         super.breakBlock(worldIn, pos, state);

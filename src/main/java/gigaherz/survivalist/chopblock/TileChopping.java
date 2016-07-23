@@ -5,12 +5,9 @@ import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -21,7 +18,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
@@ -66,9 +62,9 @@ public class TileChopping extends TileEntity implements ITickable
         return null;
     }
 
-    public static void registerSticksRecipe()
+    public static void registerStockRecipes()
     {
-        oreDictRecipes.add(Triple.of("plankWood", new ItemStack(Items.STICK), 2.0));
+        registerRecipe("plankWood", new ItemStack(Items.STICK), 2.0);
     }
 
     public static void registerRecipe(ItemStack input, ItemStack output)
@@ -81,7 +77,17 @@ public class TileChopping extends TileEntity implements ITickable
         recipes.add(Triple.of(input, output, outputMultiplier));
     }
 
-    private ItemStackHandler slot = new ItemStackHandler()
+    public static void registerRecipe(String input, ItemStack output)
+    {
+        registerRecipe(input, output, 1.0);
+    }
+
+    public static void registerRecipe(String input, ItemStack output, double outputMultiplier)
+    {
+        oreDictRecipes.add(Triple.of(input, output, outputMultiplier));
+    }
+
+    private ItemStackHandler slotInventory = new ItemStackHandler()
     {
         @Override
         protected int getStackLimit(int slot, ItemStack stack)
@@ -126,7 +132,7 @@ public class TileChopping extends TileEntity implements ITickable
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return (T)slot;
+            return (T) slotInventory;
         return super.getCapability(capability, facing);
     }
 
@@ -134,14 +140,14 @@ public class TileChopping extends TileEntity implements ITickable
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-        CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(slot, null, compound.getTag("Inventory"));
+        CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(slotInventory, null, compound.getTag("Inventory"));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound = super.writeToNBT(compound);
-        compound.setTag("Inventory", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(slot, null));
+        compound.setTag("Inventory", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(slotInventory, null));
         return compound;
     }
 
@@ -177,7 +183,7 @@ public class TileChopping extends TileEntity implements ITickable
         {
             breakingProgress--;
 
-            if(breakingProgress == 0)
+            if (breakingProgress == 0)
             {
                 IBlockState state = worldObj.getBlockState(pos);
                 worldObj.notifyBlockUpdate(pos, state, state, 3);
@@ -187,15 +193,15 @@ public class TileChopping extends TileEntity implements ITickable
 
     public void chop(EntityPlayer playerIn, int axeLevel, int fortune)
     {
-        if (slot.getStackInSlot(0) != null)
+        if (slotInventory.getStackInSlot(0) != null)
         {
             breakingProgress += 40;
             if (breakingProgress >= 40 * 5)
             {
-                Pair<ItemStack, Double> res = getResults(slot.getStackInSlot(0));
+                Pair<ItemStack, Double> res = getResults(slotInventory.getStackInSlot(0));
                 ItemStack out = res.getLeft();
                 out.stackSize = (int) (res.getRight() * (1 + axeLevel) * (1 + fortune));
-                slot.setStackInSlot(0, null);
+                slotInventory.setStackInSlot(0, null);
                 breakingProgress = 0;
                 if (!worldObj.isRemote)
                 {
@@ -210,6 +216,7 @@ public class TileChopping extends TileEntity implements ITickable
     }
 
     private static final Random RANDOM = new Random();
+
     public static void spawnItemStack(World worldIn, double x, double y, double z, ItemStack stack)
     {
         while (stack.stackSize > 0)
@@ -238,8 +245,8 @@ public class TileChopping extends TileEntity implements ITickable
         }
     }
 
-    public ItemStackHandler getSlot()
+    public ItemStackHandler getSlotInventory()
     {
-        return slot;
+        return slotInventory;
     }
 }

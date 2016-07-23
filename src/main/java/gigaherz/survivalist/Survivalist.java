@@ -1,6 +1,9 @@
 package gigaherz.survivalist;
 
-import gigaherz.survivalist.base.*;
+import gigaherz.survivalist.base.BlockRegistered;
+import gigaherz.survivalist.base.ItemRegistered;
+import gigaherz.survivalist.base.ItemRegisteredArmor;
+import gigaherz.survivalist.base.ItemRegisteredFood;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.BlockRack;
@@ -227,7 +230,7 @@ public class Survivalist
     public static boolean hasOreName(ItemStack stack, String oreName)
     {
         int id = OreDictionary.getOreID(oreName);
-        for(int i : OreDictionary.getOreIDs(stack))
+        for (int i : OreDictionary.getOreIDs(stack))
         {
             if (i == id) return true;
         }
@@ -277,12 +280,12 @@ public class Survivalist
                     {
                         if (r instanceof ShapedRecipes)
                         {
-                            ShapedRecipes rcp = (ShapedRecipes)r;
+                            ShapedRecipes rcp = (ShapedRecipes) r;
 
                             ItemStack[] inputs = rcp.recipeItems;
 
                             ItemStack logInput = null;
-                            for(ItemStack input : inputs)
+                            for (ItemStack input : inputs)
                             {
                                 if (!hasOreName(input, "logWood") || logInput != null)
                                 {
@@ -311,7 +314,7 @@ public class Survivalist
 
             if (ConfigManager.instance.removeSticksFromPlanks)
             {
-                TileChopping.registerSticksRecipe();
+                TileChopping.registerStockRecipes();
             }
         }
 
