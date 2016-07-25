@@ -148,9 +148,8 @@ public class BlockChopping extends BlockRegistered
         {
             TileChopping chopper = (TileChopping) tileentity;
             ItemStack heldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
-            assert heldItem != null;
 
-            int harvestLevel = heldItem.getItem().getHarvestLevel(heldItem, "axe");
+            int harvestLevel = heldItem != null ? heldItem.getItem().getHarvestLevel(heldItem, "axe") : -1;
             if (harvestLevel >= 0)
             {
                 if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
