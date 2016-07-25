@@ -50,7 +50,15 @@ public class ClientProxy implements ISidedProxy
     public void registerModels()
     {
         if (Survivalist.iron_nugget != null)
-            registerItemModel(Survivalist.iron_nugget);
+            registerItemModel(Survivalist.iron_nugget, "ore=iron");
+        if (Survivalist.copper_nugget != null)
+            registerItemModel(Survivalist.copper_nugget, "ore=copper");
+        if (Survivalist.tin_nugget != null)
+            registerItemModel(Survivalist.tin_nugget, "ore=tin");
+        if (Survivalist.lead_nugget != null)
+            registerItemModel(Survivalist.lead_nugget, "ore=lead");
+        if (Survivalist.silver_nugget != null)
+            registerItemModel(Survivalist.silver_nugget, "ore=silver");
 
         if (Survivalist.chainmail != null)
             registerItemModel(Survivalist.chainmail);
@@ -81,6 +89,14 @@ public class ClientProxy implements ISidedProxy
             registerItemModel(Survivalist.iron_ore_rock, "ore=iron");
         if (Survivalist.gold_ore_rock != null)
             registerItemModel(Survivalist.gold_ore_rock, "ore=gold");
+        if (Survivalist.copper_ore_rock != null)
+            registerItemModel(Survivalist.copper_ore_rock, "ore=copper");
+        if (Survivalist.tin_ore_rock != null)
+            registerItemModel(Survivalist.tin_ore_rock, "ore=tin");
+        if (Survivalist.lead_ore_rock != null)
+            registerItemModel(Survivalist.lead_ore_rock, "ore=lead");
+        if (Survivalist.silver_ore_rock != null)
+            registerItemModel(Survivalist.silver_ore_rock, "ore=silver");
 
         if (Survivalist.rack != null)
             registerBlockModelAsItem(Survivalist.rack);
@@ -115,6 +131,11 @@ public class ClientProxy implements ISidedProxy
     public void registerItemModel(final Item item)
     {
         registerItemModel(item, 0, "inventory");
+    }
+
+    public void registerItemModel(final ItemStack stack)
+    {
+        registerItemModel(stack.getItem(), stack.getMetadata(), "inventory");
     }
 
     public void registerItemModel(final ItemStack stack, final String variantName)

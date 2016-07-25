@@ -7,7 +7,11 @@
   "variants": {
     "ore": {
       "iron": { "textures": { "layer0": "survivalist:item/iron_ore_rock" } },
-      "gold": { "textures": { "layer0": "survivalist:item/gold_ore_rock" } }
+      "gold": { "textures": { "layer0": "survivalist:item/gold_ore_rock" } },
+      "copper": { "textures": { "layer0": "survivalist:item/copper_ore_rock" } },
+      "tin": { "textures": { "layer0": "survivalist:item/tin_ore_rock" } },
+      "lead": { "textures": { "layer0": "survivalist:item/lead_ore_rock" } },
+      "silver": { "textures": { "layer0": "survivalist:item/silver_ore_rock" } }
     }
   }
 }

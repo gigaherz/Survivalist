@@ -16,6 +16,7 @@ public class ConfigManager
     public final boolean replaceStoneDrops;
     public final boolean replaceIronOreDrops;
     public final boolean replaceGoldOreDrops;
+    public final boolean replaceModOreDrops;
     public final boolean enableScraping;
     public final boolean enableToolScraping;
     public final boolean enableArmorScraping;
@@ -25,7 +26,8 @@ public class ConfigManager
     public final boolean enableRottenDrying;
     public final boolean enableMeatDrying;
     public final boolean enableLeatherTanning;
-    public final boolean enableIronNugget;
+    public final boolean enableNuggets;
+    public final boolean enableNuggetRecipes;
     public final boolean enableChainmailCrafting;
     public final boolean enableTorchFire;
     public final boolean enableBread;
@@ -53,6 +55,7 @@ public class ConfigManager
         Property p_replaceStoneDrops = config.get("Rocks", "ReplaceStoneDrops", true);
         Property p_replaceIronOreDrops = config.get("Rocks", "ReplaceIronOreDrops", true);
         Property p_replaceGoldOreDrops = config.get("Rocks", "ReplaceGoldOreDrops", true);
+        Property p_replaceModOreDrops = config.get("Rocks", "ReplaceModOreDrops", true);
 
         config.addCustomCategoryComment("Scraping", "Settings for the Scraping feature and enchant");
         Property p_enableScraping = config.get("Scraping", "Enable", true);
@@ -68,8 +71,12 @@ public class ConfigManager
         Property p_enableLeatherTanning = config.get("DryingRack", "EnableLeatherTanning", true);
         Property p_enableSaddleCrafting = config.get("DryingRack", "EnableSaddleCrafting", true);
 
+        config.addCustomCategoryComment("Nuggets", "Settings for enabling custom nuggets");
+        Property p_enableNuggets = config.get("Nuggets", "Enable", true);
+        Property p_enableNuggetRecipes = config.get("Nuggets", "EnableNuggetRecipes", true);
+        p_enableNuggetRecipes.setComment("Independent of Nuggets being enabled, allows adding recipes also when different mods don't play together.");
+
         config.addCustomCategoryComment("Chainmail", "Settings for the chainmail crafting");
-        Property p_enableIronNugget = config.get("Chainmail", "EnableIronNugget", true);
         Property p_enableChainmailCrafting = config.get("Chainmail", "EnableChainmailCrafting", true);
 
         config.addCustomCategoryComment("TorchFire", "Settings for the torch setting fire to entities");
@@ -92,6 +99,7 @@ public class ConfigManager
         replaceStoneDrops = p_replaceStoneDrops.getBoolean();
         replaceIronOreDrops = p_replaceIronOreDrops.getBoolean();
         replaceGoldOreDrops = p_replaceGoldOreDrops.getBoolean();
+        replaceModOreDrops = p_replaceModOreDrops.getBoolean();
         enableScraping = p_enableScraping.getBoolean();
         enableToolScraping = p_enableToolScraping.getBoolean();
         enableArmorScraping = p_enableArmorScraping.getBoolean();
@@ -102,7 +110,8 @@ public class ConfigManager
         enableMeatDrying = p_enableMeatDrying.getBoolean();
         enableLeatherTanning = p_enableLeatherTanning.getBoolean();
         enableSaddleCrafting = p_enableSaddleCrafting.getBoolean();
-        enableIronNugget = p_enableIronNugget.getBoolean();
+        enableNuggets = p_enableNuggets.getBoolean();
+        enableNuggetRecipes = p_enableNuggetRecipes.getBoolean();
         enableChainmailCrafting = p_enableChainmailCrafting.getBoolean();
         enableTorchFire = p_enableTorchFire.getBoolean();
         enableBread = p_enableBread.getBoolean();
@@ -117,6 +126,7 @@ public class ConfigManager
         anyDefault = anyDefault || !p_replaceStoneDrops.wasRead();
         anyDefault = anyDefault || !p_replaceIronOreDrops.wasRead();
         anyDefault = anyDefault || !p_replaceGoldOreDrops.wasRead();
+        anyDefault = anyDefault || !p_replaceModOreDrops.wasRead();
         anyDefault = anyDefault || !p_enableScraping.wasRead();
         anyDefault = anyDefault || !p_enableToolScraping.wasRead();
         anyDefault = anyDefault || !p_enableArmorScraping.wasRead();
@@ -127,7 +137,8 @@ public class ConfigManager
         anyDefault = anyDefault || !p_enableMeatDrying.wasRead();
         anyDefault = anyDefault || !p_enableLeatherTanning.wasRead();
         anyDefault = anyDefault || !p_enableSaddleCrafting.wasRead();
-        anyDefault = anyDefault || !p_enableIronNugget.wasRead();
+        anyDefault = anyDefault || !p_enableNuggets.wasRead();
+        anyDefault = anyDefault || !p_enableNuggetRecipes.wasRead();
         anyDefault = anyDefault || !p_enableChainmailCrafting.wasRead();
         anyDefault = anyDefault || !p_enableTorchFire.wasRead();
         anyDefault = anyDefault || !p_enableBread.wasRead();

@@ -8,17 +8,17 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class ItemOreRock extends ItemRegistered
+public class ItemNugget extends ItemRegistered
 {
     static final String[] subNames = {
-            ".iron_rock", ".gold_rock", ".copper_rock", ".tin_rock", ".lead_rock", ".silver_rock"
+            ".iron_nugget", ".copper_nugget", ".tin_nugget", ".lead_nugget", ".silver_nugget"
     };
 
-    public ItemOreRock(String name)
+    public ItemNugget(String name)
     {
         super(name);
         setHasSubtypes(true);
-        setUnlocalizedName(Survivalist.MODID + ".rock");
+        setUnlocalizedName(Survivalist.MODID + ".nugget");
     }
 
     @Override

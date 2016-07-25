@@ -9,10 +9,7 @@ import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.Dryable;
 import gigaherz.survivalist.rack.TileRack;
-import gigaherz.survivalist.rocks.EntityRock;
-import gigaherz.survivalist.rocks.ItemOreRock;
-import gigaherz.survivalist.rocks.ItemRock;
-import gigaherz.survivalist.rocks.RocksEventHandling;
+import gigaherz.survivalist.rocks.*;
 import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.scraping.MessageScraping;
@@ -47,7 +44,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, dependencies = "required-after:Forge@[12.17.0.1916,)")
+@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, dependencies = "required-after:Forge@[12.17.0.1916,);after:reborncore;after:techreborn")
 public class Survivalist
 {
     public static final String MODID = "survivalist";
@@ -70,7 +67,7 @@ public class Survivalist
     public static Item chainmail;
     public static Item tanned_leather;
     public static Item jerky;
-    public static Item iron_nugget;
+    public static Item nugget;
     public static Item rock;
     public static Item rock_ore;
     public static Item dough;
@@ -88,6 +85,16 @@ public class Survivalist
 
     public static ItemStack iron_ore_rock;
     public static ItemStack gold_ore_rock;
+    public static ItemStack copper_ore_rock;
+    public static ItemStack tin_ore_rock;
+    public static ItemStack lead_ore_rock;
+    public static ItemStack silver_ore_rock;
+
+    public static ItemStack iron_nugget;
+    public static ItemStack copper_nugget;
+    public static ItemStack tin_nugget;
+    public static ItemStack lead_nugget;
+    public static ItemStack silver_nugget;    
 
     public static BlockRegistered rack;
 
@@ -159,11 +166,21 @@ public class Survivalist
             GameRegistry.register(jerky);
         }
 
-        if (ConfigManager.instance.enableIronNugget)
+        if (ConfigManager.instance.enableNuggets)
         {
-            iron_nugget = new ItemRegistered("iron_nugget").setCreativeTab(CreativeTabs.MATERIALS);
-            GameRegistry.register(iron_nugget);
+            nugget = new ItemNugget("nugget").setCreativeTab(CreativeTabs.MATERIALS);
+            GameRegistry.register(nugget);
+
+            iron_nugget = new ItemStack(nugget, 1, 0);
+            copper_nugget = new ItemStack(nugget, 1, 1);
+            tin_nugget = new ItemStack(nugget, 1, 2);
+            lead_nugget = new ItemStack(nugget, 1, 3);
+            silver_nugget = new ItemStack(nugget, 1, 4);
             OreDictionary.registerOre("nuggetIron", iron_nugget);
+            OreDictionary.registerOre("nuggetCopper", copper_nugget);
+            OreDictionary.registerOre("nuggetTin", tin_nugget);
+            OreDictionary.registerOre("nuggetLead", lead_nugget);
+            OreDictionary.registerOre("nuggetSilver", silver_nugget);
         }
 
         if (ConfigManager.instance.enableRocks)
@@ -178,8 +195,16 @@ public class Survivalist
 
             iron_ore_rock = new ItemStack(rock_ore, 1, 0);
             gold_ore_rock = new ItemStack(rock_ore, 1, 1);
+            copper_ore_rock = new ItemStack(rock_ore, 1, 2);
+            tin_ore_rock = new ItemStack(rock_ore, 1, 3);
+            lead_ore_rock = new ItemStack(rock_ore, 1, 4);
+            silver_ore_rock = new ItemStack(rock_ore, 1, 5);
             OreDictionary.registerOre("rockOreIron", iron_ore_rock);
             OreDictionary.registerOre("rockOreGold", gold_ore_rock);
+            OreDictionary.registerOre("rockOreCopper", copper_ore_rock);
+            OreDictionary.registerOre("rockOreTin", tin_ore_rock);
+            OreDictionary.registerOre("rockOreLead", lead_ore_rock);
+            OreDictionary.registerOre("rockOreSilver", silver_ore_rock);
 
             rock_normal = new ItemStack(rock, 1, 0);
             rock_andesite = new ItemStack(rock, 1, 1);
@@ -375,19 +400,18 @@ public class Survivalist
         if (ConfigManager.instance.sticksFromSaplings)
             GameRegistry.addRecipe(new ShapelessOreRecipe(Items.STICK, "treeSapling"));
 
-        if (ConfigManager.instance.enableIronNugget)
+        if (ConfigManager.instance.enableNuggetRecipes)
         {
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(iron_nugget, 9), "ingotIron"));
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.IRON_INGOT),
-                    "nnn",
-                    "nnn",
-                    "nnn",
-                    'n', "nuggetIron"));
+            addIngotToNuggets("ingotIron", "nuggetIron");
+            addIngotToNuggets("ingotCopper", "nuggetCopper");
+            addIngotToNuggets("ingotTin", "nuggetTin");
+            addIngotToNuggets("ingotLead", "nuggetLead");
+            addIngotToNuggets("ingotSilver", "nuggetSilver");
         }
 
         if (ConfigManager.instance.enableChainmailCrafting)
         {
-            if (ConfigManager.instance.enableIronNugget)
+            if (ConfigManager.instance.enableNuggets)
             {
                 GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chainmail),
                         " n ",
@@ -430,8 +454,12 @@ public class Survivalist
             EntityRegistry.registerModEntity(EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
             logger.debug("Last used id: %i", entityId);
 
-            GameRegistry.addSmelting(iron_ore_rock, new ItemStack(iron_nugget), 0.1f);
-            GameRegistry.addSmelting(gold_ore_rock, new ItemStack(Items.GOLD_NUGGET), 0.1f);
+            addSmeltingNugget(iron_ore_rock, "nuggetIron");
+            addSmeltingNugget(gold_ore_rock, "nuggetGold");
+            addSmeltingNugget(copper_ore_rock, "nuggetCopper");
+            addSmeltingNugget(tin_ore_rock, "nuggetTin");
+            addSmeltingNugget(lead_ore_rock, "nuggetLead");
+            addSmeltingNugget(silver_ore_rock, "nuggetSilver");
 
             GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
                     "rrr",
@@ -468,6 +496,32 @@ public class Survivalist
 
             GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.GRAVEL);
             GameRegistry.addShapelessRecipe(new ItemStack(Items.FLINT), Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL);
+        }
+    }
+
+    private void addIngotToNuggets(String oreIngot, String oreNugget)
+    {
+        List<ItemStack> matches1 = OreDictionary.getOres(oreIngot);
+        if (matches1.size() > 0)
+        {
+            GameRegistry.addRecipe(new ShapedOreRecipe(matches1.get(0), "nnn","nnn","nnn",'n', oreNugget));
+        }
+
+        List<ItemStack> matches2 = OreDictionary.getOres(oreNugget);
+        if (matches2.size() > 0)
+        {
+            ItemStack output = matches2.get(0).copy();
+            output.stackSize = 9;
+            GameRegistry.addRecipe(new ShapelessOreRecipe(output, oreIngot));
+        }
+    }
+
+    private void addSmeltingNugget(ItemStack stack, String ore)
+    {
+        List<ItemStack> matches = OreDictionary.getOres(ore);
+        if (matches.size() > 0)
+        {
+            GameRegistry.addSmelting(stack, matches.get(0), 0.1f);
         }
     }
 

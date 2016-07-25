@@ -1,0 +1,16 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "ore": {
+      "iron": { "textures": { "layer0": "survivalist:item/iron_nugget" } },
+      "copper": { "textures": { "layer0": "survivalist:item/copper_nugget" } },
+      "tin": { "textures": { "layer0": "survivalist:item/tin_nugget" } },
+      "lead": { "textures": { "layer0": "survivalist:item/lead_nugget" } },
+      "silver": { "textures": { "layer0": "survivalist:item/silver_nugget" } }
+    }
+  }
+}

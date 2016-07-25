@@ -12,6 +12,19 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+
+repositories {
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        url 'http://maven.epoxide.xyz'
+    }
+    maven {
+        url 'http://dogforce-games.com/maven'
+    }
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.5.0"
@@ -26,6 +39,11 @@ minecraft {
 
     replace "@VERSION@", project.version
     replaceIn "Survivalist.java"
+}
+
+dependencies {
+    deobfCompile "mezz.jei:jei_1.10:3.7.1.219:api"
+    runtime "mezz.jei:jei_1.10:3.7.1.219"
 }
 
 compileJava {
