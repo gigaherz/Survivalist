@@ -150,21 +150,18 @@ public class BlockChopping extends BlockRegistered
             ItemStack heldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
 
             int harvestLevel = heldItem != null ? heldItem.getItem().getHarvestLevel(heldItem, "axe") : -1;
-            if (harvestLevel >= 0)
+            if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
             {
-                if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
+                if (worldIn.rand.nextFloat() < 0.06f)
                 {
-                    if (worldIn.rand.nextFloat() < 0.06f)
+                    int damage = worldIn.getBlockState(pos).getValue(DAMAGE);
+                    if (damage < 2)
                     {
-                        int damage = worldIn.getBlockState(pos).getValue(DAMAGE);
-                        if (damage < 2)
-                        {
-                            worldIn.setBlockState(pos, getDefaultState().withProperty(DAMAGE, damage + 1));
-                        }
-                        else
-                        {
-                            worldIn.setBlockToAir(pos);
-                        }
+                        worldIn.setBlockState(pos, getDefaultState().withProperty(DAMAGE, damage + 1));
+                    }
+                    else
+                    {
+                        worldIn.setBlockToAir(pos);
                     }
                 }
             }

@@ -3,6 +3,7 @@ package gigaherz.survivalist.chopblock;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -30,6 +31,8 @@ import java.util.Random;
 
 public class TileChopping extends TileEntity
 {
+    private static final Random RANDOM = new Random();
+
     private static List<Triple<ItemStack, ItemStack, Double>> recipes = Lists.newArrayList();
     private static List<Triple<String, ItemStack, Double>> oreDictRecipes = Lists.newArrayList();
 
@@ -183,34 +186,42 @@ public class TileChopping extends TileEntity
         return oldState.getBlock() != newState.getBlock();
     }
 
-    Random rand = new Random();
     public boolean chop(EntityPlayer playerIn, int axeLevel, int fortune)
     {
+        boolean completed = false;
         if (slotInventory.getStackInSlot(0) != null)
         {
-            breakingProgress += 25 + 25 * axeLevel;
+            breakingProgress += 25 + 25 * Math.max(0, axeLevel);
             if (breakingProgress >= 200)
             {
-                Pair<ItemStack, Double> res = getResults(slotInventory.getStackInSlot(0));
-                ItemStack out = res.getLeft();
-                out.stackSize = (int) (res.getRight() * (1 + axeLevel) * (1 + rand.nextFloat() * fortune));
-                slotInventory.setStackInSlot(0, null);
-                breakingProgress = 0;
                 if (!worldObj.isRemote)
                 {
-                    spawnItemStack(worldObj, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
-                    worldObj.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 0.3f, 1.0f);
-                    return true;
+                    if (axeLevel >= 0 || RANDOM.nextFloat() < 0.4f)
+                    {
+                        Pair<ItemStack, Double> res = getResults(slotInventory.getStackInSlot(0));
+                        if (res != null)
+                        {
+                            ItemStack out = res.getLeft();
+                            out.stackSize = (int) (Math.max(1, res.getRight() * (1 + axeLevel)) * (1 + RANDOM.nextFloat() * fortune));
+                            spawnItemStack(worldObj, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
+                        }
+                    }
+                    else
+                    {
+                        // TODO: Spawn some block breaking particles
+                    }
+                    completed = true;
                 }
+                worldObj.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                slotInventory.setStackInSlot(0, null);
+                breakingProgress = 0;
             }
 
             IBlockState state = worldObj.getBlockState(pos);
             worldObj.notifyBlockUpdate(pos, state, state, 3);
         }
-        return false;
+        return completed;
     }
-
-    private static final Random RANDOM = new Random();
 
     public static void spawnItemStack(World worldIn, double x, double y, double z, ItemStack stack)
     {
