@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -177,6 +178,12 @@ public class TileChopping extends TileEntity implements ITickable
     }
 
     @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+    {
+        return oldState.getBlock() != newState.getBlock();
+    }
+
+    @Override
     public void update()
     {
         if (breakingProgress > 0)
@@ -191,7 +198,7 @@ public class TileChopping extends TileEntity implements ITickable
         }
     }
 
-    public void chop(EntityPlayer playerIn, int axeLevel, int fortune)
+    public boolean chop(EntityPlayer playerIn, int axeLevel, int fortune)
     {
         if (slotInventory.getStackInSlot(0) != null)
         {
@@ -207,12 +214,14 @@ public class TileChopping extends TileEntity implements ITickable
                 {
                     spawnItemStack(worldObj, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
                     worldObj.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 0.3f, 1.0f);
+                    return true;
                 }
             }
 
             IBlockState state = worldObj.getBlockState(pos);
             worldObj.notifyBlockUpdate(pos, state, state, 3);
         }
+        return false;
     }
 
     private static final Random RANDOM = new Random();

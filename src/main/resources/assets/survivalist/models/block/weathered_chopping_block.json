@@ -1,0 +1,7 @@
+{
+  "parent": "survivalist:block/chopping_block",
+  "textures": {
+    "top": "survivalist:block/weathered_oak_slab_top",
+    "side": "survivalist:block/weathered_oak_slab"
+  }
+}

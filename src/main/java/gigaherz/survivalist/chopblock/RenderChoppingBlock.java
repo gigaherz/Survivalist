@@ -1,8 +1,6 @@
 package gigaherz.survivalist.chopblock;
 
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.rack.BlockRack;
-import gigaherz.survivalist.rack.TileRack;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -49,9 +47,9 @@ public class RenderChoppingBlock extends TileEntitySpecialRenderer<TileChopping>
         {
             GlStateManager.pushMatrix();
 
-            GlStateManager.translate(0, -4.5/16.0f, 0);
+            GlStateManager.translate(0, -4.5 / 16.0f, 0);
 
-            GlStateManager.scale(2,2,2);
+            GlStateManager.scale(2, 2, 2);
 
             GlStateManager.color(1f, 1f, 1f, 1f);
 

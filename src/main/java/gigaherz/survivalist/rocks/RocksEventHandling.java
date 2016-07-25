@@ -3,8 +3,6 @@ package gigaherz.survivalist.rocks;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockStone;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,7 +29,7 @@ public class RocksEventHandling
         {
             List<ItemStack> newDrops = Lists.newArrayList();
 
-            for(ItemStack drop : ev.getDrops())
+            for (ItemStack drop : ev.getDrops())
             {
                 if (drop.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE) && ConfigManager.instance.replaceStoneDrops)
                 {

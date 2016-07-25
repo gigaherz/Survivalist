@@ -1,15 +1,16 @@
 {
   "forge_marker":1,
   "variants": {
-    "normal": [{
-      "model": "survivalist:chopping_block",
-      "textures": {
-        "top":  "survivalist:block/weathered_oak_slab_top",
-        "side": "survivalist:block/weathered_oak_slab"
+    "damage": {
+      "0": {
+        "model": "survivalist:chopping_block"
+      },
+      "1": {
+        "model": "survivalist:used_chopping_block"
+      },
+      "2": {
+        "model": "survivalist:weathered_chopping_block"
       }
-    }],
-    "brandnew": [{
-      "model": "survivalist:chopping_block"
-    }]
+    }
   }
 }

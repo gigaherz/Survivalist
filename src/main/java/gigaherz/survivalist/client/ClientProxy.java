@@ -1,9 +1,7 @@
 package gigaherz.survivalist.client;
 
-import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.ISidedProxy;
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.RenderChoppingBlock;
 import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.RenderRack;
@@ -23,7 +21,6 @@ import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ClientProxy implements ISidedProxy
 {
@@ -43,7 +40,6 @@ public class ClientProxy implements ISidedProxy
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
         ClientRegistry.bindTileEntitySpecialRenderer(TileChopping.class, new RenderChoppingBlock());
-
     }
 
     // ----------------------------------------------------------- Item/Block Models
@@ -108,7 +104,11 @@ public class ClientProxy implements ISidedProxy
             registerItemModel(Survivalist.round_bread);
 
         if (Survivalist.chopping_block != null)
-            registerBlockModelAsItem(Survivalist.chopping_block);
+        {
+            registerBlockModelAsItem(Survivalist.chopping_block, 0, "damage=0");
+            registerBlockModelAsItem(Survivalist.chopping_block, 1, "damage=1");
+            registerBlockModelAsItem(Survivalist.chopping_block, 2, "damage=2");
+        }
     }
 
     public void registerBlockModelAsItem(final Block block)

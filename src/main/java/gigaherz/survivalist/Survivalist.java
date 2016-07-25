@@ -94,7 +94,7 @@ public class Survivalist
     public static ItemStack copper_nugget;
     public static ItemStack tin_nugget;
     public static ItemStack lead_nugget;
-    public static ItemStack silver_nugget;    
+    public static ItemStack silver_nugget;
 
     public static BlockRegistered rack;
 
@@ -504,7 +504,7 @@ public class Survivalist
         List<ItemStack> matches1 = OreDictionary.getOres(oreIngot);
         if (matches1.size() > 0)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(matches1.get(0), "nnn","nnn","nnn",'n', oreNugget));
+            GameRegistry.addRecipe(new ShapedOreRecipe(matches1.get(0), "nnn", "nnn", "nnn", 'n', oreNugget));
         }
 
         List<ItemStack> matches2 = OreDictionary.getOres(oreNugget);

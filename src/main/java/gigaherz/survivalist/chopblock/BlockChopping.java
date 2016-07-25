@@ -1,14 +1,20 @@
 package gigaherz.survivalist.chopblock;
 
+import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.base.BlockRegistered;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -21,9 +27,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class BlockChopping extends BlockRegistered
 {
+    public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 2);
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
 
     public BlockChopping(String name)
@@ -32,9 +40,10 @@ public class BlockChopping extends BlockRegistered
         setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
         setSoundType(SoundType.WOOD);
         setHardness(5.0F);
-        setResistance(1.0F);
+        setResistance(5.0F);
         setLightOpacity(0);
         setHarvestLevel("axe", 0);
+        setDefaultState(this.blockState.getBaseState().withProperty(DAMAGE, 0));
     }
 
     @Deprecated
@@ -61,6 +70,31 @@ public class BlockChopping extends BlockRegistered
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
         return AABB;
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, DAMAGE);
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state)
+    {
+        return state.getValue(DAMAGE);
+    }
+
+    @Deprecated
+    @Override
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return getDefaultState().withProperty(DAMAGE, (meta & 3) % 3);
+    }
+
+    @Override
+    public int damageDropped(IBlockState state)
+    {
+        return state.getValue(DAMAGE);
     }
 
     @Override
@@ -119,7 +153,24 @@ public class BlockChopping extends BlockRegistered
             int harvestLevel = heldItem.getItem().getHarvestLevel(heldItem, "axe");
             if (harvestLevel >= 0)
             {
-                chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem));
+                if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
+                {
+                    if (true) //worldIn.rand.nextInt(25) == 0)
+                    {
+                        int damage = worldIn.getBlockState(pos).getValue(DAMAGE);
+                        if (damage < 2)
+                        {
+                            worldIn.setBlockState(pos, getDefaultState().withProperty(DAMAGE, damage + 1));
+                        }
+                        else
+                        {
+                            worldIn.setBlockToAir(pos);
+                        }
+                    }
+
+                    IBlockState state = worldIn.getBlockState(pos);
+                    worldIn.notifyBlockUpdate(pos, state, state, 3);
+                }
             }
         }
 
@@ -152,6 +203,51 @@ public class BlockChopping extends BlockRegistered
             {
                 InventoryHelper.spawnItemStack(worldIn, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), itemstack);
             }
+        }
+    }
+
+    @Override
+    public ItemBlock createItemBlock()
+    {
+        return (ItemBlock) new AsItem(this).setRegistryName(getRegistryName());
+    }
+
+    public static class AsItem extends ItemBlock
+    {
+        static final String[] subNames = {
+                ".pristine_chopping_block", ".slightly_damaged_chopping_block", ".heavily_damaged_chopping_block"
+        };
+
+        public AsItem(Block block)
+        {
+            super(block);
+            setHasSubtypes(true);
+        }
+
+        @Override
+        public int getMetadata(int damage)
+        {
+            return damage;
+        }
+
+        @Override
+        public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+        {
+            for (int i = 0; i < subNames.length; i++)
+            {
+                subItems.add(new ItemStack(this, 1, i));
+            }
+        }
+
+        @Override
+        public String getUnlocalizedName(ItemStack stack)
+        {
+            int meta = stack.getMetadata();
+
+            if (meta > subNames.length)
+                return getUnlocalizedName();
+
+            return "item." + Survivalist.MODID + subNames[meta];
         }
     }
 }

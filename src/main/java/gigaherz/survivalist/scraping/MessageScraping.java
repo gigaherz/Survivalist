@@ -52,10 +52,10 @@ public class MessageScraping
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
                     Minecraft.getMinecraft().thePlayer.addChatMessage(
-                        new TextComponentTranslation("text." + Survivalist.MODID + ".scraping.message1",
-                                makeClickable(message.stack.getTextComponent()),
-                                new TextComponentString("" + message.ret.stackSize),
-                                makeClickable(message.ret.getTextComponent()))));
+                            new TextComponentTranslation("text." + Survivalist.MODID + ".scraping.message1",
+                                    makeClickable(message.stack.getTextComponent()),
+                                    new TextComponentString("" + message.ret.stackSize),
+                                    makeClickable(message.ret.getTextComponent()))));
 
             return null; // no response in this case
         }

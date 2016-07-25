@@ -44,7 +44,9 @@ public class ItemRock extends ItemRegistered
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
         for (int i = 0; i < subNames.length; i++)
-        { subItems.add(new ItemStack(this, 1, i)); }
+        {
+            subItems.add(new ItemStack(this, 1, i));
+        }
     }
 
     @Override
