@@ -44,7 +44,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, dependencies = "required-after:Forge@[12.17.0.1916,);after:reborncore;after:techreborn")
+@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.9.4,1.11.0)", dependencies = "required-after:Forge@[12.17.0.1916,);after:reborncore;after:techreborn")
 public class Survivalist
 {
     public static final String MODID = "survivalist";
