@@ -155,7 +155,7 @@ public class BlockChopping extends BlockRegistered
             {
                 if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
                 {
-                    if (true) //worldIn.rand.nextInt(25) == 0)
+                    if (worldIn.rand.nextFloat() < 0.06f)
                     {
                         int damage = worldIn.getBlockState(pos).getValue(DAMAGE);
                         if (damage < 2)
@@ -167,9 +167,6 @@ public class BlockChopping extends BlockRegistered
                             worldIn.setBlockToAir(pos);
                         }
                     }
-
-                    IBlockState state = worldIn.getBlockState(pos);
-                    worldIn.notifyBlockUpdate(pos, state, state, 3);
                 }
             }
         }
@@ -215,7 +212,7 @@ public class BlockChopping extends BlockRegistered
     public static class AsItem extends ItemBlock
     {
         static final String[] subNames = {
-                ".pristine_chopping_block", ".slightly_damaged_chopping_block", ".heavily_damaged_chopping_block"
+                ".pristine_chopping_block", ".used_chopping_block", ".weathered_chopping_block"
         };
 
         public AsItem(Block block)
@@ -247,7 +244,7 @@ public class BlockChopping extends BlockRegistered
             if (meta > subNames.length)
                 return getUnlocalizedName();
 
-            return "item." + Survivalist.MODID + subNames[meta];
+            return "tile." + Survivalist.MODID + subNames[meta];
         }
     }
 }

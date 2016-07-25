@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class TileChopping extends TileEntity implements ITickable
+public class TileChopping extends TileEntity
 {
     private static List<Triple<ItemStack, ItemStack, Double>> recipes = Lists.newArrayList();
     private static List<Triple<String, ItemStack, Double>> oreDictRecipes = Lists.newArrayList();
@@ -183,31 +183,17 @@ public class TileChopping extends TileEntity implements ITickable
         return oldState.getBlock() != newState.getBlock();
     }
 
-    @Override
-    public void update()
-    {
-        if (breakingProgress > 0)
-        {
-            breakingProgress--;
-
-            if (breakingProgress == 0)
-            {
-                IBlockState state = worldObj.getBlockState(pos);
-                worldObj.notifyBlockUpdate(pos, state, state, 3);
-            }
-        }
-    }
-
+    Random rand = new Random();
     public boolean chop(EntityPlayer playerIn, int axeLevel, int fortune)
     {
         if (slotInventory.getStackInSlot(0) != null)
         {
-            breakingProgress += 40;
-            if (breakingProgress >= 40 * 5)
+            breakingProgress += 25 + 25 * axeLevel;
+            if (breakingProgress >= 200)
             {
                 Pair<ItemStack, Double> res = getResults(slotInventory.getStackInSlot(0));
                 ItemStack out = res.getLeft();
-                out.stackSize = (int) (res.getRight() * (1 + axeLevel) * (1 + fortune));
+                out.stackSize = (int) (res.getRight() * (1 + axeLevel) * (1 + rand.nextFloat() * fortune));
                 slotInventory.setStackInSlot(0, null);
                 breakingProgress = 0;
                 if (!worldObj.isRemote)

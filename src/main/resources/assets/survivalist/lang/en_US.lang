@@ -30,5 +30,8 @@ tile.survivalist.rack.name=Drying Rack
 text.survivalist.rack.title=Drying
 
 tile.survivalist.chopping_block.name=Chopping Block
+tile.survivalist.pristine_chopping_block.name=Chopping Block
+tile.survivalist.used_chopping_block.name=Used Chopping Block
+tile.survivalist.weathered_chopping_block.name=Weathered Chopping Block
 
 text.survivalist.scraping.message1=Your %s broke but you got %dx%s in return!"
