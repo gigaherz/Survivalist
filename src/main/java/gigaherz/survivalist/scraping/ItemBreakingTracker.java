@@ -293,38 +293,38 @@ public class ItemBreakingTracker
         {
             final Entity entity = e.getEntity();
 
-            if (entity.worldObj.isRemote)
+            if (!(entity instanceof EntityPlayer))
                 return;
 
-            if (entity instanceof EntityPlayer)
+            if (entity.worldObj == null || entity.worldObj.isRemote)
+                return;
+
+            if (entity.hasCapability(TRACKER, null))
+                return;
+
+            e.addCapability(PROP_KEY, new ICapabilityProvider()
             {
-                if (!entity.hasCapability(TRACKER, null))
+                ItemBreakingTracker cap = new ItemBreakingTracker();
+
                 {
-                    e.addCapability(PROP_KEY, new ICapabilityProvider()
-                    {
-                        ItemBreakingTracker cap = new ItemBreakingTracker();
-
-                        {
-                            cap.init(entity, entity.worldObj);
-                        }
-
-                        @Override
-                        public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-                        {
-                            return capability == TRACKER;
-                        }
-
-                        @SuppressWarnings("unchecked")
-                        @Override
-                        public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-                        {
-                            if (capability == TRACKER)
-                                return (T) cap;
-                            return null;
-                        }
-                    });
+                    cap.init(entity, entity.worldObj);
                 }
-            }
+
+                @Override
+                public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+                {
+                    return capability == TRACKER;
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+                {
+                    if (capability == TRACKER)
+                        return (T) cap;
+                    return null;
+                }
+            });
         }
     }
 

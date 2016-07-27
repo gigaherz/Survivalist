@@ -3,7 +3,6 @@ package gigaherz.survivalist.chopblock;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -14,7 +13,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -254,5 +252,12 @@ public class TileChopping extends TileEntity
     public ItemStackHandler getSlotInventory()
     {
         return slotInventory;
+    }
+
+    public int getBreakStage()
+    {
+        if (breakingProgress <= 0)
+            return -1;
+        return breakingProgress * 10 / 200;
     }
 }
