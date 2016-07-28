@@ -1,5 +1,8 @@
 package gigaherz.survivalist;
 
+import com.google.common.collect.Lists;
+import gigaherz.survivalist.api.Choppable;
+import gigaherz.survivalist.api.Dryable;
 import gigaherz.survivalist.base.BlockRegistered;
 import gigaherz.survivalist.base.ItemRegistered;
 import gigaherz.survivalist.base.ItemRegisteredArmor;
@@ -7,7 +10,6 @@ import gigaherz.survivalist.base.ItemRegisteredFood;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.BlockRack;
-import gigaherz.survivalist.rack.Dryable;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.*;
 import gigaherz.survivalist.scraping.EnchantmentScraping;
@@ -25,12 +27,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -44,7 +48,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.9.4,1.11.0)", dependencies = "required-after:Forge@[12.17.0.1916,);after:reborncore;after:techreborn")
+@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.9.4,1.11.0)",
+        dependencies = "required-after:Forge@[12.17.0.1916,)")
 public class Survivalist
 {
     public static final String MODID = "survivalist";
@@ -269,80 +274,6 @@ public class Survivalist
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
-        if (ConfigManager.instance.removeSticksFromPlanks)
-        {
-            List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-            for (int i = 0; i < recipes.size(); )
-            {
-                boolean removed = false;
-                IRecipe r = recipes.get(i);
-                if (r instanceof ShapedOreRecipe)
-                {
-                    ItemStack output = r.getRecipeOutput();
-                    if (output != null && output.getItem() == Items.STICK)
-                    {
-                        recipes.remove(r);
-                        removed = true;
-                    }
-                }
-
-                if (!removed) i++;
-            }
-        }
-
-        if (ConfigManager.instance.enableChopping)
-        {
-            if (ConfigManager.instance.replacePlanksRecipes)
-            {
-                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-                for (int i = 0; i < recipes.size(); )
-                {
-                    boolean removed = false;
-                    IRecipe r = recipes.get(i);
-
-                    ItemStack output = r.getRecipeOutput();
-                    if (output != null && hasOreName(output, "plankWood"))
-                    {
-                        if (r instanceof ShapedRecipes)
-                        {
-                            ShapedRecipes rcp = (ShapedRecipes) r;
-
-                            ItemStack[] inputs = rcp.recipeItems;
-
-                            ItemStack logInput = null;
-                            for (ItemStack input : inputs)
-                            {
-                                if (!hasOreName(input, "logWood") || logInput != null)
-                                {
-                                    logInput = null;
-                                    break;
-                                }
-
-                                logInput = input;
-                            }
-
-                            if (logInput != null)
-                            {
-                                recipes.remove(r);
-                                TileChopping.registerRecipe(logInput.copy(), output.copy());
-                                removed = true;
-                            }
-                        }
-                    }
-
-                    if (!removed) i++;
-                }
-
-
-                GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(chopping_block), "logWood"));
-            }
-
-            if (ConfigManager.instance.removeSticksFromPlanks)
-            {
-                TileChopping.registerStockRecipes();
-            }
-        }
-
         if (ConfigManager.instance.enableBread)
         {
             if (ConfigManager.instance.removeVanillaBread)
@@ -496,6 +427,136 @@ public class Survivalist
 
             GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.GRAVEL);
             GameRegistry.addShapelessRecipe(new ItemStack(Items.FLINT), Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL);
+        }
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        if (ConfigManager.instance.removeSticksFromPlanks)
+        {
+            List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+            for (int i = 0; i < recipes.size(); )
+            {
+                boolean removed = false;
+                IRecipe r = recipes.get(i);
+                if (r instanceof ShapedOreRecipe)
+                {
+                    ItemStack output = r.getRecipeOutput();
+                    if (output != null && output.getItem() == Items.STICK)
+                    {
+                        recipes.remove(r);
+                        removed = true;
+                    }
+                }
+
+                if (!removed) i++;
+            }
+        }
+
+        if (ConfigManager.instance.enableChopping)
+        {
+            if (ConfigManager.instance.replacePlanksRecipes)
+            {
+                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+                for (int i = 0; i < recipes.size(); )
+                {
+                    boolean removed = false;
+                    IRecipe r = recipes.get(i);
+
+                    ItemStack output = r.getRecipeOutput();
+                    if (output != null && hasOreName(output, "plankWood"))
+                    {
+                        List<Object> inputs = null;
+                        if (r instanceof ShapedRecipes)
+                        {
+                            ShapedRecipes rcp = (ShapedRecipes) r;
+                            inputs = Lists.newArrayList((Object[]) rcp.recipeItems);
+                        }
+                        else if (r instanceof ShapelessRecipes)
+                        {
+                            ShapelessRecipes rcp = (ShapelessRecipes) r;
+                            inputs = Lists.newArrayList(rcp.recipeItems);
+                        }
+                        else if (r instanceof ShapedOreRecipe)
+                        {
+                            ShapedOreRecipe rcp = (ShapedOreRecipe) r;
+                            inputs = Lists.newArrayList(rcp.getInput());
+                        }
+                        else if (r instanceof ShapelessOreRecipe)
+                        {
+                            ShapelessOreRecipe rcp = (ShapelessOreRecipe) r;
+                            inputs = Lists.newArrayList(rcp.getInput());
+                        }
+                        else
+                        {
+                            logger.warn("Unknown recipe type with planks output (" + output.getItem().getRegistryName() + "): " + r.getClass().getName());
+                        }
+
+                        if (inputs != null)
+                        {
+                            ItemStack logInput = null;
+                            String oreInput = null;
+
+                            for (Object input : inputs)
+                            {
+                                if (input instanceof ItemStack)
+                                {
+                                    ItemStack stack = (ItemStack) input;
+                                    if (!hasOreName(stack, "logWood") || logInput != null || oreInput != null)
+                                    {
+                                        logInput = null;
+                                        oreInput = null;
+                                        break;
+                                    }
+                                    logInput = stack;
+                                }
+                                else if (input instanceof String)
+                                {
+                                    logger.warn("A recipe with planks output uses ore dictionary string as input. This is not supported yet.");
+
+                                    logInput = null;
+                                    oreInput = null;
+                                    break;
+
+                                    /*
+                                    String oreName = (String) input;
+                                    if (<verify that the inputs are logs> || logInput != null || oreInput != null)
+                                    {
+                                        logInput = null;
+                                        oreInput = null;
+                                        break;
+                                    }
+                                    oreInput = oreName;*/
+                                }
+                            }
+
+                            if (logInput != null)
+                            {
+                                recipes.remove(r);
+                                Choppable.registerRecipe(logInput.copy(), output.copy());
+                                removed = true;
+                            }
+                            else if (oreInput != null)
+                            {
+                                recipes.remove(r);
+                                Choppable.registerRecipe(logInput.copy(), output.copy());
+                                removed = true;
+                            }
+                        }
+                    }
+
+                    if (!removed) i++;
+                }
+
+
+                GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(chopping_block), "logWood"));
+            }
+
+            if (ConfigManager.instance.removeSticksFromPlanks)
+            {
+                Choppable.registerStockRecipes();
+            }
         }
     }
 

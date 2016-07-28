@@ -1,6 +1,8 @@
 package gigaherz.survivalist.chopblock;
 
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.base.BlockRegistered;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -119,7 +121,7 @@ public class BlockChopping extends BlockRegistered
             return false;
         }
 
-        if (TileChopping.isValidInput(heldItem))
+        if (Choppable.isValidInput(heldItem))
         {
             ItemStack remaining = chopper.getSlotInventory().insertItem(0, heldItem, false);
             if (!playerIn.isCreative())
@@ -152,7 +154,7 @@ public class BlockChopping extends BlockRegistered
             int harvestLevel = heldItem != null ? heldItem.getItem().getHarvestLevel(heldItem, "axe") : -1;
             if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
             {
-                if (worldIn.rand.nextFloat() < 0.06f)
+                if (worldIn.rand.nextFloat() < ConfigManager.instance.choppingDegradeChance)
                 {
                     int damage = worldIn.getBlockState(pos).getValue(DAMAGE);
                     if (damage < 2)

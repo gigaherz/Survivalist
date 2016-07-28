@@ -35,3 +35,6 @@ tile.survivalist.used_chopping_block.name=Used Chopping Block
 tile.survivalist.weathered_chopping_block.name=Weathered Chopping Block
 
 text.survivalist.scraping.message1=Your %s broke but you got %dx%s in return!"
+
+text.survivalist.jei.category.chopping=Chopping Block
+text.survivalist.jei.category.drying=Drying Rack

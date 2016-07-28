@@ -35,6 +35,7 @@ public class ConfigManager
     public final boolean enableSaddleCrafting;
     public final boolean enableChopping;
     public final boolean replacePlanksRecipes;
+    public final float choppingDegradeChance;
 
     public static void loadConfig(Configuration configuration)
     {
@@ -89,6 +90,8 @@ public class ConfigManager
         config.addCustomCategoryComment("Chopping", "Settings for the chopping block");
         Property p_enableChopping = config.get("Chopping", "Enable", true);
         Property p_replacePlanksRecipes = config.get("Chopping", "ReplacePlanksRecipes", true);
+        Property p_choppingDegradeChance = config.get("Chopping", "DegradeChance", 0.06);
+        p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
 
         config.load();
 
@@ -118,6 +121,7 @@ public class ConfigManager
         removeVanillaBread = p_removeVanillaBread.getBoolean();
         enableChopping = p_enableChopping.getBoolean();
         replacePlanksRecipes = p_replacePlanksRecipes.getBoolean();
+        choppingDegradeChance = (float) p_choppingDegradeChance.getDouble();
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
         anyDefault = anyDefault || !p_sticksFromSaplings.wasRead();
@@ -145,6 +149,7 @@ public class ConfigManager
         anyDefault = anyDefault || !p_removeVanillaBread.wasRead();
         anyDefault = anyDefault || !p_enableChopping.wasRead();
         anyDefault = anyDefault || !p_replacePlanksRecipes.wasRead();
+        anyDefault = anyDefault || !p_choppingDegradeChance.wasRead();
 
         if (anyDefault)
             config.save();

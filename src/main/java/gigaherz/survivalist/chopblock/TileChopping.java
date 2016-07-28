@@ -1,11 +1,9 @@
 package gigaherz.survivalist.chopblock;
 
-import com.google.common.collect.Lists;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.api.Choppable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,75 +17,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
 public class TileChopping extends TileEntity
 {
     private static final Random RANDOM = new Random();
-
-    private static List<Triple<ItemStack, ItemStack, Double>> recipes = Lists.newArrayList();
-    private static List<Triple<String, ItemStack, Double>> oreDictRecipes = Lists.newArrayList();
-
-    public static boolean isValidInput(ItemStack stack)
-    {
-        for (Triple<ItemStack, ItemStack, Double> recipe : recipes)
-        {
-            if (OreDictionary.itemMatches(recipe.getLeft(), stack, false))
-                return true;
-        }
-        for (Triple<String, ItemStack, Double> recipe : oreDictRecipes)
-        {
-            if (Survivalist.hasOreName(stack, recipe.getLeft()))
-                return true;
-        }
-        return false;
-    }
-
-    public static Pair<ItemStack, Double> getResults(ItemStack stack)
-    {
-        for (Triple<ItemStack, ItemStack, Double> recipe : recipes)
-        {
-            if (OreDictionary.itemMatches(recipe.getLeft(), stack, false))
-                return Pair.of(recipe.getMiddle().copy(), recipe.getRight());
-        }
-        for (Triple<String, ItemStack, Double> recipe : oreDictRecipes)
-        {
-            if (Survivalist.hasOreName(stack, recipe.getLeft()))
-                return Pair.of(recipe.getMiddle().copy(), recipe.getRight());
-        }
-        return null;
-    }
-
-    public static void registerStockRecipes()
-    {
-        registerRecipe("plankWood", new ItemStack(Items.STICK), 2.0);
-    }
-
-    public static void registerRecipe(ItemStack input, ItemStack output)
-    {
-        registerRecipe(input, output, 1.0);
-    }
-
-    public static void registerRecipe(ItemStack input, ItemStack output, double outputMultiplier)
-    {
-        recipes.add(Triple.of(input, output, outputMultiplier));
-    }
-
-    public static void registerRecipe(String input, ItemStack output)
-    {
-        registerRecipe(input, output, 1.0);
-    }
-
-    public static void registerRecipe(String input, ItemStack output, double outputMultiplier)
-    {
-        oreDictRecipes.add(Triple.of(input, output, outputMultiplier));
-    }
 
     private ItemStackHandler slotInventory = new ItemStackHandler()
     {
@@ -100,7 +37,7 @@ public class TileChopping extends TileEntity
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
         {
-            if (!isValidInput(stack))
+            if (!Choppable.isValidInput(stack))
                 return stack;
             return super.insertItem(slot, stack, simulate);
         }
@@ -194,13 +131,26 @@ public class TileChopping extends TileEntity
             {
                 if (!worldObj.isRemote)
                 {
-                    if (axeLevel >= 0 || RANDOM.nextFloat() < 0.4f)
+                    Pair<ItemStack, Double> res = Choppable.getResults(slotInventory.getStackInSlot(0));
+                    if (res != null)
                     {
-                        Pair<ItemStack, Double> res = getResults(slotInventory.getStackInSlot(0));
-                        if (res != null)
+                        double number = 0.4f * res.getRight();
+
+                        if (axeLevel >= 0)
+                            number = Math.max(0, res.getRight() * (1 + axeLevel)) * (1 + RANDOM.nextFloat() * fortune);
+
+                        int whole = (int) Math.floor(number);
+                        double remainder = number - whole;
+
+                        if (RANDOM.nextFloat() < remainder)
+                        {
+                            whole++;
+                        }
+
+                        if (number > 0)
                         {
                             ItemStack out = res.getLeft();
-                            out.stackSize = (int) (Math.max(1, res.getRight() * (1 + axeLevel)) * (1 + RANDOM.nextFloat() * fortune));
+                            out.stackSize = whole;
                             spawnItemStack(worldObj, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
                         }
                     }

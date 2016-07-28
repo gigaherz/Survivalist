@@ -1,5 +1,6 @@
 package gigaherz.survivalist.rack;
 
+import gigaherz.survivalist.api.Dryable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
