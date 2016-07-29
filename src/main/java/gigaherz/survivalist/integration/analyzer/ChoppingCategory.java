@@ -15,10 +15,10 @@ import java.util.List;
 
 public class ChoppingCategory implements IRecipeCategory<ChoppingRecipeWrapper>
 {
-    static final ResourceLocation GUI_TEXTURE_LOCATION = Survivalist.location("textures/gui/conversion.png");
-    static final String UID = Survivalist.MODID + "_chopping";
+    private static final ResourceLocation GUI_TEXTURE_LOCATION = Survivalist.location("textures/gui/conversion.png");
+    public static final String UID = Survivalist.MODID + "_chopping";
 
-    static ChoppingCategory INSTANCE;
+    public static ChoppingCategory INSTANCE;
 
     @Nonnull
     private final IDrawable background;

@@ -15,10 +15,10 @@ import java.util.List;
 
 public class DryingCategory implements IRecipeCategory<DryingRecipeWrapper>
 {
-    static final ResourceLocation GUI_TEXTURE_LOCATION = Survivalist.location("textures/gui/conversion.png");
-    static final String UID = Survivalist.MODID + "_drying";
+    private static final ResourceLocation GUI_TEXTURE_LOCATION = Survivalist.location("textures/gui/conversion.png");
+    public static final String UID = Survivalist.MODID + "_drying";
 
-    static DryingCategory INSTANCE;
+    public static DryingCategory INSTANCE;
 
     @Nonnull
     private final IDrawable background;

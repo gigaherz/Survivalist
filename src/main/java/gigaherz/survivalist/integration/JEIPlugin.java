@@ -1,5 +1,6 @@
 package gigaherz.survivalist.integration;
 
+import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.integration.analyzer.ChoppingCategory;
 import gigaherz.survivalist.integration.analyzer.ChoppingRecipeHandler;
 import gigaherz.survivalist.integration.analyzer.ChoppingRecipeWrapper;
@@ -9,6 +10,7 @@ import gigaherz.survivalist.integration.drying.DryingRecipeWrapper;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
+import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
@@ -25,6 +27,9 @@ public class JEIPlugin implements IModPlugin
         registry.addRecipeHandlers(
                 new ChoppingRecipeHandler(),
                 new DryingRecipeHandler());
+
+        registry.addRecipeCategoryCraftingItem(new ItemStack(Survivalist.chopping_block), ChoppingCategory.UID);
+        registry.addRecipeCategoryCraftingItem(new ItemStack(Survivalist.rack), DryingCategory.UID);
 
         //registry.getRecipeTransferRegistry().addRecipeTransferHandler(new EssentializerCategory.TransferInfo());
 
