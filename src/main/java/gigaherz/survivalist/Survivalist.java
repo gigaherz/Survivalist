@@ -257,16 +257,6 @@ public class Survivalist
         logger.debug("Final message number: " + messageNumber);
     }
 
-    public static boolean hasOreName(ItemStack stack, String oreName)
-    {
-        int id = OreDictionary.getOreID(oreName);
-        for (int i : OreDictionary.getOreIDs(stack))
-        {
-            if (i == id) return true;
-        }
-        return false;
-    }
-
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
@@ -558,6 +548,22 @@ public class Survivalist
                 Choppable.registerStockRecipes();
             }
         }
+    }
+
+    public static boolean hasOreName(ItemStack stack, String oreName)
+    {
+        if (stack.getItem() == null)
+        {
+            logger.warn("Detected ItemStack with null item inside!");
+            return false;
+        }
+
+        int id = OreDictionary.getOreID(oreName);
+        for (int i : OreDictionary.getOreIDs(stack))
+        {
+            if (i == id) return true;
+        }
+        return false;
     }
 
     private void addIngotToNuggets(String oreIngot, String oreNugget)
