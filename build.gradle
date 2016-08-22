@@ -27,23 +27,23 @@ repositories {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.6.4"
+version = "1.6.5"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Survivalist-1.10.2"
 
 minecraft {
-    version = "1.10.2-12.18.1.2014"
+    version = "1.10.2-12.18.1.2070"
     runDir = "run"
 
-    mappings = "snapshot_20160718"
+    mappings = "snapshot_20160821"
 
     replace "@VERSION@", project.version
     replaceIn "Survivalist.java"
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.10.2:3.7.8.234:api"
-    runtime "mezz.jei:jei_1.10.2:3.7.8.234"
+    deobfCompile "mezz.jei:jei_1.10.2:3.9.0.245:api"
+    runtime "mezz.jei:jei_1.10.2:3.9.0.245"
 }
 
 compileJava {

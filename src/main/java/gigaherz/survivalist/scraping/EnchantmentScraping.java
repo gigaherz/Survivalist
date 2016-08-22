@@ -10,7 +10,7 @@ public class EnchantmentScraping extends Enchantment
 {
     public static EnchantmentScraping register()
     {
-        EnchantmentScraping scraping = new EnchantmentScraping(Rarity.COMMON, EnumEnchantmentType.ALL, EntityEquipmentSlot.values());
+        EnchantmentScraping scraping = new EnchantmentScraping(Rarity.COMMON, EnumEnchantmentType.BREAKABLE, EntityEquipmentSlot.values());
         GameRegistry.register(scraping);
         return scraping;
     }

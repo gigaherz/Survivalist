@@ -34,7 +34,8 @@ public class ConfigManager
     public final boolean removeVanillaBread;
     public final boolean enableSaddleCrafting;
     public final boolean enableChopping;
-    public final boolean replacePlanksRecipes;
+    public boolean importPlanksRecipes;
+    public boolean removePlanksRecipes;
     public final float choppingDegradeChance;
 
     public static void loadConfig(Configuration configuration)
@@ -89,9 +90,13 @@ public class ConfigManager
 
         config.addCustomCategoryComment("Chopping", "Settings for the chopping block");
         Property p_enableChopping = config.get("Chopping", "Enable", true);
-        Property p_replacePlanksRecipes = config.get("Chopping", "ReplacePlanksRecipes", true);
+        Property p_importPlanksRecipes = config.get("Chopping", "ImportPlanksRecipes", true);
+        Property p_removePlanksRecipes = config.get("Chopping", "RemovePlanksRecipes", true);
         Property p_choppingDegradeChance = config.get("Chopping", "DegradeChance", 0.06);
         p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
+
+        // Backward compatibility
+        Property p_replacePlanksRecipes = config.get("Chopping", "ReplacePlanksRecipes", true);
 
         config.load();
 
@@ -120,8 +125,15 @@ public class ConfigManager
         enableBread = p_enableBread.getBoolean();
         removeVanillaBread = p_removeVanillaBread.getBoolean();
         enableChopping = p_enableChopping.getBoolean();
-        replacePlanksRecipes = p_replacePlanksRecipes.getBoolean();
+        importPlanksRecipes = p_importPlanksRecipes.getBoolean();
+        removePlanksRecipes = p_removePlanksRecipes.getBoolean();
         choppingDegradeChance = (float) p_choppingDegradeChance.getDouble();
+
+        if(p_replacePlanksRecipes.wasRead() && !p_importPlanksRecipes.wasRead() && !p_removePlanksRecipes.wasRead())
+        {
+            removePlanksRecipes = importPlanksRecipes = p_replacePlanksRecipes.getBoolean();
+            config.getCategory("Chopping").remove("ReplacePlanksRecipes");
+        }
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
         anyDefault = anyDefault || !p_sticksFromSaplings.wasRead();
@@ -148,7 +160,8 @@ public class ConfigManager
         anyDefault = anyDefault || !p_enableBread.wasRead();
         anyDefault = anyDefault || !p_removeVanillaBread.wasRead();
         anyDefault = anyDefault || !p_enableChopping.wasRead();
-        anyDefault = anyDefault || !p_replacePlanksRecipes.wasRead();
+        anyDefault = anyDefault || !p_importPlanksRecipes.wasRead();
+        anyDefault = anyDefault || !p_removePlanksRecipes.wasRead();
         anyDefault = anyDefault || !p_choppingDegradeChance.wasRead();
 
         if (anyDefault)

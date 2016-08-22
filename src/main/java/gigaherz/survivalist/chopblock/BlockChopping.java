@@ -166,6 +166,16 @@ public class BlockChopping extends BlockRegistered
                         worldIn.setBlockToAir(pos);
                     }
                 }
+
+                if (heldItem != null && !playerIn.capabilities.isCreativeMode)
+                {
+                    heldItem.damageItem(1, playerIn);
+                    if (heldItem.stackSize <= 0)
+                    {
+                        net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(playerIn, heldItem, EnumHand.MAIN_HAND);
+                        playerIn.setHeldItem(EnumHand.MAIN_HAND, null);
+                    }
+                }
             }
         }
 

@@ -446,7 +446,7 @@ public class Survivalist
 
         if (ConfigManager.instance.enableChopping)
         {
-            if (ConfigManager.instance.replacePlanksRecipes)
+            if (ConfigManager.instance.importPlanksRecipes || ConfigManager.instance.removePlanksRecipes)
             {
                 List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
                 for (int i = 0; i < recipes.size(); )
@@ -523,15 +523,25 @@ public class Survivalist
 
                             if (logInput != null)
                             {
-                                recipes.remove(r);
-                                Choppable.registerRecipe(logInput.copy(), output.copy());
-                                removed = true;
+                                if (ConfigManager.instance.removePlanksRecipes)
+                                {
+                                    removed = recipes.remove(r);
+                                }
+                                if (ConfigManager.instance.importPlanksRecipes)
+                                {
+                                    Choppable.registerRecipe(logInput.copy(), output.copy());
+                                }
                             }
                             else if (oreInput != null)
                             {
-                                recipes.remove(r);
-                                Choppable.registerRecipe(logInput.copy(), output.copy());
-                                removed = true;
+                                if (ConfigManager.instance.removePlanksRecipes)
+                                {
+                                    removed = recipes.remove(r);
+                                }
+                                if (ConfigManager.instance.importPlanksRecipes)
+                                {
+                                    Choppable.registerRecipe(logInput.copy(), output.copy());
+                                }
                             }
                         }
                     }
