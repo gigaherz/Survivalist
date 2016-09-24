@@ -3,10 +3,7 @@ package gigaherz.survivalist;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
-import gigaherz.survivalist.base.BlockRegistered;
-import gigaherz.survivalist.base.ItemRegistered;
-import gigaherz.survivalist.base.ItemRegisteredArmor;
-import gigaherz.survivalist.base.ItemRegisteredFood;
+import gigaherz.survivalist.base.*;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.BlockRack;
@@ -24,6 +21,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
@@ -77,6 +75,7 @@ public class Survivalist
     public static Item rock_ore;
     public static Item dough;
     public static Item round_bread;
+    public static Item hatchet;
 
     public static Item tanned_helmet;
     public static Item tanned_chestplate;
@@ -108,6 +107,9 @@ public class Survivalist
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
                     new int[]{2, 4, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 1);
+
+    public static ItemTool.ToolMaterial TOOL_FLINT =
+            EnumHelper.addToolMaterial("flint", 1, 150, 5.0F, 1.5F, 5);
 
     public static SimpleNetworkWrapper channel;
 
@@ -241,6 +243,12 @@ public class Survivalist
             GameRegistry.registerTileEntity(TileChopping.class, "tile_chopping_block");
         }
 
+        if (ConfigManager.instance.enableHatchet)
+        {
+            hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F).setCreativeTab(CreativeTabs.TOOLS);
+            GameRegistry.register(hatchet);
+        }
+
         registerNetwork();
 
         proxy.preInit();
@@ -302,16 +310,40 @@ public class Survivalist
 
             Dryable.register();
 
-            if (ConfigManager.instance.enableLeatherTanning &&
-                    ConfigManager.instance.enableSaddleCrafting)
+            if (ConfigManager.instance.enableLeatherTanning)
             {
-                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.SADDLE),
+                if (ConfigManager.instance.enableSaddleCrafting)
+                {
+                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.SADDLE),
+                            "ttt",
+                            "tst",
+                            "i i",
+                            't', "materialTannedLeather",
+                            's', new ItemStack(Items.STRING),
+                            'i', "ingotIron"));
+                }
+
+                GameRegistry.addRecipe(new ItemStack(tanned_helmet),
                         "ttt",
-                        "tst",
-                        "i i",
-                        't', "materialTannedLeather",
-                        's', new ItemStack(Items.STRING),
-                        'i', "ingotIron"));
+                        "t t",
+                        't', tanned_leather);
+
+                GameRegistry.addRecipe(new ItemStack(tanned_chestplate),
+                        "t t",
+                        "ttt",
+                        "ttt",
+                        't', tanned_leather);
+
+                GameRegistry.addRecipe(new ItemStack(tanned_leggings),
+                        "ttt",
+                        "t t",
+                        "t t",
+                        't', tanned_leather);
+
+                GameRegistry.addRecipe(new ItemStack(tanned_boots),
+                        "t t",
+                        "t t",
+                        't', tanned_leather);
             }
         }
 
@@ -417,6 +449,12 @@ public class Survivalist
 
             GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.GRAVEL);
             GameRegistry.addShapelessRecipe(new ItemStack(Items.FLINT), Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL);
+        }
+
+        if (ConfigManager.instance.enableHatchet)
+        {
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(hatchet),
+                    "stickWood", "string", Items.FLINT));
         }
     }
 

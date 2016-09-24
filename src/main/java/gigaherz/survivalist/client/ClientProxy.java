@@ -103,6 +103,9 @@ public class ClientProxy implements ISidedProxy
         if (Survivalist.round_bread != null)
             registerItemModel(Survivalist.round_bread);
 
+        if (Survivalist.hatchet != null)
+            registerItemModel(Survivalist.hatchet);
+
         if (Survivalist.chopping_block != null)
         {
             registerBlockModelAsItem(Survivalist.chopping_block, 0, "damage=0");

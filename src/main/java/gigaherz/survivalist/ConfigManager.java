@@ -37,6 +37,7 @@ public class ConfigManager
     public boolean importPlanksRecipes;
     public boolean removePlanksRecipes;
     public final float choppingDegradeChance;
+    public final boolean enableHatchet;
 
     public static void loadConfig(Configuration configuration)
     {
@@ -95,6 +96,9 @@ public class ConfigManager
         Property p_choppingDegradeChance = config.get("Chopping", "DegradeChance", 0.06);
         p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
 
+        config.addCustomCategoryComment("Tools", "Settings for the tools");
+        Property p_enableHatchet = config.get("Tools", "EnableHatchet", true);
+
         // Backward compatibility
         Property p_replacePlanksRecipes = config.get("Chopping", "ReplacePlanksRecipes", true);
 
@@ -128,10 +132,14 @@ public class ConfigManager
         importPlanksRecipes = p_importPlanksRecipes.getBoolean();
         removePlanksRecipes = p_removePlanksRecipes.getBoolean();
         choppingDegradeChance = (float) p_choppingDegradeChance.getDouble();
+        enableHatchet = p_enableHatchet.getBoolean();
 
-        if(p_replacePlanksRecipes.wasRead() && !p_importPlanksRecipes.wasRead() && !p_removePlanksRecipes.wasRead())
+        if(p_replacePlanksRecipes.wasRead())
         {
-            removePlanksRecipes = importPlanksRecipes = p_replacePlanksRecipes.getBoolean();
+            if(!p_importPlanksRecipes.wasRead())
+                importPlanksRecipes = p_replacePlanksRecipes.getBoolean();
+            if(!p_removePlanksRecipes.wasRead())
+                removePlanksRecipes = p_replacePlanksRecipes.getBoolean();
             config.getCategory("Chopping").remove("ReplacePlanksRecipes");
         }
 
@@ -163,6 +171,7 @@ public class ConfigManager
         anyDefault = anyDefault || !p_importPlanksRecipes.wasRead();
         anyDefault = anyDefault || !p_removePlanksRecipes.wasRead();
         anyDefault = anyDefault || !p_choppingDegradeChance.wasRead();
+        anyDefault = anyDefault || !p_enableHatchet.wasRead();
 
         if (anyDefault)
             config.save();
