@@ -2,17 +2,16 @@ package gigaherz.survivalist.integration.drying;
 
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.api.Dryable;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import gigaherz.survivalist.integration.MixedRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
-public class DryingRecipeWrapper extends BlankRecipeWrapper
+public class DryingRecipeWrapper extends MixedRecipeWrapper
 {
     public static List<DryingRecipeWrapper> getRecipes()
     {
@@ -26,29 +25,18 @@ public class DryingRecipeWrapper extends BlankRecipeWrapper
         return list;
     }
 
-    List<Object> inputs;
-    List<ItemStack> outputs;
     int time;
 
-    private DryingRecipeWrapper(Object input, ItemStack output, int time)
+    private DryingRecipeWrapper(String input, ItemStack output, int time)
     {
-        inputs = Collections.singletonList(input);
-        outputs = Collections.singletonList(output);
+        super(input, output);
         this.time = time;
     }
 
-    @Nonnull
-    @Override
-    public List getInputs()
+    private DryingRecipeWrapper(ItemStack input, ItemStack output, int time)
     {
-        return inputs;
-    }
-
-    @Nonnull
-    @Override
-    public List getOutputs()
-    {
-        return outputs;
+        super(input, output);
+        this.time = time;
     }
 
     @Override

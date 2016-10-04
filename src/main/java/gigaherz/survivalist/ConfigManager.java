@@ -1,13 +1,24 @@
 package gigaherz.survivalist;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfigManager
 {
     public static ConfigManager instance;
-
-    private final Configuration config;
 
     public final boolean sticksFromLeaves;
     public final boolean sticksFromSaplings;
@@ -34,10 +45,11 @@ public class ConfigManager
     public final boolean removeVanillaBread;
     public final boolean enableSaddleCrafting;
     public final boolean enableChopping;
-    public boolean importPlanksRecipes;
-    public boolean removePlanksRecipes;
+    public final boolean importPlanksRecipes;
+    public final boolean removePlanksRecipes;
     public final float choppingDegradeChance;
     public final boolean enableHatchet;
+    public final List<Pair<ItemStack,Integer>> customChoppingAxes = Lists.newArrayList();
 
     public static void loadConfig(Configuration configuration)
     {
@@ -46,63 +58,63 @@ public class ConfigManager
 
     public ConfigManager(Configuration configuration)
     {
-        config = configuration;
 
-        config.addCustomCategoryComment("Sticks", "Settings for stick crafting");
-        Property p_sticksFromLeaves = config.get("Sticks", "CraftSticksFromLeaves", true);
-        Property p_sticksFromSaplings = config.get("Sticks", "CraftSticksFromSaplings", true);
-        Property p_removeSticksFromPlanks = config.get("Sticks", "RemoveSticksFromPlanksRecipes", true);
+        configuration.addCustomCategoryComment("Sticks", "Settings for stick crafting");
+        Property p_sticksFromLeaves = configuration.get("Sticks", "CraftSticksFromLeaves", true);
+        Property p_sticksFromSaplings = configuration.get("Sticks", "CraftSticksFromSaplings", true);
+        Property p_removeSticksFromPlanks = configuration.get("Sticks", "RemoveSticksFromPlanksRecipes", true);
 
-        config.addCustomCategoryComment("Rocks", "Settings for rock and ore rock drops");
-        Property p_enableRocks = config.get("Rocks", "Enables", true);
-        Property p_replaceStoneDrops = config.get("Rocks", "ReplaceStoneDrops", true);
-        Property p_replaceIronOreDrops = config.get("Rocks", "ReplaceIronOreDrops", true);
-        Property p_replaceGoldOreDrops = config.get("Rocks", "ReplaceGoldOreDrops", true);
-        Property p_replaceModOreDrops = config.get("Rocks", "ReplaceModOreDrops", true);
+        configuration.addCustomCategoryComment("Rocks", "Settings for rock and ore rock drops");
+        Property p_enableRocks = configuration.get("Rocks", "Enables", true);
+        Property p_replaceStoneDrops = configuration.get("Rocks", "ReplaceStoneDrops", true);
+        Property p_replaceIronOreDrops = configuration.get("Rocks", "ReplaceIronOreDrops", true);
+        Property p_replaceGoldOreDrops = configuration.get("Rocks", "ReplaceGoldOreDrops", true);
+        Property p_replaceModOreDrops = configuration.get("Rocks", "ReplaceModOreDrops", true);
 
-        config.addCustomCategoryComment("Scraping", "Settings for the Scraping feature and enchant");
-        Property p_enableScraping = config.get("Scraping", "Enable", true);
-        Property p_enableToolScraping = config.get("Scraping", "EnableToolScraping", true);
-        Property p_enableArmorScraping = config.get("Scraping", "EnableArmorScraping", true);
+        configuration.addCustomCategoryComment("Scraping", "Settings for the Scraping feature and enchant");
+        Property p_enableScraping = configuration.get("Scraping", "Enable", true);
+        Property p_enableToolScraping = configuration.get("Scraping", "EnableToolScraping", true);
+        Property p_enableArmorScraping = configuration.get("Scraping", "EnableArmorScraping", true);
 
-        config.addCustomCategoryComment("DryingRack", "Settings for the drying rack block");
-        Property p_enableDryingRack = config.get("DryingRack", "Enable", true);
-        Property p_enableMeatRotting = config.get("DryingRack", "EnableMeatRotting", true);
-        Property p_enableRottenDrying = config.get("DryingRack", "EnableRottenDrying", true);
-        Property p_enableJerky = config.get("DryingRack", "EnableJerky", true);
-        Property p_enableMeatDrying = config.get("DryingRack", "EnableMeatDrying", true);
-        Property p_enableLeatherTanning = config.get("DryingRack", "EnableLeatherTanning", true);
-        Property p_enableSaddleCrafting = config.get("DryingRack", "EnableSaddleCrafting", true);
+        configuration.addCustomCategoryComment("DryingRack", "Settings for the drying rack block");
+        Property p_enableDryingRack = configuration.get("DryingRack", "Enable", true);
+        Property p_enableMeatRotting = configuration.get("DryingRack", "EnableMeatRotting", true);
+        Property p_enableRottenDrying = configuration.get("DryingRack", "EnableRottenDrying", true);
+        Property p_enableJerky = configuration.get("DryingRack", "EnableJerky", true);
+        Property p_enableMeatDrying = configuration.get("DryingRack", "EnableMeatDrying", true);
+        Property p_enableLeatherTanning = configuration.get("DryingRack", "EnableLeatherTanning", true);
+        Property p_enableSaddleCrafting = configuration.get("DryingRack", "EnableSaddleCrafting", true);
 
-        config.addCustomCategoryComment("Nuggets", "Settings for enabling custom nuggets");
-        Property p_enableNuggets = config.get("Nuggets", "Enable", true);
-        Property p_enableNuggetRecipes = config.get("Nuggets", "EnableNuggetRecipes", true);
+        configuration.addCustomCategoryComment("Nuggets", "Settings for enabling custom nuggets");
+        Property p_enableNuggets = configuration.get("Nuggets", "Enable", true);
+        Property p_enableNuggetRecipes = configuration.get("Nuggets", "EnableNuggetRecipes", true);
         p_enableNuggetRecipes.setComment("Independent of Nuggets being enabled, allows adding recipes also when different mods don't play together.");
 
-        config.addCustomCategoryComment("Chainmail", "Settings for the chainmail crafting");
-        Property p_enableChainmailCrafting = config.get("Chainmail", "EnableChainmailCrafting", true);
+        configuration.addCustomCategoryComment("Chainmail", "Settings for the chainmail crafting");
+        Property p_enableChainmailCrafting = configuration.get("Chainmail", "EnableChainmailCrafting", true);
 
-        config.addCustomCategoryComment("TorchFire", "Settings for the torch setting fire to entities");
-        Property p_enableTorchFire = config.get("TorchFire", "Enable", true);
+        configuration.addCustomCategoryComment("TorchFire", "Settings for the torch setting fire to entities");
+        Property p_enableTorchFire = configuration.get("TorchFire", "Enable", true);
 
-        config.addCustomCategoryComment("Bread", "Settings for the dough/bread replacements");
-        Property p_enableBread = config.get("Bread", "Enable", true);
-        Property p_removeVanillaBread = config.get("Bread", "RemoveVanillaBread", true);
+        configuration.addCustomCategoryComment("Bread", "Settings for the dough/bread replacements");
+        Property p_enableBread = configuration.get("Bread", "Enable", true);
+        Property p_removeVanillaBread = configuration.get("Bread", "RemoveVanillaBread", true);
 
-        config.addCustomCategoryComment("Chopping", "Settings for the chopping block");
-        Property p_enableChopping = config.get("Chopping", "Enable", true);
-        Property p_importPlanksRecipes = config.get("Chopping", "ImportPlanksRecipes", true);
-        Property p_removePlanksRecipes = config.get("Chopping", "RemovePlanksRecipes", true);
-        Property p_choppingDegradeChance = config.get("Chopping", "DegradeChance", 0.06);
+        configuration.addCustomCategoryComment("Chopping", "Settings for the chopping block");
+        Property p_enableChopping = configuration.get("Chopping", "Enable", true);
+        Property p_importPlanksRecipes = configuration.get("Chopping", "ImportPlanksRecipes", true);
+        Property p_removePlanksRecipes = configuration.get("Chopping", "RemovePlanksRecipes", true);
+        Property p_choppingDegradeChance = configuration.get("Chopping", "DegradeChance", 0.06);
         p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
 
-        config.addCustomCategoryComment("Tools", "Settings for the tools");
-        Property p_enableHatchet = config.get("Tools", "EnableHatchet", true);
+        configuration.addCustomCategoryComment("Tools", "Settings for the tools");
+        Property p_enableHatchet = configuration.get("Tools", "EnableHatchet", true);
 
-        // Backward compatibility
-        Property p_replacePlanksRecipes = config.get("Chopping", "ReplacePlanksRecipes", true);
+        boolean hasList = configuration.hasCategory("CustomAxes");
+        configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");
+        ConfigCategory c_customAxes = configuration.getCategory("CustomAxes");
 
-        config.load();
+        configuration.load();
 
         sticksFromLeaves = p_sticksFromLeaves.getBoolean();
         sticksFromSaplings = p_sticksFromSaplings.getBoolean();
@@ -133,15 +145,7 @@ public class ConfigManager
         removePlanksRecipes = p_removePlanksRecipes.getBoolean();
         choppingDegradeChance = (float) p_choppingDegradeChance.getDouble();
         enableHatchet = p_enableHatchet.getBoolean();
-
-        if(p_replacePlanksRecipes.wasRead())
-        {
-            if(!p_importPlanksRecipes.wasRead())
-                importPlanksRecipes = p_replacePlanksRecipes.getBoolean();
-            if(!p_removePlanksRecipes.wasRead())
-                removePlanksRecipes = p_replacePlanksRecipes.getBoolean();
-            config.getCategory("Chopping").remove("ReplacePlanksRecipes");
-        }
+        parseChoppingAxes(c_customAxes);
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
         anyDefault = anyDefault || !p_sticksFromSaplings.wasRead();
@@ -172,13 +176,53 @@ public class ConfigManager
         anyDefault = anyDefault || !p_removePlanksRecipes.wasRead();
         anyDefault = anyDefault || !p_choppingDegradeChance.wasRead();
         anyDefault = anyDefault || !p_enableHatchet.wasRead();
+        anyDefault = anyDefault || !hasList;
 
         if (anyDefault)
-            config.save();
+            configuration.save();
     }
 
-    public void save()
+    private final Pattern itemRegex = Pattern.compile("^(?<item>[a-zA-Z-0-9_]+:[a-zA-Z-0-9_]+)(?:@(?<meta>[0-9]+))?$");
+    private void parseChoppingAxes(ConfigCategory category)
     {
-        config.save();
+        for (Map.Entry<String, Property> entry : category.entrySet())
+        {
+            String key = entry.getKey();
+            int level = entry.getValue().getInt(-1);
+            if (level < 0)
+                continue;
+
+            Matcher matcher = itemRegex.matcher(key);
+
+            if (!matcher.matches())
+            {
+                Survivalist.logger.warn("Could not parse chopping item " + key);
+                continue;
+            }
+
+            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(matcher.group("item")));
+            if (item == null)
+            {
+                Survivalist.logger.warn("Could not parse chopping item " + key);
+                continue;
+            }
+
+            String metaString = matcher.group("meta");
+            int meta = Strings.isNullOrEmpty(metaString) ? 0 : Integer.parseInt(metaString);
+
+            ItemStack stack = new ItemStack(item, 1, meta);
+
+            customChoppingAxes.add(Pair.of(stack, level));
+        }
+    }
+
+    public int getAxeLevel(ItemStack stack)
+    {
+        for (Pair<ItemStack, Integer> customAxe : customChoppingAxes)
+        {
+            if (ItemStack.areItemsEqual(customAxe.getLeft(), stack))
+                return customAxe.getRight();
+        }
+        return -1;
     }
 }

@@ -13,6 +13,7 @@ import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.scraping.MessageScraping;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -26,9 +27,12 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -38,6 +42,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -45,6 +50,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Map;
 
 @Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.9.4,1.11.0)",
         dependencies = "required-after:Forge@[12.17.0.1916,)")
@@ -143,7 +149,8 @@ public class Survivalist
             rack = new BlockRack("rack");
             GameRegistry.register(rack);
             GameRegistry.register(rack.createItemBlock());
-            GameRegistry.registerTileEntity(TileRack.class, "tileRack");
+            GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
+            addAlternativeName(TileRack.class, "tileRack");
         }
 
         if (ConfigManager.instance.enableLeatherTanning)
@@ -252,6 +259,18 @@ public class Survivalist
         registerNetwork();
 
         proxy.preInit();
+
+        if (Loader.isModLoaded("MineTweaker3"))
+        {
+            try
+            {
+                Class.forName("gigaherz.survivalist.integration.MineTweakerPlugin").getMethod("init").invoke(null);
+            }
+            catch (Exception e)
+            {
+                throw new ReportedException(new CrashReport("Error initializing minetweaker integration", e));
+            }
+        }
     }
 
     private void registerNetwork()
@@ -308,7 +327,7 @@ public class Survivalist
                     's', "stickWood",
                     'p', "plankWood"));
 
-            Dryable.register();
+            Dryable.registerStockRecipes();
 
             if (ConfigManager.instance.enableLeatherTanning)
             {
@@ -638,6 +657,12 @@ public class Survivalist
         {
             GameRegistry.addSmelting(stack, matches.get(0), 0.1f);
         }
+    }
+
+    Map<String, Class<? extends TileEntity >> nameToClassMap = ReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "nameToClassMap");
+    private void addAlternativeName(Class<? extends TileEntity> clazz, String altName)
+    {
+        nameToClassMap.put(altName, clazz);
     }
 
     public static ResourceLocation location(String path)

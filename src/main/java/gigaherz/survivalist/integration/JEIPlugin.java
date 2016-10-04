@@ -11,6 +11,8 @@ import gigaherz.survivalist.integration.drying.DryingRecipeWrapper;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
+import mezz.jei.api.ISubtypeRegistry;
+import mezz.jei.api.ingredients.IModIngredientRegistration;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -18,6 +20,18 @@ import javax.annotation.Nonnull;
 @mezz.jei.api.JEIPlugin
 public class JEIPlugin implements IModPlugin
 {
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry)
+    {
+
+    }
+
+    @Override
+    public void registerIngredients(IModIngredientRegistration registry)
+    {
+
+    }
+
     @Override
     public void register(@Nonnull IModRegistry registry)
     {

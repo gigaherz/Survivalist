@@ -3,7 +3,7 @@ package gigaherz.survivalist.integration.analyzer;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.client.StackRenderingHelper;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import gigaherz.survivalist.integration.MixedRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemModelMesher;
@@ -12,10 +12,9 @@ import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
-public class ChoppingRecipeWrapper extends BlankRecipeWrapper
+public class ChoppingRecipeWrapper extends MixedRecipeWrapper
 {
     public static List<ChoppingRecipeWrapper> getRecipes()
     {
@@ -41,29 +40,18 @@ public class ChoppingRecipeWrapper extends BlankRecipeWrapper
         return middle;
     }
 
-    private List<Object> inputs;
-    private List<ItemStack> outputs;
     private double multiplier;
 
-    private ChoppingRecipeWrapper(Object input, ItemStack output, double multiplier)
+    private ChoppingRecipeWrapper(String input, ItemStack output, double multiplier)
     {
-        inputs = Collections.singletonList(input);
-        outputs = Collections.singletonList(output);
+        super(input, output);
         this.multiplier = multiplier;
     }
 
-    @Nonnull
-    @Override
-    public List getInputs()
+    private ChoppingRecipeWrapper(ItemStack input, ItemStack output, double multiplier)
     {
-        return inputs;
-    }
-
-    @Nonnull
-    @Override
-    public List getOutputs()
-    {
-        return outputs;
+        super(input, output);
+        this.multiplier = multiplier;
     }
 
     @Override

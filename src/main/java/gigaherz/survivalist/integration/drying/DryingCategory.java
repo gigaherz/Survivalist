@@ -5,13 +5,13 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class DryingCategory implements IRecipeCategory<DryingRecipeWrapper>
 {
@@ -63,15 +63,16 @@ public class DryingCategory implements IRecipeCategory<DryingRecipeWrapper>
     @Override
     public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull DryingRecipeWrapper recipeWrapper)
     {
+    }
+
+    @Override
+    public void setRecipe(IRecipeLayout recipeLayout, DryingRecipeWrapper recipeWrapper, IIngredients ingredients)
+    {
         IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 
         itemStacks.init(0, true, 4, 4);
         itemStacks.init(1, false, 66, 4);
 
-        List inputs = recipeWrapper.getInputs();
-        List outputs = recipeWrapper.getOutputs();
-
-        itemStacks.setFromRecipe(0, inputs.get(0));
-        itemStacks.setFromRecipe(1, outputs.get(0));
+        itemStacks.set(ingredients);
     }
 }
