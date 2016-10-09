@@ -2,6 +2,7 @@ package gigaherz.survivalist.client;
 
 import gigaherz.survivalist.ISidedProxy;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.api.state.ItemStateMapper;
 import gigaherz.survivalist.chopblock.RenderChoppingBlock;
 import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.RenderRack;
@@ -29,13 +30,8 @@ public class ClientProxy implements ISidedProxy
         OBJLoader.INSTANCE.addDomain(Survivalist.MODID);
         registerModels();
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityRock.class, new IRenderFactory<EntityRock>()
-        {
-            @Override
-            public Render<? super EntityRock> createRenderFor(RenderManager manager)
-            {
-                return new RenderSnowball<EntityRock>(manager, Survivalist.rock, Minecraft.getMinecraft().getRenderItem());
-            }
+        RenderingRegistry.registerEntityRenderingHandler(EntityRock.class, manager -> {
+            return new RenderSnowball<>(manager, Survivalist.rock, Minecraft.getMinecraft().getRenderItem());
         });
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
@@ -45,6 +41,7 @@ public class ClientProxy implements ISidedProxy
     // ----------------------------------------------------------- Item/Block Models
     public void registerModels()
     {
+        /*
         if (Survivalist.iron_nugget != null)
             registerItemModel(Survivalist.iron_nugget, "ore=iron");
         if (Survivalist.copper_nugget != null)
@@ -55,6 +52,8 @@ public class ClientProxy implements ISidedProxy
             registerItemModel(Survivalist.lead_nugget, "ore=lead");
         if (Survivalist.silver_nugget != null)
             registerItemModel(Survivalist.silver_nugget, "ore=silver");
+        */
+        new ItemStateMapper(Survivalist.nugget).registerAllModelsExplicitly();
 
         if (Survivalist.chainmail != null)
             registerItemModel(Survivalist.chainmail);

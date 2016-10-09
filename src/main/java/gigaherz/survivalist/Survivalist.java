@@ -3,6 +3,7 @@ package gigaherz.survivalist;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
+import gigaherz.survivalist.api.state.ItemStateful;
 import gigaherz.survivalist.base.*;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
@@ -76,7 +77,7 @@ public class Survivalist
     public static Item chainmail;
     public static Item tanned_leather;
     public static Item jerky;
-    public static Item nugget;
+    public static ItemStateful nugget;
     public static Item rock;
     public static Item rock_ore;
     public static Item dough;
@@ -182,7 +183,7 @@ public class Survivalist
 
         if (ConfigManager.instance.enableNuggets)
         {
-            nugget = new ItemNugget("nugget").setCreativeTab(CreativeTabs.MATERIALS);
+            nugget = new ItemNugget("nugget");
             GameRegistry.register(nugget);
 
             iron_nugget = new ItemStack(nugget, 1, 0);
