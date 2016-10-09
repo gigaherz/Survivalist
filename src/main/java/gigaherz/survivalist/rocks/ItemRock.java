@@ -1,51 +1,54 @@
 package gigaherz.survivalist.rocks;
 
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.base.ItemRegistered;
+import gigaherz.survivalist.api.state.IItemState;
+import gigaherz.survivalist.api.state.ItemStateManager;
+import gigaherz.survivalist.api.state.ItemStateful;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemRock extends ItemRegistered
+public class ItemRock extends ItemStateful
 {
-    static final String[] subNames = {
-            ".rock", ".rock_andesite", ".rock_diorite", ".rock_granite"
-    };
+    public static final PropertyEnum<Subtype> TYPE = PropertyEnum.create("rock", Subtype.class);
 
     public ItemRock(String name)
     {
         super(name);
         setHasSubtypes(true);
         setUnlocalizedName(Survivalist.MODID + ".rock");
+        setCreativeTab(CreativeTabs.MATERIALS);
+        setStateManager(new ItemStateManager(this, TYPE));
     }
 
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        int meta = stack.getMetadata();
+        IItemState state = getStateManager().get(stack.getMetadata());
 
-        if (meta > subNames.length)
+        if (state == null)
             return getUnlocalizedName();
 
-        return "item." + Survivalist.MODID + subNames[meta];
+        String subName = state.getValue(TYPE).getUnlocalizedSuffix();
+
+        return "item." + Survivalist.MODID + subName;
     }
 
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
-        for (int i = 0; i < subNames.length; i++)
+        for (Subtype type : TYPE.getAllowedValues())
         {
-            subItems.add(new ItemStack(this, 1, i));
+            IItemState state = getDefaultState().withProperty(TYPE, type);
+            subItems.add(state.getStack());
         }
     }
 
@@ -70,6 +73,34 @@ public class ItemRock extends ItemRegistered
 
         playerIn.addStat(StatList.getObjectUseStats(this));
 
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+        return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+    }
+
+    public enum Subtype implements IStringSerializable
+    {
+        STONE("normal", ".rock"),
+        ANDESITE("andesite", ".rock_andesite"),
+        DIORITE("diorite", ".rock_diorite"),
+        GRANITE("granite", ".rock_granite");
+
+        final String name;
+        final String unlocalizedSuffix;
+
+        Subtype(String name, String unlocalizedSuffix)
+        {
+            this.name = name;
+            this.unlocalizedSuffix = unlocalizedSuffix;
+        }
+
+        @Override
+        public String getName()
+        {
+            return name;
+        }
+
+        public String getUnlocalizedSuffix()
+        {
+            return unlocalizedSuffix;
+        }
     }
 }

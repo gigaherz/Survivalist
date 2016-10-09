@@ -78,8 +78,8 @@ public class Survivalist
     public static Item tanned_leather;
     public static Item jerky;
     public static ItemStateful nugget;
-    public static Item rock;
-    public static Item rock_ore;
+    public static ItemStateful rock;
+    public static ItemStateful rock_ore;
     public static Item dough;
     public static Item round_bread;
     public static Item hatchet;
@@ -202,10 +202,10 @@ public class Survivalist
         {
             RocksEventHandling.register();
 
-            rock = new ItemRock("rock").setCreativeTab(CreativeTabs.MATERIALS);
+            rock = new ItemRock("rock");
             GameRegistry.register(rock);
 
-            rock_ore = new ItemOreRock("rock_ore").setCreativeTab(CreativeTabs.MATERIALS);
+            rock_ore = new ItemOreRock("rock_ore");
             GameRegistry.register(rock_ore);
 
             iron_ore_rock = new ItemStack(rock_ore, 1, 0);

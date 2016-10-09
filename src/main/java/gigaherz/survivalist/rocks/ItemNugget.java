@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ItemNugget extends ItemStateful
 {
-    public static final PropertyEnum<NuggetType> ORE = PropertyEnum.create("ore", NuggetType.class);
+    public static final PropertyEnum<Subtype> ORE = PropertyEnum.create("ore", Subtype.class);
 
     public ItemNugget(String name)
     {
@@ -22,18 +22,13 @@ public class ItemNugget extends ItemStateful
         setHasSubtypes(true);
         setUnlocalizedName(Survivalist.MODID + ".nugget");
         setCreativeTab(CreativeTabs.MATERIALS);
-    }
-
-    @Override
-    public ItemStateManager createItemState()
-    {
-        return new ItemStateManager(this, ORE);
+        setStateManager(new ItemStateManager(this, ORE));
     }
 
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        IItemState state = getStateData().get(stack.getMetadata());
+        IItemState state = getStateManager().get(stack.getMetadata());
 
         if (state == null)
             return getUnlocalizedName();
@@ -46,14 +41,14 @@ public class ItemNugget extends ItemStateful
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
-        for (NuggetType type : ORE.getAllowedValues())
+        for (Subtype type : ORE.getAllowedValues())
         {
             IItemState state = getDefaultState().withProperty(ORE, type);
-            subItems.add(new ItemStack(this, 1, state.getMetadata()));
+            subItems.add(state.getStack());
         }
     }
 
-    public enum NuggetType implements IStringSerializable
+    public enum Subtype implements IStringSerializable
     {
         IRON("iron", ".iron_nugget"),
         COPPER("copper", ".copper_nugget"),
@@ -64,7 +59,7 @@ public class ItemNugget extends ItemStateful
         final String name;
         final String unlocalizedSuffix;
 
-        NuggetType(String name, String unlocalizedSuffix)
+        Subtype(String name, String unlocalizedSuffix)
         {
             this.name = name;
             this.unlocalizedSuffix = unlocalizedSuffix;

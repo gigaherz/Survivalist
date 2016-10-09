@@ -4,33 +4,30 @@ import gigaherz.survivalist.base.ItemRegistered;
 
 public abstract class ItemStateful extends ItemRegistered
 {
-    private ItemStateManager stateData;
+    private ItemStateManager stateManager;
 
     public ItemStateful(String name)
     {
         super(name);
-        initializeItemState();
     }
 
-    public ItemStateManager getStateData()
+    public ItemStateManager getStateManager()
     {
-        return stateData;
+        return stateManager;
+    }
+
+    public void setStateManager(ItemStateManager manager)
+    {
+        stateManager = manager;
     }
 
     public IItemState getDefaultState()
     {
-        return stateData.getDefaultState();
+        return stateManager.getDefaultState();
     }
 
     public void setDefaultState(IItemState defaultState)
     {
-        stateData.setDefaultState(defaultState);
+        stateManager.setDefaultState(defaultState);
     }
-
-    public void initializeItemState()
-    {
-        stateData = createItemState();
-    }
-
-    public abstract ItemStateManager createItemState();
 }

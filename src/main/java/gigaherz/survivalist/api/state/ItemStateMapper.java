@@ -21,7 +21,7 @@ public class ItemStateMapper implements ItemMeshDefinition
 
     public void registerAllModelsExplicitly()
     {
-        ItemStateManager manager = item.getStateData();
+        ItemStateManager manager = item.getStateManager();
         for (IItemState state : manager.getStateTable())
         {
             ModelLoader.setCustomModelResourceLocation(item, state.getMetadata(), getModelLocation(state));

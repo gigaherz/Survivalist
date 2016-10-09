@@ -41,19 +41,9 @@ public class ClientProxy implements ISidedProxy
     // ----------------------------------------------------------- Item/Block Models
     public void registerModels()
     {
-        /*
-        if (Survivalist.iron_nugget != null)
-            registerItemModel(Survivalist.iron_nugget, "ore=iron");
-        if (Survivalist.copper_nugget != null)
-            registerItemModel(Survivalist.copper_nugget, "ore=copper");
-        if (Survivalist.tin_nugget != null)
-            registerItemModel(Survivalist.tin_nugget, "ore=tin");
-        if (Survivalist.lead_nugget != null)
-            registerItemModel(Survivalist.lead_nugget, "ore=lead");
-        if (Survivalist.silver_nugget != null)
-            registerItemModel(Survivalist.silver_nugget, "ore=silver");
-        */
         new ItemStateMapper(Survivalist.nugget).registerAllModelsExplicitly();
+        new ItemStateMapper(Survivalist.rock_ore).registerAllModelsExplicitly();
+        new ItemStateMapper(Survivalist.rock).registerAllModelsExplicitly();
 
         if (Survivalist.chainmail != null)
             registerItemModel(Survivalist.chainmail);
@@ -70,28 +60,6 @@ public class ClientProxy implements ISidedProxy
             registerItemModel(Survivalist.tanned_leggings, 0, Survivalist.location("tanned_armor"), "part=leggings");
         if (Survivalist.tanned_boots != null)
             registerItemModel(Survivalist.tanned_boots, 0, Survivalist.location("tanned_armor"), "part=boots");
-
-        if (Survivalist.rock_normal != null)
-            registerItemModel(Survivalist.rock_normal, "rock=normal");
-        if (Survivalist.rock_andesite != null)
-            registerItemModel(Survivalist.rock_andesite, "rock=andesite");
-        if (Survivalist.rock_diorite != null)
-            registerItemModel(Survivalist.rock_diorite, "rock=diorite");
-        if (Survivalist.rock_granite != null)
-            registerItemModel(Survivalist.rock_granite, "rock=granite");
-
-        if (Survivalist.iron_ore_rock != null)
-            registerItemModel(Survivalist.iron_ore_rock, "ore=iron");
-        if (Survivalist.gold_ore_rock != null)
-            registerItemModel(Survivalist.gold_ore_rock, "ore=gold");
-        if (Survivalist.copper_ore_rock != null)
-            registerItemModel(Survivalist.copper_ore_rock, "ore=copper");
-        if (Survivalist.tin_ore_rock != null)
-            registerItemModel(Survivalist.tin_ore_rock, "ore=tin");
-        if (Survivalist.lead_ore_rock != null)
-            registerItemModel(Survivalist.lead_ore_rock, "ore=lead");
-        if (Survivalist.silver_ore_rock != null)
-            registerItemModel(Survivalist.silver_ore_rock, "ore=silver");
 
         if (Survivalist.rack != null)
             registerBlockModelAsItem(Survivalist.rack);

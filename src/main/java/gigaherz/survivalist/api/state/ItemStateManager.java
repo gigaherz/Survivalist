@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,12 +16,13 @@ public class ItemStateManager
 {
     private IItemState defaultState;
 
+    @Nullable
     public static IItemState lookup(ItemStack stack)
     {
         Item item = stack.getItem();
         if (!(item instanceof ItemStateful))
             throw new IllegalStateException("Can not obtain an itemState from a non-stateful item");
-        ItemStateManager stateData = ((ItemStateful)item).getStateData();
+        ItemStateManager stateData = ((ItemStateful)item).getStateManager();
         return stateData.get(stack.getMetadata());
     }
 
@@ -78,6 +80,7 @@ public class ItemStateManager
         return state;
     }
 
+    @Nullable
     public IItemState get(int metadata)
     {
         if (metadata < 0 || metadata >= stateTable.length)
@@ -121,7 +124,22 @@ public class ItemStateManager
         }
 
         @Override
-        public int getMetadata() { return metadata; }
+        public int getMetadata()
+        {
+            return metadata;
+        }
+
+        @Override
+        public ItemStack getStack()
+        {
+            return getStack(1);
+        }
+
+        @Override
+        public ItemStack getStack(int count)
+        {
+            return new ItemStack(item, count, metadata);
+        }
 
         @Override
         public <T extends Comparable<T>> IItemState withProperty(IProperty<T> property, T value)
