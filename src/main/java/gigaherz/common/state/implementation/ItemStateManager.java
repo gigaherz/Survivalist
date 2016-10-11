@@ -1,6 +1,8 @@
-package gigaherz.survivalist.api.state;
+package gigaherz.common.state.implementation;
 
 import com.google.common.collect.ImmutableList;
+import gigaherz.common.state.IItemState;
+import gigaherz.common.state.IItemStateManager;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,24 +14,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
 
-public class ItemStateManager
+public class ItemStateManager implements IItemStateManager
 {
-    private IItemState defaultState;
-
-    @Nullable
-    public static IItemState lookup(ItemStack stack)
-    {
-        Item item = stack.getItem();
-        if (!(item instanceof ItemStateful))
-            throw new IllegalStateException("Can not obtain an itemState from a non-stateful item");
-        ItemStateManager stateData = ((ItemStateful)item).getStateManager();
-        return stateData.get(stack.getMetadata());
-    }
-
     private final Item item;
     private final ItemState[] stateTable;
     private final IProperty[] properties;
     private final Comparable[][] propertyValues;
+
+    private IItemState defaultState;
 
     public ItemStateManager(Item item, IProperty... properties)
     {
@@ -43,6 +35,7 @@ public class ItemStateManager
         for (int i = 0; i < properties.length; i++)
         {
             IProperty prop = properties[i];
+            @SuppressWarnings("unchecked")
             Collection<Comparable> allowed = prop.getAllowedValues();
             Comparable[] values = allowed.toArray(new Comparable[allowed.size()]);
             propertyValues[i] = values;
@@ -61,18 +54,18 @@ public class ItemStateManager
     private int enumStates(IProperty[] properties, int p, int state, Deque<Comparable> values)
     {
         Comparable[] propValues = propertyValues[p];
-        for(Object o : propValues)
+        for (Object o : propValues)
         {
-            values.push((Comparable)o);
+            values.push((Comparable) o);
 
-            if (p+1 >= properties.length)
+            if (p + 1 >= properties.length)
             {
                 stateTable[state] = new ItemState(state, values.toArray(new Comparable[values.size()]));
                 state++;
             }
             else
             {
-                state = enumStates(properties, p+1, state, values);
+                state = enumStates(properties, p + 1, state, values);
             }
 
             values.pop();
@@ -80,6 +73,7 @@ public class ItemStateManager
         return state;
     }
 
+    @Override
     @Nullable
     public IItemState get(int metadata)
     {
@@ -88,28 +82,34 @@ public class ItemStateManager
         return stateTable[metadata];
     }
 
+    @Override
     public Item getItem()
     {
         return item;
     }
+
+    @Override
     public ImmutableList<IProperty> getProperties()
     {
         return ImmutableList.copyOf(properties);
     }
 
+    @Override
     public IItemState getDefaultState()
     {
         return defaultState;
     }
 
+    @Override
     public void setDefaultState(IItemState defaultState)
     {
         this.defaultState = defaultState;
     }
 
-    IItemState[] getStateTable()
+    @Override
+    public ImmutableList<IItemState> getStateTable()
     {
-        return stateTable;
+        return ImmutableList.copyOf(stateTable);
     }
 
     public class ItemState implements IItemState
@@ -145,8 +145,8 @@ public class ItemStateManager
         public <T extends Comparable<T>> IItemState withProperty(IProperty<T> property, T value)
         {
             int lastSize = 1;
-            int meta=0;
-            for(int i=0;i<properties.length;i++)
+            int meta = 0;
+            for (int i = 0; i < properties.length; i++)
             {
                 Comparable[] values = propertyValues[i];
                 int idx;
@@ -160,23 +160,27 @@ public class ItemStateManager
             return stateTable[meta];
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public <T extends Comparable<T>> T getValue(IProperty<T> property)
         {
             int i = ArrayUtils.indexOf(properties, property);
-            return (T)values[i];
+
+            return (T) values[i];
         }
 
-        public ImmutableList<Object> getValues()
+        @Override
+        public ImmutableList<Comparable> getValues()
         {
             return ImmutableList.copyOf(values);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public String toString()
         {
             StringBuilder sb = new StringBuilder();
-            for(int i=0;i<properties.length;i++)
+            for (int i = 0; i < properties.length; i++)
             {
                 if (i != 0)
                     sb.append(",");

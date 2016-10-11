@@ -1,4 +1,4 @@
-package gigaherz.survivalist.base;
+package gigaherz.common;
 
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;

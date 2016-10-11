@@ -1,6 +1,9 @@
-package gigaherz.survivalist.api.state;
+package gigaherz.common.state.client;
 
 import com.google.common.collect.Maps;
+import gigaherz.common.state.IItemState;
+import gigaherz.common.state.IItemStateManager;
+import gigaherz.common.state.ItemStateful;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
@@ -21,7 +24,7 @@ public class ItemStateMapper implements ItemMeshDefinition
 
     public void registerAllModelsExplicitly()
     {
-        ItemStateManager manager = item.getStateManager();
+        IItemStateManager manager = item.getStateManager();
         for (IItemState state : manager.getStateTable())
         {
             ModelLoader.setCustomModelResourceLocation(item, state.getMetadata(), getModelLocation(state));
@@ -39,6 +42,10 @@ public class ItemStateMapper implements ItemMeshDefinition
         if (stack.getItem() != item)
             throw new IllegalArgumentException("The stack's item is not the expected item!");
 
-        return getModelLocation(ItemStateManager.lookup(stack));
+        IItemState state = IItemStateManager.lookup(stack);
+        if (state == null)
+            state = item.getDefaultState();
+
+        return getModelLocation(state);
     }
 }

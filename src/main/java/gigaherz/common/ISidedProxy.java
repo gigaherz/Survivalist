@@ -1,4 +1,4 @@
-package gigaherz.survivalist;
+package gigaherz.common;
 
 public interface ISidedProxy
 {

@@ -60,6 +60,7 @@ public class DryingCategory implements IRecipeCategory<DryingRecipeWrapper>
     {
     }
 
+    @Deprecated
     @Override
     public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull DryingRecipeWrapper recipeWrapper)
     {

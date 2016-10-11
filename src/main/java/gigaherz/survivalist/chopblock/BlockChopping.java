@@ -1,9 +1,9 @@
 package gigaherz.survivalist.chopblock;
 
+import gigaherz.common.BlockRegistered;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.base.BlockRegistered;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;

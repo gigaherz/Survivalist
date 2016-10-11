@@ -36,6 +36,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.tuple.Triple;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -289,12 +290,9 @@ public class ItemBreakingTracker
         }
 
         @SubscribeEvent
-        public void attachCapabilities(AttachCapabilitiesEvent.Entity e)
+        public void attachCapabilities(AttachCapabilitiesEvent<EntityPlayer> e)
         {
-            final Entity entity = e.getEntity();
-
-            if (!(entity instanceof EntityPlayer))
-                return;
+            final EntityPlayer entity = e.getObject();
 
             if (entity.worldObj == null || entity.worldObj.isRemote)
                 return;
@@ -311,14 +309,14 @@ public class ItemBreakingTracker
                 }
 
                 @Override
-                public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+                public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
                 {
                     return capability == TRACKER;
                 }
 
                 @SuppressWarnings("unchecked")
                 @Override
-                public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+                public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
                 {
                     if (capability == TRACKER)
                         return (T) cap;

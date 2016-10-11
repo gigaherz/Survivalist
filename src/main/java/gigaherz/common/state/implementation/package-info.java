@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package gigaherz.survivalist.base;
+package gigaherz.common.state.implementation;
 
 import mcp.MethodsReturnNonnullByDefault;
 

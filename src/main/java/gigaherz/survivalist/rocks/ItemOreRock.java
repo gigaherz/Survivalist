@@ -1,9 +1,10 @@
 package gigaherz.survivalist.rocks;
 
+import gigaherz.common.state.IItemState;
+import gigaherz.common.state.IItemStateManager;
+import gigaherz.common.state.ItemStateful;
+import gigaherz.common.state.implementation.ItemStateManager;
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.api.state.IItemState;
-import gigaherz.survivalist.api.state.ItemStateManager;
-import gigaherz.survivalist.api.state.ItemStateful;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -22,7 +23,12 @@ public class ItemOreRock extends ItemStateful
         setHasSubtypes(true);
         setUnlocalizedName(Survivalist.MODID + ".rock");
         setCreativeTab(CreativeTabs.MATERIALS);
-        setStateManager(new ItemStateManager(this, ORE));
+    }
+
+    @Override
+    public IItemStateManager createStateManager()
+    {
+        return new ItemStateManager(this, ORE);
     }
 
     @Override
@@ -46,6 +52,11 @@ public class ItemOreRock extends ItemStateful
             IItemState state = getDefaultState().withProperty(ORE, type);
             subItems.add(state.getStack());
         }
+    }
+
+    public ItemStack getStack(Subtype iron)
+    {
+        return getDefaultState().withProperty(ORE, iron).getStack();
     }
 
     public enum Subtype implements IStringSerializable

@@ -1,10 +1,9 @@
 package gigaherz.survivalist;
 
 import com.google.common.collect.Lists;
+import gigaherz.common.*;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
-import gigaherz.survivalist.api.state.ItemStateful;
-import gigaherz.survivalist.base.*;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.rack.BlockRack;
@@ -14,8 +13,10 @@ import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.scraping.MessageScraping;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
+import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -31,14 +32,17 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -77,9 +81,9 @@ public class Survivalist
     public static Item chainmail;
     public static Item tanned_leather;
     public static Item jerky;
-    public static ItemStateful nugget;
-    public static ItemStateful rock;
-    public static ItemStateful rock_ore;
+    public static ItemNugget nugget;
+    public static ItemRock rock;
+    public static ItemOreRock rock_ore;
     public static Item dough;
     public static Item round_bread;
     public static Item hatchet;
@@ -88,24 +92,6 @@ public class Survivalist
     public static Item tanned_chestplate;
     public static Item tanned_leggings;
     public static Item tanned_boots;
-
-    public static ItemStack rock_normal;
-    public static ItemStack rock_andesite;
-    public static ItemStack rock_diorite;
-    public static ItemStack rock_granite;
-
-    public static ItemStack iron_ore_rock;
-    public static ItemStack gold_ore_rock;
-    public static ItemStack copper_ore_rock;
-    public static ItemStack tin_ore_rock;
-    public static ItemStack lead_ore_rock;
-    public static ItemStack silver_ore_rock;
-
-    public static ItemStack iron_nugget;
-    public static ItemStack copper_nugget;
-    public static ItemStack tin_nugget;
-    public static ItemStack lead_nugget;
-    public static ItemStack silver_nugget;
 
     public static BlockRegistered rack;
 
@@ -120,6 +106,8 @@ public class Survivalist
 
     public static SimpleNetworkWrapper channel;
 
+    public Survivalist() { MinecraftForge.EVENT_BUS.register(this); }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -127,134 +115,14 @@ public class Survivalist
 
         ConfigManager.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
 
-        if (ConfigManager.instance.enableScraping)
-        {
-            ItemBreakingTracker.register();
-
-            scraping = EnchantmentScraping.register();
-        }
-
         if (ConfigManager.instance.enableTorchFire)
         {
             TorchFireEventHandling.register();
         }
 
-        if (ConfigManager.instance.enableChainmailCrafting)
+        if (ConfigManager.instance.enableScraping)
         {
-            chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.MATERIALS);
-            GameRegistry.register(chainmail);
-        }
-
-        if (ConfigManager.instance.enableDryingRack)
-        {
-            rack = new BlockRack("rack");
-            GameRegistry.register(rack);
-            GameRegistry.register(rack.createItemBlock());
-            GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
-            addAlternativeName(TileRack.class, "tileRack");
-        }
-
-        if (ConfigManager.instance.enableLeatherTanning)
-        {
-            tanned_leather = new ItemRegistered("tanned_leather").setCreativeTab(CreativeTabs.MATERIALS);
-            GameRegistry.register(tanned_leather);
-            OreDictionary.registerOre("materialLeather", tanned_leather);
-            OreDictionary.registerOre("materialTannedLeather", tanned_leather);
-            OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
-
-            tanned_helmet = new ItemRegisteredArmor("tanned_helmet", TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD);
-            GameRegistry.register(tanned_helmet);
-
-            tanned_chestplate = new ItemRegisteredArmor("tanned_chestplate", TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST);
-            GameRegistry.register(tanned_chestplate);
-
-            tanned_leggings = new ItemRegisteredArmor("tanned_leggings", TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS);
-            GameRegistry.register(tanned_leggings);
-
-            tanned_boots = new ItemRegisteredArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET);
-            GameRegistry.register(tanned_boots);
-        }
-
-        if (ConfigManager.instance.enableJerky)
-        {
-            jerky = new ItemRegisteredFood("jerky", 4, 1, true);
-            GameRegistry.register(jerky);
-        }
-
-        if (ConfigManager.instance.enableNuggets)
-        {
-            nugget = new ItemNugget("nugget");
-            GameRegistry.register(nugget);
-
-            iron_nugget = new ItemStack(nugget, 1, 0);
-            copper_nugget = new ItemStack(nugget, 1, 1);
-            tin_nugget = new ItemStack(nugget, 1, 2);
-            lead_nugget = new ItemStack(nugget, 1, 3);
-            silver_nugget = new ItemStack(nugget, 1, 4);
-            OreDictionary.registerOre("nuggetIron", iron_nugget);
-            OreDictionary.registerOre("nuggetCopper", copper_nugget);
-            OreDictionary.registerOre("nuggetTin", tin_nugget);
-            OreDictionary.registerOre("nuggetLead", lead_nugget);
-            OreDictionary.registerOre("nuggetSilver", silver_nugget);
-        }
-
-        if (ConfigManager.instance.enableRocks)
-        {
-            RocksEventHandling.register();
-
-            rock = new ItemRock("rock");
-            GameRegistry.register(rock);
-
-            rock_ore = new ItemOreRock("rock_ore");
-            GameRegistry.register(rock_ore);
-
-            iron_ore_rock = new ItemStack(rock_ore, 1, 0);
-            gold_ore_rock = new ItemStack(rock_ore, 1, 1);
-            copper_ore_rock = new ItemStack(rock_ore, 1, 2);
-            tin_ore_rock = new ItemStack(rock_ore, 1, 3);
-            lead_ore_rock = new ItemStack(rock_ore, 1, 4);
-            silver_ore_rock = new ItemStack(rock_ore, 1, 5);
-            OreDictionary.registerOre("rockOreIron", iron_ore_rock);
-            OreDictionary.registerOre("rockOreGold", gold_ore_rock);
-            OreDictionary.registerOre("rockOreCopper", copper_ore_rock);
-            OreDictionary.registerOre("rockOreTin", tin_ore_rock);
-            OreDictionary.registerOre("rockOreLead", lead_ore_rock);
-            OreDictionary.registerOre("rockOreSilver", silver_ore_rock);
-
-            rock_normal = new ItemStack(rock, 1, 0);
-            rock_andesite = new ItemStack(rock, 1, 1);
-            rock_diorite = new ItemStack(rock, 1, 2);
-            rock_granite = new ItemStack(rock, 1, 3);
-            OreDictionary.registerOre("rock", rock_normal);
-            OreDictionary.registerOre("rock", rock_andesite);
-            OreDictionary.registerOre("rock", rock_diorite);
-            OreDictionary.registerOre("rock", rock_granite);
-            OreDictionary.registerOre("rockAndesite", rock_andesite);
-            OreDictionary.registerOre("rockDiorite", rock_diorite);
-            OreDictionary.registerOre("rockGranite", rock_granite);
-        }
-
-        if (ConfigManager.instance.enableBread)
-        {
-            dough = new ItemRegisteredFood("dough", 5, 0.6f, true);
-            GameRegistry.register(dough);
-
-            round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true);
-            GameRegistry.register(round_bread);
-        }
-
-        if (ConfigManager.instance.enableChopping)
-        {
-            chopping_block = new BlockChopping("chopping_block");
-            GameRegistry.register(chopping_block);
-            GameRegistry.register(chopping_block.createItemBlock());
-            GameRegistry.registerTileEntity(TileChopping.class, "tile_chopping_block");
-        }
-
-        if (ConfigManager.instance.enableHatchet)
-        {
-            hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F).setCreativeTab(CreativeTabs.TOOLS);
-            GameRegistry.register(hatchet);
+            ItemBreakingTracker.register();
         }
 
         registerNetwork();
@@ -272,6 +140,96 @@ public class Survivalist
                 throw new ReportedException(new CrashReport("Error initializing minetweaker integration", e));
             }
         }
+    }
+
+    @SubscribeEvent
+    public void registerBlocks(RegistryEvent.Register<Block> event)
+    {
+        rack = new BlockRack("rack");
+        GameRegistry.register(rack);
+        GameRegistry.register(rack.createItemBlock());
+        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
+        addAlternativeName(TileRack.class, "tileRack");
+
+        chopping_block = new BlockChopping("chopping_block");
+        GameRegistry.register(chopping_block);
+        GameRegistry.register(chopping_block.createItemBlock());
+        GameRegistry.registerTileEntity(TileChopping.class, "tile_chopping_block");
+    }
+
+    @SubscribeEvent
+    public void registerItems(RegistryEvent.Register<Item> event)
+    {
+        chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.MATERIALS);
+        GameRegistry.register(chainmail);
+
+        tanned_leather = new ItemRegistered("tanned_leather").setCreativeTab(CreativeTabs.MATERIALS);
+        GameRegistry.register(tanned_leather);
+        OreDictionary.registerOre("materialLeather", tanned_leather);
+        OreDictionary.registerOre("materialTannedLeather", tanned_leather);
+        OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
+
+        tanned_helmet = new ItemRegisteredArmor("tanned_helmet", TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD);
+        GameRegistry.register(tanned_helmet);
+
+        tanned_chestplate = new ItemRegisteredArmor("tanned_chestplate", TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST);
+        GameRegistry.register(tanned_chestplate);
+
+        tanned_leggings = new ItemRegisteredArmor("tanned_leggings", TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS);
+        GameRegistry.register(tanned_leggings);
+
+        tanned_boots = new ItemRegisteredArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET);
+        GameRegistry.register(tanned_boots);
+
+        jerky = new ItemRegisteredFood("jerky", 4, 1, true);
+        GameRegistry.register(jerky);
+
+        nugget = new ItemNugget("nugget");
+        GameRegistry.register(nugget);
+
+        OreDictionary.registerOre("nuggetIron", nugget.getStack(ItemNugget.Subtype.IRON));
+        OreDictionary.registerOre("nuggetCopper", nugget.getStack(ItemNugget.Subtype.COPPER));
+        OreDictionary.registerOre("nuggetTin", nugget.getStack(ItemNugget.Subtype.TIN));
+        OreDictionary.registerOre("nuggetLead", nugget.getStack(ItemNugget.Subtype.LEAD));
+        OreDictionary.registerOre("nuggetSilver", nugget.getStack(ItemNugget.Subtype.SILVER));
+
+        RocksEventHandling.register();
+
+        rock = new ItemRock("rock");
+        GameRegistry.register(rock);
+
+        rock_ore = new ItemOreRock("rock_ore");
+        GameRegistry.register(rock_ore);
+
+        OreDictionary.registerOre("rockOreIron",   rock_ore.getStack(ItemOreRock.Subtype.IRON));
+        OreDictionary.registerOre("rockOreGold",   rock_ore.getStack(ItemOreRock.Subtype.GOLD));
+        OreDictionary.registerOre("rockOreCopper", rock_ore.getStack(ItemOreRock.Subtype.COPPER));
+        OreDictionary.registerOre("rockOreTin",    rock_ore.getStack(ItemOreRock.Subtype.TIN));
+        OreDictionary.registerOre("rockOreLead",   rock_ore.getStack(ItemOreRock.Subtype.LEAD));
+        OreDictionary.registerOre("rockOreSilver", rock_ore.getStack(ItemOreRock.Subtype.SILVER));
+
+        OreDictionary.registerOre("rock", rock.getStack(ItemRock.Subtype.NORMAL));
+        OreDictionary.registerOre("rock", rock.getStack(ItemRock.Subtype.ANDESITE));
+        OreDictionary.registerOre("rock", rock.getStack(ItemRock.Subtype.DIORITE));
+        OreDictionary.registerOre("rock", rock.getStack(ItemRock.Subtype.GRANITE));
+        OreDictionary.registerOre("rockAndesite", rock.getStack(ItemRock.Subtype.ANDESITE));
+        OreDictionary.registerOre("rockDiorite", rock.getStack(ItemRock.Subtype.DIORITE));
+        OreDictionary.registerOre("rockGranite", rock.getStack(ItemRock.Subtype.GRANITE));
+
+        dough = new ItemRegisteredFood("dough", 5, 0.6f, true);
+        GameRegistry.register(dough);
+
+        round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true);
+        GameRegistry.register(round_bread);
+
+        hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F).setCreativeTab(CreativeTabs.TOOLS);
+        GameRegistry.register(hatchet);
+    }
+
+    @SubscribeEvent
+    public void registerEnchantments(RegistryEvent.Register<Enchantment> event)
+    {
+        scraping = EnchantmentScraping.register();
     }
 
     private void registerNetwork()
@@ -427,39 +385,39 @@ public class Survivalist
             EntityRegistry.registerModEntity(EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
             logger.debug("Last used id: %i", entityId);
 
-            addSmeltingNugget(iron_ore_rock, "nuggetIron");
-            addSmeltingNugget(gold_ore_rock, "nuggetGold");
-            addSmeltingNugget(copper_ore_rock, "nuggetCopper");
-            addSmeltingNugget(tin_ore_rock, "nuggetTin");
-            addSmeltingNugget(lead_ore_rock, "nuggetLead");
-            addSmeltingNugget(silver_ore_rock, "nuggetSilver");
+            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.IRON), "nuggetIron");
+            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.GOLD), "nuggetGold");
+            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.COPPER), "nuggetCopper");
+            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.TIN), "nuggetTin");
+            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.LEAD), "nuggetLead");
+            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.SILVER), "nuggetSilver");
 
             GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
                     "rrr",
                     "rcr",
                     "rrr",
-                    'r', rock_normal,
+                    'r', rock.getStack(ItemRock.Subtype.NORMAL),
                     'c', Items.CLAY_BALL);
 
             GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 5),
                     "rrr",
                     "rcr",
                     "rrr",
-                    'r', rock_andesite,
+                    'r', rock.getStack(ItemRock.Subtype.ANDESITE),
                     'c', Items.CLAY_BALL);
 
             GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 3),
                     "rrr",
                     "rcr",
                     "rrr",
-                    'r', rock_diorite,
+                    'r', rock.getStack(ItemRock.Subtype.DIORITE),
                     'c', Items.CLAY_BALL);
 
             GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 1),
                     "rrr",
                     "rcr",
                     "rrr",
-                    'r', rock_granite,
+                    'r', rock.getStack(ItemRock.Subtype.GRANITE),
                     'c', Items.CLAY_BALL);
 
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.GRAVEL),
@@ -660,7 +618,8 @@ public class Survivalist
         }
     }
 
-    Map<String, Class<? extends TileEntity >> nameToClassMap = ReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "nameToClassMap");
+    Map<String, Class<? extends TileEntity>> nameToClassMap = ReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "nameToClassMap");
+
     private void addAlternativeName(Class<? extends TileEntity> clazz, String altName)
     {
         nameToClassMap.put(altName, clazz);

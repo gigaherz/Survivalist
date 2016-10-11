@@ -1,6 +1,6 @@
 package gigaherz.survivalist.server;
 
-import gigaherz.survivalist.ISidedProxy;
+import gigaherz.common.ISidedProxy;
 
 public class ServerProxy implements ISidedProxy
 {

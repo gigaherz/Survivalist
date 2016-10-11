@@ -60,6 +60,7 @@ public class ChoppingCategory implements IRecipeCategory<ChoppingRecipeWrapper>
     {
     }
 
+    @Deprecated
     @Override
     public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull ChoppingRecipeWrapper recipeWrapper)
     {

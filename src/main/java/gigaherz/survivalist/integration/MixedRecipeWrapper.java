@@ -25,9 +25,9 @@ public abstract class MixedRecipeWrapper extends BlankRecipeWrapper
     @Override
     public void getIngredients(IIngredients ingredients)
     {
-        if (inputOredict!= null)
+        if (inputOredict != null)
             ingredients.setInput(String.class, inputOredict);
-        if (inputStack!= null)
+        if (inputStack != null)
             ingredients.setInput(ItemStack.class, inputStack);
         ingredients.setOutput(ItemStack.class, output);
     }

@@ -40,7 +40,8 @@ public class MineTweakerPlugin
         return (ItemStack) internal;
     }
 
-    static String toOredictName(IIngredient ing) {
+    static String toOredictName(IIngredient ing)
+    {
         if (!(ing instanceof IOreDictEntry))
             return null;
 
@@ -69,7 +70,7 @@ public class MineTweakerPlugin
         public static void removeRecipe(IIngredient ingredient)
         {
             Iterator<Triple<ItemStack, Integer, ItemStack>> it = Dryable.RECIPES.iterator();
-            while(it.hasNext())
+            while (it.hasNext())
             {
                 Triple<ItemStack, Integer, ItemStack> item = it.next();
                 if (ingredient.matches(new MCItemStack(item.getRight())))
@@ -77,7 +78,7 @@ public class MineTweakerPlugin
             }
 
             Iterator<Triple<String, Integer, ItemStack>> it2 = Dryable.ORE_RECIPES.iterator();
-            while(it2.hasNext())
+            while (it2.hasNext())
             {
                 Triple<String, Integer, ItemStack> item = it2.next();
                 if (ingredient.matches(new MCItemStack(item.getRight())))
@@ -124,7 +125,7 @@ public class MineTweakerPlugin
         public static void removeRecipe(IIngredient ingredient)
         {
             Iterator<Triple<ItemStack, ItemStack, Double>> it = Choppable.RECIPES.iterator();
-            while(it.hasNext())
+            while (it.hasNext())
             {
                 Triple<ItemStack, ItemStack, Double> item = it.next();
                 if (ingredient.matches(new MCItemStack(item.getMiddle())))
@@ -132,7 +133,7 @@ public class MineTweakerPlugin
             }
 
             Iterator<Triple<String, ItemStack, Double>> it2 = Choppable.ORE_RECIPES.iterator();
-            while(it2.hasNext())
+            while (it2.hasNext())
             {
                 Triple<String, ItemStack, Double> item = it2.next();
                 if (ingredient.matches(new MCItemStack(item.getMiddle())))

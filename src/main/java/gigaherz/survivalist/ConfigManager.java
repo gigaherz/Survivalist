@@ -49,7 +49,7 @@ public class ConfigManager
     public final boolean removePlanksRecipes;
     public final float choppingDegradeChance;
     public final boolean enableHatchet;
-    public final List<Pair<ItemStack,Integer>> customChoppingAxes = Lists.newArrayList();
+    public final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
 
     public static void loadConfig(Configuration configuration)
     {
@@ -183,6 +183,7 @@ public class ConfigManager
     }
 
     private final Pattern itemRegex = Pattern.compile("^(?<item>[a-zA-Z-0-9_]+:[a-zA-Z-0-9_]+)(?:@(?<meta>[0-9]+))?$");
+
     private void parseChoppingAxes(ConfigCategory category)
     {
         for (Map.Entry<String, Property> entry : category.entrySet())
