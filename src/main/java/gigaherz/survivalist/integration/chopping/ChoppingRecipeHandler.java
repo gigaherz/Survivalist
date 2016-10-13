@@ -1,4 +1,4 @@
-package gigaherz.survivalist.integration.analyzer;
+package gigaherz.survivalist.integration.chopping;
 
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;

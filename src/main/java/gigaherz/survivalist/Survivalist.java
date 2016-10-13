@@ -106,40 +106,6 @@ public class Survivalist
 
     public static SimpleNetworkWrapper channel;
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        logger = event.getModLog();
-
-        ConfigManager.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
-
-        if (ConfigManager.instance.enableTorchFire)
-        {
-            TorchFireEventHandling.register();
-        }
-
-        if (ConfigManager.instance.enableScraping)
-        {
-            ItemBreakingTracker.register();
-        }
-
-        registerNetwork();
-
-        proxy.preInit();
-
-        if (Loader.isModLoaded("MineTweaker3"))
-        {
-            try
-            {
-                Class.forName("gigaherz.survivalist.integration.MineTweakerPlugin").getMethod("init").invoke(null);
-            }
-            catch (Exception e)
-            {
-                throw new ReportedException(new CrashReport("Error initializing minetweaker integration", e));
-            }
-        }
-    }
-
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {
@@ -239,6 +205,40 @@ public class Survivalist
         int messageNumber = 0;
         channel.registerMessage(MessageScraping.Handler.class, MessageScraping.class, messageNumber++, Side.CLIENT);
         logger.debug("Final message number: " + messageNumber);
+    }
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        logger = event.getModLog();
+
+        ConfigManager.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
+
+        if (ConfigManager.instance.enableTorchFire)
+        {
+            TorchFireEventHandling.register();
+        }
+
+        if (ConfigManager.instance.enableScraping)
+        {
+            ItemBreakingTracker.register();
+        }
+
+        registerNetwork();
+
+        proxy.preInit();
+
+        if (Loader.isModLoaded("MineTweaker3"))
+        {
+            try
+            {
+                Class.forName("gigaherz.survivalist.integration.MineTweakerPlugin").getMethod("init").invoke(null);
+            }
+            catch (Exception e)
+            {
+                throw new ReportedException(new CrashReport("Error initializing minetweaker integration", e));
+            }
+        }
     }
 
     @Mod.EventHandler

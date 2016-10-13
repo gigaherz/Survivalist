@@ -1,4 +1,4 @@
-package gigaherz.survivalist.integration.analyzer;
+package gigaherz.survivalist.integration.chopping;
 
 import gigaherz.survivalist.Survivalist;
 import mezz.jei.api.IGuiHelper;

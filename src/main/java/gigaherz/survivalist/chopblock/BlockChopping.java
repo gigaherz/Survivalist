@@ -48,6 +48,15 @@ public class BlockChopping extends BlockRegistered
         setDefaultState(this.blockState.getBaseState().withProperty(DAMAGE, 0));
     }
 
+    @Override
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    {
+        if (ConfigManager.instance.enableChopping)
+        {
+            super.getSubBlocks(itemIn, tab, list);
+        }
+    }
+
     @Deprecated
     @Override
     public boolean isOpaqueCube(IBlockState state)

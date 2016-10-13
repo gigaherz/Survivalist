@@ -1,4 +1,4 @@
-package gigaherz.survivalist.integration.analyzer;
+package gigaherz.survivalist.integration.chopping;
 
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.api.Choppable;

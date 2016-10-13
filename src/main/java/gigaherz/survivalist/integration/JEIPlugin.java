@@ -2,9 +2,9 @@ package gigaherz.survivalist.integration;
 
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.integration.analyzer.ChoppingCategory;
-import gigaherz.survivalist.integration.analyzer.ChoppingRecipeHandler;
-import gigaherz.survivalist.integration.analyzer.ChoppingRecipeWrapper;
+import gigaherz.survivalist.integration.chopping.ChoppingCategory;
+import gigaherz.survivalist.integration.chopping.ChoppingRecipeHandler;
+import gigaherz.survivalist.integration.chopping.ChoppingRecipeWrapper;
 import gigaherz.survivalist.integration.drying.DryingCategory;
 import gigaherz.survivalist.integration.drying.DryingRecipeHandler;
 import gigaherz.survivalist.integration.drying.DryingRecipeWrapper;

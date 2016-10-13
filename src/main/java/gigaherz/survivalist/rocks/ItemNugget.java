@@ -4,6 +4,7 @@ import gigaherz.common.state.IItemState;
 import gigaherz.common.state.IItemStateManager;
 import gigaherz.common.state.ItemStateful;
 import gigaherz.common.state.implementation.ItemStateManager;
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.creativetab.CreativeTabs;
@@ -47,10 +48,13 @@ public class ItemNugget extends ItemStateful
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
     {
-        for (Subtype type : ORE.getAllowedValues())
+        if (ConfigManager.instance.enableNuggets)
         {
-            IItemState state = getDefaultState().withProperty(ORE, type);
-            subItems.add(state.getStack());
+            for (Subtype type : ORE.getAllowedValues())
+            {
+                IItemState state = getDefaultState().withProperty(ORE, type);
+                subItems.add(state.getStack());
+            }
         }
     }
 

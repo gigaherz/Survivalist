@@ -1,6 +1,6 @@
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-package gigaherz.survivalist.integration.analyzer;
+package gigaherz.survivalist.integration.chopping;
 
 import mcp.MethodsReturnNonnullByDefault;
 
