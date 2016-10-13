@@ -32,7 +32,6 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -57,6 +56,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Map;
 
+@Mod.EventBusSubscriber
 @Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.9.4,1.11.0)",
         dependencies = "required-after:Forge@[12.17.0.1916,)")
 public class Survivalist
@@ -106,8 +106,6 @@ public class Survivalist
 
     public static SimpleNetworkWrapper channel;
 
-    public Survivalist() { MinecraftForge.EVENT_BUS.register(this); }
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -143,7 +141,7 @@ public class Survivalist
     }
 
     @SubscribeEvent
-    public void registerBlocks(RegistryEvent.Register<Block> event)
+    public static void registerBlocks(RegistryEvent.Register<Block> event)
     {
         rack = new BlockRack("rack");
         GameRegistry.register(rack);
@@ -158,7 +156,7 @@ public class Survivalist
     }
 
     @SubscribeEvent
-    public void registerItems(RegistryEvent.Register<Item> event)
+    public static void registerItems(RegistryEvent.Register<Item> event)
     {
         chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.MATERIALS);
         GameRegistry.register(chainmail);
@@ -227,7 +225,7 @@ public class Survivalist
     }
 
     @SubscribeEvent
-    public void registerEnchantments(RegistryEvent.Register<Enchantment> event)
+    public static void registerEnchantments(RegistryEvent.Register<Enchantment> event)
     {
         scraping = EnchantmentScraping.register();
     }
@@ -592,7 +590,7 @@ public class Survivalist
         return false;
     }
 
-    private void addIngotToNuggets(String oreIngot, String oreNugget)
+    private static void addIngotToNuggets(String oreIngot, String oreNugget)
     {
         List<ItemStack> matches1 = OreDictionary.getOres(oreIngot);
         if (matches1.size() > 0)
@@ -609,7 +607,7 @@ public class Survivalist
         }
     }
 
-    private void addSmeltingNugget(ItemStack stack, String ore)
+    private static void addSmeltingNugget(ItemStack stack, String ore)
     {
         List<ItemStack> matches = OreDictionary.getOres(ore);
         if (matches.size() > 0)
@@ -618,9 +616,9 @@ public class Survivalist
         }
     }
 
-    Map<String, Class<? extends TileEntity>> nameToClassMap = ReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "nameToClassMap");
+    private static Map<String, Class<? extends TileEntity>> nameToClassMap = ReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "nameToClassMap");
 
-    private void addAlternativeName(Class<? extends TileEntity> clazz, String altName)
+    private static void addAlternativeName(Class<? extends TileEntity> clazz, String altName)
     {
         nameToClassMap.put(altName, clazz);
     }

@@ -22,23 +22,23 @@ import static gigaherz.common.client.ModelHelpers.registerBlockModelAsItem;
 import static gigaherz.common.client.ModelHelpers.registerItemModel;
 import static gigaherz.survivalist.Survivalist.proxy;
 
+@Mod.EventBusSubscriber
 public class ClientProxy implements ISidedProxy
 {
-    public ClientProxy() { MinecraftForge.EVENT_BUS.register(this); }
-
     public void preInit()
+    {
+    }
+
+    // ----------------------------------------------------------- Item/Block Models
+    @SubscribeEvent
+    public static void registerModels(ModelRegistryEvent event)
     {
         RenderingRegistry.registerEntityRenderingHandler(EntityRock.class,
                 manager -> new RenderSnowball<>(manager, Survivalist.rock, Minecraft.getMinecraft().getRenderItem()));
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
         ClientRegistry.bindTileEntitySpecialRenderer(TileChopping.class, new RenderChoppingBlock());
-    }
 
-    // ----------------------------------------------------------- Item/Block Models
-    @SubscribeEvent
-    public void registerModels(ModelRegistryEvent event)
-    {
         OBJLoader.INSTANCE.addDomain(Survivalist.MODID);
 
         new ItemStateMapper(Survivalist.nugget).registerAllModelsExplicitly();
