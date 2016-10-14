@@ -70,7 +70,7 @@ public class Survivalist
     public static Survivalist instance;
 
     @SidedProxy(clientSide = "gigaherz.survivalist.client.ClientProxy", serverSide = "gigaherz.survivalist.server.ServerProxy")
-    public static ISidedProxy proxy;
+    public static IModProxy proxy;
 
     public static Logger logger;
 
@@ -500,17 +500,17 @@ public class Survivalist
                         if (inputs != null)
                         {
                             ItemStack logInput = null;
-                            String oreInput = null;
+                            //String oreInput = null;
 
                             for (Object input : inputs)
                             {
                                 if (input instanceof ItemStack)
                                 {
                                     ItemStack stack = (ItemStack) input;
-                                    if (!hasOreName(stack, "logWood") || logInput != null || oreInput != null)
+                                    if (!hasOreName(stack, "logWood") || logInput != null /* || oreInput != null */)
                                     {
                                         logInput = null;
-                                        oreInput = null;
+                                        //oreInput = null;
                                         break;
                                     }
                                     logInput = stack;
@@ -520,7 +520,7 @@ public class Survivalist
                                     logger.warn("A recipe with planks output uses ore dictionary string as input. This is not supported yet.");
 
                                     logInput = null;
-                                    oreInput = null;
+                                    //oreInput = null;
                                     break;
 
                                     /*
@@ -546,7 +546,7 @@ public class Survivalist
                                     Choppable.registerRecipe(logInput.copy(), output.copy());
                                 }
                             }
-                            else if (oreInput != null)
+                            /*else if (oreInput != null)
                             {
                                 if (ConfigManager.instance.removePlanksRecipes)
                                 {
@@ -556,13 +556,12 @@ public class Survivalist
                                 {
                                     Choppable.registerRecipe(logInput.copy(), output.copy());
                                 }
-                            }
+                            }*/
                         }
                     }
 
                     if (!removed) i++;
                 }
-
 
                 GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(chopping_block), "logWood"));
             }

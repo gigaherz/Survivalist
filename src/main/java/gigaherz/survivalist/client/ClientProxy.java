@@ -2,6 +2,7 @@ package gigaherz.survivalist.client;
 
 import gigaherz.common.ISidedProxy;
 import gigaherz.common.state.client.ItemStateMapper;
+import gigaherz.survivalist.IModProxy;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.chopblock.RenderChoppingBlock;
 import gigaherz.survivalist.chopblock.TileChopping;
@@ -23,7 +24,7 @@ import static gigaherz.common.client.ModelHelpers.registerItemModel;
 import static gigaherz.survivalist.Survivalist.proxy;
 
 @Mod.EventBusSubscriber
-public class ClientProxy implements ISidedProxy
+public class ClientProxy implements IModProxy
 {
     public void preInit()
     {

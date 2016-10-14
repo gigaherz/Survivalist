@@ -1,8 +1,8 @@
 package gigaherz.survivalist.server;
 
-import gigaherz.common.ISidedProxy;
+import gigaherz.survivalist.IModProxy;
 
-public class ServerProxy implements ISidedProxy
+public class ServerProxy implements IModProxy
 {
     public void preInit()
     {

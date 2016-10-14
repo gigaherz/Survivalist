@@ -1,8 +1,8 @@
 package gigaherz.survivalist.integration.chopping;
 
 import com.google.common.collect.Lists;
+import gigaherz.common.client.StackRenderingHelper;
 import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.client.StackRenderingHelper;
 import gigaherz.survivalist.integration.MixedRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
