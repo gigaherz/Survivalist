@@ -1,6 +1,5 @@
 package gigaherz.survivalist.client;
 
-import gigaherz.common.ISidedProxy;
 import gigaherz.common.state.client.ItemStateMapper;
 import gigaherz.survivalist.IModProxy;
 import gigaherz.survivalist.Survivalist;
@@ -13,17 +12,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import static gigaherz.common.client.ModelHelpers.registerBlockModelAsItem;
 import static gigaherz.common.client.ModelHelpers.registerItemModel;
-import static gigaherz.survivalist.Survivalist.proxy;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(Side.CLIENT)
 public class ClientProxy implements IModProxy
 {
     public void preInit()
