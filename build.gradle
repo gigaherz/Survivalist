@@ -52,7 +52,7 @@ shadowJar {
     dependencies {
         include(dependency(':Commons:'))
     }
-    relocate 'gigaherz.common', 'gigaherz.everpipe.shadow.common'
+    relocate 'gigaherz.common', 'gigaherz.survivalist.shadow.common'
 }
 
 reobf {
