@@ -1,6 +1,7 @@
 package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
+import gigaherz.common.OreDictionaryHelper;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.init.Items;
@@ -65,7 +66,7 @@ public class Dryable
         }
         for (Triple<String, Integer, ItemStack> recipe : ORE_RECIPES)
         {
-            if (Survivalist.hasOreName(stack, recipe.getLeft()))
+            if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
                 return recipe.getMiddle();
         }
 
@@ -85,7 +86,7 @@ public class Dryable
         }
         for (Triple<String, Integer, ItemStack> recipe : ORE_RECIPES)
         {
-            if (Survivalist.hasOreName(stack, recipe.getLeft()))
+            if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
                 return recipe.getRight().copy();
         }
         return null;

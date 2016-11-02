@@ -1,6 +1,7 @@
 package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
+import gigaherz.common.OreDictionaryHelper;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -52,7 +53,7 @@ public class Choppable
         }
         for (Triple<String, ItemStack, Double> recipe : ORE_RECIPES)
         {
-            if (Survivalist.hasOreName(stack, recipe.getLeft()))
+            if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
                 return true;
         }
         return false;
@@ -70,7 +71,7 @@ public class Choppable
         }
         for (Triple<String, ItemStack, Double> recipe : ORE_RECIPES)
         {
-            if (Survivalist.hasOreName(stack, recipe.getLeft()))
+            if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
                 return Pair.of(recipe.getMiddle().copy(), recipe.getRight());
         }
         return null;

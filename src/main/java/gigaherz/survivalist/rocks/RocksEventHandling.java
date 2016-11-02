@@ -2,6 +2,7 @@ package gigaherz.survivalist.rocks;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import gigaherz.common.OreDictionaryHelper;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.init.Blocks;
@@ -82,22 +83,22 @@ public class RocksEventHandling
             }
             else if (ConfigManager.instance.replaceModOreDrops)
             {
-                if (Survivalist.hasOreName(drop, "oreCopper"))
+                if (OreDictionaryHelper.hasOreName(drop, "oreCopper"))
                 {
                     newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 2));
                     anyChanged = true;
                 }
-                else if (Survivalist.hasOreName(drop, "oreTin"))
+                else if (OreDictionaryHelper.hasOreName(drop, "oreTin"))
                 {
                     newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 3));
                     anyChanged = true;
                 }
-                else if (Survivalist.hasOreName(drop, "oreLead"))
+                else if (OreDictionaryHelper.hasOreName(drop, "oreLead"))
                 {
                     newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 4));
                     anyChanged = true;
                 }
-                else if (Survivalist.hasOreName(drop, "oreSilver"))
+                else if (OreDictionaryHelper.hasOreName(drop, "oreSilver"))
                 {
                     newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 5));
                     anyChanged = true;

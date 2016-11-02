@@ -36,6 +36,10 @@ public class BlockChopping extends BlockRegistered
     public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 2);
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
 
+    private static final String[] subNames = {
+            ".pristine_chopping_block", ".used_chopping_block", ".weathered_chopping_block"
+    };
+
     public BlockChopping(String name)
     {
         super(name, Material.WOOD);
@@ -53,7 +57,10 @@ public class BlockChopping extends BlockRegistered
     {
         if (ConfigManager.instance.enableChopping)
         {
-            super.getSubBlocks(itemIn, tab, list);
+            for (int i = 0; i < subNames.length; i++)
+            {
+                list.add(new ItemStack(this, 1, i));
+            }
         }
     }
 
@@ -238,10 +245,6 @@ public class BlockChopping extends BlockRegistered
 
     public static class AsItem extends ItemBlock
     {
-        static final String[] subNames = {
-                ".pristine_chopping_block", ".used_chopping_block", ".weathered_chopping_block"
-        };
-
         public AsItem(Block block)
         {
             super(block);
@@ -252,15 +255,6 @@ public class BlockChopping extends BlockRegistered
         public int getMetadata(int damage)
         {
             return damage;
-        }
-
-        @Override
-        public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
-        {
-            for (int i = 0; i < subNames.length; i++)
-            {
-                subItems.add(new ItemStack(this, 1, i));
-            }
         }
 
         @Override

@@ -34,10 +34,10 @@ group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-namin
 archivesBaseName = "Survivalist-1.10.2"
 
 minecraft {
-    version = "1.10.2-12.18.2.2102"
+    version = "1.10.2-12.18.2.2114"
     runDir = "run"
 
-    mappings = "snapshot_20161010"
+    mappings = "snapshot_20161029"
 
     replace "@VERSION@", project.version
     replaceIn "Survivalist.java"
@@ -68,7 +68,7 @@ artifacts {
 }
 
 dependencies {
-    deobfCompile "gigaherz.commons:Commons:1.10.2-0.3"
+    deobfCompile "gigaherz.commons:Commons:1.10.2-0.4.1"
 
     deobfCompile "mezz.jei:jei_1.10.2:3.12.3.293:api"
     runtime "mezz.jei:jei_1.10.2:3.12.3.293"

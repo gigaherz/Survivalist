@@ -6,6 +6,7 @@ import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
+import gigaherz.survivalist.common.ItemTannedArmor;
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.*;
@@ -29,7 +30,6 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
@@ -46,7 +46,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -54,7 +53,6 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.Map;
 
 @Mod.EventBusSubscriber
 @Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.9.4,1.11.0)",
@@ -106,64 +104,115 @@ public class Survivalist
 
     public static SimpleNetworkWrapper channel;
 
+    private final RenamingHelper helper = new RenamingHelper();
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {
-        rack = new BlockRack("rack");
-        GameRegistry.register(rack);
-        GameRegistry.register(rack.createItemBlock());
-        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
-        addAlternativeName(TileRack.class, "tileRack");
+        event.getRegistry().registerAll(
+                rack = new BlockRack("rack"),
+                chopping_block = new BlockChopping("chopping_block")
+        );
+    }
 
-        chopping_block = new BlockChopping("chopping_block");
-        GameRegistry.register(chopping_block);
-        GameRegistry.register(chopping_block.createItemBlock());
-        GameRegistry.registerTileEntity(TileChopping.class, "tile_chopping_block");
+    private void registerTileEntities()
+    {
+        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
+        GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName().toString());
+
+        helper.addAlternativeName(TileRack.class, "tileRack");
+        helper.addAlternativeName(TileChopping.class, "tile_chopping_block");
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event)
     {
-        chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.MATERIALS);
-        GameRegistry.register(chainmail);
+        event.getRegistry().registerAll(
+            // ItemBlocks
+                rack.createItemBlock(),
+                chopping_block.createItemBlock(),
 
-        tanned_leather = new ItemRegistered("tanned_leather").setCreativeTab(CreativeTabs.MATERIALS);
-        GameRegistry.register(tanned_leather);
+            // Items
+                chainmail = new ItemRegistered("chainmail") {
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enableChainmailCrafting)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                }.setCreativeTab(CreativeTabs.MATERIALS),
+                tanned_leather = new ItemRegistered("tanned_leather") {
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enableLeatherTanning)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                }.setCreativeTab(CreativeTabs.MATERIALS),
+                tanned_helmet = new ItemTannedArmor("tanned_helmet", TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD),
+                tanned_chestplate = new ItemTannedArmor("tanned_chestplate", Survivalist.TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST),
+                tanned_leggings = new ItemTannedArmor("tanned_leggings", TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS),
+                tanned_boots = new ItemTannedArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET),
+                jerky = new ItemRegisteredFood("jerky", 4, 1, true) {
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enableLeatherTanning)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                },
+                nugget = new ItemNugget("nugget"),
+                rock = new ItemRock("rock"),
+                rock_ore = new ItemOreRock("rock_ore"),
+                dough = new ItemRegisteredFood("dough", 5, 0.6f, true){
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enableBread)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                },
+                round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true){
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enableBread)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                },
+                hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F){
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enableHatchet)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                }.setCreativeTab(CreativeTabs.TOOLS)
+        );
+    }
+
+    private static void registerOredictNames()
+    {
         OreDictionary.registerOre("materialLeather", tanned_leather);
         OreDictionary.registerOre("materialTannedLeather", tanned_leather);
         OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
-
-        tanned_helmet = new ItemRegisteredArmor("tanned_helmet", TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD);
-        GameRegistry.register(tanned_helmet);
-
-        tanned_chestplate = new ItemRegisteredArmor("tanned_chestplate", TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST);
-        GameRegistry.register(tanned_chestplate);
-
-        tanned_leggings = new ItemRegisteredArmor("tanned_leggings", TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS);
-        GameRegistry.register(tanned_leggings);
-
-        tanned_boots = new ItemRegisteredArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET);
-        GameRegistry.register(tanned_boots);
-
-        jerky = new ItemRegisteredFood("jerky", 4, 1, true);
-        GameRegistry.register(jerky);
-
-        nugget = new ItemNugget("nugget");
-        GameRegistry.register(nugget);
-
         OreDictionary.registerOre("nuggetIron", nugget.getStack(ItemNugget.Subtype.IRON));
         OreDictionary.registerOre("nuggetCopper", nugget.getStack(ItemNugget.Subtype.COPPER));
         OreDictionary.registerOre("nuggetTin", nugget.getStack(ItemNugget.Subtype.TIN));
         OreDictionary.registerOre("nuggetLead", nugget.getStack(ItemNugget.Subtype.LEAD));
         OreDictionary.registerOre("nuggetSilver", nugget.getStack(ItemNugget.Subtype.SILVER));
-
-        RocksEventHandling.register();
-
-        rock = new ItemRock("rock");
-        GameRegistry.register(rock);
-
-        rock_ore = new ItemOreRock("rock_ore");
-        GameRegistry.register(rock_ore);
 
         OreDictionary.registerOre("rockOreIron",   rock_ore.getStack(ItemOreRock.Subtype.IRON));
         OreDictionary.registerOre("rockOreGold",   rock_ore.getStack(ItemOreRock.Subtype.GOLD));
@@ -179,15 +228,6 @@ public class Survivalist
         OreDictionary.registerOre("rockAndesite", rock.getStack(ItemRock.Subtype.ANDESITE));
         OreDictionary.registerOre("rockDiorite", rock.getStack(ItemRock.Subtype.DIORITE));
         OreDictionary.registerOre("rockGranite", rock.getStack(ItemRock.Subtype.GRANITE));
-
-        dough = new ItemRegisteredFood("dough", 5, 0.6f, true);
-        GameRegistry.register(dough);
-
-        round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true);
-        GameRegistry.register(round_bread);
-
-        hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F).setCreativeTab(CreativeTabs.TOOLS);
-        GameRegistry.register(hatchet);
     }
 
     @SubscribeEvent
@@ -223,6 +263,15 @@ public class Survivalist
         {
             ItemBreakingTracker.register();
         }
+
+        if (ConfigManager.instance.enableRocks)
+        {
+            RocksEventHandling.register();
+        }
+
+        registerTileEntities();
+
+        registerOredictNames();
 
         registerNetwork();
 
@@ -469,7 +518,7 @@ public class Survivalist
                     IRecipe r = recipes.get(i);
 
                     ItemStack output = r.getRecipeOutput();
-                    if (output != null && hasOreName(output, "plankWood"))
+                    if (output != null && OreDictionaryHelper.hasOreName(output, "plankWood"))
                     {
                         List<Object> inputs = null;
                         if (r instanceof ShapedRecipes)
@@ -507,7 +556,7 @@ public class Survivalist
                                 if (input instanceof ItemStack)
                                 {
                                     ItemStack stack = (ItemStack) input;
-                                    if (!hasOreName(stack, "logWood") || logInput != null /* || oreInput != null */)
+                                    if (!OreDictionaryHelper.hasOreName(stack, "logWood") || logInput != null /* || oreInput != null */)
                                     {
                                         logInput = null;
                                         //oreInput = null;
@@ -573,22 +622,6 @@ public class Survivalist
         }
     }
 
-    public static boolean hasOreName(ItemStack stack, String oreName)
-    {
-        if (stack.getItem() == null)
-        {
-            logger.warn("Detected ItemStack with null item inside!");
-            return false;
-        }
-
-        int id = OreDictionary.getOreID(oreName);
-        for (int i : OreDictionary.getOreIDs(stack))
-        {
-            if (i == id) return true;
-        }
-        return false;
-    }
-
     private static void addIngotToNuggets(String oreIngot, String oreNugget)
     {
         List<ItemStack> matches1 = OreDictionary.getOres(oreIngot);
@@ -613,13 +646,6 @@ public class Survivalist
         {
             GameRegistry.addSmelting(stack, matches.get(0), 0.1f);
         }
-    }
-
-    private static Map<String, Class<? extends TileEntity>> nameToClassMap = ReflectionHelper.getPrivateValue(TileEntity.class, null, "field_145855_i", "nameToClassMap");
-
-    private static void addAlternativeName(Class<? extends TileEntity> clazz, String altName)
-    {
-        nameToClassMap.put(altName, clazz);
     }
 
     public static ResourceLocation location(String path)
