@@ -25,7 +25,7 @@ public class DryingRecipeWrapper extends MixedRecipeWrapper
         return list;
     }
 
-    int time;
+    private int time;
 
     private DryingRecipeWrapper(String input, ItemStack output, int time)
     {

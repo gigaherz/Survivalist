@@ -3,6 +3,9 @@ package gigaherz.survivalist.integration;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.Collections;
 
 public abstract class MixedRecipeWrapper extends BlankRecipeWrapper
 {
@@ -26,7 +29,7 @@ public abstract class MixedRecipeWrapper extends BlankRecipeWrapper
     public void getIngredients(IIngredients ingredients)
     {
         if (inputOredict != null)
-            ingredients.setInput(String.class, inputOredict);
+            ingredients.setInputLists(ItemStack.class, Collections.singletonList(OreDictionary.getOres(inputOredict)));
         if (inputStack != null)
             ingredients.setInput(ItemStack.class, inputStack);
         ingredients.setOutput(ItemStack.class, output);
