@@ -290,9 +290,12 @@ public class ItemBreakingTracker
         }
 
         @SubscribeEvent
-        public void attachCapabilities(AttachCapabilitiesEvent<EntityPlayer> e)
+        public void attachCapabilities(AttachCapabilitiesEvent<Entity> e)
         {
-            final EntityPlayer entity = e.getObject();
+            final Entity entity = e.getObject();
+
+            if (!(entity instanceof EntityPlayerMP))
+                return;
 
             if (entity.worldObj == null || entity.worldObj.isRemote)
                 return;
