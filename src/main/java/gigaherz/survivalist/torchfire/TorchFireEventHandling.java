@@ -18,7 +18,7 @@ public class TorchFireEventHandling
     @SubscribeEvent
     public void onAttackEntity(AttackEntityEvent ev)
     {
-        if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().worldObj.isRemote)
+        if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().world.isRemote)
         {
             ItemStack stack = ev.getEntityPlayer().getHeldItem(EnumHand.MAIN_HAND);
             if (stack != null && stack.getItem() instanceof ItemBlock)
@@ -30,8 +30,8 @@ public class TorchFireEventHandling
                     ev.getTarget().setFire(2);
                     if (rnd.nextFloat() > 0.25)
                     {
-                        stack.stackSize--;
-                        if (stack.stackSize <= 0)
+                        stack.func_190917_f(-1);
+                        if (stack.func_190916_E() <= 0)
                         {
                             ev.getEntityPlayer().inventory.setInventorySlotContents(ev.getEntityPlayer().inventory.currentItem, null);
                         }

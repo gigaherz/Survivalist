@@ -30,6 +30,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
@@ -55,8 +56,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.9.4,1.11.0)",
-        dependencies = "required-after:Forge@[12.17.0.1916,)")
+@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.11.0,1.12.0)")
 public class Survivalist
 {
     public static final String MODID = "survivalist";
@@ -104,8 +104,6 @@ public class Survivalist
 
     public static SimpleNetworkWrapper channel;
 
-    private final RenamingHelper helper = new RenamingHelper();
-
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {
@@ -119,9 +117,6 @@ public class Survivalist
     {
         GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
         GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName().toString());
-
-        helper.addAlternativeName(TileRack.class, "tileRack");
-        helper.addAlternativeName(TileChopping.class, "tile_chopping_block");
     }
 
     @SubscribeEvent
@@ -135,7 +130,7 @@ public class Survivalist
             // Items
                 chainmail = new ItemRegistered("chainmail") {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableChainmailCrafting)
                         {
@@ -145,7 +140,7 @@ public class Survivalist
                 }.setCreativeTab(CreativeTabs.MATERIALS),
                 tanned_leather = new ItemRegistered("tanned_leather") {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableLeatherTanning)
                         {
@@ -159,7 +154,7 @@ public class Survivalist
                 tanned_boots = new ItemTannedArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET),
                 jerky = new ItemRegisteredFood("jerky", 4, 1, true) {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableLeatherTanning)
                         {
@@ -172,7 +167,7 @@ public class Survivalist
                 rock_ore = new ItemOreRock("rock_ore"),
                 dough = new ItemRegisteredFood("dough", 5, 0.6f, true){
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableBread)
                         {
@@ -182,7 +177,7 @@ public class Survivalist
                 },
                 round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true){
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableBread)
                         {
@@ -192,7 +187,7 @@ public class Survivalist
                 },
                 hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F){
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableHatchet)
                         {
@@ -634,7 +629,7 @@ public class Survivalist
         if (matches2.size() > 0)
         {
             ItemStack output = matches2.get(0).copy();
-            output.stackSize = 9;
+            output.func_190920_e(9);
             GameRegistry.addRecipe(new ShapelessOreRecipe(output, oreIngot));
         }
     }

@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -41,7 +42,7 @@ public class BlockRack extends BlockRegistered
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
     {
         if (ConfigManager.instance.enableDryingRack)
         {
@@ -88,13 +89,13 @@ public class BlockRack extends BlockRegistered
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack)
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         return getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 

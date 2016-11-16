@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class ItemTannedArmor extends ItemRegisteredArmor
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
         if (ConfigManager.instance.enableLeatherTanning)
         {

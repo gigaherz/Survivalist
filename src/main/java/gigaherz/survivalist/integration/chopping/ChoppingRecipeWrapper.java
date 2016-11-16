@@ -36,7 +36,7 @@ public class ChoppingRecipeWrapper extends MixedRecipeWrapper
     private static ItemStack copyWithSize(ItemStack middle)
     {
         middle = middle.copy();
-        middle.stackSize = 1;
+        middle.func_190920_e(1);
         return middle;
     }
 
@@ -64,7 +64,7 @@ public class ChoppingRecipeWrapper extends MixedRecipeWrapper
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0, 100);
 
-        long animTick = mc.theWorld.getTotalWorldTime();
+        long animTick = mc.world.getTotalWorldTime();
         int whichAxe = (int) ((animTick / 20) % 5);
 
         double amount = 1.0;

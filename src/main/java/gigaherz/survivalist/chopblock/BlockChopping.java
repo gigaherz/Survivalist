@@ -13,7 +13,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -21,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -53,7 +56,7 @@ public class BlockChopping extends BlockRegistered
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
     {
         if (ConfigManager.instance.enableChopping)
         {
@@ -116,7 +119,7 @@ public class BlockChopping extends BlockRegistered
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
@@ -125,10 +128,12 @@ public class BlockChopping extends BlockRegistered
 
         TileChopping chopper = (TileChopping) tileEntity;
 
-        if (heldItem == null)
+        ItemStack heldItem = playerIn.getHeldItem(hand);
+
+        if (heldItem == ItemStack.field_190927_a)
         {
             ItemStack extracted = chopper.getSlotInventory().extractItem(0, 1, false);
-            if (extracted != null && extracted.stackSize > 0)
+            if (extracted.func_190916_E() > 0)
             {
                 ItemHandlerHelper.giveItemToPlayer(playerIn, extracted);
                 return true;
@@ -142,7 +147,7 @@ public class BlockChopping extends BlockRegistered
             ItemStack remaining = chopper.getSlotInventory().insertItem(0, heldItem, false);
             if (!playerIn.isCreative())
             {
-                if (remaining != null && remaining.stackSize > 0)
+                if (remaining.func_190916_E() > 0)
                 {
                     playerIn.setHeldItem(hand, remaining);
                 }
@@ -151,7 +156,7 @@ public class BlockChopping extends BlockRegistered
                     playerIn.setHeldItem(hand, null);
                 }
             }
-            return remaining == null || remaining.stackSize < heldItem.stackSize;
+            return remaining.func_190916_E() < heldItem.func_190916_E();
         }
 
         return false;
@@ -186,7 +191,7 @@ public class BlockChopping extends BlockRegistered
                 if (heldItem != null && !playerIn.capabilities.isCreativeMode)
                 {
                     heldItem.damageItem(1, playerIn);
-                    if (heldItem.stackSize <= 0)
+                    if (heldItem.func_190916_E() <= 0)
                     {
                         net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(playerIn, heldItem, EnumHand.MAIN_HAND);
                         playerIn.setHeldItem(EnumHand.MAIN_HAND, null);

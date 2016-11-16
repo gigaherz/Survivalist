@@ -52,17 +52,6 @@ public class DryingCategory extends BlankRecipeCategory<DryingRecipeWrapper>
     }
 
     @Override
-    public void drawAnimations(@Nonnull Minecraft minecraft)
-    {
-    }
-
-    @Deprecated
-    @Override
-    public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull DryingRecipeWrapper recipeWrapper)
-    {
-    }
-
-    @Override
     public void setRecipe(IRecipeLayout recipeLayout, DryingRecipeWrapper recipeWrapper, IIngredients ingredients)
     {
         IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();

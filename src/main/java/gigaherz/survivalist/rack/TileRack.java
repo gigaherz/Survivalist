@@ -32,8 +32,8 @@ public class TileRack extends TileEntity implements ITickable
             super.onContentsChanged(slot);
             TileRack.this.markDirty();
 
-            IBlockState state = worldObj.getBlockState(pos);
-            worldObj.notifyBlockUpdate(pos, state, state, 3);
+            IBlockState state = world.getBlockState(pos);
+            world.notifyBlockUpdate(pos, state, state, 3);
         }
     };
 
@@ -57,14 +57,14 @@ public class TileRack extends TileEntity implements ITickable
         super.onDataPacket(net, packet);
         readFromNBT(packet.getNbtCompound());
 
-        IBlockState state = worldObj.getBlockState(pos);
-        worldObj.notifyBlockUpdate(pos, state, state, 3);
+        IBlockState state = world.getBlockState(pos);
+        world.notifyBlockUpdate(pos, state, state, 3);
     }
 
     @Override
     public void update()
     {
-        if (worldObj.isRemote)
+        if (world.isRemote)
             return;
 
         for (int i = 0; i < 4; i++)
@@ -113,7 +113,7 @@ public class TileRack extends TileEntity implements ITickable
 
     public boolean isUseableByPlayer(EntityPlayer player)
     {
-        return worldObj.getTileEntity(pos) == this
+        return world.getTileEntity(pos) == this
                 && player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
     }
 

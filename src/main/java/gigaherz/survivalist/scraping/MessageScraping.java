@@ -51,10 +51,10 @@ public class MessageScraping
         public IMessage onMessage(MessageScraping message, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(
+                    Minecraft.getMinecraft().player.addChatMessage(
                             new TextComponentTranslation("text." + Survivalist.MODID + ".scraping.message1",
                                     makeClickable(message.stack.getTextComponent()),
-                                    new TextComponentString("" + message.ret.stackSize),
+                                    new TextComponentString("" + message.ret.func_190916_E()),
                                     makeClickable(message.ret.getTextComponent()))));
 
             return null; // no response in this case

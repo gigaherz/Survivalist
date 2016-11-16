@@ -14,19 +14,11 @@ public class DryingRecipeHandler implements IRecipeHandler<DryingRecipeWrapper>
         return DryingRecipeWrapper.class;
     }
 
-    @Deprecated
-    @Nonnull
-    @Override
-    public String getRecipeCategoryUid()
-    {
-        return DryingCategory.UID;
-    }
-
     @Nonnull
     @Override
     public String getRecipeCategoryUid(@Nonnull DryingRecipeWrapper recipe)
     {
-        return getRecipeCategoryUid();
+        return DryingCategory.UID;
     }
 
     @Nonnull

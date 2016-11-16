@@ -112,7 +112,7 @@ public class ContainerRack extends Container
             }
         }
 
-        if (stack.stackSize == 0)
+        if (stack.func_190916_E() == 0)
         {
             slot.putStack(null);
         }
@@ -121,12 +121,12 @@ public class ContainerRack extends Container
             slot.onSlotChanged();
         }
 
-        if (stack.stackSize == stackCopy.stackSize)
+        if (stack.func_190916_E() == stackCopy.func_190916_E())
         {
             return null;
         }
 
-        slot.onPickupFromSlot(player, stack);
+        slot.func_190901_a(player, stack);
         return stackCopy;
     }
 
@@ -138,13 +138,13 @@ public class ContainerRack extends Container
             Slot slot = this.inventorySlots.get(i);
             ItemStack existing = slot.getStack();
 
-            if (existing == null && slot.isItemValid(stack))
+            if (existing.func_190916_E() <= 0 && slot.isItemValid(stack))
             {
                 slot.putStack(copyWithSize(stack, 1));
                 slot.onSlotChanged();
-                stack.stackSize--;
+                stack.func_190917_f(-1);
                 transferred = true;
-                if (stack.stackSize <= 0)
+                if (stack.func_190916_E() <= 0)
                     break;
             }
         }
@@ -154,7 +154,7 @@ public class ContainerRack extends Container
     private ItemStack copyWithSize(ItemStack stack, int count)
     {
         ItemStack stack1 = stack.copy();
-        stack1.stackSize = count;
+        stack1.func_190920_e(count);
         return stack1;
     }
 }

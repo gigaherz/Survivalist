@@ -11,6 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class ItemNugget extends ItemStateful
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
         if (ConfigManager.instance.enableNuggets)
         {

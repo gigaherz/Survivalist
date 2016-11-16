@@ -14,19 +14,11 @@ public class ChoppingRecipeHandler implements IRecipeHandler<ChoppingRecipeWrapp
         return ChoppingRecipeWrapper.class;
     }
 
-    @Deprecated
-    @Nonnull
-    @Override
-    public String getRecipeCategoryUid()
-    {
-        return ChoppingCategory.UID;
-    }
-
     @Nonnull
     @Override
     public String getRecipeCategoryUid(@Nonnull ChoppingRecipeWrapper recipe)
     {
-        return getRecipeCategoryUid();
+        return ChoppingCategory.UID;
     }
 
     @Nonnull

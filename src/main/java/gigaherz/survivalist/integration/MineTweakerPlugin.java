@@ -1,5 +1,6 @@
 package gigaherz.survivalist.integration;
 
+/*
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
@@ -142,3 +143,4 @@ public class MineTweakerPlugin
         }
     }
 }
+*/

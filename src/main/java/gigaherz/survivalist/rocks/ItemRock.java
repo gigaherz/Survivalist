@@ -50,7 +50,7 @@ public class ItemRock extends ItemStateful
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
         if (ConfigManager.instance.enableRocks)
         {
@@ -63,11 +63,13 @@ public class ItemRock extends ItemStateful
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
+        ItemStack stack = playerIn.getHeldItem(hand);
+
         if (!playerIn.capabilities.isCreativeMode)
         {
-            --itemStackIn.stackSize;
+            stack.func_190917_f(-1);
         }
 
         worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ,
@@ -83,7 +85,7 @@ public class ItemRock extends ItemStateful
 
         playerIn.addStat(StatList.getObjectUseStats(this));
 
-        return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
     public ItemStack getStack(Subtype iron)

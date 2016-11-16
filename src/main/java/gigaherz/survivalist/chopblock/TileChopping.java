@@ -46,10 +46,10 @@ public class TileChopping extends TileEntity
         protected void onContentsChanged(int slot)
         {
             breakingProgress = 0;
-            if (worldObj != null)
+            if (world != null)
             {
-                IBlockState state = worldObj.getBlockState(pos);
-                worldObj.notifyBlockUpdate(pos, state, state, 3);
+                IBlockState state = world.getBlockState(pos);
+                world.notifyBlockUpdate(pos, state, state, 3);
             }
             markDirty();
         }
@@ -129,7 +129,7 @@ public class TileChopping extends TileEntity
             breakingProgress += 25 + 25 * Math.max(0, axeLevel);
             if (breakingProgress >= 200)
             {
-                if (!worldObj.isRemote)
+                if (!world.isRemote)
                 {
                     Pair<ItemStack, Double> res = Choppable.getResults(slotInventory.getStackInSlot(0));
                     if (res != null)
@@ -150,8 +150,8 @@ public class TileChopping extends TileEntity
                         if (number > 0)
                         {
                             ItemStack out = res.getLeft();
-                            out.stackSize = whole;
-                            spawnItemStack(worldObj, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
+                            out.func_190920_e(whole);
+                            spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
                         }
                     }
                     else
@@ -160,29 +160,29 @@ public class TileChopping extends TileEntity
                     }
                     completed = true;
                 }
-                worldObj.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                world.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 slotInventory.setStackInSlot(0, null);
                 breakingProgress = 0;
             }
 
-            IBlockState state = worldObj.getBlockState(pos);
-            worldObj.notifyBlockUpdate(pos, state, state, 3);
+            IBlockState state = world.getBlockState(pos);
+            world.notifyBlockUpdate(pos, state, state, 3);
         }
         return completed;
     }
 
     public static void spawnItemStack(World worldIn, double x, double y, double z, ItemStack stack)
     {
-        while (stack.stackSize > 0)
+        while (stack.func_190916_E() > 0)
         {
             int i = /*RANDOM.nextInt(3) +*/ 1;
 
-            if (i > stack.stackSize)
+            if (i > stack.func_190916_E())
             {
-                i = stack.stackSize;
+                i = stack.func_190916_E();
             }
 
-            stack.stackSize -= i;
+            stack.func_190917_f(-i);
             EntityItem entityitem = new EntityItem(worldIn, x, y, z, new ItemStack(stack.getItem(), i, stack.getMetadata()));
 
             if (stack.hasTagCompound())

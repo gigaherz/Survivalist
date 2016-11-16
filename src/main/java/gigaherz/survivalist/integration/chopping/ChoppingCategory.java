@@ -53,17 +53,6 @@ public class ChoppingCategory extends BlankRecipeCategory<ChoppingRecipeWrapper>
     }
 
     @Override
-    public void drawAnimations(@Nonnull Minecraft minecraft)
-    {
-    }
-
-    @Deprecated
-    @Override
-    public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull ChoppingRecipeWrapper recipeWrapper)
-    {
-    }
-
-    @Override
     public void setRecipe(IRecipeLayout recipeLayout, ChoppingRecipeWrapper recipeWrapper, IIngredients ingredients)
     {
         IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
