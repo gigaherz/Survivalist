@@ -116,18 +116,10 @@ public class Survivalist
         );
     }
 
-    @Deprecated
-    private static RegistryNamespaced<ResourceLocation, Class <? extends TileEntity >> field_190562_f = ReflectionHelper.getPrivateValue(TileEntity.class, null, "field_190562_f");
-
-    private static void tempRegisterTileEntity(ResourceLocation name, Class<? extends TileEntity> clazz)
-    {
-        field_190562_f.putObject(name, clazz);
-    }
-
     public static void registerTileEntities()
     {
-        tempRegisterTileEntity(rack.getRegistryName(), TileRack.class);
-        tempRegisterTileEntity(chopping_block.getRegistryName(), TileChopping.class);
+        GameRegistry.registerTileEntityWithAlternatives(TileRack.class, rack.getRegistryName().toString(), "tileRack");
+        GameRegistry.registerTileEntityWithAlternatives(TileChopping.class, chopping_block.getRegistryName().toString(), "tile_chopping_block");
     }
 
     @SubscribeEvent
