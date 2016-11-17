@@ -30,9 +30,11 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -47,6 +49,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -113,10 +116,18 @@ public class Survivalist
         );
     }
 
-    private void registerTileEntities()
+    @Deprecated
+    private static RegistryNamespaced<ResourceLocation, Class <? extends TileEntity >> field_190562_f = ReflectionHelper.getPrivateValue(TileEntity.class, null, "field_190562_f");
+
+    private static void tempRegisterTileEntity(ResourceLocation name, Class<? extends TileEntity> clazz)
     {
-        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
-        GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName().toString());
+        field_190562_f.putObject(name, clazz);
+    }
+
+    public static void registerTileEntities()
+    {
+        tempRegisterTileEntity(rack.getRegistryName(), TileRack.class);
+        tempRegisterTileEntity(chopping_block.getRegistryName(), TileChopping.class);
     }
 
     @SubscribeEvent
