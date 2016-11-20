@@ -28,8 +28,9 @@ public class RenderChoppingBlock extends TileEntitySpecialRenderer<TileChopping>
             GlStateManager.translate(x + 0.5, y + 0.65, z + 0.5);
 
             IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+            assert inv != null;
             ItemStack stack = inv.getStackInSlot(0);
-            if (stack != null)
+            if (stack.getCount() > 0)
             {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0, -4.5 / 16.0f, 0);

@@ -2,7 +2,6 @@ package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
 import gigaherz.common.OreDictionaryHelper;
-import gigaherz.survivalist.Survivalist;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;

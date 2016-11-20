@@ -16,8 +16,6 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-import java.util.List;
-
 public class ItemRock extends ItemStateful
 {
     public static final PropertyEnum<Subtype> TYPE = PropertyEnum.create("rock", Subtype.class);
@@ -69,7 +67,7 @@ public class ItemRock extends ItemStateful
 
         if (!playerIn.capabilities.isCreativeMode)
         {
-            stack.func_190917_f(-1);
+            stack.grow(-1);
         }
 
         worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ,
@@ -80,7 +78,7 @@ public class ItemRock extends ItemStateful
         {
             EntityRock entity = new EntityRock(worldIn, playerIn);
             entity.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-            worldIn.spawnEntityInWorld(entity);
+            worldIn.spawnEntity(entity);
         }
 
         playerIn.addStat(StatList.getObjectUseStats(this));

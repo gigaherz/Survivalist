@@ -13,8 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 
-import java.util.List;
-
 public class ItemOreRock extends ItemStateful
 {
     public static final PropertyEnum<Subtype> ORE = PropertyEnum.create("ore", Subtype.class);

@@ -81,11 +81,10 @@ public class ContainerRack extends Container
         Slot slot = this.inventorySlots.get(slotIndex);
         if (slot == null || !slot.getHasStack())
         {
-            return null;
+            return ItemStack.EMPTY;
         }
 
         ItemStack stack = slot.getStack();
-        assert stack != null;
         ItemStack stackCopy = stack.copy();
 
         int startIndex;
@@ -98,7 +97,7 @@ public class ContainerRack extends Container
 
             if (!mergeItemStack(stack, startIndex, endIndex, false))
             {
-                return null;
+                return ItemStack.EMPTY;
             }
         }
         else
@@ -108,25 +107,25 @@ public class ContainerRack extends Container
 
             if (!mergeItemStack(stack, startIndex, endIndex))
             {
-                return null;
+                return ItemStack.EMPTY;
             }
         }
 
-        if (stack.func_190916_E() == 0)
+        if (stack.getCount() == 0)
         {
-            slot.putStack(null);
+            slot.putStack(ItemStack.EMPTY);
         }
         else
         {
             slot.onSlotChanged();
         }
 
-        if (stack.func_190916_E() == stackCopy.func_190916_E())
+        if (stack.getCount() == stackCopy.getCount())
         {
-            return null;
+            return ItemStack.EMPTY;
         }
 
-        slot.func_190901_a(player, stack);
+        slot.onTake(player, stack);
         return stackCopy;
     }
 
@@ -138,13 +137,13 @@ public class ContainerRack extends Container
             Slot slot = this.inventorySlots.get(i);
             ItemStack existing = slot.getStack();
 
-            if (existing.func_190916_E() <= 0 && slot.isItemValid(stack))
+            if (existing.getCount() <= 0 && slot.isItemValid(stack))
             {
                 slot.putStack(copyWithSize(stack, 1));
                 slot.onSlotChanged();
-                stack.func_190917_f(-1);
+                stack.grow(-1);
                 transferred = true;
-                if (stack.func_190916_E() <= 0)
+                if (stack.getCount() <= 0)
                     break;
             }
         }
@@ -154,7 +153,7 @@ public class ContainerRack extends Container
     private ItemStack copyWithSize(ItemStack stack, int count)
     {
         ItemStack stack1 = stack.copy();
-        stack1.func_190920_e(count);
+        stack1.setCount(count);
         return stack1;
     }
 }

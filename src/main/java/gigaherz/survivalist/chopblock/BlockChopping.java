@@ -13,9 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -32,7 +30,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockChopping extends BlockRegistered
 {
@@ -130,10 +127,10 @@ public class BlockChopping extends BlockRegistered
 
         ItemStack heldItem = playerIn.getHeldItem(hand);
 
-        if (heldItem == ItemStack.field_190927_a)
+        if (heldItem == ItemStack.EMPTY)
         {
             ItemStack extracted = chopper.getSlotInventory().extractItem(0, 1, false);
-            if (extracted.func_190916_E() > 0)
+            if (extracted.getCount() > 0)
             {
                 ItemHandlerHelper.giveItemToPlayer(playerIn, extracted);
                 return true;
@@ -147,16 +144,16 @@ public class BlockChopping extends BlockRegistered
             ItemStack remaining = chopper.getSlotInventory().insertItem(0, heldItem, false);
             if (!playerIn.isCreative())
             {
-                if (remaining.func_190916_E() > 0)
+                if (remaining.getCount() > 0)
                 {
                     playerIn.setHeldItem(hand, remaining);
                 }
                 else
                 {
-                    playerIn.setHeldItem(hand, null);
+                    playerIn.setHeldItem(hand, ItemStack.EMPTY);
                 }
             }
-            return remaining.func_190916_E() < heldItem.func_190916_E();
+            return remaining.getCount() < heldItem.getCount();
         }
 
         return false;
@@ -188,13 +185,13 @@ public class BlockChopping extends BlockRegistered
                     }
                 }
 
-                if (heldItem != null && !playerIn.capabilities.isCreativeMode)
+                if (heldItem.getCount() > 0 && !playerIn.capabilities.isCreativeMode)
                 {
                     heldItem.damageItem(1, playerIn);
-                    if (heldItem.func_190916_E() <= 0)
+                    if (heldItem.getCount() <= 0)
                     {
                         net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(playerIn, heldItem, EnumHand.MAIN_HAND);
-                        playerIn.setHeldItem(EnumHand.MAIN_HAND, null);
+                        playerIn.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
                     }
                 }
             }
@@ -235,7 +232,7 @@ public class BlockChopping extends BlockRegistered
         {
             ItemStack itemstack = inventory.getStackInSlot(i);
 
-            if (itemstack != null)
+            if (itemstack.getCount() > 0)
             {
                 InventoryHelper.spawnItemStack(worldIn, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), itemstack);
             }

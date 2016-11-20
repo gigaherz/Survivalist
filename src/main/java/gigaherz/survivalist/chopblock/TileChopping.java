@@ -59,7 +59,7 @@ public class TileChopping extends TileEntity
     private int breakingProgress = 0;
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return true;
@@ -68,7 +68,7 @@ public class TileChopping extends TileEntity
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return (T) slotInventory;
@@ -124,7 +124,7 @@ public class TileChopping extends TileEntity
     public boolean chop(EntityPlayer playerIn, int axeLevel, int fortune)
     {
         boolean completed = false;
-        if (slotInventory.getStackInSlot(0) != null)
+        if (slotInventory.getStackInSlot(0).getCount() > 0)
         {
             breakingProgress += 25 + 25 * Math.max(0, axeLevel);
             if (breakingProgress >= 200)
@@ -150,7 +150,7 @@ public class TileChopping extends TileEntity
                         if (number > 0)
                         {
                             ItemStack out = res.getLeft();
-                            out.func_190920_e(whole);
+                            out.setCount(whole);
                             spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
                         }
                     }
@@ -161,7 +161,7 @@ public class TileChopping extends TileEntity
                     completed = true;
                 }
                 world.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                slotInventory.setStackInSlot(0, null);
+                slotInventory.setStackInSlot(0, ItemStack.EMPTY);
                 breakingProgress = 0;
             }
 
@@ -173,21 +173,23 @@ public class TileChopping extends TileEntity
 
     public static void spawnItemStack(World worldIn, double x, double y, double z, ItemStack stack)
     {
-        while (stack.func_190916_E() > 0)
+        while (stack.getCount() > 0)
         {
             int i = /*RANDOM.nextInt(3) +*/ 1;
 
-            if (i > stack.func_190916_E())
+            if (i > stack.getCount())
             {
-                i = stack.func_190916_E();
+                i = stack.getCount();
             }
 
-            stack.func_190917_f(-i);
+            stack.grow(-i);
             EntityItem entityitem = new EntityItem(worldIn, x, y, z, new ItemStack(stack.getItem(), i, stack.getMetadata()));
 
             if (stack.hasTagCompound())
             {
-                entityitem.getEntityItem().setTagCompound(stack.getTagCompound().copy());
+                NBTTagCompound tagCompound = stack.getTagCompound();
+                assert tagCompound != null;
+                entityitem.getEntityItem().setTagCompound(tagCompound.copy());
             }
 
             entityitem.setPickupDelay(15);
@@ -195,7 +197,7 @@ public class TileChopping extends TileEntity
             entityitem.motionX = RANDOM.nextGaussian() * 0.02;
             entityitem.motionY = RANDOM.nextGaussian() * 0.02 + 0.2;
             entityitem.motionZ = RANDOM.nextGaussian() * 0.02;
-            worldIn.spawnEntityInWorld(entityitem);
+            worldIn.spawnEntity(entityitem);
         }
     }
 

@@ -9,10 +9,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
+import javax.annotation.Nullable;
+
 public class GuiHandler implements IGuiHandler
 {
     public static final int GUI_RACK = 0;
 
+    @Nullable
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
     {
@@ -31,6 +34,7 @@ public class GuiHandler implements IGuiHandler
         return null;
     }
 
+    @Nullable
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
     {

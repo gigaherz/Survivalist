@@ -14,6 +14,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nullable;
+
 public class TileRack extends TileEntity implements ITickable
 {
     public int[] dryTimeRemaining = new int[4];
@@ -95,7 +97,7 @@ public class TileRack extends TileEntity implements ITickable
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return true;
@@ -104,7 +106,7 @@ public class TileRack extends TileEntity implements ITickable
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return (T) items;

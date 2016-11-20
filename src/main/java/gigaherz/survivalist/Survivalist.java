@@ -30,11 +30,9 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -49,7 +47,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -206,6 +203,7 @@ public class Survivalist
         OreDictionary.registerOre("materialLeather", tanned_leather);
         OreDictionary.registerOre("materialTannedLeather", tanned_leather);
         OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
+
         OreDictionary.registerOre("nuggetIron", nugget.getStack(ItemNugget.Subtype.IRON));
         OreDictionary.registerOre("nuggetCopper", nugget.getStack(ItemNugget.Subtype.COPPER));
         OreDictionary.registerOre("nuggetTin", nugget.getStack(ItemNugget.Subtype.TIN));
@@ -307,7 +305,7 @@ public class Survivalist
                     if (r instanceof ShapedOreRecipe)
                     {
                         ItemStack output = r.getRecipeOutput();
-                        if (output != null && output.getItem() == Items.BREAD)
+                        if (output.getItem() == Items.BREAD)
                         {
                             recipes.remove(r);
                             removed = true;
@@ -427,7 +425,7 @@ public class Survivalist
 
         if (ConfigManager.instance.enableRocks)
         {
-            EntityRegistry.registerModEntity(EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
+            EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
             logger.debug("Last used id: %i", entityId);
 
             addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.IRON), "nuggetIron");
@@ -494,7 +492,7 @@ public class Survivalist
                 if (r instanceof ShapedOreRecipe)
                 {
                     ItemStack output = r.getRecipeOutput();
-                    if (output != null && output.getItem() == Items.STICK)
+                    if (output.getItem() == Items.STICK)
                     {
                         recipes.remove(r);
                         removed = true;
@@ -516,7 +514,7 @@ public class Survivalist
                     IRecipe r = recipes.get(i);
 
                     ItemStack output = r.getRecipeOutput();
-                    if (output != null && OreDictionaryHelper.hasOreName(output, "plankWood"))
+                    if (output.getCount() > 0 && OreDictionaryHelper.hasOreName(output, "plankWood"))
                     {
                         List<Object> inputs = null;
                         if (r instanceof ShapedRecipes)
@@ -632,7 +630,7 @@ public class Survivalist
         if (matches2.size() > 0)
         {
             ItemStack output = matches2.get(0).copy();
-            output.func_190920_e(9);
+            output.setCount(9);
             GameRegistry.addRecipe(new ShapelessOreRecipe(output, oreIngot));
         }
     }

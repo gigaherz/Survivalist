@@ -25,6 +25,7 @@ public class RenderRack extends TileEntitySpecialRenderer<TileRack>
         GlStateManager.disableLighting();
 
         IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        assert inv != null;
 
         GlStateManager.pushMatrix();
 
@@ -35,7 +36,7 @@ public class RenderRack extends TileEntitySpecialRenderer<TileRack>
         for (int i = 0; i < 4; i++)
         {
             ItemStack stack = inv.getStackInSlot(i);
-            if (stack != null)
+            if (stack.getCount() > 0)
             {
                 GlStateManager.pushMatrix();
 

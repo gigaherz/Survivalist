@@ -73,11 +73,10 @@ public class Dryable
         return -1;
     }
 
-    @Nullable
     public static ItemStack getDryingResult(@Nullable ItemStack stack)
     {
         if (stack == null)
-            return null;
+            return ItemStack.EMPTY;
 
         for (Triple<ItemStack, Integer, ItemStack> recipe : RECIPES)
         {
@@ -89,6 +88,6 @@ public class Dryable
             if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
                 return recipe.getRight().copy();
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 }

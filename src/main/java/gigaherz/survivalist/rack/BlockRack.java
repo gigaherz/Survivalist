@@ -4,7 +4,6 @@ import gigaherz.common.BlockRegistered;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.GuiHandler;
 import gigaherz.survivalist.Survivalist;
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -21,9 +20,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockRack extends BlockRegistered
 {

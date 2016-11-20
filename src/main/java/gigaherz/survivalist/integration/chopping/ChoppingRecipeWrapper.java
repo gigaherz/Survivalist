@@ -36,7 +36,7 @@ public class ChoppingRecipeWrapper extends MixedRecipeWrapper
     private static ItemStack copyWithSize(ItemStack middle)
     {
         middle = middle.copy();
-        middle.func_190920_e(1);
+        middle.setCount(1);
         return middle;
     }
 

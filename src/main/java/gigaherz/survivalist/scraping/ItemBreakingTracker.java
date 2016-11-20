@@ -50,9 +50,12 @@ public class ItemBreakingTracker
 
     ItemStack[] equipmentSlots;
 
+    @Nullable
     public static ItemBreakingTracker get(EntityPlayer p)
     {
-        return p.getCapability(Handler.TRACKER, null);
+        if (p.hasCapability(Handler.TRACKER, null))
+            return p.getCapability(Handler.TRACKER, null);
+        return null;
     }
 
     public static void register()
@@ -230,7 +233,7 @@ public class ItemBreakingTracker
                 entityitem.motionX = 0;
                 entityitem.motionZ = 0;
 
-                player.world.spawnEntityInWorld(entityitem);
+                player.world.spawnEntity(entityitem);
             }
         }
 
