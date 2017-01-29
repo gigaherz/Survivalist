@@ -29,7 +29,7 @@ repositories {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.8.0"
+version = "1.8.1"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Survivalist-1.10.2"
 
@@ -50,7 +50,7 @@ jar {
 shadowJar {
     classifier = ''
     dependencies {
-        include(dependency(':Commons:'))
+        include(dependency(':Commons-1.10.2:'))
         exclude '*CraftTweaker*'
     }
     relocate 'gigaherz.common', 'gigaherz.survivalist.shadow.common'
