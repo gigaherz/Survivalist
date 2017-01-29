@@ -43,7 +43,7 @@ public class BlockChopping extends BlockRegistered
     public BlockChopping(String name)
     {
         super(name, Material.WOOD);
-        setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+        setCreativeTab(CreativeTabs.DECORATIONS);
         setSoundType(SoundType.WOOD);
         setHardness(5.0F);
         setResistance(5.0F);

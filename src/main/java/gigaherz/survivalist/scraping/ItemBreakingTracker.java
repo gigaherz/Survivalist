@@ -226,18 +226,18 @@ public class ItemBreakingTracker
 
                 Survivalist.channel.sendTo(new MessageScraping(stack, ret), (EntityPlayerMP) player);
 
-                EntityItem entityitem = new EntityItem(player.worldObj, player.posX, player.posY + 0.5, player.posZ, ret);
+                EntityItem entityitem = new EntityItem(player.world, player.posX, player.posY + 0.5, player.posZ, ret);
                 entityitem.motionX = 0;
                 entityitem.motionZ = 0;
 
-                player.worldObj.spawnEntityInWorld(entityitem);
+                player.world.spawnEntity(entityitem);
             }
         }
 
         @SubscribeEvent
         public void onPlayerDestroyItem(PlayerDestroyItemEvent ev)
         {
-            if (ev.getEntityPlayer().worldObj.isRemote)
+            if (ev.getEntityPlayer().world.isRemote)
                 return;
 
             ItemStack stack = ev.getOriginal();
@@ -253,7 +253,7 @@ public class ItemBreakingTracker
         @SubscribeEvent
         public void onLivingHurt(LivingHurtEvent ev)
         {
-            if (ev.getEntity().worldObj.isRemote)
+            if (ev.getEntity().world.isRemote)
                 return;
 
             if (ev.getEntity() instanceof EntityPlayer)
@@ -267,7 +267,7 @@ public class ItemBreakingTracker
         @SubscribeEvent
         public void entityJoinWorld(EntityJoinWorldEvent ev)
         {
-            if (ev.getEntity().worldObj.isRemote)
+            if (ev.getEntity().world.isRemote)
                 return;
 
             if (ev.getEntity() instanceof EntityPlayer)
@@ -297,7 +297,7 @@ public class ItemBreakingTracker
             if (!(entity instanceof EntityPlayerMP))
                 return;
 
-            if (entity.worldObj == null || entity.worldObj.isRemote)
+            if (entity.world == null || entity.world.isRemote)
                 return;
 
             if (entity.hasCapability(TRACKER, null))
@@ -308,7 +308,7 @@ public class ItemBreakingTracker
                 ItemBreakingTracker cap = new ItemBreakingTracker();
 
                 {
-                    cap.init(entity, entity.worldObj);
+                    cap.init(entity, entity.world);
                 }
 
                 @Override

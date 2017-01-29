@@ -46,10 +46,10 @@ public class TileChopping extends TileEntity
         protected void onContentsChanged(int slot)
         {
             breakingProgress = 0;
-            if (worldObj != null)
+            if (world != null)
             {
-                IBlockState state = worldObj.getBlockState(pos);
-                worldObj.notifyBlockUpdate(pos, state, state, 3);
+                IBlockState state = world.getBlockState(pos);
+                world.notifyBlockUpdate(pos, state, state, 3);
             }
             markDirty();
         }
@@ -126,10 +126,10 @@ public class TileChopping extends TileEntity
         boolean completed = false;
         if (slotInventory.getStackInSlot(0) != null)
         {
-            breakingProgress += 25 + 25 * Math.max(0, axeLevel);
+            breakingProgress += 25 + Choppable.getHitCountMultiplier(slotInventory.getStackInSlot(0))* 25 * Math.max(0, axeLevel);
             if (breakingProgress >= 200)
             {
-                if (!worldObj.isRemote)
+                if (!world.isRemote)
                 {
                     Pair<ItemStack, Double> res = Choppable.getResults(slotInventory.getStackInSlot(0));
                     if (res != null)
@@ -151,7 +151,7 @@ public class TileChopping extends TileEntity
                         {
                             ItemStack out = res.getLeft();
                             out.stackSize = whole;
-                            spawnItemStack(worldObj, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
+                            spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
                         }
                     }
                     else
@@ -160,13 +160,13 @@ public class TileChopping extends TileEntity
                     }
                     completed = true;
                 }
-                worldObj.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                world.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 slotInventory.setStackInSlot(0, null);
                 breakingProgress = 0;
             }
 
-            IBlockState state = worldObj.getBlockState(pos);
-            worldObj.notifyBlockUpdate(pos, state, state, 3);
+            IBlockState state = world.getBlockState(pos);
+            world.notifyBlockUpdate(pos, state, state, 3);
         }
         return completed;
     }
@@ -195,7 +195,7 @@ public class TileChopping extends TileEntity
             entityitem.motionX = RANDOM.nextGaussian() * 0.02;
             entityitem.motionY = RANDOM.nextGaussian() * 0.02 + 0.2;
             entityitem.motionZ = RANDOM.nextGaussian() * 0.02;
-            worldIn.spawnEntityInWorld(entityitem);
+            worldIn.spawnEntity(entityitem);
         }
     }
 

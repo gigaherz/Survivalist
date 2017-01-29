@@ -6,6 +6,7 @@ import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
@@ -13,8 +14,74 @@ import java.util.List;
 
 public class Dryable
 {
-    public static final List<Triple<ItemStack, Integer, ItemStack>> RECIPES = Lists.newArrayList();
-    public static final List<Triple<String, Integer, ItemStack>> ORE_RECIPES = Lists.newArrayList();
+    public static abstract class DryingRecipe
+    {
+        private int time;
+        private ItemStack output;
+
+        public DryingRecipe(int time, ItemStack output)
+        {
+            this.time = time;
+            this.output = output;
+        }
+
+        public int getTime()
+        {
+            return time;
+        }
+
+        public ItemStack getOutput()
+        {
+            return output;
+        }
+
+        public abstract boolean accepts(ItemStack stack);
+    }
+
+    public static class DryingItemRecipe extends DryingRecipe
+    {
+        private ItemStack input;
+
+        public DryingItemRecipe(ItemStack input, int time, ItemStack output)
+        {
+            super(time, output);
+            this.input = input;
+        }
+
+        public ItemStack getInput()
+        {
+            return input;
+        }
+
+        public boolean accepts(ItemStack stack)
+        {
+            return OreDictionary.itemMatches(input, stack, false);
+        }
+    }
+
+    public static class DryingOreRecipe extends DryingRecipe
+    {
+        private String oreName;
+
+        public DryingOreRecipe(String oreName, int time, ItemStack right)
+        {
+            super(time, right);
+            this.oreName = oreName;
+        }
+
+        public String getOreName()
+        {
+            return oreName;
+        }
+
+        @Override
+        public boolean accepts(ItemStack stack)
+        {
+            return OreDictionaryHelper.hasOreName(stack, oreName);
+        }
+    }
+
+    public static final List<DryingRecipe> RECIPES = Lists.newArrayList();
 
     public static void registerStockRecipes()
     {
@@ -46,12 +113,12 @@ public class Dryable
 
     public static void registerRecipe(ItemStack input, ItemStack output, int time)
     {
-        RECIPES.add(Triple.of(input, time, output));
+        RECIPES.add(new DryingItemRecipe(input, time, output));
     }
 
     public static void registerRecipe(String input, ItemStack output, int time)
     {
-        ORE_RECIPES.add(Triple.of(input, time, output));
+        RECIPES.add(new DryingOreRecipe(input, time, output));
     }
 
     public static int getDryingTime(@Nullable ItemStack stack)
@@ -59,15 +126,10 @@ public class Dryable
         if (stack == null)
             return -1;
 
-        for (Triple<ItemStack, Integer, ItemStack> recipe : RECIPES)
+        for (DryingRecipe recipe : RECIPES)
         {
-            if (ItemStack.areItemsEqual(recipe.getLeft(), stack))
-                return recipe.getMiddle();
-        }
-        for (Triple<String, Integer, ItemStack> recipe : ORE_RECIPES)
-        {
-            if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
-                return recipe.getMiddle();
+            if (recipe.accepts(stack))
+                return recipe.getTime();
         }
 
         return -1;
@@ -79,16 +141,12 @@ public class Dryable
         if (stack == null)
             return null;
 
-        for (Triple<ItemStack, Integer, ItemStack> recipe : RECIPES)
+        for (DryingRecipe recipe : RECIPES)
         {
-            if (ItemStack.areItemsEqual(recipe.getLeft(), stack))
-                return recipe.getRight().copy();
+            if (recipe.accepts(stack))
+                return recipe.getOutput().copy();
         }
-        for (Triple<String, Integer, ItemStack> recipe : ORE_RECIPES)
-        {
-            if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
-                return recipe.getRight().copy();
-        }
+
         return null;
     }
 }

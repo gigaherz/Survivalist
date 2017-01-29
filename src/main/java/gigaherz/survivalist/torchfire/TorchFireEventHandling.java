@@ -18,7 +18,7 @@ public class TorchFireEventHandling
     @SubscribeEvent
     public void onAttackEntity(AttackEntityEvent ev)
     {
-        if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().worldObj.isRemote)
+        if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().world.isRemote)
         {
             ItemStack stack = ev.getEntityPlayer().getHeldItem(EnumHand.MAIN_HAND);
             if (stack != null && stack.getItem() instanceof ItemBlock)

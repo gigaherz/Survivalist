@@ -49,6 +49,8 @@ public class ConfigManager
     public final boolean removePlanksRecipes;
     public final float choppingDegradeChance;
     public final boolean enableHatchet;
+    public final boolean enablePick;
+    public final boolean enableSpade;
     public final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
 
     public static void loadConfig(Configuration configuration)
@@ -109,6 +111,8 @@ public class ConfigManager
 
         configuration.addCustomCategoryComment("Tools", "Settings for the tools");
         Property p_enableHatchet = configuration.get("Tools", "EnableHatchet", true);
+        Property p_enablePick = configuration.get("Tools", "EnablePick", true);
+        Property p_enableSpade = configuration.get("Tools", "EnableSpade", true);
 
         boolean hasList = configuration.hasCategory("CustomAxes");
         configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");
@@ -145,6 +149,8 @@ public class ConfigManager
         removePlanksRecipes = p_removePlanksRecipes.getBoolean();
         choppingDegradeChance = (float) p_choppingDegradeChance.getDouble();
         enableHatchet = p_enableHatchet.getBoolean();
+        enablePick = p_enablePick.getBoolean();
+        enableSpade = p_enableSpade.getBoolean();
         parseChoppingAxes(c_customAxes);
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
@@ -176,6 +182,8 @@ public class ConfigManager
         anyDefault = anyDefault || !p_removePlanksRecipes.wasRead();
         anyDefault = anyDefault || !p_choppingDegradeChance.wasRead();
         anyDefault = anyDefault || !p_enableHatchet.wasRead();
+        anyDefault = anyDefault || !p_enablePick.wasRead();
+        anyDefault = anyDefault || !p_enableSpade.wasRead();
         anyDefault = anyDefault || !hasList;
 
         if (anyDefault)

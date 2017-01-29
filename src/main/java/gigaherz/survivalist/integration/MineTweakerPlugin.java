@@ -9,11 +9,10 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.mc1102.item.MCItemStack;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Triple;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.Iterator;
+import javax.annotation.Nullable;
 
 public class MineTweakerPlugin
 {
@@ -28,6 +27,7 @@ public class MineTweakerPlugin
         return ing instanceof IOreDictEntry;
     }
 
+    @Nullable
     static ItemStack toStack(IIngredient ing)
     {
         Object internal = ing.getInternal();
@@ -40,6 +40,7 @@ public class MineTweakerPlugin
         return (ItemStack) internal;
     }
 
+    @Nullable
     static String toOredictName(IIngredient ing)
     {
         if (!(ing instanceof IOreDictEntry))
@@ -52,7 +53,7 @@ public class MineTweakerPlugin
     public static class DryableZen
     {
         @ZenMethod
-        public static void addRecipe(IIngredient input, IItemStack output, int time)
+        public static void addRecipe(@Nullable IIngredient input, @Nullable IItemStack output, int time)
         {
             if (input == null || output == null)
             {
@@ -67,23 +68,9 @@ public class MineTweakerPlugin
         }
 
         @ZenMethod
-        public static void removeRecipe(IIngredient ingredient)
+        public static void removeRecipe(final IIngredient ingredient)
         {
-            Iterator<Triple<ItemStack, Integer, ItemStack>> it = Dryable.RECIPES.iterator();
-            while (it.hasNext())
-            {
-                Triple<ItemStack, Integer, ItemStack> item = it.next();
-                if (ingredient.matches(new MCItemStack(item.getRight())))
-                    it.remove();
-            }
-
-            Iterator<Triple<String, Integer, ItemStack>> it2 = Dryable.ORE_RECIPES.iterator();
-            while (it2.hasNext())
-            {
-                Triple<String, Integer, ItemStack> item = it2.next();
-                if (ingredient.matches(new MCItemStack(item.getRight())))
-                    it.remove();
-            }
+            Dryable.RECIPES.removeIf(item -> ingredient.matches(new MCItemStack(item.getOutput())));
         }
     }
 
@@ -91,7 +78,7 @@ public class MineTweakerPlugin
     public static class ChoppableZen
     {
         @ZenMethod
-        public static void addRecipe(IIngredient input, IItemStack output)
+        public static void addRecipe(@Nullable IIngredient input, @Nullable IItemStack output)
         {
             if (input == null || output == null)
             {
@@ -106,7 +93,7 @@ public class MineTweakerPlugin
         }
 
         @ZenMethod
-        public static void addRecipe(IIngredient input, IItemStack output, double outputMultiplier)
+        public static void addRecipe(@Nullable IIngredient input, @Nullable IItemStack output, double outputMultiplier)
         {
             if (input == null || output == null)
             {
@@ -120,25 +107,25 @@ public class MineTweakerPlugin
                 Choppable.registerRecipe(toStack(input), toStack(output), outputMultiplier);
         }
 
+        @ZenMethod
+        public static void addRecipe(@Nullable IIngredient input, @Nullable IItemStack output, double outputMultiplier, double hitCountMultiplier)
+        {
+            if (input == null || output == null)
+            {
+                Survivalist.logger.error("Required parameters missing for chopping recipe.");
+                return;
+            }
+
+            if (isOredict(input))
+                Choppable.registerRecipe(toOredictName(input), toStack(output), outputMultiplier, hitCountMultiplier);
+            else
+                Choppable.registerRecipe(toStack(input), toStack(output), outputMultiplier, hitCountMultiplier);
+        }
 
         @ZenMethod
-        public static void removeRecipe(IIngredient ingredient)
+        public static void removeRecipe(final IIngredient ingredient)
         {
-            Iterator<Triple<ItemStack, ItemStack, Double>> it = Choppable.RECIPES.iterator();
-            while (it.hasNext())
-            {
-                Triple<ItemStack, ItemStack, Double> item = it.next();
-                if (ingredient.matches(new MCItemStack(item.getMiddle())))
-                    it.remove();
-            }
-
-            Iterator<Triple<String, ItemStack, Double>> it2 = Choppable.ORE_RECIPES.iterator();
-            while (it2.hasNext())
-            {
-                Triple<String, ItemStack, Double> item = it2.next();
-                if (ingredient.matches(new MCItemStack(item.getMiddle())))
-                    it.remove();
-            }
+            Choppable.RECIPES.removeIf(item -> ingredient.matches(new MCItemStack(item.getOutput())));
         }
     }
 }

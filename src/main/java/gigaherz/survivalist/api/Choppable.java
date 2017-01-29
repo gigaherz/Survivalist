@@ -2,7 +2,6 @@ package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
 import gigaherz.common.OreDictionaryHelper;
-import gigaherz.survivalist.Survivalist;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -13,8 +12,82 @@ import java.util.List;
 
 public class Choppable
 {
-    public static final List<Triple<ItemStack, ItemStack, Double>> RECIPES = Lists.newArrayList();
-    public static final List<Triple<String, ItemStack, Double>> ORE_RECIPES = Lists.newArrayList();
+
+    public static abstract class ChoppingRecipe
+    {
+        private ItemStack output;
+        private double outputMultiplier;
+        private double hitCountMultiplier;
+
+        public ChoppingRecipe(ItemStack output, double outputMultiplier, double hitCountMultiplier)
+        {
+            this.outputMultiplier = outputMultiplier;
+            this.output = output;
+            this.hitCountMultiplier = hitCountMultiplier;
+        }
+
+        public double getOutputMultiplier()
+        {
+            return outputMultiplier;
+        }
+
+        public ItemStack getOutput()
+        {
+            return output;
+        }
+
+        public abstract boolean accepts(ItemStack stack);
+
+        public double getHitCountMultiplier()
+        {
+            return hitCountMultiplier;
+        }
+    }
+
+    public static class ChoppingItemRecipe extends ChoppingRecipe
+    {
+        private ItemStack input;
+
+        public ChoppingItemRecipe(ItemStack input, ItemStack output, double outputMultiplier, double hitCountMultiplier)
+        {
+            super(output, outputMultiplier, hitCountMultiplier);
+            this.input = input;
+        }
+
+        public ItemStack getInput()
+        {
+            return input;
+        }
+
+        public boolean accepts(ItemStack stack)
+        {
+            return OreDictionary.itemMatches(input, stack, false);
+        }
+    }
+
+    public static class ChoppingOreRecipe extends ChoppingRecipe
+    {
+        private String oreName;
+
+        public ChoppingOreRecipe(String oreName, ItemStack right, double outputMultiplier, double hitCountMultiplier)
+        {
+            super(right, outputMultiplier, hitCountMultiplier);
+            this.oreName = oreName;
+        }
+
+        public String getOreName()
+        {
+            return oreName;
+        }
+
+        @Override
+        public boolean accepts(ItemStack stack)
+        {
+            return OreDictionaryHelper.hasOreName(stack, oreName);
+        }
+    }
+
+    public static final List<ChoppingRecipe> RECIPES = Lists.newArrayList();
 
     public static void registerStockRecipes()
     {
@@ -28,7 +101,12 @@ public class Choppable
 
     public static void registerRecipe(ItemStack input, ItemStack output, double outputMultiplier)
     {
-        RECIPES.add(Triple.of(input, output, outputMultiplier));
+        registerRecipe(input, output, outputMultiplier, 1);
+    }
+
+    public static void registerRecipe(ItemStack input, ItemStack output, double outputMultiplier, double hitCountMultiplier)
+    {
+        RECIPES.add(new ChoppingItemRecipe(input, output, outputMultiplier, hitCountMultiplier));
     }
 
     public static void registerRecipe(String input, ItemStack output)
@@ -38,7 +116,12 @@ public class Choppable
 
     public static void registerRecipe(String input, ItemStack output, double outputMultiplier)
     {
-        ORE_RECIPES.add(Triple.of(input, output, outputMultiplier));
+        registerRecipe(input, output, outputMultiplier, 1);
+    }
+
+    public static void registerRecipe(String input, ItemStack output, double outputMultiplier, double hitCountMultiplier)
+    {
+        RECIPES.add(new ChoppingOreRecipe(input, output, outputMultiplier, hitCountMultiplier));
     }
 
     public static boolean isValidInput(ItemStack stack)
@@ -46,16 +129,12 @@ public class Choppable
         if (stack == null)
             return false;
 
-        for (Triple<ItemStack, ItemStack, Double> recipe : RECIPES)
+        for (ChoppingRecipe recipe : RECIPES)
         {
-            if (OreDictionary.itemMatches(recipe.getLeft(), stack, false))
+            if (recipe.accepts(stack))
                 return true;
         }
-        for (Triple<String, ItemStack, Double> recipe : ORE_RECIPES)
-        {
-            if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
-                return true;
-        }
+
         return false;
     }
 
@@ -64,16 +143,26 @@ public class Choppable
         if (stack == null)
             return null;
 
-        for (Triple<ItemStack, ItemStack, Double> recipe : RECIPES)
+        for (ChoppingRecipe recipe : RECIPES)
         {
-            if (OreDictionary.itemMatches(recipe.getLeft(), stack, false))
-                return Pair.of(recipe.getMiddle().copy(), recipe.getRight());
+            if (recipe.accepts(stack))
+                return Pair.of(recipe.getOutput().copy(), recipe.getOutputMultiplier());
         }
-        for (Triple<String, ItemStack, Double> recipe : ORE_RECIPES)
-        {
-            if (OreDictionaryHelper.hasOreName(stack, recipe.getLeft()))
-                return Pair.of(recipe.getMiddle().copy(), recipe.getRight());
-        }
+
         return null;
+    }
+
+    public static double getHitCountMultiplier(ItemStack stack)
+    {
+        if (stack == null)
+            return 0;
+
+        for (ChoppingRecipe recipe : RECIPES)
+        {
+            if (recipe.accepts(stack))
+                return recipe.getHitCountMultiplier();
+        }
+
+        return 0;
     }
 }

@@ -51,7 +51,7 @@ public class MessageScraping
         public IMessage onMessage(MessageScraping message, MessageContext ctx)
         {
             Minecraft.getMinecraft().addScheduledTask(() ->
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(
+                    Minecraft.getMinecraft().player.sendMessage(
                             new TextComponentTranslation("text." + Survivalist.MODID + ".scraping.message1",
                                     makeClickable(message.stack.getTextComponent()),
                                     new TextComponentString("" + message.ret.stackSize),
