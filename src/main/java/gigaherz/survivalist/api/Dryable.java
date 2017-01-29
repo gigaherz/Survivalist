@@ -121,11 +121,8 @@ public class Dryable
         RECIPES.add(new DryingOreRecipe(input, time, output));
     }
 
-    public static int getDryingTime(@Nullable ItemStack stack)
+    public static int getDryingTime(ItemStack stack)
     {
-        if (stack == null)
-            return -1;
-
         for (DryingRecipe recipe : RECIPES)
         {
             if (recipe.accepts(stack))
@@ -135,11 +132,8 @@ public class Dryable
         return -1;
     }
 
-    public static ItemStack getDryingResult(@Nullable ItemStack stack)
+    public static ItemStack getDryingResult(ItemStack stack)
     {
-        if (stack == null)
-            return ItemStack.EMPTY;
-
         for (DryingRecipe recipe : RECIPES)
         {
             if (recipe.accepts(stack))

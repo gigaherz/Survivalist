@@ -42,6 +42,9 @@ public class RocksEventHandling
 
         for (ItemStack drop : drops)
         {
+            if (drop.getCount() <= 0)
+                continue;
+
             if (drop.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE) && ConfigManager.instance.replaceStoneDrops)
             {
                 newDrops.add(new ItemStack(Survivalist.rock, 4));
