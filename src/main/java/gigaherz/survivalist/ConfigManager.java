@@ -48,7 +48,10 @@ public class ConfigManager
     public final boolean importPlanksRecipes;
     public final boolean removePlanksRecipes;
     public final float choppingDegradeChance;
+    public final float choppingExhaustion;
     public final boolean enableHatchet;
+    public final boolean enablePick;
+    public final boolean enableSpade;
     public final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
 
     public static void loadConfig(Configuration configuration)
@@ -105,10 +108,13 @@ public class ConfigManager
         Property p_importPlanksRecipes = configuration.get("Chopping", "ImportPlanksRecipes", true);
         Property p_removePlanksRecipes = configuration.get("Chopping", "RemovePlanksRecipes", true);
         Property p_choppingDegradeChance = configuration.get("Chopping", "DegradeChance", 0.06);
+        Property p_choppingExhaustion = configuration.get("Chopping", "DegradeChance", 0.0025);
         p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
 
         configuration.addCustomCategoryComment("Tools", "Settings for the tools");
         Property p_enableHatchet = configuration.get("Tools", "EnableHatchet", true);
+        Property p_enablePick = configuration.get("Tools", "EnablePick", true);
+        Property p_enableSpade = configuration.get("Tools", "EnableSpade", true);
 
         boolean hasList = configuration.hasCategory("CustomAxes");
         configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");
@@ -144,7 +150,10 @@ public class ConfigManager
         importPlanksRecipes = p_importPlanksRecipes.getBoolean();
         removePlanksRecipes = p_removePlanksRecipes.getBoolean();
         choppingDegradeChance = (float) p_choppingDegradeChance.getDouble();
+        choppingExhaustion = (float) p_choppingExhaustion.getDouble();
         enableHatchet = p_enableHatchet.getBoolean();
+        enablePick = p_enablePick.getBoolean();
+        enableSpade = p_enableSpade.getBoolean();
         parseChoppingAxes(c_customAxes);
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
@@ -175,7 +184,10 @@ public class ConfigManager
         anyDefault = anyDefault || !p_importPlanksRecipes.wasRead();
         anyDefault = anyDefault || !p_removePlanksRecipes.wasRead();
         anyDefault = anyDefault || !p_choppingDegradeChance.wasRead();
+        anyDefault = anyDefault || !p_choppingExhaustion.wasRead();
         anyDefault = anyDefault || !p_enableHatchet.wasRead();
+        anyDefault = anyDefault || !p_enablePick.wasRead();
+        anyDefault = anyDefault || !p_enableSpade.wasRead();
         anyDefault = anyDefault || !hasList;
 
         if (anyDefault)

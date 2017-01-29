@@ -28,8 +28,8 @@ public class GuiRack extends GuiContainer
     protected void drawGuiContainerForegroundLayer(int i, int j)
     {
         String name = I18n.format(titleString);
-        mc.fontRendererObj.drawString(name, (xSize - mc.fontRendererObj.getStringWidth(name)) / 2, 6, 0x404040);
-        mc.fontRendererObj.drawString(I18n.format(this.player.getName()), 8, ySize - 96 + 2, 0x404040);
+        mc.fontRenderer.drawString(name, (xSize - mc.fontRenderer.getStringWidth(name)) / 2, 6, 0x404040);
+        mc.fontRenderer.drawString(I18n.format(this.player.getName()), 8, ySize - 96 + 2, 0x404040);
     }
 
     @Override

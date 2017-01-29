@@ -3,31 +3,35 @@ package gigaherz.survivalist.integration.chopping;
 import com.google.common.collect.Lists;
 import gigaherz.common.client.StackRenderingHelper;
 import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.integration.MixedRecipeWrapper;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Triple;
+import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
-public class ChoppingRecipeWrapper extends MixedRecipeWrapper
+public class ChoppingRecipeWrapper extends BlankRecipeWrapper
 {
     public static List<ChoppingRecipeWrapper> getRecipes()
     {
         List<ChoppingRecipeWrapper> list = Lists.newArrayList();
 
-        for (Triple<ItemStack, ItemStack, Double> pair : Choppable.RECIPES)
+        for (Choppable.ChoppingRecipe pair : Choppable.RECIPES)
         {
-            list.add(new ChoppingRecipeWrapper(pair.getLeft(), copyWithSize(pair.getMiddle()), pair.getRight()));
-        }
-
-        for (Triple<String, ItemStack, Double> pair : Choppable.ORE_RECIPES)
-        {
-            list.add(new ChoppingRecipeWrapper(pair.getLeft(), copyWithSize(pair.getMiddle()), pair.getRight()));
+            if (pair instanceof Choppable.ChoppingItemRecipe)
+            {
+                list.add(new ChoppingRecipeWrapper.ItemInput((Choppable.ChoppingItemRecipe) pair));
+            }
+            else if (pair instanceof Choppable.ChoppingOreRecipe)
+            {
+                list.add(new ChoppingRecipeWrapper.OreInput((Choppable.ChoppingOreRecipe) pair));
+            }
         }
 
         return list;
@@ -41,17 +45,18 @@ public class ChoppingRecipeWrapper extends MixedRecipeWrapper
     }
 
     private double multiplier;
+    private ItemStack output;
 
-    private ChoppingRecipeWrapper(String input, ItemStack output, double multiplier)
+    private ChoppingRecipeWrapper(ItemStack output, double multiplier)
     {
-        super(input, output);
+        this.output = output;
         this.multiplier = multiplier;
     }
 
-    private ChoppingRecipeWrapper(ItemStack input, ItemStack output, double multiplier)
+    @Override
+    public void getIngredients(IIngredients ingredients)
     {
-        super(input, output);
-        this.multiplier = multiplier;
+        ingredients.setOutput(ItemStack.class, output);
     }
 
     @Override
@@ -101,9 +106,55 @@ public class ChoppingRecipeWrapper extends MixedRecipeWrapper
         String label = amount + "x";
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0, 150);
-        mc.fontRendererObj.drawString(label, 58 - mc.fontRendererObj.getStringWidth(label), 14, 0xFFFFFFFF, true);
+        mc.fontRenderer.drawString(label, 58 - mc.fontRenderer.getStringWidth(label), 14, 0xFFFFFFFF, true);
         GlStateManager.popMatrix();
 
         GlStateManager.popMatrix();
+    }
+
+    private static class ItemInput extends ChoppingRecipeWrapper
+    {
+        private ItemStack inputStack;
+
+        private ItemInput(ItemStack input, ItemStack output, double multiplier)
+        {
+            super(output, multiplier);
+            this.inputStack = input;
+        }
+
+        public ItemInput(Choppable.ChoppingItemRecipe recipe)
+        {
+            this(recipe.getInput(), copyWithSize(recipe.getOutput()), recipe.getOutputMultiplier());
+        }
+
+        @Override
+        public void getIngredients(IIngredients ingredients)
+        {
+            ingredients.setInput(ItemStack.class, inputStack);
+            super.getIngredients(ingredients);
+        }
+    }
+
+    private static class OreInput extends ChoppingRecipeWrapper
+    {
+        private String inputOredict;
+
+        private OreInput(String input, ItemStack output, double multiplier)
+        {
+            super(output, multiplier);
+            this.inputOredict = input;
+        }
+
+        public OreInput(Choppable.ChoppingOreRecipe recipe)
+        {
+            this(recipe.getOreName(), copyWithSize(recipe.getOutput()), recipe.getOutputMultiplier());
+        }
+
+        @Override
+        public void getIngredients(IIngredients ingredients)
+        {
+            ingredients.setInputLists(ItemStack.class, Collections.singletonList(OreDictionary.getOres(inputOredict)));
+            super.getIngredients(ingredients);
+        }
     }
 }

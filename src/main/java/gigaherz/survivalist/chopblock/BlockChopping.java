@@ -43,7 +43,7 @@ public class BlockChopping extends BlockRegistered
     public BlockChopping(String name)
     {
         super(name, Material.WOOD);
-        setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+        setCreativeTab(CreativeTabs.DECORATIONS);
         setSoundType(SoundType.WOOD);
         setHardness(5.0F);
         setResistance(5.0F);
@@ -184,6 +184,9 @@ public class BlockChopping extends BlockRegistered
                         worldIn.setBlockToAir(pos);
                     }
                 }
+
+                if (ConfigManager.instance.choppingExhaustion > 0)
+                    playerIn.addExhaustion(ConfigManager.instance.choppingExhaustion);
 
                 if (heldItem.getCount() > 0 && !playerIn.capabilities.isCreativeMode)
                 {

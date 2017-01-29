@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -126,38 +127,23 @@ public class TileChopping extends TileEntity
         boolean completed = false;
         if (slotInventory.getStackInSlot(0).getCount() > 0)
         {
-            breakingProgress += 25 + 25 * Math.max(0, axeLevel);
+            breakingProgress += 25 + Choppable.getHitCountMultiplier(slotInventory.getStackInSlot(0))* 25 * Math.max(0, axeLevel);
             if (breakingProgress >= 200)
             {
                 if (!world.isRemote)
                 {
-                    Pair<ItemStack, Double> res = Choppable.getResults(slotInventory.getStackInSlot(0));
-                    if (res != null)
+                    Choppable.ChoppingRecipe recipe = Choppable.find(slotInventory.getStackInSlot(0));
+                    if (recipe != null)
                     {
-                        double number = 0.4f * res.getRight();
+                        ItemStack out = recipe.getResults(slotInventory.getStackInSlot(0), playerIn, axeLevel, fortune, RANDOM);
 
-                        if (axeLevel >= 0)
-                            number = Math.max(0, res.getRight() * (1 + axeLevel)) * (1 + RANDOM.nextFloat() * fortune);
-
-                        int whole = (int) Math.floor(number);
-                        double remainder = number - whole;
-
-                        if (RANDOM.nextFloat() < remainder)
+                        if (out.getCount() > 0)
                         {
-                            whole++;
-                        }
-
-                        if (number > 0)
-                        {
-                            ItemStack out = res.getLeft();
-                            out.setCount(whole);
+                            //ItemHandlerHelper.giveItemToPlayer(playerIn, out);
                             spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
                         }
                     }
-                    else
-                    {
-                        // TODO: Spawn some block breaking particles
-                    }
+
                     completed = true;
                 }
                 world.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);

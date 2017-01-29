@@ -85,6 +85,8 @@ public class Survivalist
     public static Item dough;
     public static Item round_bread;
     public static Item hatchet;
+    public static Item pick;
+    public static Item spade;
 
     public static Item tanned_helmet;
     public static Item tanned_chestplate;
@@ -190,6 +192,26 @@ public class Survivalist
                     public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableHatchet)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                }.setCreativeTab(CreativeTabs.TOOLS),
+                pick = new ItemRegisteredPick("pick", TOOL_FLINT){
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enablePick)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                }.setCreativeTab(CreativeTabs.TOOLS),
+                spade = new ItemRegisteredSpade("spade", TOOL_FLINT){
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enableSpade)
                         {
                             super.getSubItems(itemIn, tab, subItems);
                         }
@@ -472,10 +494,22 @@ public class Survivalist
             GameRegistry.addShapelessRecipe(new ItemStack(Items.FLINT), Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL);
         }
 
+        if (ConfigManager.instance.enableSpade)
+        {
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(spade),
+                    "stickWood", Items.FLINT));
+        }
+
         if (ConfigManager.instance.enableHatchet)
         {
             GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(hatchet),
                     "stickWood", "string", Items.FLINT));
+        }
+
+        if (ConfigManager.instance.enablePick)
+        {
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(pick),
+                    "stickWood", "string", Items.FLINT, Items.FLINT));
         }
     }
 
