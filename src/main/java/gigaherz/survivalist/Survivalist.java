@@ -226,26 +226,26 @@ public class Survivalist
         OreDictionary.registerOre("materialTannedLeather", tanned_leather);
         OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
 
-        OreDictionary.registerOre("nuggetIron", nugget.getStack(ItemNugget.Subtype.IRON));
-        OreDictionary.registerOre("nuggetCopper", nugget.getStack(ItemNugget.Subtype.COPPER));
-        OreDictionary.registerOre("nuggetTin", nugget.getStack(ItemNugget.Subtype.TIN));
-        OreDictionary.registerOre("nuggetLead", nugget.getStack(ItemNugget.Subtype.LEAD));
-        OreDictionary.registerOre("nuggetSilver", nugget.getStack(ItemNugget.Subtype.SILVER));
+        OreDictionary.registerOre("nuggetIron", nugget.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("nuggetCopper", nugget.getStack(OreMaterial.COPPER));
+        OreDictionary.registerOre("nuggetTin", nugget.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("nuggetLead", nugget.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("nuggetSilver", nugget.getStack(OreMaterial.SILVER));
 
-        OreDictionary.registerOre("rockOreIron",   rock_ore.getStack(ItemOreRock.Subtype.IRON));
-        OreDictionary.registerOre("rockOreGold",   rock_ore.getStack(ItemOreRock.Subtype.GOLD));
-        OreDictionary.registerOre("rockOreCopper", rock_ore.getStack(ItemOreRock.Subtype.COPPER));
-        OreDictionary.registerOre("rockOreTin",    rock_ore.getStack(ItemOreRock.Subtype.TIN));
-        OreDictionary.registerOre("rockOreLead",   rock_ore.getStack(ItemOreRock.Subtype.LEAD));
-        OreDictionary.registerOre("rockOreSilver", rock_ore.getStack(ItemOreRock.Subtype.SILVER));
+        OreDictionary.registerOre("rockOreIron",   rock_ore.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("rockOreGold",   rock_ore.getStack(OreMaterial.GOLD));
+        OreDictionary.registerOre("rockOreCopper", rock_ore.getStack(OreMaterial.COPPER));
+        OreDictionary.registerOre("rockOreTin",    rock_ore.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("rockOreLead",   rock_ore.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("rockOreSilver", rock_ore.getStack(OreMaterial.SILVER));
 
-        OreDictionary.registerOre("rock", rock.getStack(ItemRock.Subtype.NORMAL));
-        OreDictionary.registerOre("rock", rock.getStack(ItemRock.Subtype.ANDESITE));
-        OreDictionary.registerOre("rock", rock.getStack(ItemRock.Subtype.DIORITE));
-        OreDictionary.registerOre("rock", rock.getStack(ItemRock.Subtype.GRANITE));
-        OreDictionary.registerOre("rockAndesite", rock.getStack(ItemRock.Subtype.ANDESITE));
-        OreDictionary.registerOre("rockDiorite", rock.getStack(ItemRock.Subtype.DIORITE));
-        OreDictionary.registerOre("rockGranite", rock.getStack(ItemRock.Subtype.GRANITE));
+        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.NORMAL));
+        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.ANDESITE));
+        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.DIORITE));
+        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.GRANITE));
+        OreDictionary.registerOre("rockAndesite", rock.getStack(RockMaterial.ANDESITE));
+        OreDictionary.registerOre("rockDiorite", rock.getStack(RockMaterial.DIORITE));
+        OreDictionary.registerOre("rockGranite", rock.getStack(RockMaterial.GRANITE));
     }
 
     @SubscribeEvent
@@ -450,39 +450,39 @@ public class Survivalist
             EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
             logger.debug("Last used id: %i", entityId);
 
-            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.IRON), "nuggetIron");
-            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.GOLD), "nuggetGold");
-            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.COPPER), "nuggetCopper");
-            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.TIN), "nuggetTin");
-            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.LEAD), "nuggetLead");
-            addSmeltingNugget(rock_ore.getStack(ItemOreRock.Subtype.SILVER), "nuggetSilver");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
 
             GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
                     "rrr",
                     "rcr",
                     "rrr",
-                    'r', rock.getStack(ItemRock.Subtype.NORMAL),
+                    'r', rock.getStack(RockMaterial.NORMAL),
                     'c', Items.CLAY_BALL);
 
             GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 5),
                     "rrr",
                     "rcr",
                     "rrr",
-                    'r', rock.getStack(ItemRock.Subtype.ANDESITE),
+                    'r', rock.getStack(RockMaterial.ANDESITE),
                     'c', Items.CLAY_BALL);
 
             GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 3),
                     "rrr",
                     "rcr",
                     "rrr",
-                    'r', rock.getStack(ItemRock.Subtype.DIORITE),
+                    'r', rock.getStack(RockMaterial.DIORITE),
                     'c', Items.CLAY_BALL);
 
             GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 1),
                     "rrr",
                     "rcr",
                     "rrr",
-                    'r', rock.getStack(ItemRock.Subtype.GRANITE),
+                    'r', rock.getStack(RockMaterial.GRANITE),
                     'c', Items.CLAY_BALL);
 
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.GRAVEL),

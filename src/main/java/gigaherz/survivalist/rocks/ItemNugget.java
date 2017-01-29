@@ -10,12 +10,11 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 
 public class ItemNugget extends ItemStateful
 {
-    public static final PropertyEnum<Subtype> ORE = PropertyEnum.create("ore", Subtype.class);
+    public static final PropertyEnum<OreMaterial> ORE = PropertyEnum.create("ore", OreMaterial.class, OreMaterial.NUGGETS);
 
     public ItemNugget(String name)
     {
@@ -49,7 +48,7 @@ public class ItemNugget extends ItemStateful
     {
         if (ConfigManager.instance.enableNuggets)
         {
-            for (Subtype type : ORE.getAllowedValues())
+            for (OreMaterial type : ORE.getAllowedValues())
             {
                 IItemState state = getDefaultState().withProperty(ORE, type);
                 subItems.add(state.getStack());
@@ -57,37 +56,8 @@ public class ItemNugget extends ItemStateful
         }
     }
 
-    public ItemStack getStack(Subtype iron)
+    public ItemStack getStack(OreMaterial material)
     {
-        return getDefaultState().withProperty(ORE, iron).getStack();
-    }
-
-    public enum Subtype implements IStringSerializable
-    {
-        IRON("iron", ".iron_nugget"),
-        COPPER("copper", ".copper_nugget"),
-        TIN("tin", ".tin_nugget"),
-        LEAD("lead", ".lead_nugget"),
-        SILVER("silver", ".silver_nugget");
-
-        final String name;
-        final String unlocalizedSuffix;
-
-        Subtype(String name, String unlocalizedSuffix)
-        {
-            this.name = name;
-            this.unlocalizedSuffix = unlocalizedSuffix;
-        }
-
-        @Override
-        public String getName()
-        {
-            return name;
-        }
-
-        public String getUnlocalizedSuffix()
-        {
-            return unlocalizedSuffix;
-        }
+        return getDefaultState().withProperty(ORE, material).getStack();
     }
 }

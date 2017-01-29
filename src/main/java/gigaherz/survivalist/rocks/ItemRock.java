@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class ItemRock extends ItemStateful
 {
-    public static final PropertyEnum<Subtype> TYPE = PropertyEnum.create("rock", Subtype.class);
+    public static final PropertyEnum<RockMaterial> TYPE = PropertyEnum.create("rock", RockMaterial.class);
 
     public ItemRock(String name)
     {
@@ -52,7 +52,7 @@ public class ItemRock extends ItemStateful
     {
         if (ConfigManager.instance.enableRocks)
         {
-            for (Subtype type : TYPE.getAllowedValues())
+            for (RockMaterial type : TYPE.getAllowedValues())
             {
                 IItemState state = getDefaultState().withProperty(TYPE, type);
                 subItems.add(state.getStack());
@@ -86,36 +86,8 @@ public class ItemRock extends ItemStateful
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
-    public ItemStack getStack(Subtype iron)
+    public ItemStack getStack(RockMaterial iron)
     {
         return getDefaultState().withProperty(TYPE, iron).getStack();
-    }
-
-    public enum Subtype implements IStringSerializable
-    {
-        NORMAL("normal", ".rock"),
-        ANDESITE("andesite", ".rock_andesite"),
-        DIORITE("diorite", ".rock_diorite"),
-        GRANITE("granite", ".rock_granite");
-
-        final String name;
-        final String unlocalizedSuffix;
-
-        Subtype(String name, String unlocalizedSuffix)
-        {
-            this.name = name;
-            this.unlocalizedSuffix = unlocalizedSuffix;
-        }
-
-        @Override
-        public String getName()
-        {
-            return name;
-        }
-
-        public String getUnlocalizedSuffix()
-        {
-            return unlocalizedSuffix;
-        }
     }
 }
