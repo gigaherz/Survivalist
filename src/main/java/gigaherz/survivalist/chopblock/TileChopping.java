@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -59,7 +60,7 @@ public class TileChopping extends TileEntity
     private int breakingProgress = 0;
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return true;
@@ -68,7 +69,7 @@ public class TileChopping extends TileEntity
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return (T) slotInventory;
@@ -131,33 +132,18 @@ public class TileChopping extends TileEntity
             {
                 if (!world.isRemote)
                 {
-                    Pair<ItemStack, Double> res = Choppable.getResults(slotInventory.getStackInSlot(0));
-                    if (res != null)
+                    Choppable.ChoppingRecipe recipe = Choppable.find(slotInventory.getStackInSlot(0));
+                    if (recipe != null)
                     {
-                        double number = 0.4f * res.getRight();
+                        ItemStack out = recipe.getResults(slotInventory.getStackInSlot(0), playerIn, axeLevel, fortune, RANDOM);
 
-                        if (axeLevel >= 0)
-                            number = Math.max(0, res.getRight() * (1 + axeLevel)) * (1 + RANDOM.nextFloat() * fortune);
-
-                        int whole = (int) Math.floor(number);
-                        double remainder = number - whole;
-
-                        if (RANDOM.nextFloat() < remainder)
+                        if (out != null)
                         {
-                            whole++;
-                        }
-
-                        if (number > 0)
-                        {
-                            ItemStack out = res.getLeft();
-                            out.stackSize = whole;
+                            //ItemHandlerHelper.giveItemToPlayer(playerIn, out);
                             spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
                         }
                     }
-                    else
-                    {
-                        // TODO: Spawn some block breaking particles
-                    }
+
                     completed = true;
                 }
                 world.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);

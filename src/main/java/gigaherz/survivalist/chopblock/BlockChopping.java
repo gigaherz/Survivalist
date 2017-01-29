@@ -183,6 +183,9 @@ public class BlockChopping extends BlockRegistered
                     }
                 }
 
+                if (ConfigManager.instance.choppingExhaustion > 0)
+                    playerIn.addExhaustion(ConfigManager.instance.choppingExhaustion);
+
                 if (heldItem != null && !playerIn.capabilities.isCreativeMode)
                 {
                     heldItem.damageItem(1, playerIn);

@@ -2,28 +2,34 @@ package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
 import gigaherz.common.OreDictionaryHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
+import java.util.Random;
 
 public class Choppable
 {
-
     public static abstract class ChoppingRecipe
     {
         private ItemStack output;
-        private double outputMultiplier;
-        private double hitCountMultiplier;
+        private double outputMultiplier = 1.0;
+        private double hitCountMultiplier = 1.0;
+        private int maxOutput;
 
-        public ChoppingRecipe(ItemStack output, double outputMultiplier, double hitCountMultiplier)
+        public ChoppingRecipe(ItemStack output)
         {
-            this.outputMultiplier = outputMultiplier;
             this.output = output;
-            this.hitCountMultiplier = hitCountMultiplier;
+        }
+
+        public abstract boolean accepts(ItemStack stack);
+
+        public ItemStack getOutput()
+        {
+            return output;
         }
 
         public double getOutputMultiplier()
@@ -31,16 +37,59 @@ public class Choppable
             return outputMultiplier;
         }
 
-        public ItemStack getOutput()
+        public ChoppingRecipe setOutputMultiplier(double outputMultiplier)
         {
-            return output;
+            this.outputMultiplier = outputMultiplier;
+            return this;
         }
-
-        public abstract boolean accepts(ItemStack stack);
 
         public double getHitCountMultiplier()
         {
             return hitCountMultiplier;
+        }
+
+        public ChoppingRecipe setHitCountMultiplier(double hitCountMultiplier)
+        {
+            this.hitCountMultiplier = hitCountMultiplier;
+            return this;
+        }
+
+        public int getMaxOutput()
+        {
+            return maxOutput;
+        }
+
+        public void setMaxOutput(int maxOutput)
+        {
+            this.maxOutput = maxOutput;
+        }
+
+        public ItemStack getResults(ItemStack input, EntityPlayer player, int axeLevel, int fortune, Random random)
+        {
+            double number = 0.4f * getOutputMultiplier();
+
+            if (axeLevel >= 0)
+                number = Math.max(0, getOutputMultiplier() * (1 + axeLevel)) * (1 + random.nextFloat() * fortune);
+
+            int whole = (int) Math.floor(number);
+            double remainder = number - whole;
+
+            if (random.nextFloat() < remainder)
+            {
+                whole++;
+            }
+
+            if (getMaxOutput() > 0)
+                whole = Math.min(whole, getMaxOutput());
+
+            if (number > 0)
+            {
+                ItemStack out = getOutput().copy();
+                out.stackSize = whole;
+                return out;
+            }
+
+            return null;
         }
     }
 
@@ -48,9 +97,9 @@ public class Choppable
     {
         private ItemStack input;
 
-        public ChoppingItemRecipe(ItemStack input, ItemStack output, double outputMultiplier, double hitCountMultiplier)
+        public ChoppingItemRecipe(ItemStack input, ItemStack output)
         {
-            super(output, outputMultiplier, hitCountMultiplier);
+            super(output);
             this.input = input;
         }
 
@@ -69,9 +118,9 @@ public class Choppable
     {
         private String oreName;
 
-        public ChoppingOreRecipe(String oreName, ItemStack right, double outputMultiplier, double hitCountMultiplier)
+        public ChoppingOreRecipe(String oreName, ItemStack output)
         {
-            super(right, outputMultiplier, hitCountMultiplier);
+            super(output);
             this.oreName = oreName;
         }
 
@@ -91,37 +140,26 @@ public class Choppable
 
     public static void registerStockRecipes()
     {
-        registerRecipe("plankWood", new ItemStack(Items.STICK), 2.0);
+        registerRecipe("plankWood", new ItemStack(Items.STICK))
+                .setOutputMultiplier(2.0);
+        registerRecipe(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.STRING))
+                .setMaxOutput(4);
     }
 
-    public static void registerRecipe(ItemStack input, ItemStack output)
+    public static ChoppingRecipe registerRecipe(ItemStack input, ItemStack output)
     {
-        registerRecipe(input, output, 1.0);
+        return registerRecipe(new ChoppingItemRecipe(input, output));
     }
 
-    public static void registerRecipe(ItemStack input, ItemStack output, double outputMultiplier)
+    public static ChoppingRecipe registerRecipe(String input, ItemStack output)
     {
-        registerRecipe(input, output, outputMultiplier, 1);
+        return registerRecipe(new ChoppingOreRecipe(input, output));
     }
 
-    public static void registerRecipe(ItemStack input, ItemStack output, double outputMultiplier, double hitCountMultiplier)
+    private static ChoppingRecipe registerRecipe(ChoppingRecipe recipe)
     {
-        RECIPES.add(new ChoppingItemRecipe(input, output, outputMultiplier, hitCountMultiplier));
-    }
-
-    public static void registerRecipe(String input, ItemStack output)
-    {
-        registerRecipe(input, output, 1.0);
-    }
-
-    public static void registerRecipe(String input, ItemStack output, double outputMultiplier)
-    {
-        registerRecipe(input, output, outputMultiplier, 1);
-    }
-
-    public static void registerRecipe(String input, ItemStack output, double outputMultiplier, double hitCountMultiplier)
-    {
-        RECIPES.add(new ChoppingOreRecipe(input, output, outputMultiplier, hitCountMultiplier));
+        RECIPES.add(recipe);
+        return recipe;
     }
 
     public static boolean isValidInput(ItemStack stack)
@@ -138,7 +176,7 @@ public class Choppable
         return false;
     }
 
-    public static Pair<ItemStack, Double> getResults(ItemStack stack)
+    public static ChoppingRecipe find(ItemStack stack)
     {
         if (stack == null)
             return null;
@@ -146,7 +184,7 @@ public class Choppable
         for (ChoppingRecipe recipe : RECIPES)
         {
             if (recipe.accepts(stack))
-                return Pair.of(recipe.getOutput().copy(), recipe.getOutputMultiplier());
+                return recipe;
         }
 
         return null;

@@ -102,9 +102,9 @@ public class MineTweakerPlugin
             }
 
             if (isOredict(input))
-                Choppable.registerRecipe(toOredictName(input), toStack(output), outputMultiplier);
+                Choppable.registerRecipe(toOredictName(input), toStack(output)).setOutputMultiplier(outputMultiplier);
             else
-                Choppable.registerRecipe(toStack(input), toStack(output), outputMultiplier);
+                Choppable.registerRecipe(toStack(input), toStack(output)).setOutputMultiplier(outputMultiplier);
         }
 
         @ZenMethod
@@ -117,9 +117,9 @@ public class MineTweakerPlugin
             }
 
             if (isOredict(input))
-                Choppable.registerRecipe(toOredictName(input), toStack(output), outputMultiplier, hitCountMultiplier);
+                Choppable.registerRecipe(toOredictName(input), toStack(output)).setOutputMultiplier(outputMultiplier).setHitCountMultiplier(hitCountMultiplier);
             else
-                Choppable.registerRecipe(toStack(input), toStack(output), outputMultiplier, hitCountMultiplier);
+                Choppable.registerRecipe(toStack(input), toStack(output)).setOutputMultiplier(outputMultiplier).setHitCountMultiplier(hitCountMultiplier);
         }
 
         @ZenMethod
