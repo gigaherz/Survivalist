@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ItemOreRock extends ItemStateful
 {
-    public static final PropertyEnum<Subtype> ORE = PropertyEnum.create("ore", Subtype.class);
+    public static final PropertyEnum<OreMaterial> ORE = PropertyEnum.create("ore", OreMaterial.class);
 
     public ItemOreRock(String name)
     {
@@ -50,7 +50,7 @@ public class ItemOreRock extends ItemStateful
     {
         if (ConfigManager.instance.enableRocks)
         {
-            for (Subtype type : ORE.getAllowedValues())
+            for (OreMaterial type : ORE.getAllowedValues())
             {
                 IItemState state = getDefaultState().withProperty(ORE, type);
                 subItems.add(state.getStack());
@@ -58,38 +58,8 @@ public class ItemOreRock extends ItemStateful
         }
     }
 
-    public ItemStack getStack(Subtype iron)
+    public ItemStack getStack(OreMaterial material)
     {
-        return getDefaultState().withProperty(ORE, iron).getStack();
-    }
-
-    public enum Subtype implements IStringSerializable
-    {
-        IRON("iron", ".iron_rock"),
-        GOLD("gold", ".gold_rock"),
-        COPPER("copper", ".copper_rock"),
-        TIN("tin", ".tin_rock"),
-        LEAD("lead", ".lead_rock"),
-        SILVER("silver", ".silver_rock");
-
-        final String name;
-        final String unlocalizedSuffix;
-
-        Subtype(String name, String unlocalizedSuffix)
-        {
-            this.name = name;
-            this.unlocalizedSuffix = unlocalizedSuffix;
-        }
-
-        @Override
-        public String getName()
-        {
-            return name;
-        }
-
-        public String getUnlocalizedSuffix()
-        {
-            return unlocalizedSuffix;
-        }
+        return getDefaultState().withProperty(ORE, material).getStack();
     }
 }
