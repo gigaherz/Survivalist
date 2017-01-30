@@ -86,8 +86,8 @@ public class ItemRock extends ItemStateful
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
-    public ItemStack getStack(RockMaterial iron)
+    public ItemStack getStack(RockMaterial material)
     {
-        return getDefaultState().withProperty(TYPE, iron).getStack();
+        return getDefaultState().withProperty(TYPE, material).getStack();
     }
 }

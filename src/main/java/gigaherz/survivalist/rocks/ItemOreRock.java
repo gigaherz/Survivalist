@@ -56,8 +56,8 @@ public class ItemOreRock extends ItemStateful
         }
     }
 
-    public ItemStack getStack(OreMaterial iron)
+    public ItemStack getStack(OreMaterial material)
     {
-        return getDefaultState().withProperty(ORE, iron).getStack();
+        return getDefaultState().withProperty(ORE, material).getStack();
     }
 }
