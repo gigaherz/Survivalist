@@ -48,6 +48,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
@@ -235,6 +236,13 @@ public class Survivalist
 
     private static void registerOredictNames()
     {
+        // Make sure to register the vanilla iron nugget if it isn't registered.
+        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft","iron_nugget"));
+        if (item != null && OreDictionary.getOreIDs(new ItemStack(item)).length == 0)
+        {
+            OreDictionary.registerOre("nuggetIron", item);
+        }
+
         OreDictionary.registerOre("materialLeather", tanned_leather);
         OreDictionary.registerOre("materialTannedLeather", tanned_leather);
         OreDictionary.registerOre("materialHardenedLeather", tanned_leather);

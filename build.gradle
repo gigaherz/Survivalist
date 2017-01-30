@@ -28,7 +28,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.8.3"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Survivalist-1.11.0"
+archivesBaseName = "Survivalist-1.11.2"
 
 minecraft {
     version = "1.11.2-13.20.0.2201"
