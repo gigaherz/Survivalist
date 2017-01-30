@@ -2,6 +2,7 @@ package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
 import gigaherz.common.OreDictionaryHelper;
+import gigaherz.survivalist.ConfigManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -142,8 +143,11 @@ public class Choppable
     {
         registerRecipe("plankWood", new ItemStack(Items.STICK))
                 .setOutputMultiplier(2.0);
-        registerRecipe(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.STRING))
-                .setMaxOutput(4);
+        if (ConfigManager.instance.enableStringCrafting)
+        {
+            registerRecipe(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.STRING))
+                    .setMaxOutput(4);
+        }
     }
 
     public static ChoppingRecipe registerRecipe(ItemStack input, ItemStack output)

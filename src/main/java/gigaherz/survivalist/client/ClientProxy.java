@@ -66,6 +66,8 @@ public class ClientProxy implements IModProxy
         registerBlockModelAsItem(Survivalist.chopping_block, 0, "damage=0");
         registerBlockModelAsItem(Survivalist.chopping_block, 1, "damage=1");
         registerBlockModelAsItem(Survivalist.chopping_block, 2, "damage=2");
+
+        registerItemModel(Survivalist.plant_fibres);
     }
 
 }
