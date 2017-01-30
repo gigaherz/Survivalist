@@ -38,7 +38,7 @@ public class ItemNugget extends ItemStateful
         if (state == null)
             return getUnlocalizedName();
 
-        String subName = state.getValue(ORE).getUnlocalizedSuffix();
+        String subName = state.getValue(ORE).getUnlocalizedNuggetSuffix();
 
         return "item." + Survivalist.MODID + subName;
     }
