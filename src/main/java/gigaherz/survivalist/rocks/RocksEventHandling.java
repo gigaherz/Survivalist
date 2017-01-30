@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class RocksEventHandling
 {
-    Random rnd = new Random();
+    private final Random rnd = new Random();
 
     public static void register()
     {

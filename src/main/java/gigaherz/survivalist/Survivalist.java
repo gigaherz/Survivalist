@@ -7,6 +7,8 @@ import gigaherz.survivalist.api.Dryable;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.common.ItemTannedArmor;
+import gigaherz.survivalist.misc.FibersEventHandling;
+import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.*;
@@ -87,6 +89,7 @@ public class Survivalist
     public static Item hatchet;
     public static Item pick;
     public static Item spade;
+    public static Item plant_fibres;
 
     public static Item tanned_helmet;
     public static Item tanned_chestplate;
@@ -216,7 +219,17 @@ public class Survivalist
                             super.getSubItems(itemIn, tab, subItems);
                         }
                     }
-                }.setCreativeTab(CreativeTabs.TOOLS)
+                }.setCreativeTab(CreativeTabs.TOOLS),
+                plant_fibres = new ItemRegistered("plant_fibres"){
+                    @Override
+                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    {
+                        if (ConfigManager.instance.enableFibres)
+                        {
+                            super.getSubItems(itemIn, tab, subItems);
+                        }
+                    }
+                }.setCreativeTab(CreativeTabs.MATERIALS)
         );
     }
 
@@ -285,6 +298,16 @@ public class Survivalist
         if (ConfigManager.instance.enableRocks)
         {
             RocksEventHandling.register();
+        }
+
+        if (ConfigManager.instance.dropFibersFromGrass)
+        {
+            FibersEventHandling.register();
+        }
+
+        if (ConfigManager.instance.dropStringFromSheep)
+        {
+            StringEventHandling.register();
         }
 
         registerTileEntities();
@@ -457,33 +480,62 @@ public class Survivalist
             addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
             addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
 
-            GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
-                    "rrr",
-                    "rcr",
-                    "rrr",
-                    'r', rock.getStack(RockMaterial.NORMAL),
-                    'c', Items.CLAY_BALL);
+            if (ConfigManager.instance.cobbleRequiresClay)
+            {
+                GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
+                        "rrr",
+                        "rcr",
+                        "rrr",
+                        'r', rock.getStack(RockMaterial.NORMAL),
+                        'c', Items.CLAY_BALL);
 
-            GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 5),
-                    "rrr",
-                    "rcr",
-                    "rrr",
-                    'r', rock.getStack(RockMaterial.ANDESITE),
-                    'c', Items.CLAY_BALL);
+                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 5),
+                        "rrr",
+                        "rcr",
+                        "rrr",
+                        'r', rock.getStack(RockMaterial.ANDESITE),
+                        'c', Items.CLAY_BALL);
 
-            GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 3),
-                    "rrr",
-                    "rcr",
-                    "rrr",
-                    'r', rock.getStack(RockMaterial.DIORITE),
-                    'c', Items.CLAY_BALL);
+                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 3),
+                        "rrr",
+                        "rcr",
+                        "rrr",
+                        'r', rock.getStack(RockMaterial.DIORITE),
+                        'c', Items.CLAY_BALL);
 
-            GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 1),
-                    "rrr",
-                    "rcr",
-                    "rrr",
-                    'r', rock.getStack(RockMaterial.GRANITE),
-                    'c', Items.CLAY_BALL);
+                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 1),
+                        "rrr",
+                        "rcr",
+                        "rrr",
+                        'r', rock.getStack(RockMaterial.GRANITE),
+                        'c', Items.CLAY_BALL);
+            }
+            else
+            {
+                GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
+                        "rrr",
+                        "rrr",
+                        "rrr",
+                        'r', rock.getStack(RockMaterial.NORMAL));
+
+                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 5),
+                        "rrr",
+                        "rrr",
+                        "rrr",
+                        'r', rock.getStack(RockMaterial.ANDESITE));
+
+                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 3),
+                        "rrr",
+                        "rrr",
+                        "rrr",
+                        'r', rock.getStack(RockMaterial.DIORITE));
+
+                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 1),
+                        "rrr",
+                        "rrr",
+                        "rrr",
+                        'r', rock.getStack(RockMaterial.GRANITE));
+            }
 
             GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.GRAVEL),
                     "rr",
@@ -511,6 +563,12 @@ public class Survivalist
             GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(pick),
                     "stickWood", "string", Items.FLINT, Items.FLINT));
         }
+
+        if (ConfigManager.instance.enableStringCrafting)
+        {
+            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.STRING),
+                    plant_fibres, plant_fibres, plant_fibres, plant_fibres));
+    }
     }
 
     @Mod.EventHandler

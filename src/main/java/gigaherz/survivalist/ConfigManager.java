@@ -28,6 +28,7 @@ public class ConfigManager
     public final boolean replaceIronOreDrops;
     public final boolean replaceGoldOreDrops;
     public final boolean replaceModOreDrops;
+    public final boolean cobbleRequiresClay;
     public final boolean enableScraping;
     public final boolean enableToolScraping;
     public final boolean enableArmorScraping;
@@ -52,6 +53,10 @@ public class ConfigManager
     public final boolean enableHatchet;
     public final boolean enablePick;
     public final boolean enableSpade;
+    public final boolean enableFibres;
+    public final boolean enableStringCrafting;
+    public final boolean dropFibersFromGrass;
+    public final boolean dropStringFromSheep;
     public final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
 
     public static void loadConfig(Configuration configuration)
@@ -61,7 +66,6 @@ public class ConfigManager
 
     public ConfigManager(Configuration configuration)
     {
-
         configuration.addCustomCategoryComment("Sticks", "Settings for stick crafting");
         Property p_sticksFromLeaves = configuration.get("Sticks", "CraftSticksFromLeaves", true);
         Property p_sticksFromSaplings = configuration.get("Sticks", "CraftSticksFromSaplings", true);
@@ -73,6 +77,7 @@ public class ConfigManager
         Property p_replaceIronOreDrops = configuration.get("Rocks", "ReplaceIronOreDrops", true);
         Property p_replaceGoldOreDrops = configuration.get("Rocks", "ReplaceGoldOreDrops", true);
         Property p_replaceModOreDrops = configuration.get("Rocks", "ReplaceModOreDrops", true);
+        Property p_cobbleRequiresClay = configuration.get("Rocks", "CobbleRequiresClay", true);
 
         configuration.addCustomCategoryComment("Scraping", "Settings for the Scraping feature and enchant");
         Property p_enableScraping = configuration.get("Scraping", "Enable", true);
@@ -109,12 +114,18 @@ public class ConfigManager
         Property p_removePlanksRecipes = configuration.get("Chopping", "RemovePlanksRecipes", true);
         Property p_choppingDegradeChance = configuration.get("Chopping", "DegradeChance", 0.06);
         Property p_choppingExhaustion = configuration.get("Chopping", "DegradeChance", 0.0025);
+        Property p_enableStringCrafting = configuration.get("Chopping", "EnableStringCraftingFromWool", true);
         p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
 
         configuration.addCustomCategoryComment("Tools", "Settings for the tools");
         Property p_enableHatchet = configuration.get("Tools", "EnableHatchet", true);
         Property p_enablePick = configuration.get("Tools", "EnablePick", true);
         Property p_enableSpade = configuration.get("Tools", "EnableSpade", true);
+
+        configuration.addCustomCategoryComment("Fobres", "Settings for the tools");
+        Property p_enableFibres = configuration.get("Tools", "EnableFibres", true);
+        Property p_dropfibersFromGrass = configuration.get("Tools", "DropFibresFromGrass", true);
+        Property p_dropStringsFromSheep = configuration.get("Tools", "DropFibresFromGrass", true);
 
         boolean hasList = configuration.hasCategory("CustomAxes");
         configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");
@@ -130,6 +141,7 @@ public class ConfigManager
         replaceIronOreDrops = p_replaceIronOreDrops.getBoolean();
         replaceGoldOreDrops = p_replaceGoldOreDrops.getBoolean();
         replaceModOreDrops = p_replaceModOreDrops.getBoolean();
+        cobbleRequiresClay = p_cobbleRequiresClay.getBoolean();
         enableScraping = p_enableScraping.getBoolean();
         enableToolScraping = p_enableToolScraping.getBoolean();
         enableArmorScraping = p_enableArmorScraping.getBoolean();
@@ -154,6 +166,10 @@ public class ConfigManager
         enableHatchet = p_enableHatchet.getBoolean();
         enablePick = p_enablePick.getBoolean();
         enableSpade = p_enableSpade.getBoolean();
+        enableFibres = p_enableFibres.getBoolean();
+        enableStringCrafting = p_enableStringCrafting.getBoolean();
+        dropFibersFromGrass = p_dropfibersFromGrass.getBoolean();
+        dropStringFromSheep = p_dropStringsFromSheep.getBoolean();
         parseChoppingAxes(c_customAxes);
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
@@ -164,6 +180,7 @@ public class ConfigManager
         anyDefault = anyDefault || !p_replaceIronOreDrops.wasRead();
         anyDefault = anyDefault || !p_replaceGoldOreDrops.wasRead();
         anyDefault = anyDefault || !p_replaceModOreDrops.wasRead();
+        anyDefault = anyDefault || !p_cobbleRequiresClay.wasRead();
         anyDefault = anyDefault || !p_enableScraping.wasRead();
         anyDefault = anyDefault || !p_enableToolScraping.wasRead();
         anyDefault = anyDefault || !p_enableArmorScraping.wasRead();
@@ -188,6 +205,10 @@ public class ConfigManager
         anyDefault = anyDefault || !p_enableHatchet.wasRead();
         anyDefault = anyDefault || !p_enablePick.wasRead();
         anyDefault = anyDefault || !p_enableSpade.wasRead();
+        anyDefault = anyDefault || !p_enableStringCrafting.wasRead();
+        anyDefault = anyDefault || !p_dropfibersFromGrass.wasRead();
+        anyDefault = anyDefault || !p_enableFibres.wasRead();
+        anyDefault = anyDefault || !p_dropStringsFromSheep.wasRead();
         anyDefault = anyDefault || !hasList;
 
         if (anyDefault)
