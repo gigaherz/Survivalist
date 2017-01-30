@@ -40,7 +40,7 @@ public class ItemOreRock extends ItemStateful
         if (state == null)
             return getUnlocalizedName();
 
-        String subName = state.getValue(ORE).getUnlocalizedSuffix();
+        String subName = state.getValue(ORE).getUnlocalizedOreSuffix();
 
         return "item." + Survivalist.MODID + subName;
     }

@@ -6,21 +6,23 @@ import java.util.Arrays;
 
 public enum OreMaterial implements IStringSerializable
 {
-    IRON("iron", ".iron_rock", true),
-    GOLD("gold", ".gold_rock", false),
-    COPPER("copper", ".copper_rock", true),
-    TIN("tin", ".tin_rock", true),
-    LEAD("lead", ".lead_rock", true),
-    SILVER("silver", ".silver_rock", true);
+    IRON("iron", ".iron_rock", ".iron_nugget", true),
+    GOLD("gold", ".gold_rock", ".gold_nugget", false),
+    COPPER("copper", ".copper_rock", ".copper_nugget", true),
+    TIN("tin", ".tin_rock", ".tin_nugget", true),
+    LEAD("lead", ".lead_rock", ".lead_nugget", true),
+    SILVER("silver", ".silver_rock", ".silver_nugget", true);
 
     final String name;
-    final String unlocalizedSuffix;
+    final String oreSuffix;
+    final String nuggetSuffix;
     private final boolean needsNugget;
 
-    OreMaterial(String name, String unlocalizedSuffix, boolean needsNugget)
+    OreMaterial(String name, String oreSuffix, String nuggetSuffix, boolean needsNugget)
     {
         this.name = name;
-        this.unlocalizedSuffix = unlocalizedSuffix;
+        this.oreSuffix = oreSuffix;
+        this.nuggetSuffix = nuggetSuffix;
         this.needsNugget = needsNugget;
     }
 
@@ -30,9 +32,14 @@ public enum OreMaterial implements IStringSerializable
         return name;
     }
 
-    public String getUnlocalizedSuffix()
+    public String getUnlocalizedOreSuffix()
     {
-        return unlocalizedSuffix;
+        return oreSuffix;
+    }
+
+    public String getUnlocalizedNuggetSuffix()
+    {
+        return nuggetSuffix;
     }
 
     public boolean needsNugget()
