@@ -1,6 +1,5 @@
 package gigaherz.survivalist.integration;
 
-/*
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
@@ -8,7 +7,7 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
-import minetweaker.mc1102.item.MCItemStack;
+import minetweaker.mc1112.item.MCItemStack;
 import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -23,26 +22,25 @@ public class MineTweakerPlugin
         MineTweakerAPI.registerClass(ChoppableZen.class);
     }
 
-    static boolean isOredict(IIngredient ing)
+    private static boolean isOredict(IIngredient ing)
     {
         return ing instanceof IOreDictEntry;
     }
 
-    @Nullable
-    static ItemStack toStack(IIngredient ing)
+    private static ItemStack toStack(IIngredient ing)
     {
         Object internal = ing.getInternal();
         if (!(internal instanceof ItemStack))
         {
             Survivalist.logger.error("Not a valid item stack: " + ing);
-            return null;
+            return ItemStack.EMPTY;
         }
 
         return (ItemStack) internal;
     }
 
     @Nullable
-    static String toOredictName(IIngredient ing)
+    private static String toOredictName(IIngredient ing)
     {
         if (!(ing instanceof IOreDictEntry))
             return null;
@@ -130,4 +128,3 @@ public class MineTweakerPlugin
         }
     }
 }
-*/

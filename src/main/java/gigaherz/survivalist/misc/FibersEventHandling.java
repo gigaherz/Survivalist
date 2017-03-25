@@ -1,14 +1,18 @@
 package gigaherz.survivalist.misc;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Random;
 
@@ -22,6 +26,8 @@ public class FibersEventHandling
     {
         MinecraftForge.EVENT_BUS.register(new FibersEventHandling());
     }
+
+    private Field nonNullListDelegate;
 
     @SubscribeEvent
     public void onHarvestBlock(BlockEvent.HarvestDropsEvent ev)
@@ -39,7 +45,31 @@ public class FibersEventHandling
             return;
         }
 
-        if (rnd.nextFloat() < 0.12f)
-            drops.add(new ItemStack(Survivalist.plant_fibres));
+        try
+        {
+            if (rnd.nextFloat() < 0.12f)
+                drops.add(new ItemStack(Survivalist.plant_fibres));
+        }
+        catch(UnsupportedOperationException ex)
+        {
+            if (!(drops instanceof NonNullList))
+                throw ex;
+
+            // Workaround for getDrops using a fixed-length NonNullList
+            if (nonNullListDelegate == null)
+            {
+                nonNullListDelegate = ReflectionHelper.findField(drops.getClass(), "field_191198_a", "delegate");
+            }
+
+            try
+            {
+                nonNullListDelegate.set(drops, Lists.newArrayList(drops));
+                drops.add(new ItemStack(Survivalist.plant_fibres));
+            }
+            catch (IllegalAccessException e)
+            {
+                throw ex;
+            }
+        }
     }
 }

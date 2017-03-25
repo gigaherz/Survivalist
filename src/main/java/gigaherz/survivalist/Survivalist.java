@@ -326,7 +326,7 @@ public class Survivalist
 
         proxy.preInit();
 
-        if (Loader.isModLoaded("MineTweaker3"))
+        if (Loader.isModLoaded("MineTweaker3") || Loader.isModLoaded("crafttweaker"))
         {
             try
             {
