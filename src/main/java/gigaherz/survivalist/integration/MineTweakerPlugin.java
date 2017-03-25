@@ -22,13 +22,13 @@ public class MineTweakerPlugin
         MineTweakerAPI.registerClass(ChoppableZen.class);
     }
 
-    static boolean isOredict(IIngredient ing)
+    private static boolean isOredict(IIngredient ing)
     {
         return ing instanceof IOreDictEntry;
     }
 
     @Nullable
-    static ItemStack toStack(IIngredient ing)
+    private static ItemStack toStack(IIngredient ing)
     {
         Object internal = ing.getInternal();
         if (!(internal instanceof ItemStack))
@@ -41,7 +41,7 @@ public class MineTweakerPlugin
     }
 
     @Nullable
-    static String toOredictName(IIngredient ing)
+    private static String toOredictName(IIngredient ing)
     {
         if (!(ing instanceof IOreDictEntry))
             return null;
