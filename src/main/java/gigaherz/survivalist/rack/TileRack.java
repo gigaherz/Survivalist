@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
@@ -132,5 +133,10 @@ public class TileRack extends TileEntity implements ITickable
     {
         super.readFromNBT(compound);
         items.deserializeNBT(compound.getCompoundTag("Items"));
+    }
+
+    public IItemHandler inventory()
+    {
+        return items;
     }
 }
