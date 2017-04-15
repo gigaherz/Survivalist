@@ -125,7 +125,7 @@ public class BlockRack extends BlockRegistered
         {
             ItemStack itemstack = inventory.getStackInSlot(i);
 
-            if (itemstack != null)
+            if (itemstack.getCount() > 0)
             {
                 InventoryHelper.spawnItemStack(worldIn, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), itemstack);
             }
