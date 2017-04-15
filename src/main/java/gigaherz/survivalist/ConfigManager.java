@@ -122,10 +122,10 @@ public class ConfigManager
         Property p_enablePick = configuration.get("Tools", "EnablePick", true);
         Property p_enableSpade = configuration.get("Tools", "EnableSpade", true);
 
-        configuration.addCustomCategoryComment("Fobres", "Settings for the tools");
-        Property p_enableFibres = configuration.get("Tools", "EnableFibres", true);
-        Property p_dropfibersFromGrass = configuration.get("Tools", "DropFibresFromGrass", true);
-        Property p_dropStringsFromSheep = configuration.get("Tools", "DropFibresFromGrass", true);
+        configuration.addCustomCategoryComment("Fibres", "Settings for the fibre collection");
+        Property p_enableFibres = configuration.get("Fibres", "EnableFibres", true);
+        Property p_dropfibersFromGrass = configuration.get("Fibres", "DropFibresFromGrass", true);
+        Property p_dropStringsFromSheep = configuration.get("Fibres", "DropFibresFromGrass", true);
 
         boolean hasList = configuration.hasCategory("CustomAxes");
         configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,17 +22,24 @@ public class DryingRecipeWrapper extends BlankRecipeWrapper
 
         for (Dryable.DryingRecipe pair : Dryable.RECIPES)
         {
-            if (pair instanceof Dryable.DryingItemRecipe)
-            {
-                list.add(new DryingRecipeWrapper.ItemInput((Dryable.DryingItemRecipe) pair));
-            }
-            else if (pair instanceof Dryable.DryingOreRecipe)
-            {
-                list.add(new DryingRecipeWrapper.OreInput((Dryable.DryingOreRecipe) pair));
-            }
+            Object p = wrap(pair);
+            if (p != null)
+                list.add((DryingRecipeWrapper)p);
         }
 
         return list;
+    }
+
+    @Nullable
+    public static Object wrap(Dryable.DryingRecipe pair)
+    {
+        if (pair instanceof Dryable.DryingItemRecipe)
+            return new ItemInput((Dryable.DryingItemRecipe) pair);
+
+        if (pair instanceof Dryable.DryingOreRecipe)
+            return new OreInput((Dryable.DryingOreRecipe) pair);
+
+        return null;
     }
 
     private static ItemStack copyWithSize(ItemStack middle)
