@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,17 +25,24 @@ public class ChoppingRecipeWrapper extends BlankRecipeWrapper
 
         for (Choppable.ChoppingRecipe pair : Choppable.RECIPES)
         {
-            if (pair instanceof Choppable.ChoppingItemRecipe)
-            {
-                list.add(new ChoppingRecipeWrapper.ItemInput((Choppable.ChoppingItemRecipe) pair));
-            }
-            else if (pair instanceof Choppable.ChoppingOreRecipe)
-            {
-                list.add(new ChoppingRecipeWrapper.OreInput((Choppable.ChoppingOreRecipe) pair));
-            }
+            Object p = wrap(pair);
+            if (p != null)
+                list.add((ChoppingRecipeWrapper)p);
         }
 
         return list;
+    }
+
+    @Nullable
+    public static Object wrap(Choppable.ChoppingRecipe pair)
+    {
+        if (pair instanceof Choppable.ChoppingItemRecipe)
+            return new ItemInput((Choppable.ChoppingItemRecipe) pair);
+
+        if (pair instanceof Choppable.ChoppingOreRecipe)
+            return new OreInput((Choppable.ChoppingOreRecipe) pair);
+
+        return null;
     }
 
     private static ItemStack copyWithSize(ItemStack middle)

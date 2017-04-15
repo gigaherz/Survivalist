@@ -111,14 +111,20 @@ public class Dryable
         }
     }
 
-    public static void registerRecipe(ItemStack input, ItemStack output, int time)
+    public static DryingRecipe registerRecipe(ItemStack input, ItemStack output, int time)
     {
-        RECIPES.add(new DryingItemRecipe(input, time, output));
+        return registerRecipe(new DryingItemRecipe(input, time, output));
     }
 
-    public static void registerRecipe(String input, ItemStack output, int time)
+    public static DryingRecipe registerRecipe(String input, ItemStack output, int time)
     {
-        RECIPES.add(new DryingOreRecipe(input, time, output));
+        return registerRecipe(new DryingOreRecipe(input, time, output));
+    }
+
+    private static DryingRecipe registerRecipe(DryingRecipe recipe)
+    {
+        RECIPES.add(recipe);
+        return recipe;
     }
 
     public static int getDryingTime(ItemStack stack)

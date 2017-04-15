@@ -60,16 +60,40 @@ public class MineTweakerPlugin
                 return;
             }
 
+            Dryable.DryingRecipe recipe;
             if (isOredict(input))
-                Dryable.registerRecipe(toOredictName(input), toStack(output), time);
+                recipe = Dryable.registerRecipe(toOredictName(input), toStack(output), time);
             else
-                Dryable.registerRecipe(toStack(input), toStack(output), time);
+                recipe = Dryable.registerRecipe(toStack(input), toStack(output), time);
+
+            WrapperHelper.addJeiRecipe(recipe);
         }
 
         @ZenMethod
-        public static void removeRecipe(final IIngredient ingredient)
+        public static void removeRecipe(final IIngredient output)
         {
-            Dryable.RECIPES.removeIf(item -> ingredient.matches(new MCItemStack(item.getOutput())));
+            Dryable.RECIPES.removeIf(recipe -> output.matches(new MCItemStack(recipe.getOutput())));
+        }
+
+        @ZenMethod
+        public static void removeRecipe(final IIngredient output, final IIngredient input)
+        {
+            if (isOredict(input))
+            {
+                Dryable.RECIPES.removeIf(recipe ->
+                        recipe instanceof Dryable.DryingOreRecipe &&
+                                output.matches(new MCItemStack(recipe.getOutput())) &&
+                                ((Dryable.DryingOreRecipe) recipe).getOreName().equals(toOredictName(input))
+                );
+            }
+            else
+            {
+                Dryable.RECIPES.removeIf(recipe ->
+                        recipe instanceof Dryable.DryingItemRecipe &&
+                                output.matches(new MCItemStack(recipe.getOutput())) &&
+                                input.matches(new MCItemStack(((Dryable.DryingItemRecipe) recipe).getInput()))
+                );
+            }
         }
     }
 
@@ -85,10 +109,13 @@ public class MineTweakerPlugin
                 return;
             }
 
+            Choppable.ChoppingRecipe recipe;
             if (isOredict(input))
-                Choppable.registerRecipe(toOredictName(input), toStack(output));
+                recipe = Choppable.registerRecipe(toOredictName(input), toStack(output));
             else
-                Choppable.registerRecipe(toStack(input), toStack(output));
+                recipe = Choppable.registerRecipe(toStack(input), toStack(output));
+
+            WrapperHelper.addJeiRecipe(recipe);
         }
 
         @ZenMethod
@@ -100,10 +127,13 @@ public class MineTweakerPlugin
                 return;
             }
 
+            Choppable.ChoppingRecipe recipe;
             if (isOredict(input))
-                Choppable.registerRecipe(toOredictName(input), toStack(output)).setOutputMultiplier(outputMultiplier);
+                recipe = Choppable.registerRecipe(toOredictName(input), toStack(output)).setOutputMultiplier(outputMultiplier);
             else
-                Choppable.registerRecipe(toStack(input), toStack(output)).setOutputMultiplier(outputMultiplier);
+                recipe = Choppable.registerRecipe(toStack(input), toStack(output)).setOutputMultiplier(outputMultiplier);
+
+            WrapperHelper.addJeiRecipe(recipe);
         }
 
         @ZenMethod
@@ -122,9 +152,30 @@ public class MineTweakerPlugin
         }
 
         @ZenMethod
-        public static void removeRecipe(final IIngredient ingredient)
+        public static void removeRecipe(final IIngredient output)
         {
-            Choppable.RECIPES.removeIf(item -> ingredient.matches(new MCItemStack(item.getOutput())));
+            Choppable.RECIPES.removeIf(recipe -> output.matches(new MCItemStack(recipe.getOutput())));
+        }
+
+        @ZenMethod
+        public static void removeRecipe(final IIngredient output, final IIngredient input)
+        {
+            if (isOredict(input))
+            {
+                Choppable.RECIPES.removeIf(recipe ->
+                        recipe instanceof Choppable.ChoppingOreRecipe &&
+                        output.matches(new MCItemStack(recipe.getOutput())) &&
+                        ((Choppable.ChoppingOreRecipe) recipe).getOreName().equals(toOredictName(input))
+                );
+            }
+            else
+            {
+                Choppable.RECIPES.removeIf(recipe ->
+                        recipe instanceof Choppable.ChoppingItemRecipe &&
+                        output.matches(new MCItemStack(recipe.getOutput())) &&
+                        input.matches(new MCItemStack(((Choppable.ChoppingItemRecipe) recipe).getInput()))
+                );
+            }
         }
     }
 }
