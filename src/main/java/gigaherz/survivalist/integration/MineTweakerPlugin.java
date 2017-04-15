@@ -3,16 +3,21 @@ package gigaherz.survivalist.integration;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
+import gigaherz.survivalist.integration.chopping.ChoppingRecipeWrapper;
+import gigaherz.survivalist.integration.drying.DryingRecipeWrapper;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.oredict.IOreDictEntry;
 import minetweaker.mc1102.item.MCItemStack;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MineTweakerPlugin
 {
@@ -73,28 +78,37 @@ public class MineTweakerPlugin
         @ZenMethod
         public static void removeRecipe(final IIngredient output)
         {
-            Dryable.RECIPES.removeIf(recipe -> output.matches(new MCItemStack(recipe.getOutput())));
+            List<Dryable.DryingRecipe> toRemove = Dryable.RECIPES.stream()
+                    .filter(recipe -> output.matches(new MCItemStack(recipe.getOutput())))
+                    .collect(Collectors.toList());
+
+            Dryable.RECIPES.removeAll(toRemove);
+            WrapperHelper.removeDryingRecipes(toRemove);
         }
 
         @ZenMethod
         public static void removeRecipe(final IIngredient output, final IIngredient input)
         {
+            List<Dryable.DryingRecipe> toRemove;
             if (isOredict(input))
             {
-                Dryable.RECIPES.removeIf(recipe ->
+                toRemove = Dryable.RECIPES.stream().filter(recipe ->
                         recipe instanceof Dryable.DryingOreRecipe &&
                                 output.matches(new MCItemStack(recipe.getOutput())) &&
                                 ((Dryable.DryingOreRecipe) recipe).getOreName().equals(toOredictName(input))
-                );
+                ).collect(Collectors.toList());
             }
             else
             {
-                Dryable.RECIPES.removeIf(recipe ->
+                toRemove = Dryable.RECIPES.stream().filter(recipe ->
                         recipe instanceof Dryable.DryingItemRecipe &&
                                 output.matches(new MCItemStack(recipe.getOutput())) &&
                                 input.matches(new MCItemStack(((Dryable.DryingItemRecipe) recipe).getInput()))
-                );
+                ).collect(Collectors.toList());
             }
+
+            Dryable.RECIPES.removeAll(toRemove);
+            WrapperHelper.removeDryingRecipes(toRemove);
         }
     }
 
@@ -155,14 +169,25 @@ public class MineTweakerPlugin
         @ZenMethod
         public static void removeRecipe(final IIngredient output)
         {
-            Choppable.RECIPES.removeIf(recipe -> output.matches(new MCItemStack(recipe.getOutput())));
+            List<Choppable.ChoppingRecipe> toRemove = Choppable.RECIPES.stream()
+                    .filter(recipe -> output.matches(new MCItemStack(recipe.getOutput())))
+                    .collect(Collectors.toList());
+
+            Choppable.RECIPES.removeAll(toRemove);
+            WrapperHelper.removeChoppingRecipes(toRemove);
         }
 
         @ZenMethod
         public static void removeRecipe(final IIngredient output, final IIngredient input)
         {
+            List<Choppable.ChoppingRecipe> toRemove;
             if (isOredict(input))
             {
+                toRemove = Choppable.RECIPES.stream().filter(recipe ->
+                        recipe instanceof Choppable.ChoppingOreRecipe &&
+                                output.matches(new MCItemStack(recipe.getOutput())) &&
+                                ((Choppable.ChoppingOreRecipe) recipe).getOreName().equals(toOredictName(input))
+                ).collect(Collectors.toList());
                 Choppable.RECIPES.removeIf(recipe ->
                         recipe instanceof Choppable.ChoppingOreRecipe &&
                         output.matches(new MCItemStack(recipe.getOutput())) &&
@@ -171,11 +196,86 @@ public class MineTweakerPlugin
             }
             else
             {
-                Choppable.RECIPES.removeIf(recipe ->
+                toRemove = Choppable.RECIPES.stream().filter(recipe ->
                         recipe instanceof Choppable.ChoppingItemRecipe &&
                         output.matches(new MCItemStack(recipe.getOutput())) &&
                         input.matches(new MCItemStack(((Choppable.ChoppingItemRecipe) recipe).getInput()))
-                );
+                ).collect(Collectors.toList());
+            }
+
+            Choppable.RECIPES.removeAll(toRemove);
+            WrapperHelper.removeChoppingRecipes(toRemove);
+        }
+    }
+
+    public static class WrapperHelper
+    {
+        public static void addJeiRecipe(Dryable.DryingRecipe recipe)
+        {
+            Object rcp = recipe;
+            if (Loader.isModLoaded("JEI"))
+            {
+                rcp = JeiWrapper.wrap(recipe);
+            }
+
+            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(rcp);
+        }
+
+        public static void addJeiRecipe(Choppable.ChoppingRecipe recipe)
+        {
+            Object rcp = recipe;
+            if (Loader.isModLoaded("JEI"))
+            {
+                rcp = JeiWrapper.wrap(recipe);
+            }
+
+            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(rcp);
+        }
+
+        public static void removeJeiRecipe(Dryable.DryingRecipe recipe)
+        {
+            Object rcp = recipe;
+            if (Loader.isModLoaded("JEI"))
+            {
+                rcp = JeiWrapper.wrap(recipe);
+            }
+
+            MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(rcp);
+        }
+
+        public static void removeDryingRecipes(List<Dryable.DryingRecipe> recipe)
+        {
+            recipe.forEach(WrapperHelper::removeJeiRecipe);
+        }
+
+        public static void removeJeiRecipe(Choppable.ChoppingRecipe recipe)
+        {
+            Object rcp = recipe;
+            if (Loader.isModLoaded("JEI"))
+            {
+                rcp = JeiWrapper.wrap(recipe);
+            }
+
+            MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(rcp);
+        }
+
+        public static void removeChoppingRecipes(List<Choppable.ChoppingRecipe> recipe)
+        {
+            recipe.forEach(WrapperHelper::removeJeiRecipe);
+        }
+
+        private static class JeiWrapper
+        {
+            static Object wrap(Dryable.DryingRecipe recipe)
+            {
+                Object wrap = DryingRecipeWrapper.wrap(recipe);
+                return wrap != null ? wrap : recipe;
+            }
+
+            static Object wrap(Choppable.ChoppingRecipe recipe)
+            {
+                Object wrap = ChoppingRecipeWrapper.wrap(recipe);
+                return wrap != null ? wrap : recipe;
             }
         }
     }
