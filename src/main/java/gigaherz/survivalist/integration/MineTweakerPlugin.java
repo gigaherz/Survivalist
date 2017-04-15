@@ -212,7 +212,7 @@ public class MineTweakerPlugin
         public static void addJeiRecipe(Dryable.DryingRecipe recipe)
         {
             Object rcp = recipe;
-            if (Loader.isModLoaded("JEI"))
+            if (Loader.isModLoaded("jei"))
             {
                 rcp = JeiWrapper.wrap(recipe);
             }
@@ -223,7 +223,7 @@ public class MineTweakerPlugin
         public static void addJeiRecipe(Choppable.ChoppingRecipe recipe)
         {
             Object rcp = recipe;
-            if (Loader.isModLoaded("JEI"))
+            if (Loader.isModLoaded("jei"))
             {
                 rcp = JeiWrapper.wrap(recipe);
             }
@@ -234,7 +234,7 @@ public class MineTweakerPlugin
         public static void removeJeiRecipe(Dryable.DryingRecipe recipe)
         {
             Object rcp = recipe;
-            if (Loader.isModLoaded("JEI"))
+            if (Loader.isModLoaded("jei"))
             {
                 rcp = JeiWrapper.wrap(recipe);
             }
@@ -250,7 +250,7 @@ public class MineTweakerPlugin
         public static void removeJeiRecipe(Choppable.ChoppingRecipe recipe)
         {
             Object rcp = recipe;
-            if (Loader.isModLoaded("JEI"))
+            if (Loader.isModLoaded("jei"))
             {
                 rcp = JeiWrapper.wrap(recipe);
             }
@@ -261,68 +261,6 @@ public class MineTweakerPlugin
         public static void removeChoppingRecipes(List<Choppable.ChoppingRecipe> recipe)
         {
             recipe.forEach(WrapperHelper::removeJeiRecipe);
-        }
-
-        private static class JeiWrapper
-        {
-            static Object wrap(Dryable.DryingRecipe recipe)
-            {
-                Object wrap = DryingRecipeWrapper.wrap(recipe);
-                return wrap != null ? wrap : recipe;
-            }
-
-            static Object wrap(Choppable.ChoppingRecipe recipe)
-            {
-                Object wrap = ChoppingRecipeWrapper.wrap(recipe);
-                return wrap != null ? wrap : recipe;
-            }
-        }
-    }
-
-    public static class WrapperHelper
-    {
-        public static void addJeiRecipe(Dryable.DryingRecipe recipe)
-        {
-            Object rcp = recipe;
-            if (Loader.isModLoaded("jei"))
-            {
-                rcp = JeiWrapper.wrap(recipe);
-            }
-
-            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(rcp);
-        }
-
-        public static void addJeiRecipe(Choppable.ChoppingRecipe recipe)
-        {
-            Object rcp = recipe;
-            if (Loader.isModLoaded("jei"))
-            {
-                rcp = JeiWrapper.wrap(recipe);
-            }
-
-            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(rcp);
-        }
-
-        public static void removeJeiRecipe(Dryable.DryingRecipe recipe)
-        {
-            Object rcp = recipe;
-            if (Loader.isModLoaded("jei"))
-            {
-                rcp = JeiWrapper.wrap(recipe);
-            }
-
-            MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(rcp);
-        }
-
-        public static void removeJeiRecipe(Choppable.ChoppingRecipe recipe)
-        {
-            Object rcp = recipe;
-            if (Loader.isModLoaded("jei"))
-            {
-                rcp = JeiWrapper.wrap(recipe);
-            }
-
-            MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(rcp);
         }
 
         private static class JeiWrapper
