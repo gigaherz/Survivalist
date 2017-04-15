@@ -218,13 +218,11 @@ public class BlockChopping extends BlockRegistered
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (!(tileentity instanceof TileChopping))
-            return;
-
-        TileChopping chopper = (TileChopping) tileentity;
-
-        dropInventoryItems(worldIn, pos, chopper.getSlotInventory());
-        worldIn.updateComparatorOutputLevel(pos, this);
+        if (tileentity instanceof TileChopping)
+        {
+            dropInventoryItems(worldIn, pos, ((TileChopping) tileentity).getSlotInventory());
+            worldIn.updateComparatorOutputLevel(pos, this);
+        }
 
         super.breakBlock(worldIn, pos, state);
     }
