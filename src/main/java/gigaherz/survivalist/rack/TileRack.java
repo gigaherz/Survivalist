@@ -16,6 +16,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public class TileRack extends TileEntity implements ITickable
 {
@@ -125,6 +126,7 @@ public class TileRack extends TileEntity implements ITickable
     {
         compound = super.writeToNBT(compound);
         compound.setTag("Items", items.serializeNBT());
+        compound.setIntArray("RemainingTime", dryTimeRemaining);
         return compound;
     }
 
@@ -133,6 +135,9 @@ public class TileRack extends TileEntity implements ITickable
     {
         super.readFromNBT(compound);
         items.deserializeNBT(compound.getCompoundTag("Items"));
+        int[] remaining = compound.getIntArray("RemainingTime");
+
+        dryTimeRemaining = Arrays.copyOf(remaining, 4);
     }
 
     public IItemHandler inventory()
