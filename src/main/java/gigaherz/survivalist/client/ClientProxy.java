@@ -69,5 +69,4 @@ public class ClientProxy implements IModProxy
 
         registerItemModel(Survivalist.plant_fibres);
     }
-
 }

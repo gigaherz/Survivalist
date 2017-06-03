@@ -4,7 +4,6 @@ import gigaherz.common.BlockRegistered;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.GuiHandler;
 import gigaherz.survivalist.Survivalist;
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;

@@ -128,12 +128,13 @@ public class Survivalist
     public static void registerItems(RegistryEvent.Register<Item> event)
     {
         event.getRegistry().registerAll(
-            // ItemBlocks
+                // ItemBlocks
                 rack.createItemBlock(),
                 chopping_block.createItemBlock(),
 
-            // Items
-                chainmail = new ItemRegistered("chainmail") {
+                // Items
+                chainmail = new ItemRegistered("chainmail")
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -143,7 +144,8 @@ public class Survivalist
                         }
                     }
                 }.setCreativeTab(CreativeTabs.MATERIALS),
-                tanned_leather = new ItemRegistered("tanned_leather") {
+                tanned_leather = new ItemRegistered("tanned_leather")
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -157,7 +159,8 @@ public class Survivalist
                 tanned_chestplate = new ItemTannedArmor("tanned_chestplate", Survivalist.TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST),
                 tanned_leggings = new ItemTannedArmor("tanned_leggings", TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS),
                 tanned_boots = new ItemTannedArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET),
-                jerky = new ItemRegisteredFood("jerky", 4, 1, true) {
+                jerky = new ItemRegisteredFood("jerky", 4, 1, true)
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -170,7 +173,8 @@ public class Survivalist
                 nugget = new ItemNugget("nugget"),
                 rock = new ItemRock("rock"),
                 rock_ore = new ItemOreRock("rock_ore"),
-                dough = new ItemRegisteredFood("dough", 5, 0.6f, true){
+                dough = new ItemRegisteredFood("dough", 5, 0.6f, true)
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -180,7 +184,8 @@ public class Survivalist
                         }
                     }
                 },
-                round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true){
+                round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true)
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -190,7 +195,8 @@ public class Survivalist
                         }
                     }
                 },
-                hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F){
+                hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F)
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -200,7 +206,8 @@ public class Survivalist
                         }
                     }
                 }.setCreativeTab(CreativeTabs.TOOLS),
-                pick = new ItemRegisteredPick("pick", TOOL_FLINT){
+                pick = new ItemRegisteredPick("pick", TOOL_FLINT)
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -210,7 +217,8 @@ public class Survivalist
                         }
                     }
                 }.setCreativeTab(CreativeTabs.TOOLS),
-                spade = new ItemRegisteredSpade("spade", TOOL_FLINT){
+                spade = new ItemRegisteredSpade("spade", TOOL_FLINT)
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -220,7 +228,8 @@ public class Survivalist
                         }
                     }
                 }.setCreativeTab(CreativeTabs.TOOLS),
-                plant_fibres = new ItemRegistered("plant_fibres"){
+                plant_fibres = new ItemRegistered("plant_fibres")
+                {
                     @Override
                     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
                     {
@@ -245,11 +254,11 @@ public class Survivalist
         OreDictionary.registerOre("nuggetLead", nugget.getStack(OreMaterial.LEAD));
         OreDictionary.registerOre("nuggetSilver", nugget.getStack(OreMaterial.SILVER));
 
-        OreDictionary.registerOre("rockOreIron",   rock_ore.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("rockOreGold",   rock_ore.getStack(OreMaterial.GOLD));
+        OreDictionary.registerOre("rockOreIron", rock_ore.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("rockOreGold", rock_ore.getStack(OreMaterial.GOLD));
         OreDictionary.registerOre("rockOreCopper", rock_ore.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("rockOreTin",    rock_ore.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("rockOreLead",   rock_ore.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("rockOreTin", rock_ore.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("rockOreLead", rock_ore.getStack(OreMaterial.LEAD));
         OreDictionary.registerOre("rockOreSilver", rock_ore.getStack(OreMaterial.SILVER));
 
         OreDictionary.registerOre("rock", rock.getStack(RockMaterial.NORMAL));
