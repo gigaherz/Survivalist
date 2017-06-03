@@ -24,7 +24,7 @@ public class DryingRecipeWrapper extends BlankRecipeWrapper
         {
             Object p = wrap(pair);
             if (p != null)
-                list.add((DryingRecipeWrapper)p);
+                list.add((DryingRecipeWrapper) p);
         }
 
         return list;

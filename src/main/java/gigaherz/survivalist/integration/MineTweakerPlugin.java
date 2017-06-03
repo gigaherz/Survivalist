@@ -189,16 +189,16 @@ public class MineTweakerPlugin
                 ).collect(Collectors.toList());
                 Choppable.RECIPES.removeIf(recipe ->
                         recipe instanceof Choppable.ChoppingOreRecipe &&
-                        output.matches(new MCItemStack(recipe.getOutput())) &&
-                        ((Choppable.ChoppingOreRecipe) recipe).getOreName().equals(toOredictName(input))
+                                output.matches(new MCItemStack(recipe.getOutput())) &&
+                                ((Choppable.ChoppingOreRecipe) recipe).getOreName().equals(toOredictName(input))
                 );
             }
             else
             {
                 toRemove = Choppable.RECIPES.stream().filter(recipe ->
                         recipe instanceof Choppable.ChoppingItemRecipe &&
-                        output.matches(new MCItemStack(recipe.getOutput())) &&
-                        input.matches(new MCItemStack(((Choppable.ChoppingItemRecipe) recipe).getInput()))
+                                output.matches(new MCItemStack(recipe.getOutput())) &&
+                                input.matches(new MCItemStack(((Choppable.ChoppingItemRecipe) recipe).getInput()))
                 ).collect(Collectors.toList());
             }
 

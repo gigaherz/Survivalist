@@ -50,7 +50,7 @@ public class FibersEventHandling
             if (rnd.nextFloat() < 0.12f)
                 drops.add(new ItemStack(Survivalist.plant_fibres));
         }
-        catch(UnsupportedOperationException ex)
+        catch (UnsupportedOperationException ex)
         {
             if (!(drops instanceof NonNullList))
                 throw ex;

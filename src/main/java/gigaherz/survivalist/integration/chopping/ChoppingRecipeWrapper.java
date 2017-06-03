@@ -27,7 +27,7 @@ public class ChoppingRecipeWrapper extends BlankRecipeWrapper
         {
             Object p = wrap(pair);
             if (p != null)
-                list.add((ChoppingRecipeWrapper)p);
+                list.add((ChoppingRecipeWrapper) p);
         }
 
         return list;

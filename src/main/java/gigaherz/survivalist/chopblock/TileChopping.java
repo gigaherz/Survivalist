@@ -16,9 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -127,7 +125,7 @@ public class TileChopping extends TileEntity
         boolean completed = false;
         if (slotInventory.getStackInSlot(0).getCount() > 0)
         {
-            breakingProgress += 25 + Choppable.getHitCountMultiplier(slotInventory.getStackInSlot(0))* 25 * Math.max(0, axeLevel);
+            breakingProgress += 25 + Choppable.getHitCountMultiplier(slotInventory.getStackInSlot(0)) * 25 * Math.max(0, axeLevel);
             if (breakingProgress >= 200)
             {
                 if (!world.isRemote)
@@ -171,7 +169,6 @@ public class TileChopping extends TileEntity
             ItemStack copy = stack.copy();
             copy.setCount(i);
             stack.grow(-i);
-
             EntityItem entityitem = new EntityItem(worldIn, x, y, z, copy);
 
             entityitem.setPickupDelay(15);
