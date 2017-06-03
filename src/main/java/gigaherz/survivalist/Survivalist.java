@@ -583,6 +583,7 @@ public class Survivalist
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
+    	ConfigManager.instance.parseChoppingAxes();
         if (ConfigManager.instance.removeSticksFromPlanks)
         {
             List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();

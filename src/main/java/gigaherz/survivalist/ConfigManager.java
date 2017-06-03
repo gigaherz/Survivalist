@@ -58,6 +58,7 @@ public class ConfigManager
     public final boolean dropFibersFromGrass;
     public final boolean dropStringFromSheep;
     public final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
+    private final ConfigCategory customAxes;
 
     public static void loadConfig(Configuration configuration)
     {
@@ -129,7 +130,7 @@ public class ConfigManager
 
         boolean hasList = configuration.hasCategory("CustomAxes");
         configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");
-        ConfigCategory c_customAxes = configuration.getCategory("CustomAxes");
+        customAxes = configuration.getCategory("CustomAxes");
 
         configuration.load();
 
@@ -170,7 +171,6 @@ public class ConfigManager
         enableStringCrafting = p_enableStringCrafting.getBoolean();
         dropFibersFromGrass = p_dropfibersFromGrass.getBoolean();
         dropStringFromSheep = p_dropStringsFromSheep.getBoolean();
-        parseChoppingAxes(c_customAxes);
 
         boolean anyDefault = !p_enableDryingRack.wasRead();
         anyDefault = anyDefault || !p_sticksFromSaplings.wasRead();
@@ -217,9 +217,9 @@ public class ConfigManager
 
     private final Pattern itemRegex = Pattern.compile("^(?<item>[a-zA-Z-0-9_]+:[a-zA-Z-0-9_]+)(?:@(?<meta>[0-9]+))?$");
 
-    private void parseChoppingAxes(ConfigCategory category)
+    public void parseChoppingAxes()
     {
-        for (Map.Entry<String, Property> entry : category.entrySet())
+        for (Map.Entry<String, Property> entry : this.customAxes.entrySet())
         {
             String key = entry.getKey();
             int level = entry.getValue().getInt(-1);
