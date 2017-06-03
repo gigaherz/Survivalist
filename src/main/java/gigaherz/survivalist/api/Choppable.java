@@ -83,7 +83,7 @@ public class Choppable
             if (getMaxOutput() > 0)
                 whole = Math.min(whole, getMaxOutput());
 
-            if (number > 0)
+            if (whole > 0)
             {
                 ItemStack out = getOutput().copy();
                 out.setCount(whole);

@@ -168,15 +168,11 @@ public class TileChopping extends TileEntity
                 i = stack.getCount();
             }
 
+            ItemStack copy = stack.copy();
+            copy.setCount(i);
             stack.grow(-i);
-            EntityItem entityitem = new EntityItem(worldIn, x, y, z, new ItemStack(stack.getItem(), i, stack.getMetadata()));
 
-            if (stack.hasTagCompound())
-            {
-                NBTTagCompound tagCompound = stack.getTagCompound();
-                assert tagCompound != null;
-                entityitem.getEntityItem().setTagCompound(tagCompound.copy());
-            }
+            EntityItem entityitem = new EntityItem(worldIn, x, y, z, copy);
 
             entityitem.setPickupDelay(15);
 
