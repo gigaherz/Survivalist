@@ -254,7 +254,7 @@ public class ConfigManager
     {
         for (Pair<ItemStack, Integer> customAxe : customChoppingAxes)
         {
-            if (customAxe.getLeft().getUnlocalizedName().equalsIgnoreCase(stack.getUnlocalizedName())) {
+            if (ItemStack.areItemsEqualIgnoreDurability(customAxe.getLeft(), stack)) {
                 return customAxe.getRight();
             }
         }
