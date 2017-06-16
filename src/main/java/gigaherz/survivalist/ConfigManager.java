@@ -254,7 +254,8 @@ public class ConfigManager
     {
         for (Pair<ItemStack, Integer> customAxe : customChoppingAxes)
         {
-            if (ItemStack.areItemsEqualIgnoreDurability(customAxe.getLeft(), stack)) {
+            if (ItemStack.areItemsEqualIgnoreDurability(customAxe.getLeft(), stack))
+            {
                 return customAxe.getRight();
             }
         }

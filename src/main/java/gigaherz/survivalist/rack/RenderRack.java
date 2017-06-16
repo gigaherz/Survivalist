@@ -14,7 +14,7 @@ import net.minecraftforge.items.IItemHandler;
 public class RenderRack extends TileEntitySpecialRenderer<TileRack>
 {
     @Override
-    public void renderTileEntityAt(TileRack te, double x, double y, double z, float partialTicks, int destroyStage)
+    public void renderTileEntityAt(TileRack te, double x, double y, double z, float partialTicks, int destroyStage, float p_192841_10_)
     {
         IBlockState state = te.getWorld().getBlockState(te.getPos());
         if (state.getBlock() != Survivalist.rack)

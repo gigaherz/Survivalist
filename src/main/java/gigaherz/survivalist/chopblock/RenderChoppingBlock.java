@@ -15,7 +15,7 @@ public class RenderChoppingBlock extends TileEntitySpecialRenderer<TileChopping>
     final Minecraft mc = Minecraft.getMinecraft();
 
     @Override
-    public void renderTileEntityAt(TileChopping te, double x, double y, double z, float partialTicks, int destroyStage)
+    public void renderTileEntityAt(TileChopping te, double x, double y, double z, float partialTicks, int destroyStage, float p_192841_10_)
     {
         IBlockState state = te.getWorld().getBlockState(te.getPos());
         if (state.getBlock() != Survivalist.chopping_block)

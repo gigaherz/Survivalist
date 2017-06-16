@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ttt",
+    "tst",
+    "i i"
+  ],
+  "key": {
+    "t": { "type":"forge:ore_dict", "ore": "materialTannedLeather" },
+    "s": { "item": "minecraft:string" },
+    "i": { "type":"forge:ore_dict", "ore": "ingotIron" }
+  },
+  "result": {
+    "item": "survivalist:rack"
+  }
+}

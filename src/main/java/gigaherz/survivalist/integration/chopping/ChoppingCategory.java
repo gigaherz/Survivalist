@@ -6,13 +6,13 @@ import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
+import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class ChoppingCategory extends BlankRecipeCategory<ChoppingRecipeWrapper>
+public class ChoppingCategory implements IRecipeCategory<ChoppingRecipeWrapper>
 {
     private static final ResourceLocation GUI_TEXTURE_LOCATION = Survivalist.location("textures/gui/conversion.png");
     public static final String UID = Survivalist.MODID + "_chopping";
@@ -40,6 +40,12 @@ public class ChoppingCategory extends BlankRecipeCategory<ChoppingRecipeWrapper>
     public String getTitle()
     {
         return I18n.format("text." + Survivalist.MODID + ".jei.category.chopping");
+    }
+
+    @Override
+    public String getModName()
+    {
+        return "Survivalist";
     }
 
     @Nonnull

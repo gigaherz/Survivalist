@@ -4,7 +4,6 @@ import gigaherz.common.ItemRegisteredArmor;
 import gigaherz.survivalist.ConfigManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
@@ -16,11 +15,11 @@ public class ItemTannedArmor extends ItemRegisteredArmor
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
         if (ConfigManager.instance.enableLeatherTanning)
         {
-            super.getSubItems(itemIn, tab, subItems);
+            super.getSubItems(tab, subItems);
         }
     }
 }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rrr",
+    "rcr",
+    "rrr"
+  ],
+  "key": {
+    "r": { "item": "survivalist:rock", "data": 2 },
+    "c": { "item": "minecraft:clay_ball" }
+  },
+  "result": {
+    "item": "minecraft:stone",
+    "data": 3
+  }
+}

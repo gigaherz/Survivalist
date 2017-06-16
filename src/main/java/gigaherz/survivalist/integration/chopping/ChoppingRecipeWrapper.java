@@ -1,10 +1,9 @@
 package gigaherz.survivalist.integration.chopping;
 
-import com.google.common.collect.Lists;
 import gigaherz.common.client.StackRenderingHelper;
 import gigaherz.survivalist.api.Choppable;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemModelMesher;
@@ -13,28 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
-import java.util.List;
 
-public class ChoppingRecipeWrapper extends BlankRecipeWrapper
+public class ChoppingRecipeWrapper implements IRecipeWrapper
 {
-    public static List<ChoppingRecipeWrapper> getRecipes()
-    {
-        List<ChoppingRecipeWrapper> list = Lists.newArrayList();
-
-        for (Choppable.ChoppingRecipe pair : Choppable.RECIPES)
-        {
-            Object p = wrap(pair);
-            if (p != null)
-                list.add((ChoppingRecipeWrapper) p);
-        }
-
-        return list;
-    }
-
-    @Nullable
-    public static Object wrap(Choppable.ChoppingRecipe pair)
+    public static IRecipeWrapper wrap(Choppable.ChoppingRecipe pair)
     {
         if (pair instanceof Choppable.ChoppingItemRecipe)
             return new ItemInput((Choppable.ChoppingItemRecipe) pair);
@@ -42,7 +24,7 @@ public class ChoppingRecipeWrapper extends BlankRecipeWrapper
         if (pair instanceof Choppable.ChoppingOreRecipe)
             return new OreInput((Choppable.ChoppingOreRecipe) pair);
 
-        return null;
+        throw new RuntimeException("Can not import recipe");
     }
 
     private static ItemStack copyWithSize(ItemStack middle)
@@ -70,8 +52,6 @@ public class ChoppingRecipeWrapper extends BlankRecipeWrapper
     @Override
     public void drawInfo(@Nonnull Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
     {
-        super.drawInfo(mc, recipeWidth, recipeHeight, mouseX, mouseY);
-
         ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
 
         GlStateManager.pushMatrix();

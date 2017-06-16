@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "t t",
+    "ttt",
+    "ttt"
+  ],
+  "key": {
+    "t": { "item": "survivalist:chainmail" }
+  },
+  "result": {
+    "item": "minecraft:chainmail_chestplate"
+  }
+}

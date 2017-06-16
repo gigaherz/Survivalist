@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "survivalist:rock", "data": 32768 },
+    { "item": "survivalist:rock", "data": 32768 },
+    { "item": "survivalist:rock", "data": 32768 },
+    { "item": "survivalist:rock", "data": 32768 }
+  ],
+  "result": {
+    "item": "minecraft:gravel"
+  }
+}

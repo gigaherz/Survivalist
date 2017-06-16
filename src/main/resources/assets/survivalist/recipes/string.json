@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "survivalist:plant_fibres" },
+    { "item": "survivalist:plant_fibres" },
+    { "item": "survivalist:plant_fibres" },
+    { "item": "survivalist:plant_fibres" }
+  ],
+  "result": {
+    "item": "minecraft:string"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ttt",
+    "t t"
+  ],
+  "key": {
+    "t": { "type":"forge:ore_dict", "ore": "materialTannedLeather" }
+  },
+  "result": {
+    "item": "survivalist:tanned_helmet"
+  }
+}

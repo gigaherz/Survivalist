@@ -1,37 +1,19 @@
 package gigaherz.survivalist.integration.drying;
 
-import com.google.common.collect.Lists;
 import gigaherz.survivalist.api.Dryable;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
-import java.util.List;
 
-public class DryingRecipeWrapper extends BlankRecipeWrapper
+public class DryingRecipeWrapper implements IRecipeWrapper
 {
-    public static List<DryingRecipeWrapper> getRecipes()
-    {
-        List<DryingRecipeWrapper> list = Lists.newArrayList();
-
-        for (Dryable.DryingRecipe pair : Dryable.RECIPES)
-        {
-            Object p = wrap(pair);
-            if (p != null)
-                list.add((DryingRecipeWrapper) p);
-        }
-
-        return list;
-    }
-
-    @Nullable
-    public static Object wrap(Dryable.DryingRecipe pair)
+    public static IRecipeWrapper wrap(Dryable.DryingRecipe pair)
     {
         if (pair instanceof Dryable.DryingItemRecipe)
             return new ItemInput((Dryable.DryingItemRecipe) pair);
@@ -39,7 +21,7 @@ public class DryingRecipeWrapper extends BlankRecipeWrapper
         if (pair instanceof Dryable.DryingOreRecipe)
             return new OreInput((Dryable.DryingOreRecipe) pair);
 
-        return null;
+        throw new RuntimeException("Can not import recipe");
     }
 
     private static ItemStack copyWithSize(ItemStack middle)
@@ -67,8 +49,6 @@ public class DryingRecipeWrapper extends BlankRecipeWrapper
     @Override
     public void drawInfo(@Nonnull Minecraft mc, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
     {
-        super.drawInfo(mc, recipeWidth, recipeHeight, mouseX, mouseY);
-
         String label = (time / 20.0) + "s";
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0, 150);

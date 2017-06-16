@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "type" : "forge:ore_dict",
+      "ore": "stickWood"
+    }
+  ],
+  "result": {
+    "item": "survivalist:spade"
+  }
+}

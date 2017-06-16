@@ -55,7 +55,7 @@ public class ContainerRack extends Container
             {
                 for (IContainerListener icrafting : this.listeners)
                 {
-                    icrafting.sendProgressBarUpdate(this, j, tile.dryTimeRemaining[j]);
+                    icrafting.sendWindowProperty(this, j, tile.dryTimeRemaining[j]);
                 }
                 prevRemaining[j] = tile.dryTimeRemaining[j];
             }

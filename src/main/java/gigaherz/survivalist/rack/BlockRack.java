@@ -13,7 +13,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -40,11 +39,11 @@ public class BlockRack extends BlockRegistered
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
     {
         if (ConfigManager.instance.enableDryingRack)
         {
-            super.getSubBlocks(itemIn, tab, list);
+            super.getSubBlocks(tab, list);
         }
     }
 

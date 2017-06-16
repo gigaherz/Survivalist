@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " n ",
+    "n n",
+    " n "
+  ],
+  "key": {
+    "n": { "type":"forge:ore_dict", "ore": "nuggetIron" }
+  },
+  "result": {
+    "item": "survivalist:chainmail"
+  }
+}

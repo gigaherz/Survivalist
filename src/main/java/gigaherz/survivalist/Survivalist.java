@@ -1,6 +1,5 @@
 package gigaherz.survivalist;
 
-import com.google.common.collect.Lists;
 import gigaherz.common.*;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
@@ -20,8 +19,6 @@ import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -30,8 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
@@ -48,8 +44,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -59,7 +55,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.11.0,1.12.0)")
+@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.12.0,1.13.0)")
 public class Survivalist
 {
     public static final String MODID = "survivalist";
@@ -119,6 +115,16 @@ public class Survivalist
         );
     }
 
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
+    {
+        addIngotToNuggets(event.getRegistry(), "ingotIron", "nuggetIron");
+        addIngotToNuggets(event.getRegistry(), "ingotCopper", "nuggetCopper");
+        addIngotToNuggets(event.getRegistry(), "ingotTin", "nuggetTin");
+        addIngotToNuggets(event.getRegistry(), "ingotLead", "nuggetLead");
+        addIngotToNuggets(event.getRegistry(), "ingotSilver", "nuggetSilver");
+    }
+
     public static void registerTileEntities()
     {
         GameRegistry.registerTileEntityWithAlternatives(TileRack.class, rack.getRegistryName().toString(), "tileRack");
@@ -137,22 +143,22 @@ public class Survivalist
                 chainmail = new ItemRegistered("chainmail")
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableChainmailCrafting)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 }.setCreativeTab(CreativeTabs.MATERIALS),
                 tanned_leather = new ItemRegistered("tanned_leather")
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableLeatherTanning)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 }.setCreativeTab(CreativeTabs.MATERIALS),
@@ -163,11 +169,11 @@ public class Survivalist
                 jerky = new ItemRegisteredFood("jerky", 4, 1, true)
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableLeatherTanning)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 },
@@ -177,66 +183,66 @@ public class Survivalist
                 dough = new ItemRegisteredFood("dough", 5, 0.6f, true)
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableBread)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 },
                 round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true)
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableBread)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 },
                 hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F)
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableHatchet)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 }.setCreativeTab(CreativeTabs.TOOLS),
                 pick = new ItemRegisteredPick("pick", TOOL_FLINT)
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enablePick)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 }.setCreativeTab(CreativeTabs.TOOLS),
                 spade = new ItemRegisteredSpade("spade", TOOL_FLINT)
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableSpade)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 }.setCreativeTab(CreativeTabs.TOOLS),
                 plant_fibres = new ItemRegistered("plant_fibres")
                 {
                     @Override
-                    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
                         if (ConfigManager.instance.enableFibres)
                         {
-                            super.getSubItems(itemIn, tab, subItems);
+                            super.getSubItems(tab, subItems);
                         }
                     }
                 }.setCreativeTab(CreativeTabs.MATERIALS)
@@ -245,13 +251,6 @@ public class Survivalist
 
     private static void registerOredictNames()
     {
-        // Make sure to register the vanilla iron nugget if it isn't registered.
-        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", "iron_nugget"));
-        if (item != null && OreDictionary.getOreIDs(new ItemStack(item)).length == 0)
-        {
-            OreDictionary.registerOre("nuggetIron", item);
-        }
-
         OreDictionary.registerOre("materialLeather", tanned_leather);
         OreDictionary.registerOre("materialTannedLeather", tanned_leather);
         OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
@@ -355,9 +354,27 @@ public class Survivalist
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
+        if (ConfigManager.instance.enableRocks)
+        {
+            EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
+            logger.debug("Last used id: %i", entityId);
+
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
+            addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
+        }
+
+        if (ConfigManager.instance.enableDryingRack)
+        {
+            Dryable.registerStockRecipes();
+        }
+
         if (ConfigManager.instance.enableBread)
         {
-            if (ConfigManager.instance.removeVanillaBread)
+            /*if (ConfigManager.instance.removeVanillaBread)
             {
                 List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
                 for (int i = 0; i < recipes.size(); )
@@ -377,157 +394,13 @@ public class Survivalist
                     if (!removed) i++;
                 }
             }
-
-            GameRegistry.addShapelessRecipe(new ItemStack(dough), Items.WHEAT, Items.WHEAT, Items.WHEAT, Items.WHEAT);
+            */
             GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
         }
 
-        if (ConfigManager.instance.enableDryingRack)
-        {
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(rack),
-                    "sss",
-                    " p ",
-                    "p p",
-                    's', "stickWood",
-                    'p', "plankWood"));
-
-            Dryable.registerStockRecipes();
-
-            if (ConfigManager.instance.enableLeatherTanning)
-            {
-                if (ConfigManager.instance.enableSaddleCrafting)
-                {
-                    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.SADDLE),
-                            "ttt",
-                            "tst",
-                            "i i",
-                            't', "materialTannedLeather",
-                            's', new ItemStack(Items.STRING),
-                            'i', "ingotIron"));
-                }
-
-                GameRegistry.addRecipe(new ItemStack(tanned_helmet),
-                        "ttt",
-                        "t t",
-                        't', tanned_leather);
-
-                GameRegistry.addRecipe(new ItemStack(tanned_chestplate),
-                        "t t",
-                        "ttt",
-                        "ttt",
-                        't', tanned_leather);
-
-                GameRegistry.addRecipe(new ItemStack(tanned_leggings),
-                        "ttt",
-                        "t t",
-                        "t t",
-                        't', tanned_leather);
-
-                GameRegistry.addRecipe(new ItemStack(tanned_boots),
-                        "t t",
-                        "t t",
-                        't', tanned_leather);
-            }
-        }
-
-        if (ConfigManager.instance.sticksFromLeaves)
-            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.STICK, "treeLeaves"));
-
-        if (ConfigManager.instance.sticksFromSaplings)
-            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.STICK, "treeSapling"));
-
-        if (ConfigManager.instance.enableNuggetRecipes)
-        {
-            addIngotToNuggets("ingotIron", "nuggetIron");
-            addIngotToNuggets("ingotCopper", "nuggetCopper");
-            addIngotToNuggets("ingotTin", "nuggetTin");
-            addIngotToNuggets("ingotLead", "nuggetLead");
-            addIngotToNuggets("ingotSilver", "nuggetSilver");
-        }
-
-        if (ConfigManager.instance.enableChainmailCrafting)
-        {
-            if (ConfigManager.instance.enableNuggets)
-            {
-                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chainmail),
-                        " n ",
-                        "n n",
-                        " n ",
-                        'n', "nuggetIron"));
-            }
-
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(chainmail, 9),
-                    " n ",
-                    "n n",
-                    " n ",
-                    'n', "ingotIron"));
-
-            GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_HELMET),
-                    "ccc",
-                    "c c",
-                    'c', chainmail);
-
-            GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_CHESTPLATE),
-                    "c c",
-                    "ccc",
-                    "ccc",
-                    'c', chainmail);
-
-            GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_LEGGINGS),
-                    "ccc",
-                    "c c",
-                    "c c",
-                    'c', chainmail);
-
-            GameRegistry.addRecipe(new ItemStack(Items.CHAINMAIL_BOOTS),
-                    "c c",
-                    "c c",
-                    'c', chainmail);
-        }
-
+            /*
         if (ConfigManager.instance.enableRocks)
         {
-            EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
-            logger.debug("Last used id: %i", entityId);
-
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
-
-            if (ConfigManager.instance.cobbleRequiresClay)
-            {
-                GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
-                        "rrr",
-                        "rcr",
-                        "rrr",
-                        'r', rock.getStack(RockMaterial.NORMAL),
-                        'c', Items.CLAY_BALL);
-
-                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 5),
-                        "rrr",
-                        "rcr",
-                        "rrr",
-                        'r', rock.getStack(RockMaterial.ANDESITE),
-                        'c', Items.CLAY_BALL);
-
-                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 3),
-                        "rrr",
-                        "rcr",
-                        "rrr",
-                        'r', rock.getStack(RockMaterial.DIORITE),
-                        'c', Items.CLAY_BALL);
-
-                GameRegistry.addRecipe(new ItemStack(Blocks.STONE, 1, 1),
-                        "rrr",
-                        "rcr",
-                        "rrr",
-                        'r', rock.getStack(RockMaterial.GRANITE),
-                        'c', Items.CLAY_BALL);
-            }
-            else
             {
                 GameRegistry.addRecipe(new ItemStack(Blocks.COBBLESTONE),
                         "rrr",
@@ -553,46 +426,15 @@ public class Survivalist
                         "rrr",
                         'r', rock.getStack(RockMaterial.GRANITE));
             }
-
-            GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.GRAVEL),
-                    "rr",
-                    "rr",
-                    'r', "rock"));
-
-            GameRegistry.addShapelessRecipe(new ItemStack(rock, 4, 0), Blocks.GRAVEL);
-            GameRegistry.addShapelessRecipe(new ItemStack(Items.FLINT), Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL, Blocks.GRAVEL);
         }
-
-        if (ConfigManager.instance.enableSpade)
-        {
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(spade),
-                    "stickWood", Items.FLINT));
-        }
-
-        if (ConfigManager.instance.enableHatchet)
-        {
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(hatchet),
-                    "stickWood", "string", Items.FLINT));
-        }
-
-        if (ConfigManager.instance.enablePick)
-        {
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(pick),
-                    "stickWood", "string", Items.FLINT, Items.FLINT));
-        }
-
-        if (ConfigManager.instance.enableStringCrafting)
-        {
-            GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.STRING),
-                    plant_fibres, plant_fibres, plant_fibres, plant_fibres));
-        }
+        */
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         ConfigManager.instance.parseChoppingAxes();
-        if (ConfigManager.instance.removeSticksFromPlanks)
+        /*if (ConfigManager.instance.removeSticksFromPlanks)
         {
             List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
             for (int i = 0; i < recipes.size(); )
@@ -613,112 +455,59 @@ public class Survivalist
             }
         }
 
+        */
+
         if (ConfigManager.instance.enableChopping)
         {
-            if (ConfigManager.instance.importPlanksRecipes || ConfigManager.instance.removePlanksRecipes)
+            if (ConfigManager.instance.importPlanksRecipes /* || ConfigManager.instance.removePlanksRecipes*/)
             {
-                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-                for (int i = 0; i < recipes.size(); )
+                for (IRecipe r : CraftingManager.REGISTRY)
                 {
-                    boolean removed = false;
-                    IRecipe r = recipes.get(i);
+                    //boolean removed = false;
 
                     ItemStack output = r.getRecipeOutput();
                     if (output.getCount() > 0 && OreDictionaryHelper.hasOreName(output, "plankWood"))
                     {
-                        List<Object> inputs = null;
-                        if (r instanceof ShapedRecipes)
-                        {
-                            ShapedRecipes rcp = (ShapedRecipes) r;
-                            inputs = Lists.newArrayList((Object[]) rcp.recipeItems);
-                        }
-                        else if (r instanceof ShapelessRecipes)
-                        {
-                            ShapelessRecipes rcp = (ShapelessRecipes) r;
-                            inputs = Lists.newArrayList(rcp.recipeItems);
-                        }
-                        else if (r instanceof ShapedOreRecipe)
-                        {
-                            ShapedOreRecipe rcp = (ShapedOreRecipe) r;
-                            inputs = Lists.newArrayList(rcp.getInput());
-                        }
-                        else if (r instanceof ShapelessOreRecipe)
-                        {
-                            ShapelessOreRecipe rcp = (ShapelessOreRecipe) r;
-                            inputs = Lists.newArrayList(rcp.getInput());
-                        }
-                        else
-                        {
-                            logger.warn("Unknown recipe type with planks output (" + output.getItem().getRegistryName() + "): " + r.getClass().getName());
-                        }
+                        List<Ingredient> inputs = r.getIngredients();
+                        Ingredient logInput = null;
 
-                        if (inputs != null)
+                        for (Ingredient input : inputs)
                         {
-                            ItemStack logInput = null;
-                            //String oreInput = null;
-
-                            for (Object input : inputs)
+                            boolean anyWood = false;
+                            for (ItemStack stack : input.getMatchingStacks())
                             {
-                                if (input instanceof ItemStack)
+                                if (OreDictionaryHelper.hasOreName(stack, "logWood"))
                                 {
-                                    ItemStack stack = (ItemStack) input;
-                                    if (!OreDictionaryHelper.hasOreName(stack, "logWood") || logInput != null /* || oreInput != null */)
-                                    {
-                                        logInput = null;
-                                        //oreInput = null;
-                                        break;
-                                    }
-                                    logInput = stack;
-                                }
-                                else if (input instanceof String)
-                                {
-                                    logger.warn("A recipe with planks output uses ore dictionary string as input. This is not supported yet.");
-
-                                    logInput = null;
-                                    //oreInput = null;
-                                    break;
-
-                                    /*
-                                    String oreName = (String) input;
-                                    if (<verify that the inputs are logs> || logInput != null || oreInput != null)
-                                    {
-                                        logInput = null;
-                                        oreInput = null;
-                                        break;
-                                    }
-                                    oreInput = oreName;*/
+                                    anyWood = true;
                                 }
                             }
 
-                            if (logInput != null)
+                            if (!anyWood || logInput != null)
                             {
-                                if (ConfigManager.instance.removePlanksRecipes)
-                                {
-                                    removed = recipes.remove(r);
-                                }
-                                if (ConfigManager.instance.importPlanksRecipes)
-                                {
-                                    Choppable.registerRecipe(logInput.copy(), output.copy());
-                                }
+                                logInput = null;
+                                break;
                             }
-                            /*else if (oreInput != null)
+                            logInput = input;
+                        }
+
+                        if (logInput != null)
+                        {
+                            /*if (ConfigManager.instance.removePlanksRecipes)
                             {
-                                if (ConfigManager.instance.removePlanksRecipes)
-                                {
-                                    removed = recipes.remove(r);
-                                }
-                                if (ConfigManager.instance.importPlanksRecipes)
-                                {
-                                    Choppable.registerRecipe(logInput.copy(), output.copy());
-                                }
+                                removed = recipes.remove(r);
                             }*/
+                            if (ConfigManager.instance.importPlanksRecipes)
+                            {
+                                for (ItemStack stack : logInput.getMatchingStacks())
+                                {
+                                    Choppable.registerRecipe(stack.copy(), output.copy());
+                                }
+                            }
                         }
                     }
 
-                    if (!removed) i++;
+                    //if (!removed) i++;
                 }
-
-                GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(chopping_block), "logWood"));
             }
 
             if (ConfigManager.instance.removeSticksFromPlanks)
@@ -728,12 +517,15 @@ public class Survivalist
         }
     }
 
-    private static void addIngotToNuggets(String oreIngot, String oreNugget)
+    private static void addIngotToNuggets(IForgeRegistry<IRecipe> registry, String oreIngot, String oreNugget)
     {
         List<ItemStack> matches1 = OreDictionary.getOres(oreIngot);
         if (matches1.size() > 0)
         {
-            GameRegistry.addRecipe(new ShapedOreRecipe(matches1.get(0), "nnn", "nnn", "nnn", 'n', oreNugget));
+            registry.register(new ShapedOreRecipe(
+                    location(oreIngot.replace("ingot", "") + "_to_" + oreNugget.replace("nugget", "")),
+                    matches1.get(0),
+                    "nnn", "nnn", "nnn", 'n', oreNugget));
         }
 
         List<ItemStack> matches2 = OreDictionary.getOres(oreNugget);
@@ -741,7 +533,9 @@ public class Survivalist
         {
             ItemStack output = matches2.get(0).copy();
             output.setCount(9);
-            GameRegistry.addRecipe(new ShapelessOreRecipe(output, oreIngot));
+            registry.register(new ShapelessOreRecipe(
+                    location(oreIngot.replace("ingot", "") + "_to_" + oreNugget.replace("nugget", "")),
+                    output, oreIngot));
         }
     }
 
