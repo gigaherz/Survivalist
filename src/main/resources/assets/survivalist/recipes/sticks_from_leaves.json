@@ -1,5 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "conditions": [
+    {
+      "type": "config_property",
+      "mod": "survivalist",
+      "category": "Sticks",
+      "key": "CraftSticksFromLeaves"
+    }
+  ],
   "ingredients": [
     {
       "type" : "forge:ore_dict",

@@ -5,7 +5,7 @@
       "type": "config_property",
       "mod": "survivalist",
       "category": "Rocks",
-      "key": "Enabled"
+      "key": "Enable"
     }
   ],
   "ingredients": [

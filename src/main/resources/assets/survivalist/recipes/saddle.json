@@ -1,5 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "config_property",
+      "mod": "survivalist",
+      "category": "DryingRack",
+      "key": "Enable"
+    },
+    {
+      "type": "config_property",
+      "mod": "survivalist",
+      "category": "DryingRack",
+      "key": "EnableLeatherTanning"
+    },
+    {
+      "type": "config_property",
+      "mod": "survivalist",
+      "category": "DryingRack",
+      "key": "EnableSaddleCrafting"
+    }
+  ],
   "pattern": [
     "ttt",
     "tst",
@@ -11,6 +31,6 @@
     "i": { "type":"forge:ore_dict", "ore": "ingotIron" }
   },
   "result": {
-    "item": "survivalist:rack"
+    "item": "minecraft:saddle"
   }
 }

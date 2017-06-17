@@ -8,20 +8,22 @@
       "key": "Enable"
     },
     {
-      "type": "config_property",
-      "mod": "survivalist",
-      "category": "Rocks",
-      "key": "CobbleRequiresClay"
+      "type": "forge:not",
+      "value": {
+        "type": "config_property",
+        "mod": "survivalist",
+        "category": "Rocks",
+        "key": "CobbleRequiresClay"
+      }
     }
   ],
   "pattern": [
     "rrr",
-    "rcr",
+    "rrr",
     "rrr"
   ],
   "key": {
-    "r": { "item": "survivalist:rock", "data": 0 },
-    "c": { "item": "minecraft:clay_ball" }
+    "r": { "item": "survivalist:rock", "data": 0 }
   },
   "result": {
     "item": "minecraft:cobblestone"

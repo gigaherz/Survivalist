@@ -77,7 +77,7 @@ public class ConfigManager
         Property p_removeSticksFromPlanks = configuration.get("Sticks", "RemoveSticksFromPlanksRecipes", true);
 
         configuration.addCustomCategoryComment("Rocks", "Settings for rock and ore rock drops");
-        Property p_enableRocks = configuration.get("Rocks", "Enabled", true);
+        Property p_enableRocks = configuration.get("Rocks", "Enable", true);
         Property p_replaceStoneDrops = configuration.get("Rocks", "ReplaceStoneDrops", true);
         Property p_replaceIronOreDrops = configuration.get("Rocks", "ReplaceIronOreDrops", true);
         Property p_replaceGoldOreDrops = configuration.get("Rocks", "ReplaceGoldOreDrops", true);
@@ -118,8 +118,7 @@ public class ConfigManager
         Property p_importPlanksRecipes = configuration.get("Chopping", "ImportPlanksRecipes", true);
         Property p_removePlanksRecipes = configuration.get("Chopping", "RemovePlanksRecipes", true);
         Property p_choppingDegradeChance = configuration.get("Chopping", "DegradeChance", 0.06);
-        Property p_choppingExhaustion = configuration.get("Chopping", "DegradeChance", 0.0025);
-        Property p_enableStringCrafting = configuration.get("Chopping", "EnableStringCraftingFromWool", true);
+        Property p_choppingExhaustion = configuration.get("Chopping", "Exhaustion", 0.0025);
         p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
 
         configuration.addCustomCategoryComment("Tools", "Settings for the tools");
@@ -130,7 +129,8 @@ public class ConfigManager
         configuration.addCustomCategoryComment("Fibres", "Settings for the fibre collection");
         Property p_enableFibres = configuration.get("Fibres", "EnableFibres", true);
         Property p_dropfibersFromGrass = configuration.get("Fibres", "DropFibresFromGrass", true);
-        Property p_dropStringsFromSheep = configuration.get("Fibres", "DropFibresFromGrass", true);
+        Property p_dropStringsFromSheep = configuration.get("Fibres", "DropStringFromSheep", true);
+        Property p_enableStringCrafting = configuration.get("Fibres", "EnableStringCrafting", true);
 
         boolean hasList = configuration.hasCategory("CustomAxes");
         configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");
