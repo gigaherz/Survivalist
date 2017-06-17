@@ -2,14 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "conditions": [
     {
-      "type": "config_property",
-      "mod": "survivalist",
+      "type": "survivalist:config_property",
       "category": "Rocks",
       "key": "Enable"
     },
     {
-      "type": "config_property",
-      "mod": "survivalist",
+      "type": "survivalist:config_property",
       "category": "Rocks",
       "key": "CobbleRequiresClay"
     }

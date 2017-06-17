@@ -2,8 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "conditions": [
     {
-      "type": "config_property",
-      "mod": "survivalist",
+      "type": "survivalist:config_property",
       "category": "Fibres",
       "key": "EnableStringCrafting"
     }

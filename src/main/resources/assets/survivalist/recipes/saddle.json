@@ -2,20 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "conditions": [
     {
-      "type": "config_property",
-      "mod": "survivalist",
+      "type": "survivalist:config_property",
       "category": "DryingRack",
       "key": "Enable"
     },
     {
-      "type": "config_property",
-      "mod": "survivalist",
+      "type": "survivalist:config_property",
       "category": "DryingRack",
       "key": "EnableLeatherTanning"
     },
     {
-      "type": "config_property",
-      "mod": "survivalist",
+      "type": "survivalist:config_property",
       "category": "DryingRack",
       "key": "EnableSaddleCrafting"
     }
