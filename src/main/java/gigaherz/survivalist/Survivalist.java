@@ -21,6 +21,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -44,14 +45,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 @Mod.EventBusSubscriber
@@ -118,11 +120,6 @@ public class Survivalist
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
     {
-        addIngotToNuggets(event.getRegistry(), "ingotIron", "nuggetIron");
-        addIngotToNuggets(event.getRegistry(), "ingotCopper", "nuggetCopper");
-        addIngotToNuggets(event.getRegistry(), "ingotTin", "nuggetTin");
-        addIngotToNuggets(event.getRegistry(), "ingotLead", "nuggetLead");
-        addIngotToNuggets(event.getRegistry(), "ingotSilver", "nuggetSilver");
     }
 
     public static void registerTileEntities()
@@ -345,6 +342,12 @@ public class Survivalist
                 throw new ReportedException(new CrashReport("Error initializing minetweaker integration", e));
             }
         }
+
+        registerNuggetToIngotRecipe("ingotIron", "nuggetIron", false);
+        registerNuggetToIngotRecipe("ingotCopper", "nuggetCopper");
+        registerNuggetToIngotRecipe("ingotTin", "nuggetTin");
+        registerNuggetToIngotRecipe("ingotLead", "nuggetLead");
+        registerNuggetToIngotRecipe("ingotSilver", "nuggetSilver");
     }
 
     @Mod.EventHandler
@@ -374,27 +377,6 @@ public class Survivalist
 
         if (ConfigManager.instance.enableBread)
         {
-            /*if (ConfigManager.instance.removeVanillaBread)
-            {
-                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-                for (int i = 0; i < recipes.size(); )
-                {
-                    boolean removed = false;
-                    IRecipe r = recipes.get(i);
-                    if (r instanceof ShapedOreRecipe)
-                    {
-                        ItemStack output = r.getRecipeOutput();
-                        if (output.getItem() == Items.BREAD)
-                        {
-                            recipes.remove(r);
-                            removed = true;
-                        }
-                    }
-
-                    if (!removed) i++;
-                }
-            }
-            */
             GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
         }
 
@@ -434,7 +416,33 @@ public class Survivalist
     public void postInit(FMLPostInitializationEvent event)
     {
         ConfigManager.instance.parseChoppingAxes();
-        /*if (ConfigManager.instance.removeSticksFromPlanks)
+
+        /*
+        if (ConfigManager.instance.enableBread)
+        {
+            if (ConfigManager.instance.removeVanillaBread)
+            {
+                List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
+                for (int i = 0; i < recipes.size(); )
+                {
+                    boolean removed = false;
+                    IRecipe r = recipes.get(i);
+                    if (r instanceof ShapedOreRecipe)
+                    {
+                        ItemStack output = r.getRecipeOutput();
+                        if (output.getItem() == Items.BREAD)
+                        {
+                            recipes.remove(r);
+                            removed = true;
+                        }
+                    }
+
+                    if (!removed) i++;
+                }
+            }
+        }
+
+        if (ConfigManager.instance.removeSticksFromPlanks)
         {
             List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
             for (int i = 0; i < recipes.size(); )
@@ -455,11 +463,9 @@ public class Survivalist
             }
         }
 
-        */
-
         if (ConfigManager.instance.enableChopping)
         {
-            if (ConfigManager.instance.importPlanksRecipes /* || ConfigManager.instance.removePlanksRecipes*/)
+            if (ConfigManager.instance.importPlanksRecipes || ConfigManager.instance.removePlanksRecipes)
             {
                 for (IRecipe r : CraftingManager.REGISTRY)
                 {
@@ -492,10 +498,10 @@ public class Survivalist
 
                         if (logInput != null)
                         {
-                            /*if (ConfigManager.instance.removePlanksRecipes)
+                            if (ConfigManager.instance.removePlanksRecipes)
                             {
                                 removed = recipes.remove(r);
-                            }*/
+                            }
                             if (ConfigManager.instance.importPlanksRecipes)
                             {
                                 for (ItemStack stack : logInput.getMatchingStacks())
@@ -509,6 +515,54 @@ public class Survivalist
                     //if (!removed) i++;
                 }
             }
+        }
+
+        */
+
+        if (ConfigManager.instance.enableChopping)
+        {
+            if (ConfigManager.instance.importPlanksRecipes)
+            {
+                for (IRecipe r : CraftingManager.REGISTRY)
+                {
+                    ItemStack output = r.getRecipeOutput();
+                    if (output.getCount() > 0 && OreDictionaryHelper.hasOreName(output, "plankWood"))
+                    {
+                        List<Ingredient> inputs = r.getIngredients();
+                        Ingredient logInput = null;
+
+                        for (Ingredient input : inputs)
+                        {
+                            boolean anyWood = false;
+                            for (ItemStack stack : input.getMatchingStacks())
+                            {
+                                if (OreDictionaryHelper.hasOreName(stack, "logWood"))
+                                {
+                                    anyWood = true;
+                                }
+                            }
+
+                            if (!anyWood || logInput != null)
+                            {
+                                logInput = null;
+                                break;
+                            }
+                            logInput = input;
+                        }
+
+                        if (logInput != null)
+                        {
+                            if (ConfigManager.instance.importPlanksRecipes)
+                            {
+                                for (ItemStack stack : logInput.getMatchingStacks())
+                                {
+                                    Choppable.registerRecipe(stack.copy(), output.copy());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             if (ConfigManager.instance.removeSticksFromPlanks)
             {
@@ -517,26 +571,93 @@ public class Survivalist
         }
     }
 
-    private static void addIngotToNuggets(IForgeRegistry<IRecipe> registry, String oreIngot, String oreNugget)
+    private static void registerNuggetToIngotRecipe(final String oreIngot, final String oreNugget)
     {
-        List<ItemStack> matches1 = OreDictionary.getOres(oreIngot);
-        if (matches1.size() > 0)
-        {
-            registry.register(new ShapedOreRecipe(
-                    location(oreIngot.replace("ingot", "") + "_to_" + oreNugget.replace("nugget", "")),
-                    matches1.get(0),
-                    "nnn", "nnn", "nnn", 'n', oreNugget));
-        }
+        registerNuggetToIngotRecipe(oreIngot, oreNugget, true);
+    }
 
-        List<ItemStack> matches2 = OreDictionary.getOres(oreNugget);
-        if (matches2.size() > 0)
+    private static void registerNuggetToIngotRecipe(final String oreIngot, final String oreNugget, boolean addIngotToNugget)
+    {
+        ForgeRegistries.RECIPES.register(new ShapedOreRecipe(
+                location(oreIngot.replace("ingot", "") + "_from_nugget"),
+                ItemStack.EMPTY,
+                "nnn", "nnn", "nnn", 'n', oreNugget)
         {
-            ItemStack output = matches2.get(0).copy();
-            output.setCount(9);
-            registry.register(new ShapelessOreRecipe(
-                    location(oreIngot.replace("ingot", "") + "_to_" + oreNugget.replace("nugget", "")),
-                    output, oreIngot));
-        }
+            final NonNullList<ItemStack> matches1 = OreDictionary.getOres(oreIngot);
+
+            {
+                setRegistryName(this.group);
+            }
+
+            private void findOutput()
+            {
+                if (this.output.isEmpty())
+                {
+                    if (matches1.size() > 0)
+                    {
+                        output = matches1.get(0);
+                    }
+                }
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack getRecipeOutput()
+            {
+                findOutput();
+                return super.getRecipeOutput();
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1)
+            {
+                findOutput();
+                return super.getCraftingResult(var1);
+            }
+        });
+
+        if (!addIngotToNugget)
+            return;
+
+        ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(
+                location(oreIngot.replace("ingot", "") + "_to_nugget"),
+                ItemStack.EMPTY, oreIngot)
+        {
+            final NonNullList<ItemStack> matches2 = OreDictionary.getOres(oreNugget);
+
+            {
+                setRegistryName(this.group);
+            }
+
+            private void findOutput()
+            {
+                if (this.output.isEmpty())
+                {
+                    if (matches2.size() > 0)
+                    {
+                        output = matches2.get(0).copy();
+                        output.setCount(9);
+                    }
+                }
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack getRecipeOutput()
+            {
+                findOutput();
+                return super.getRecipeOutput();
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1)
+            {
+                findOutput();
+                return super.getCraftingResult(var1);
+            }
+        });
     }
 
     private static void addSmeltingNugget(ItemStack stack, String ore)

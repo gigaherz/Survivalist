@@ -1,0 +1,5 @@
+{
+  "conditions": {
+    "config_property" : "gigaherz.survivalist.ConfigurationCondition"
+  }
+}

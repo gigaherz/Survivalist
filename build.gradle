@@ -31,7 +31,7 @@ group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-namin
 archivesBaseName = "Survivalist-1.12.0"
 
 minecraft {
-    version = "1.12-14.21.0.2331"
+    version = "1.12-14.21.0.2333"
     runDir = "run"
 
     mappings = "snapshot_20170616"

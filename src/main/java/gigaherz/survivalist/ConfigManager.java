@@ -65,15 +65,19 @@ public class ConfigManager
         instance = new ConfigManager(configuration);
     }
 
+    public final Configuration config;
+
     public ConfigManager(Configuration configuration)
     {
+        this.config = configuration;
+
         configuration.addCustomCategoryComment("Sticks", "Settings for stick crafting");
         Property p_sticksFromLeaves = configuration.get("Sticks", "CraftSticksFromLeaves", true);
         Property p_sticksFromSaplings = configuration.get("Sticks", "CraftSticksFromSaplings", true);
         Property p_removeSticksFromPlanks = configuration.get("Sticks", "RemoveSticksFromPlanksRecipes", true);
 
         configuration.addCustomCategoryComment("Rocks", "Settings for rock and ore rock drops");
-        Property p_enableRocks = configuration.get("Rocks", "Enables", true);
+        Property p_enableRocks = configuration.get("Rocks", "Enabled", true);
         Property p_replaceStoneDrops = configuration.get("Rocks", "ReplaceStoneDrops", true);
         Property p_replaceIronOreDrops = configuration.get("Rocks", "ReplaceIronOreDrops", true);
         Property p_replaceGoldOreDrops = configuration.get("Rocks", "ReplaceGoldOreDrops", true);
