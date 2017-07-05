@@ -8,10 +8,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
-}
-
 repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
@@ -26,51 +22,45 @@ repositories {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.10.1"
+version = "1.10.99"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Survivalist-1.12.0"
 
 minecraft {
-    version = "1.12-14.21.0.2333"
+    version = "1.12-14.21.0.2382"
     runDir = "run"
 
-    mappings = "snapshot_20170616"
+    mappings = "snapshot_20170626"
 
     replace "@VERSION@", project.version
     replaceIn "Survivalist.java"
 }
 
-jar {
-    classifier = 'slim'
-}
-
-shadowJar {
-    classifier = ''
-    dependencies {
-        include(dependency(':Commons-1.12.0:'))
-        exclude '*CraftTweaker*'
-    }
-    relocate 'gigaherz.common', 'gigaherz.survivalist.shadow.common'
-}
-
-reobf {
-    shadowJar { mappingType = 'SEARGE' }
-}
-
-tasks.build.dependsOn reobfShadowJar
-
-artifacts {
-    archives shadowJar
-    archives sourceJar
+configurations {
+    // configuration that holds jars to embed inside the jar
+    embed
 }
 
 dependencies {
-    deobfCompile "gigaherz.commons:Commons-1.12.0:0.5.2"
+    deobfCompile "gigaherz.commons:Commons-1.12.0:0.6.1"
+    embed "gigaherz.commons:Commons-1.12.0:0.6.1"
 
-    deobfCompile "mezz.jei:jei_1.12:4.6.0.61:api"
-    runtime "mezz.jei:jei_1.12:4.6.0.61"
+    deobfCompile "mezz.jei:jei_1.12:4.7.0.67:api"
+    runtime "mezz.jei:jei_1.12:4.7.0.67"
 
     compile fileTree(dir: 'libs', include: '*.jar')
+}
+
+jar {
+    into('/') {
+        from configurations.embed
+    }
+
+    manifest {
+        attributes(
+                "ContainedDeps": configurations.embed.collect { it.getName() }.join(' ')
+        )
+    }
 }
 
 compileJava {

@@ -45,7 +45,7 @@ public class ItemOreRock extends ItemStateful
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
-        if (ConfigManager.instance.enableRocks)
+        if (ConfigManager.instance.enableRocks && isInCreativeTab(tab))
         {
             for (OreMaterial type : ORE.getAllowedValues())
             {

@@ -45,7 +45,7 @@ public class ItemNugget extends ItemStateful
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
-        if (ConfigManager.instance.enableNuggets)
+        if (ConfigManager.instance.enableNuggets && isInCreativeTab(tab))
         {
             for (OreMaterial type : ORE.getAllowedValues())
             {

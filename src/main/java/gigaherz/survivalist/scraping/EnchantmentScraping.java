@@ -8,16 +8,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class EnchantmentScraping extends Enchantment
 {
-    public static EnchantmentScraping register()
+    public EnchantmentScraping()
     {
-        EnchantmentScraping scraping = new EnchantmentScraping(Rarity.COMMON, EnumEnchantmentType.BREAKABLE, EntityEquipmentSlot.values());
-        GameRegistry.register(scraping);
-        return scraping;
-    }
-
-    protected EnchantmentScraping(Enchantment.Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot... slots)
-    {
-        super(rarityIn, typeIn, slots);
+        super(Rarity.COMMON, EnumEnchantmentType.BREAKABLE, EntityEquipmentSlot.values());
         setRegistryName("scraping");
         setName(Survivalist.MODID + ".scraping");
     }

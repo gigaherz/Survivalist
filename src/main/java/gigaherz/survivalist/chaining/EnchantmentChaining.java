@@ -8,16 +8,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class EnchantmentChaining extends Enchantment
 {
-    public static EnchantmentChaining register()
+    public EnchantmentChaining()
     {
-        EnchantmentChaining scraping = new EnchantmentChaining(Rarity.UNCOMMON, EnumEnchantmentType.WEAPON, EntityEquipmentSlot.values());
-        GameRegistry.register(scraping);
-        return scraping;
-    }
-
-    protected EnchantmentChaining(Enchantment.Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot... slots)
-    {
-        super(rarityIn, typeIn, slots);
+        super(Rarity.UNCOMMON, EnumEnchantmentType.WEAPON, EntityEquipmentSlot.values());
         setRegistryName("chaining");
         setName(Survivalist.MODID + ".chaining");
     }
