@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "nnn",
+    "nnn",
+    "nnn"
+  ],
+  "key": {
+    "n": { "item": "survivalist:nugget", "data": 0 }
+  },
+  "result": {
+    "item": "minecraft:iron_ingot"
+  }
+}

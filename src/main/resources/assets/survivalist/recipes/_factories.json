@@ -1,4 +1,7 @@
 {
+  "ingredients": {
+    "config_toggled_ingredient" : "gigaherz.survivalist.ConfigurationToggledIngredient"
+  },
   "conditions": {
     "config_property" : "gigaherz.survivalist.ConfigurationCondition"
   }

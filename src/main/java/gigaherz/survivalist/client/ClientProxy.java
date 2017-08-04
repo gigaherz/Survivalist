@@ -5,11 +5,14 @@ import gigaherz.survivalist.IModProxy;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.chopblock.RenderChoppingBlock;
 import gigaherz.survivalist.chopblock.TileChopping;
+import gigaherz.survivalist.network.UpdateFields;
 import gigaherz.survivalist.rack.RenderRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.EntityRock;
+import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -68,5 +71,23 @@ public class ClientProxy implements IModProxy
         registerBlockModelAsItem(Survivalist.chopping_block, 2, "damage=2");
 
         registerItemModel(Survivalist.plant_fibres);
+
+        registerBlockModelAsItem(Survivalist.sawmill);
+    }
+
+    @Override
+    public void handleUpdateField(final UpdateFields message)
+    {
+        Minecraft.getMinecraft().addScheduledTask(() ->
+        {
+            Minecraft gameController = Minecraft.getMinecraft();
+
+            EntityPlayer entityplayer = gameController.player;
+
+            if (entityplayer.openContainer != null && entityplayer.openContainer.windowId == message.windowId)
+            {
+                ((ContainerSawmill) entityplayer.openContainer).updateFields(message.fields);
+            }
+        });
     }
 }

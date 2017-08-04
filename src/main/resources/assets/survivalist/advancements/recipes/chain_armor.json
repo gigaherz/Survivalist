@@ -1,0 +1,63 @@
+{
+  "parent": "minecraft:recipes/root",
+  "conditions": [
+    {
+      "type": "survivalist:config_property",
+      "category": "Chainmail",
+      "key": "EnableChainmailCrafting"
+    }
+  ],
+  "rewards": {
+    "recipes": [
+      "survivalist:chain_boots",
+      "survivalist:chain_chestplate",
+      "survivalist:chain_helmet",
+      "survivalist:chain_leggings"
+    ]
+  },
+  "criteria": {
+    "has_iron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "survivalist:chainmail"
+          }
+        ]
+      }
+    },
+    "has_the_recipe1": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:chain_boots"
+      }
+    },
+    "has_the_recipe2": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:chain_chestplate"
+      }
+    },
+    "has_the_recipe3": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:chain_helmet"
+      }
+    },
+    "has_the_recipe4": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:chain_leggings"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron",
+      "has_the_recipe1",
+      "has_the_recipe2",
+      "has_the_recipe3",
+      "has_the_recipe4"
+    ]
+  ]
+}

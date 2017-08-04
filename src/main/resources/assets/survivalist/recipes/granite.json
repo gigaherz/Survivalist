@@ -5,11 +5,6 @@
       "type": "survivalist:config_property",
       "category": "Rocks",
       "key": "Enable"
-    },
-    {
-      "type": "survivalist:config_property",
-      "category": "Rocks",
-      "key": "CobbleRequiresClay"
     }
   ],
   "pattern": [
@@ -19,7 +14,13 @@
   ],
   "key": {
     "r": { "item": "survivalist:rock", "data": 3 },
-    "c": { "item": "minecraft:clay_ball" }
+    "c": {
+      "type": "survivalist:config_toggled_ingredient",
+      "category": "Rocks",
+      "key": "CobbleRequiresClay",
+      "then": { "item": "minecraft:clay_ball" },
+      "else": { "item": "survivalist:rock", "data": 3 }
+    }
   },
   "result": {
     "item": "minecraft:stone",

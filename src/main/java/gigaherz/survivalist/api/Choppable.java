@@ -20,6 +20,7 @@ public class Choppable
         private double outputMultiplier = 1.0;
         private double hitCountMultiplier = 1.0;
         private int maxOutput;
+        private int sawmillTime = 100;
 
         public ChoppingRecipe(ItemStack output)
         {
@@ -55,14 +56,26 @@ public class Choppable
             return this;
         }
 
+        public int getSawmillTime()
+        {
+            return sawmillTime;
+        }
+
+        public ChoppingRecipe setSawmillTime(int sawmillTime)
+        {
+            this.sawmillTime = sawmillTime;
+            return this;
+        }
+
         public int getMaxOutput()
         {
             return maxOutput;
         }
 
-        public void setMaxOutput(int maxOutput)
+        public ChoppingRecipe setMaxOutput(int maxOutput)
         {
             this.maxOutput = maxOutput;
+            return this;
         }
 
         public ItemStack getResults(ItemStack input, EntityPlayer player, int axeLevel, int fortune, Random random)
@@ -79,6 +92,25 @@ public class Choppable
             {
                 whole++;
             }
+
+            if (getMaxOutput() > 0)
+                whole = Math.min(whole, getMaxOutput());
+
+            if (whole > 0)
+            {
+                ItemStack out = getOutput().copy();
+                out.setCount(whole);
+                return out;
+            }
+
+            return ItemStack.EMPTY;
+        }
+
+        public ItemStack getResultsSawmill()
+        {
+            double number = Math.max(0, getOutputMultiplier() * 4);
+
+            int whole = (int) Math.floor(number);
 
             if (getMaxOutput() > 0)
                 whole = Math.min(whole, getMaxOutput());
@@ -182,7 +214,7 @@ public class Choppable
 
     public static ChoppingRecipe find(ItemStack stack)
     {
-        if (stack == null)
+        if (stack.getCount() <= 0)
             return null;
 
         for (ChoppingRecipe recipe : RECIPES)

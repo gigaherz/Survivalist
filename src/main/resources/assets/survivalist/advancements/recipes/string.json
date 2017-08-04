@@ -1,0 +1,39 @@
+{
+  "parent": "minecraft:recipes/root",
+  "conditions": [
+    {
+      "type": "survivalist:config_property",
+      "category": "Fibres",
+      "key": "EnableStringCrafting"
+    }
+  ],
+  "rewards": {
+    "recipes": [
+      "survivalist:string"
+    ]
+  },
+  "criteria": {
+    "has_fibres": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "survivalist:plant_fibres"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:string"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fibres",
+      "has_the_recipe"
+    ]
+  ]
+}

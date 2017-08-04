@@ -6,12 +6,16 @@ import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
+import gigaherz.survivalist.common.DummyRecipe;
 import gigaherz.survivalist.common.ItemTannedArmor;
 import gigaherz.survivalist.misc.FibersEventHandling;
 import gigaherz.survivalist.misc.StringEventHandling;
+import gigaherz.survivalist.network.UpdateFields;
 import gigaherz.survivalist.rack.BlockRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.*;
+import gigaherz.survivalist.sawmill.BlockSawmill;
+import gigaherz.survivalist.sawmill.TileSawmill;
 import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.scraping.MessageScraping;
@@ -22,12 +26,10 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -48,12 +50,9 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.ForgeRegistry;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,8 +96,8 @@ public class Survivalist
     public static Item tanned_boots;
 
     public static BlockRegistered rack;
-
     public static BlockRegistered chopping_block;
+    public static BlockRegistered sawmill;
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
@@ -114,10 +113,12 @@ public class Survivalist
     {
         event.getRegistry().registerAll(
                 rack = new BlockRack("rack"),
-                chopping_block = new BlockChopping("chopping_block")
+                chopping_block = new BlockChopping("chopping_block"),
+                sawmill = new BlockSawmill("sawmill")
         );
         GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
         GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName().toString());
+        GameRegistry.registerTileEntity(TileSawmill.class, sawmill.getRegistryName().toString());
     }
 
     @SubscribeEvent
@@ -127,6 +128,7 @@ public class Survivalist
                 // ItemBlocks
                 rack.createItemBlock(),
                 chopping_block.createItemBlock(),
+                sawmill.createItemBlock(),
 
                 // Items
                 chainmail = new ItemRegistered("chainmail")
@@ -284,6 +286,12 @@ public class Survivalist
         );
     }
 
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
+    {
+        replaceVanillaRecipes();
+    }
+
     private void registerNetwork()
     {
         logger.info("Registering network channel...");
@@ -292,6 +300,7 @@ public class Survivalist
 
         int messageNumber = 0;
         channel.registerMessage(MessageScraping.Handler.class, MessageScraping.class, messageNumber++, Side.CLIENT);
+        channel.registerMessage(UpdateFields.Handler.class, UpdateFields.class, messageNumber++, Side.CLIENT);
         logger.debug("Final message number: " + messageNumber);
     }
 
@@ -343,11 +352,6 @@ public class Survivalist
             }
         }*/
 
-        registerNuggetToIngotRecipe("ingotIron", "nuggetIron", false);
-        registerNuggetToIngotRecipe("ingotCopper", "nuggetCopper");
-        registerNuggetToIngotRecipe("ingotTin", "nuggetTin");
-        registerNuggetToIngotRecipe("ingotLead", "nuggetLead");
-        registerNuggetToIngotRecipe("ingotSilver", "nuggetSilver");
     }
 
     @Mod.EventHandler
@@ -381,13 +385,28 @@ public class Survivalist
         }
     }
 
+    private static void addSmeltingNugget(ItemStack stack, String ore)
+    {
+        List<ItemStack> matches = OreDictionary.getOres(ore);
+        if (matches.size() > 0)
+        {
+            GameRegistry.addSmelting(stack, matches.get(0), 0.1f);
+        }
+    }
+
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         ConfigManager.instance.parseChoppingAxes();
+    }
 
+    private static void replaceVanillaRecipes()
+    {
         ForgeRegistry<IRecipe> recipeRegistry = (ForgeRegistry<IRecipe>)ForgeRegistries.RECIPES;
         ArrayList<IRecipe> recipes = Lists.newArrayList(recipeRegistry.getValues());
+
+        logger.warn("#################################");
+        logger.warn("## Removing vanilla recipes if enabled in settings, 'Dangerous alternative' messages are expected and not a bug...");
 
         if (ConfigManager.instance.enableBread)
         {
@@ -399,6 +418,7 @@ public class Survivalist
                     if (output.getItem() == Items.BREAD)
                     {
                         recipeRegistry.remove(r.getRegistryName());
+                        recipeRegistry.register(DummyRecipe.from(r));
                     }
                 }
             }
@@ -411,7 +431,8 @@ public class Survivalist
                 ItemStack output = r.getRecipeOutput();
                 if (output.getItem() == Items.STICK)
                 {
-                    recipes.remove(r);
+                    recipeRegistry.remove(r.getRegistryName());
+                    recipeRegistry.register(DummyRecipe.from(r));
                 }
             }
         }
@@ -454,6 +475,7 @@ public class Survivalist
                             if (ConfigManager.instance.removePlanksRecipes)
                             {
                                 recipeRegistry.remove(r.getRegistryName());
+                                recipeRegistry.register(DummyRecipe.from(r));
                             }
                             if (ConfigManager.instance.importPlanksRecipes)
                             {
@@ -466,109 +488,9 @@ public class Survivalist
                     }
                 }
             }
-
-            if (ConfigManager.instance.removeSticksFromPlanks)
-            {
-            }
         }
-    }
 
-    private static void registerNuggetToIngotRecipe(final String oreIngot, final String oreNugget)
-    {
-        registerNuggetToIngotRecipe(oreIngot, oreNugget, true);
-    }
-
-    private static void registerNuggetToIngotRecipe(final String oreIngot, final String oreNugget, boolean addIngotToNugget)
-    {
-        ForgeRegistries.RECIPES.register(new ShapedOreRecipe(
-                location(oreIngot.replace("ingot", "") + "_from_nugget"),
-                ItemStack.EMPTY,
-                "nnn", "nnn", "nnn", 'n', oreNugget)
-        {
-            final NonNullList<ItemStack> matches1 = OreDictionary.getOres(oreIngot);
-
-            {
-                setRegistryName(this.group);
-            }
-
-            private void findOutput()
-            {
-                if (this.output.isEmpty())
-                {
-                    if (matches1.size() > 0)
-                    {
-                        output = matches1.get(0);
-                    }
-                }
-            }
-
-            @Nonnull
-            @Override
-            public ItemStack getRecipeOutput()
-            {
-                findOutput();
-                return super.getRecipeOutput();
-            }
-
-            @Nonnull
-            @Override
-            public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1)
-            {
-                findOutput();
-                return super.getCraftingResult(var1);
-            }
-        });
-
-        if (!addIngotToNugget)
-            return;
-
-        ForgeRegistries.RECIPES.register(new ShapelessOreRecipe(
-                location(oreIngot.replace("ingot", "") + "_to_nugget"),
-                ItemStack.EMPTY, oreIngot)
-        {
-            final NonNullList<ItemStack> matches2 = OreDictionary.getOres(oreNugget);
-
-            {
-                setRegistryName(this.group);
-            }
-
-            private void findOutput()
-            {
-                if (this.output.isEmpty())
-                {
-                    if (matches2.size() > 0)
-                    {
-                        output = matches2.get(0).copy();
-                        output.setCount(9);
-                    }
-                }
-            }
-
-            @Nonnull
-            @Override
-            public ItemStack getRecipeOutput()
-            {
-                findOutput();
-                return super.getRecipeOutput();
-            }
-
-            @Nonnull
-            @Override
-            public ItemStack getCraftingResult(@Nonnull InventoryCrafting var1)
-            {
-                findOutput();
-                return super.getCraftingResult(var1);
-            }
-        });
-    }
-
-    private static void addSmeltingNugget(ItemStack stack, String ore)
-    {
-        List<ItemStack> matches = OreDictionary.getOres(ore);
-        if (matches.size() > 0)
-        {
-            GameRegistry.addSmelting(stack, matches.get(0), 0.1f);
-        }
+        logger.warn("## Vanilla recipes removed.");
     }
 
     public static ResourceLocation location(String path)

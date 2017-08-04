@@ -1,0 +1,68 @@
+{
+  "parent": "minecraft:recipes/root",
+  "conditions": [
+    {
+      "type": "survivalist:config_property",
+      "category": "DryingRack",
+      "key": "Enable"
+    },
+    {
+      "type": "survivalist:config_property",
+      "category": "DryingRack",
+      "key": "EnableLeatherTanning"
+    }
+  ],
+  "rewards": {
+    "recipes": [
+      "survivalist:tanned_boots",
+      "survivalist:tanned_chestplate",
+      "survivalist:tanned_helmet",
+      "survivalist:tanned_leggings"
+    ]
+  },
+  "criteria": {
+    "has_tanned_leather": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "survivalist:tanned_leather"
+          }
+        ]
+      }
+    },
+    "has_the_recipe1": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:tanned_boots"
+      }
+    },
+    "has_the_recipe2": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:tanned_chestplate"
+      }
+    },
+    "has_the_recipe3": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:tanned_helmet"
+      }
+    },
+    "has_the_recipe4": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:tanned_leggings"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tanned_leather",
+      "has_the_recipe1",
+      "has_the_recipe2",
+      "has_the_recipe3",
+      "has_the_recipe4"
+    ]
+  ]
+}

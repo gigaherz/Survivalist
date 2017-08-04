@@ -39,5 +39,8 @@ tile.survivalist.pristine_chopping_block.name=Chopping Block
 tile.survivalist.used_chopping_block.name=Used Chopping Block
 tile.survivalist.weathered_chopping_block.name=Weathered Chopping Block
 
+tile.survivalist.sawmill.name=Sawmill
+text.survivalist.sawmill=Sawmill
+
 text.survivalist.jei.category.chopping=Chopping Block
 text.survivalist.jei.category.drying=Drying Rack

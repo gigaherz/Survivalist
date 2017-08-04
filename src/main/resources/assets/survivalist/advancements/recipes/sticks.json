@@ -1,0 +1,39 @@
+{
+  "parent": "minecraft:recipes/root",
+  "conditions": [
+    {
+      "type": "survivalist:config_property",
+      "category": "Sticks",
+      "key": "CraftSticksFromSaplings"
+    }
+  ],
+  "rewards": {
+    "recipes": [
+      "survivalist:string"
+    ]
+  },
+  "criteria": {
+    "has_sapling": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:sapling"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:sticks_from_saplings"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sapling",
+      "has_the_recipe"
+    ]
+  ]
+}

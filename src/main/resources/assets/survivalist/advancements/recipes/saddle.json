@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:recipes/root",
+  "conditions": [
+    {
+      "type": "survivalist:config_property",
+      "category": "DryingRack",
+      "key": "Enable"
+    },
+    {
+      "type": "survivalist:config_property",
+      "category": "DryingRack",
+      "key": "EnableLeatherTanning"
+    },
+    {
+      "type": "survivalist:config_property",
+      "category": "DryingRack",
+      "key": "EnableSaddleCrafting"
+    }
+  ],
+  "rewards": {
+    "recipes": [
+      "survivalist:saddle"
+    ]
+  },
+  "criteria": {
+    "has_tanned_leather": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "survivalist:tanned_leather"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "survivalist:saddle"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tanned_leather",
+      "has_the_recipe"
+    ]
+  ]
+}

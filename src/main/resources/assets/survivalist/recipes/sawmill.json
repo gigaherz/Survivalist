@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "survivalist:config_property",
+      "category": "Sawmill",
+      "key": "Enable"
+    }
+  ],
+  "pattern": [
+    "ddd",
+    "iii",
+    "ccc"
+  ],
+  "key": {
+    "t": { "type":"forge:ore_dict", "ore": "materialTannedLeather" },
+    "s": { "item": "minecraft:string" },
+    "i": { "type":"forge:ore_dict", "ore": "ingotIron" }
+  },
+  "result": {
+    "item": "minecraft:saddle"
+  }
+}
