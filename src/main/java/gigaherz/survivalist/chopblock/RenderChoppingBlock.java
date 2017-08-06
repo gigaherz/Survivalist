@@ -1,6 +1,5 @@
 package gigaherz.survivalist.chopblock;
 
-import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +17,7 @@ public class RenderChoppingBlock extends TileEntitySpecialRenderer<TileChopping>
     public void render(TileChopping te, double x, double y, double z, float partialTicks, int destroyStage, float p_192841_10_)
     {
         IBlockState state = te.getWorld().getBlockState(te.getPos());
-        if (state.getBlock() != Survivalist.chopping_block)
+        if (!(state.getBlock() instanceof BlockChopping))
             return;
 
         if (destroyStage < 0)

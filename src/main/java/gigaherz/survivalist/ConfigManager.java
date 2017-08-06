@@ -2,6 +2,10 @@ package gigaherz.survivalist;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.ints.Int2DoubleArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -49,6 +53,8 @@ public class ConfigManager
     public final boolean dropStringFromSheep;
     public final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
     private final ConfigCategory customAxes;
+    private final ConfigCategory axeMultipliers;
+    public final Int2DoubleMap axeLevelMap = new Int2DoubleArrayMap();
 
     public static void loadConfig(Configuration configuration)
     {
@@ -108,6 +114,13 @@ public class ConfigManager
         boolean hasList = configuration.hasCategory("CustomAxes");
         configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");
         customAxes = configuration.getCategory("CustomAxes");
+
+        configuration.addCustomCategoryComment("AxeMultipliers",
+                "Allows customizing the multiplier for each axe level. By default this is 'baseOutput * (1+axeLevel)'.\n" +
+                        "To customize an axeLevel, add a line like 'D:AxeLevel1=2.0' or 'D:AxeLevel5=3.0' without the quotes.\n" +
+                        "Levels that are not defined will continue using their default value."
+        );
+        axeMultipliers = configuration.getCategory("AxeMultipliers");
 
         configuration.load();
 
@@ -217,5 +230,25 @@ public class ConfigManager
             }
         }
         return -1;
+    }
+
+    public double getAxeLevelMultiplier(int axeLevel)
+    {
+        if (axeLevelMap.containsKey(axeLevel))
+            return axeLevelMap.get(axeLevel);
+
+        double value = 1 + axeLevel;
+
+        if (axeMultipliers != null)
+        {
+            Property p = axeMultipliers.get("AxeLevel" + axeLevel);
+            if (p != null && p.wasRead())
+            {
+                value = p.getDouble();
+            }
+        }
+
+        axeLevelMap.put(axeLevel, value);
+        return value;
     }
 }

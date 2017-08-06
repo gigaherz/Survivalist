@@ -12,6 +12,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.InventoryHelper;
@@ -73,6 +74,12 @@ public abstract class BlockChopping extends BlockRegistered
                             .withProperty(DAMAGE,i).withProperty(VARIANT,variant))));
             }
         }
+
+        @Override
+        protected String getVariantName(int meta)
+        {
+            return getStateFromMeta(meta).getValue(VARIANT).getUnlocalizedName();
+        }
     }
 
     public static class NewLog extends BlockChopping
@@ -82,6 +89,7 @@ public abstract class BlockChopping extends BlockRegistered
         public NewLog(String name)
         {
             super(name);
+            setUnlocalizedName("chopping_block." + name);
         }
 
         @Override
@@ -113,11 +121,13 @@ public abstract class BlockChopping extends BlockRegistered
                             .withProperty(DAMAGE,i).withProperty(VARIANT,variant))));
             }
         }
-    }
 
-    private static final String[] subNames = {
-            ".pristine_chopping_block", ".used_chopping_block", ".weathered_chopping_block"
-    };
+        @Override
+        protected String getVariantName(int meta)
+        {
+            return getStateFromMeta(meta).getValue(VARIANT).getUnlocalizedName();
+        }
+    }
 
     public BlockChopping(String name)
     {
@@ -173,7 +183,13 @@ public abstract class BlockChopping extends BlockRegistered
     @Override
     public int damageDropped(IBlockState state)
     {
-        return state.getValue(DAMAGE);
+        return getMetaFromState(state);
+    }
+
+    @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        return getStateFromMeta(meta);
     }
 
     @Override
@@ -301,6 +317,8 @@ public abstract class BlockChopping extends BlockRegistered
         }
     }
 
+    protected abstract String getVariantName(int meta);
+
     @Override
     public ItemBlock createItemBlock()
     {
@@ -321,15 +339,20 @@ public abstract class BlockChopping extends BlockRegistered
             return damage;
         }
 
+        private static final String[] subNames = {
+                ".pristine_", ".used_", ".weathered_"
+        };
+
         @Override
         public String getUnlocalizedName(ItemStack stack)
         {
             int meta = stack.getMetadata();
 
-            if (meta > subNames.length)
+            int damage = meta&3;
+            if (damage > subNames.length)
                 return getUnlocalizedName();
 
-            return "tile." + Survivalist.MODID + subNames[meta];
+            return "tile." + Survivalist.MODID + subNames[damage] + ((BlockChopping)block).getVariantName(meta) + "_chopping_block";
         }
     }
 }

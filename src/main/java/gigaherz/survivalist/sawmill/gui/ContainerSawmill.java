@@ -108,7 +108,7 @@ public class ContainerSawmill
             }
             else if (index != 1 && index != 0)
             {
-                if (Choppable.find(itemstack1) != null)
+                if (Choppable.isValidInput(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {

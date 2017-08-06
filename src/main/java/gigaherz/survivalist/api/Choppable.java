@@ -83,7 +83,7 @@ public class Choppable
             double number = 0.4f * getOutputMultiplier();
 
             if (axeLevel >= 0)
-                number = Math.max(0, getOutputMultiplier() * (1 + axeLevel)) * (1 + random.nextFloat() * fortune);
+                number = Math.max(0, getOutputMultiplier() * ConfigManager.instance.getAxeLevelMultiplier(axeLevel)) * (1 + random.nextFloat() * fortune);
 
             int whole = (int) Math.floor(number);
             double remainder = number - whole;
@@ -198,20 +198,6 @@ public class Choppable
         return recipe;
     }
 
-    public static boolean isValidInput(ItemStack stack)
-    {
-        if (stack.getCount() <= 0)
-            return false;
-
-        for (ChoppingRecipe recipe : RECIPES)
-        {
-            if (recipe.accepts(stack))
-                return true;
-        }
-
-        return false;
-    }
-
     public static ChoppingRecipe find(ItemStack stack)
     {
         if (stack.getCount() <= 0)
@@ -226,17 +212,20 @@ public class Choppable
         return null;
     }
 
+    public static boolean isValidInput(ItemStack stack)
+    {
+        return find(stack) != null;
+    }
+
     public static double getHitCountMultiplier(ItemStack stack)
     {
-        if (stack.getCount() <= 0)
-            return 0;
+        ChoppingRecipe recipe = find(stack);
+        return recipe != null ? recipe.getHitCountMultiplier() : 0;
+    }
 
-        for (ChoppingRecipe recipe : RECIPES)
-        {
-            if (recipe.accepts(stack))
-                return recipe.getHitCountMultiplier();
-        }
-
-        return 0;
+    public static int getSawmillTime(ItemStack stack)
+    {
+        ChoppingRecipe recipe = find(stack);
+        return recipe != null ? recipe.getSawmillTime() : 0;
     }
 }

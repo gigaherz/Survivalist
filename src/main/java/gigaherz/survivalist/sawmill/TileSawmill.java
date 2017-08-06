@@ -105,7 +105,7 @@ public class TileSawmill extends TileEntity implements ITickable
         totalBurnTime = TileEntityFurnace.getItemBurnTime(inventory.getStackInSlot(1));
 
         cookTime = compound.getInteger("CookTime");
-        totalCookTime = Choppable.find(inventory.getStackInSlot(0)).getSawmillTime();
+        totalCookTime = Choppable.getSawmillTime(inventory.getStackInSlot(0));
     }
 
     @Override
