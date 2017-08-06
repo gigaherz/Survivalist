@@ -1,12 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Fibres",
-      "key": "EnableStringCrafting"
-    }
-  ],
   "ingredients": [
     { "item": "survivalist:plant_fibres" },
     { "item": "survivalist:plant_fibres" },

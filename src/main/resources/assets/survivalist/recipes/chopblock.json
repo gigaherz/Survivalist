@@ -1,12 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Chopping",
-      "key": "Enable"
-    }
-  ],
   "ingredients": [
     {
       "type" : "forge:ore_dict",

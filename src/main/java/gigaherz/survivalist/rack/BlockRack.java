@@ -38,15 +38,6 @@ public class BlockRack extends BlockRegistered
         setLightOpacity(0);
     }
 
-    @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (ConfigManager.instance.enableDryingRack)
-        {
-            super.getSubBlocks(tab, list);
-        }
-    }
-
     @Deprecated
     @Override
     public boolean isOpaqueCube(IBlockState state)

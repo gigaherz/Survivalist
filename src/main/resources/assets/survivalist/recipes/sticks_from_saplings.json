@@ -1,12 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Sticks",
-      "key": "CraftSticksFromSaplings"
-    }
-  ],
   "ingredients": [
     {
       "type" : "forge:ore_dict",

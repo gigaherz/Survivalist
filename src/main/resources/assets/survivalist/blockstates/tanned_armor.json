@@ -6,10 +6,10 @@
   },
   "variants": {
     "part": {
-      "helmet": { "textures": { "layer0": "survivalist:item/tanned_helmet" } },
-      "chestplate": { "textures": { "layer0": "survivalist:item/tanned_chestplate" } },
-      "leggings": { "textures": { "layer0": "survivalist:item/tanned_leggings" } },
-      "boots": { "textures": { "layer0": "survivalist:item/tanned_boots" } }
+      "helmet": { "textures": { "layer0": "survivalist:items/tanned_helmet" } },
+      "chestplate": { "textures": { "layer0": "survivalist:items/tanned_chestplate" } },
+      "leggings": { "textures": { "layer0": "survivalist:items/tanned_leggings" } },
+      "boots": { "textures": { "layer0": "survivalist:items/tanned_boots" } }
     }
   }
 }

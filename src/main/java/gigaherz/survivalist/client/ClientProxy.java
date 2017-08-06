@@ -1,8 +1,10 @@
 package gigaherz.survivalist.client;
 
+import com.google.common.collect.Maps;
 import gigaherz.common.state.client.ItemStateMapper;
 import gigaherz.survivalist.IModProxy;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.RenderChoppingBlock;
 import gigaherz.survivalist.chopblock.TileChopping;
 import gigaherz.survivalist.network.UpdateFields;
@@ -10,16 +12,32 @@ import gigaherz.survivalist.rack.RenderRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.EntityRock;
 import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
+import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.Collections;
+import java.util.Map;
 
 import static gigaherz.common.client.ModelHelpers.registerBlockModelAsItem;
 import static gigaherz.common.client.ModelHelpers.registerItemModel;
@@ -66,9 +84,33 @@ public class ClientProxy implements IModProxy
         registerItemModel(Survivalist.pick);
         registerItemModel(Survivalist.spade);
 
-        registerBlockModelAsItem(Survivalist.chopping_block, 0, "damage=0");
-        registerBlockModelAsItem(Survivalist.chopping_block, 1, "damage=1");
-        registerBlockModelAsItem(Survivalist.chopping_block, 2, "damage=2");
+        NonNullList<ItemStack> stacks1 = NonNullList.create();
+        Survivalist.chopping_block.getSubBlocks(CreativeTabs.SEARCH, stacks1);
+        for(ItemStack stack : stacks1)
+        {
+            IBlockState st = Survivalist.chopping_block.getStateFromMeta(stack.getMetadata());
+            registerItemModel(stack.getItem(), stack.getMetadata(), String.format("damage=%s,variant=%s", st.getValue(BlockChopping.DAMAGE), st.getValue(BlockChopping.OldLog.VARIANT)));
+        }
+
+        NonNullList<ItemStack> stacks2 = NonNullList.create();
+        Survivalist.chopping_block2.getSubBlocks(CreativeTabs.SEARCH, stacks2);
+        for(ItemStack stack : stacks2)
+        {
+            IBlockState st = Survivalist.chopping_block2.getStateFromMeta(stack.getMetadata());
+            registerItemModel(stack.getItem(), stack.getMetadata(), Survivalist.chopping_block.getRegistryName(), String.format("damage=%s,variant=%s", st.getValue(BlockChopping.DAMAGE), st.getValue(BlockChopping.NewLog.VARIANT)));
+        }
+
+        ModelLoader.setCustomStateMapper(Survivalist.chopping_block2, new StateMapperBase(){
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state)
+            {
+                Map< IProperty<?>, Comparable<? >> map = Maps.newLinkedHashMap(state.getProperties());
+
+                String s = Survivalist.chopping_block.getRegistryName().toString();
+
+                return new ModelResourceLocation(s, this.getPropertyString(map));
+            }
+        });
 
         registerItemModel(Survivalist.plant_fibres);
 

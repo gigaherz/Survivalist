@@ -4,9 +4,9 @@ import gigaherz.common.BlockRegistered;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -30,10 +30,90 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 
-public class BlockChopping extends BlockRegistered
+public abstract class BlockChopping extends BlockRegistered
 {
     public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 2);
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+
+    public static class OldLog extends BlockChopping
+    {
+        public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = BlockOldLog.VARIANT;
+
+        public OldLog(String name)
+        {
+            super(name);
+        }
+
+        @Override
+        protected BlockStateContainer createBlockState()
+        {
+            return new BlockStateContainer(this, DAMAGE, VARIANT);
+        }
+
+        @Override
+        public int getMetaFromState(IBlockState state)
+        {
+            return state.getValue(DAMAGE) | (state.getValue(VARIANT).getMetadata()<<2);
+        }
+
+        @Deprecated
+        @Override
+        public IBlockState getStateFromMeta(int meta)
+        {
+            return getDefaultState().withProperty(DAMAGE, (meta & 3) % 3).withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta>>2));
+        }
+
+        @Override
+        public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
+        {
+            for (Integer i : DAMAGE.getAllowedValues())
+            {
+                for(BlockPlanks.EnumType variant : VARIANT.getAllowedValues())
+                    list.add(new ItemStack(this, 1, this.getMetaFromState(getDefaultState()
+                            .withProperty(DAMAGE,i).withProperty(VARIANT,variant))));
+            }
+        }
+    }
+
+    public static class NewLog extends BlockChopping
+    {
+        public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = BlockNewLog.VARIANT;
+
+        public NewLog(String name)
+        {
+            super(name);
+        }
+
+        @Override
+        protected BlockStateContainer createBlockState()
+        {
+            return new BlockStateContainer(this, DAMAGE, VARIANT);
+        }
+
+        @Override
+        public int getMetaFromState(IBlockState state)
+        {
+            return state.getValue(DAMAGE) | ((state.getValue(VARIANT).getMetadata()-4)<<2);
+        }
+
+        @Deprecated
+        @Override
+        public IBlockState getStateFromMeta(int meta)
+        {
+            return getDefaultState().withProperty(DAMAGE, (meta & 3) % 3).withProperty(VARIANT, BlockPlanks.EnumType.byMetadata((meta>>2)+4));
+        }
+
+        @Override
+        public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
+        {
+            for (Integer i : DAMAGE.getAllowedValues())
+            {
+                for(BlockPlanks.EnumType variant : VARIANT.getAllowedValues())
+                    list.add(new ItemStack(this, 1, this.getMetaFromState(getDefaultState()
+                            .withProperty(DAMAGE,i).withProperty(VARIANT,variant))));
+            }
+        }
+    }
 
     private static final String[] subNames = {
             ".pristine_chopping_block", ".used_chopping_block", ".weathered_chopping_block"
@@ -52,16 +132,7 @@ public class BlockChopping extends BlockRegistered
     }
 
     @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
-    {
-        if (ConfigManager.instance.enableChopping)
-        {
-            for (int i = 0; i < subNames.length; i++)
-            {
-                list.add(new ItemStack(this, 1, i));
-            }
-        }
-    }
+    public abstract void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list);
 
     @Deprecated
     @Override
@@ -90,23 +161,14 @@ public class BlockChopping extends BlockRegistered
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, DAMAGE);
-    }
+    protected abstract BlockStateContainer createBlockState();
 
     @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return state.getValue(DAMAGE);
-    }
+    public abstract int getMetaFromState(IBlockState state);
 
     @Deprecated
     @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        return getDefaultState().withProperty(DAMAGE, (meta & 3) % 3);
-    }
+    public abstract IBlockState getStateFromMeta(int meta);
 
     @Override
     public int damageDropped(IBlockState state)

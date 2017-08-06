@@ -6,11 +6,11 @@
   },
   "variants": {
     "ore": {
-      "iron": { "textures": { "layer0": "survivalist:item/iron_nugget" } },
-      "copper": { "textures": { "layer0": "survivalist:item/copper_nugget" } },
-      "tin": { "textures": { "layer0": "survivalist:item/tin_nugget" } },
-      "lead": { "textures": { "layer0": "survivalist:item/lead_nugget" } },
-      "silver": { "textures": { "layer0": "survivalist:item/silver_nugget" } }
+      "iron": { "textures": { "layer0": "survivalist:items/iron_nugget" } },
+      "copper": { "textures": { "layer0": "survivalist:items/copper_nugget" } },
+      "tin": { "textures": { "layer0": "survivalist:items/tin_nugget" } },
+      "lead": { "textures": { "layer0": "survivalist:items/lead_nugget" } },
+      "silver": { "textures": { "layer0": "survivalist:items/silver_nugget" } }
     }
   }
 }

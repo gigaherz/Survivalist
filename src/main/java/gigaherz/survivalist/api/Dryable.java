@@ -87,6 +87,7 @@ public class Dryable
         {
             registerRecipe(new ItemStack(Items.LEATHER), new ItemStack(Survivalist.tanned_leather), 30 * 20);
         }
+
         if (ConfigManager.instance.enableMeatRotting)
         {
             registerRecipe(new ItemStack(Items.BEEF), new ItemStack(Items.ROTTEN_FLESH), 15 * 20);

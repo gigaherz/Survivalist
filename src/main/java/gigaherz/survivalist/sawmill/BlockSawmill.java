@@ -1,6 +1,7 @@
 package gigaherz.survivalist.sawmill;
 
 import gigaherz.common.BlockRegistered;
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.GuiHandler;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.BlockHorizontal;
@@ -86,6 +87,7 @@ public class BlockSawmill extends BlockRegistered
         return state;
     }
 
+    @Deprecated
     @Override
     public int getLightValue(IBlockState state)
     {

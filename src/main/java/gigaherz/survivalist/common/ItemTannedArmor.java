@@ -17,7 +17,7 @@ public class ItemTannedArmor extends ItemRegisteredArmor
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
-        if (ConfigManager.instance.enableLeatherTanning && isInCreativeTab(tab))
+        if (isInCreativeTab(tab))
         {
             super.getSubItems(tab, subItems);
         }

@@ -4,16 +4,6 @@
     {
       "type": "survivalist:config_property",
       "category": "DryingRack",
-      "key": "Enable"
-    },
-    {
-      "type": "survivalist:config_property",
-      "category": "DryingRack",
-      "key": "EnableLeatherTanning"
-    },
-    {
-      "type": "survivalist:config_property",
-      "category": "DryingRack",
       "key": "EnableSaddleCrafting"
     }
   ],

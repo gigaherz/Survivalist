@@ -4,7 +4,7 @@
     "inventory": [{
       "model": "builtin/generated",
       "transform": "forge:default-item",
-      "textures": { "layer0": "survivalist:item/jerky" }
+      "textures": { "layer0": "survivalist:items/jerky" }
     }]
   }
 }

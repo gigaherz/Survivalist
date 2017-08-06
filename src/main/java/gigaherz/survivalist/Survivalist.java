@@ -97,11 +97,12 @@ public class Survivalist
 
     public static BlockRegistered rack;
     public static BlockRegistered chopping_block;
+    public static BlockRegistered chopping_block2;
     public static BlockRegistered sawmill;
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
-                    new int[]{2, 4, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 1);
+                    new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 1);
 
     public static ItemTool.ToolMaterial TOOL_FLINT =
             EnumHelper.addToolMaterial("flint", 1, 150, 5.0F, 1.5F, 5);
@@ -113,7 +114,8 @@ public class Survivalist
     {
         event.getRegistry().registerAll(
                 rack = new BlockRack("rack"),
-                chopping_block = new BlockChopping("chopping_block"),
+                chopping_block = new BlockChopping.OldLog("chopping_block"),
+                chopping_block2 = new BlockChopping.NewLog("chopping_block2"),
                 sawmill = new BlockSawmill("sawmill")
         );
         GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
@@ -128,6 +130,7 @@ public class Survivalist
                 // ItemBlocks
                 rack.createItemBlock(),
                 chopping_block.createItemBlock(),
+                chopping_block2.createItemBlock(),
                 sawmill.createItemBlock(),
 
                 // Items
@@ -136,7 +139,7 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enableChainmailCrafting && isInCreativeTab(tab))
+                        if (isInCreativeTab(tab))
                         {
                             super.getSubItems(tab, subItems);
                         }
@@ -147,7 +150,7 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enableLeatherTanning && isInCreativeTab(tab))
+                        if (isInCreativeTab(tab))
                         {
                             super.getSubItems(tab, subItems);
                         }
@@ -162,7 +165,7 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enableLeatherTanning && isInCreativeTab(tab))
+                        if (isInCreativeTab(tab))
                         {
                             super.getSubItems(tab, subItems);
                         }
@@ -198,7 +201,7 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enableHatchet && isInCreativeTab(tab))
+                        if (isInCreativeTab(tab))
                         {
                             super.getSubItems(tab, subItems);
                         }
@@ -209,7 +212,7 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enablePick && isInCreativeTab(tab))
+                        if (isInCreativeTab(tab))
                         {
                             super.getSubItems(tab, subItems);
                         }
@@ -220,7 +223,7 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enableSpade && isInCreativeTab(tab))
+                        if (isInCreativeTab(tab))
                         {
                             super.getSubItems(tab, subItems);
                         }
@@ -231,7 +234,7 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enableFibres && isInCreativeTab(tab))
+                        if (isInCreativeTab(tab))
                         {
                             super.getSubItems(tab, subItems);
                         }
@@ -289,6 +292,9 @@ public class Survivalist
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
     {
+        Dryable.registerStockRecipes();
+        Choppable.registerStockRecipes();
+
         replaceVanillaRecipes();
     }
 
@@ -358,31 +364,20 @@ public class Survivalist
     public void init(FMLInitializationEvent event)
     {
         int entityId = 1;
+        EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
+        logger.debug("Last used id: %i", entityId);
+
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
-        if (ConfigManager.instance.enableRocks)
-        {
-            EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
-            logger.debug("Last used id: %i", entityId);
+        addSmeltingNugget(rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
+        addSmeltingNugget(rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
+        addSmeltingNugget(rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
+        addSmeltingNugget(rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
+        addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
+        addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
 
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
-            addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
-        }
-
-        if (ConfigManager.instance.enableDryingRack)
-        {
-            Dryable.registerStockRecipes();
-        }
-
-        if (ConfigManager.instance.enableBread)
-        {
-            GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
-        }
+        GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
     }
 
     private static void addSmeltingNugget(ItemStack stack, String ore)
@@ -437,52 +432,47 @@ public class Survivalist
             }
         }
 
-        if (ConfigManager.instance.enableChopping)
+        if (ConfigManager.instance.importPlanksRecipes || ConfigManager.instance.removePlanksRecipes)
         {
-            Choppable.registerStockRecipes();
-
-            if (ConfigManager.instance.importPlanksRecipes || ConfigManager.instance.removePlanksRecipes)
+            for (IRecipe r : recipes)
             {
-                for (IRecipe r : recipes)
+                ItemStack output = r.getRecipeOutput();
+                if (output.getCount() > 0 && OreDictionaryHelper.hasOreName(output, "plankWood"))
                 {
-                    ItemStack output = r.getRecipeOutput();
-                    if (output.getCount() > 0 && OreDictionaryHelper.hasOreName(output, "plankWood"))
+                    List<Ingredient> inputs = r.getIngredients();
+                    Ingredient logInput = null;
+
+                    for (Ingredient input : inputs)
                     {
-                        List<Ingredient> inputs = r.getIngredients();
-                        Ingredient logInput = null;
-
-                        for (Ingredient input : inputs)
+                        boolean anyWood = false;
+                        for (ItemStack stack : input.getMatchingStacks())
                         {
-                            boolean anyWood = false;
-                            for (ItemStack stack : input.getMatchingStacks())
+                            if (OreDictionaryHelper.hasOreName(stack, "logWood"))
                             {
-                                if (OreDictionaryHelper.hasOreName(stack, "logWood"))
-                                {
-                                    anyWood = true;
-                                }
+                                anyWood = true;
                             }
-
-                            if (!anyWood || logInput != null)
-                            {
-                                logInput = null;
-                                break;
-                            }
-                            logInput = input;
                         }
 
-                        if (logInput != null)
+                        if (!anyWood || logInput != null)
                         {
-                            if (ConfigManager.instance.removePlanksRecipes)
+                            logInput = null;
+                            break;
+                        }
+                        logInput = input;
+                    }
+
+                    if (logInput != null)
+                    {
+                        if (ConfigManager.instance.removePlanksRecipes)
+                        {
+                            recipeRegistry.remove(r.getRegistryName());
+                            recipeRegistry.register(DummyRecipe.from(r));
+                        }
+                        if (ConfigManager.instance.importPlanksRecipes)
+                        {
+                            for (ItemStack stack : logInput.getMatchingStacks())
                             {
-                                recipeRegistry.remove(r.getRegistryName());
-                                recipeRegistry.register(DummyRecipe.from(r));
-                            }
-                            if (ConfigManager.instance.importPlanksRecipes)
-                            {
-                                for (ItemStack stack : logInput.getMatchingStacks())
-                                {
-                                    Choppable.registerRecipe(stack.copy(), output.copy());
-                                }
+                                Choppable.registerRecipe(stack.copy(), output.copy());
                             }
                         }
                     }

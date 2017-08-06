@@ -1,12 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Rocks",
-      "key": "Enable"
-    }
-  ],
   "ingredients": [
     { "item": "minecraft:gravel" }
   ],

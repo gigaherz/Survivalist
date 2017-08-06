@@ -1,12 +1,5 @@
 {
   "parent": "minecraft:recipes/root",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Chainmail",
-      "key": "EnableChainmailCrafting"
-    }
-  ],
   "rewards": {
     "recipes": [
       "survivalist:chain_boots",

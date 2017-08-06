@@ -43,26 +43,18 @@ public class JEIPlugin implements IModPlugin
     @Override
     public void register(@Nonnull IModRegistry registry)
     {
-
-
-        if (ConfigManager.instance.enableDryingRack)
+        registry.handleRecipes(Dryable.DryingRecipe.class, DryingRecipeWrapper::wrap, DryingCategory.UID);
+        registry.addRecipes(Dryable.RECIPES, DryingCategory.UID);
+        if (Survivalist.rack != null)
         {
-            registry.handleRecipes(Dryable.DryingRecipe.class, DryingRecipeWrapper::wrap, DryingCategory.UID);
-            registry.addRecipes(Dryable.RECIPES, DryingCategory.UID);
-            if (Survivalist.rack != null)
-            {
-                registry.addRecipeCatalyst(new ItemStack(Survivalist.rack), DryingCategory.UID);
-            }
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.rack), DryingCategory.UID);
         }
 
-        if (ConfigManager.instance.enableChopping)
+        registry.handleRecipes(Choppable.ChoppingRecipe.class, ChoppingRecipeWrapper::wrap, ChoppingCategory.UID);
+        registry.addRecipes(Choppable.RECIPES, ChoppingCategory.UID);
+        if (Survivalist.chopping_block != null)
         {
-            registry.handleRecipes(Choppable.ChoppingRecipe.class, ChoppingRecipeWrapper::wrap, ChoppingCategory.UID);
-            registry.addRecipes(Choppable.RECIPES, ChoppingCategory.UID);
-            if (Survivalist.chopping_block != null)
-            {
-                registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block), ChoppingCategory.UID);
-            }
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block), ChoppingCategory.UID);
         }
     }
 

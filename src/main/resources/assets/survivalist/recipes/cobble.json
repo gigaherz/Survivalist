@@ -1,12 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Rocks",
-      "key": "Enable"
-    }
-  ],
   "pattern": [
     "rrr",
     "rcr",

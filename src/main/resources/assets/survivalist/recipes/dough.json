@@ -1,12 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Bread",
-      "key": "Enable"
-    }
-  ],
   "ingredients": [
     {
       "item": "minecraft:wheat"

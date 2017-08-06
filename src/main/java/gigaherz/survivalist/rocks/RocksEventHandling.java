@@ -40,6 +40,8 @@ public class RocksEventHandling
         boolean anyChanged = false;
         List<ItemStack> newDrops = Lists.newArrayList();
 
+        int fortune = ev.getFortuneLevel();
+
         for (ItemStack drop : drops)
         {
             if (drop.getCount() <= 0)
@@ -76,34 +78,71 @@ public class RocksEventHandling
             }
             else if (drop.getItem() == Item.getItemFromBlock(Blocks.IRON_ORE) && ConfigManager.instance.replaceIronOreDrops)
             {
-                newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 0));
+                newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountNormal(), fortune), 0));
                 anyChanged = true;
             }
             else if (drop.getItem() == Item.getItemFromBlock(Blocks.GOLD_ORE) && ConfigManager.instance.replaceGoldOreDrops)
             {
-                newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 1));
+                newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountNormal(), fortune), 1));
                 anyChanged = true;
             }
             else if (ConfigManager.instance.replaceModOreDrops)
             {
                 if (OreDictionaryHelper.hasOreName(drop, "oreCopper"))
                 {
-                    newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 2));
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountNormal(), fortune), 2));
                     anyChanged = true;
                 }
                 else if (OreDictionaryHelper.hasOreName(drop, "oreTin"))
                 {
-                    newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 3));
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountNormal(), fortune), 3));
                     anyChanged = true;
                 }
                 else if (OreDictionaryHelper.hasOreName(drop, "oreLead"))
                 {
-                    newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 4));
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountNormal(), fortune), 4));
                     anyChanged = true;
                 }
                 else if (OreDictionaryHelper.hasOreName(drop, "oreSilver"))
                 {
-                    newDrops.add(new ItemStack(Survivalist.rock_ore, 2 + Math.round(2 * rnd.nextFloat()), 5));
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountNormal(), fortune), 5));
+                    anyChanged = true;
+                }
+                else
+                {
+                    newDrops.add(drop);
+                }
+            }
+            else if (ConfigManager.instance.replacePoorOreDrops)
+            {
+                if (OreDictionaryHelper.hasOreName(drop, "orePoorIron"))
+                {
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountPoor(), fortune), 0));
+                    anyChanged = true;
+                }
+                else if (OreDictionaryHelper.hasOreName(drop, "orePoorgold"))
+                {
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountPoor(), fortune), 1));
+                    anyChanged = true;
+                }
+                else if (OreDictionaryHelper.hasOreName(drop, "orePoorCopper"))
+                {
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountPoor(), fortune), 2));
+                    anyChanged = true;
+                }
+                else if (OreDictionaryHelper.hasOreName(drop, "orePoorTin"))
+                {
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountPoor(), fortune), 3));
+                    anyChanged = true;
+                }
+                else if (OreDictionaryHelper.hasOreName(drop, "orePoorLead"))
+                {
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountPoor(), fortune), 4));
+                    anyChanged = true;
+                }
+                else if (OreDictionaryHelper.hasOreName(drop, "orePoorSilver"))
+                {
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountPoor(), fortune), 5));
                     anyChanged = true;
                 }
                 else
@@ -122,5 +161,27 @@ public class RocksEventHandling
             drops.clear();
             drops.addAll(newDrops);
         }
+    }
+
+    private int getAmountPoor()
+    {
+        return 1 + Math.round(rnd.nextFloat());
+    }
+
+    private int getAmountNormal()
+    {
+        return 2 + Math.round(2 * rnd.nextFloat());
+    }
+
+    private int applyFortune(int amount, int fortune)
+    {
+        int i = rnd.nextInt(fortune + 2) - 1;
+
+        if (i < 0)
+        {
+            i = 0;
+        }
+
+        return amount * (i + 1);
     }
 }

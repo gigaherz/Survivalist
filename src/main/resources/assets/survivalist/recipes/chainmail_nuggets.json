@@ -1,12 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Chainmail",
-      "key": "EnableChainmailCrafting"
-    }
-  ],
   "pattern": [
     " n ",
     "n n",

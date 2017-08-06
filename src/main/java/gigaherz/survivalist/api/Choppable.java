@@ -165,7 +165,7 @@ public class Choppable
         @Override
         public boolean accepts(ItemStack stack)
         {
-            return OreDictionaryHelper.hasOreName(stack, oreName);
+            return stack.getCount() > 0 && OreDictionaryHelper.hasOreName(stack, oreName);
         }
     }
 
@@ -200,7 +200,7 @@ public class Choppable
 
     public static boolean isValidInput(ItemStack stack)
     {
-        if (stack == null)
+        if (stack.getCount() <= 0)
             return false;
 
         for (ChoppingRecipe recipe : RECIPES)
@@ -228,7 +228,7 @@ public class Choppable
 
     public static double getHitCountMultiplier(ItemStack stack)
     {
-        if (stack == null)
+        if (stack.getCount() <= 0)
             return 0;
 
         for (ChoppingRecipe recipe : RECIPES)

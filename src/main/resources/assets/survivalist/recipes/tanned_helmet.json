@@ -1,17 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "DryingRack",
-      "key": "Enable"
-    },
-    {
-      "type": "survivalist:config_property",
-      "category": "DryingRack",
-      "key": "EnableLeatherTanning"
-    }
-  ],
   "pattern": [
     "ttt",
     "t t"

@@ -1,12 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "conditions": [
-    {
-      "type": "survivalist:config_property",
-      "category": "Tools",
-      "key": "EnableSpade"
-    }
-  ],
   "ingredients": [
     {
       "item": "minecraft:flint"
