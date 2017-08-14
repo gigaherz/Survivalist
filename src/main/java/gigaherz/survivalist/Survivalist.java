@@ -21,6 +21,7 @@ import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.scraping.MessageScraping;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
@@ -34,6 +35,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -99,6 +101,8 @@ public class Survivalist
     public static BlockRegistered chopping_block;
     public static BlockRegistered chopping_block2;
     public static BlockRegistered sawmill;
+
+    public static SoundEvent shlop;
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
@@ -243,6 +247,14 @@ public class Survivalist
         );
 
         registerOredictNames();
+    }
+
+    @SubscribeEvent
+    public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
+    {
+        event.getRegistry().registerAll(
+                shlop = new SoundEvent(location("mob.slime.merge")).setRegistryName(location("shlop"))
+        );
     }
 
     private static void registerOredictNames()

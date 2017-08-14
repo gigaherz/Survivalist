@@ -1,0 +1,8 @@
+{
+  "mob.slime.merge": {
+    "subtitle": "sound.survivalist.slime.merge",
+    "sounds": [
+      "survivalist:mob/slime/shlop"
+    ]
+  }
+}
