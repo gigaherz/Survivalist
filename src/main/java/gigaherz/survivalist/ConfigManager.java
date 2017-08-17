@@ -15,6 +15,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -51,6 +52,7 @@ public class ConfigManager
     public final boolean enableStringCrafting;
     public final boolean dropFibersFromGrass;
     public final boolean dropStringFromSheep;
+    public final boolean mergeSlimes;
     public final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
     private final ConfigCategory customAxes;
     private final ConfigCategory axeMultipliers;
@@ -63,53 +65,68 @@ public class ConfigManager
 
     public final Configuration config;
 
+    private static class AllProperties extends ArrayList<Property>
+    {
+        public Property push(Property p)
+        {
+            this.add(p);
+            return p;
+        }
+    }
+
     public ConfigManager(Configuration configuration)
     {
         this.config = configuration;
 
+        AllProperties props = new AllProperties();
+
         configuration.addCustomCategoryComment("Sticks", "Settings for stick crafting");
-        Property p_removeSticksFromPlanks = configuration.get("Sticks", "RemoveSticksFromPlanksRecipes", true);
+        Property p_removeSticksFromPlanks = props.push(configuration.get("Sticks", "RemoveSticksFromPlanksRecipes", true));
 
         configuration.addCustomCategoryComment("Rocks", "Settings for rock and ore rock drops");
-        Property p_enableRocks = configuration.get("Rocks", "Enable", true);
-        Property p_replaceStoneDrops = configuration.get("Rocks", "ReplaceStoneDrops", true);
-        Property p_replaceIronOreDrops = configuration.get("Rocks", "ReplaceIronOreDrops", true);
-        Property p_replaceGoldOreDrops = configuration.get("Rocks", "ReplaceGoldOreDrops", true);
-        Property p_replaceModOreDrops = configuration.get("Rocks", "ReplaceModOreDrops", true);
-        Property p_replacePoorOreDrops = configuration.get("Rocks", "ReplacePoorOreDrops", true);
-        Property p_cobbleRequiresClay = configuration.get("Rocks", "CobbleRequiresClay", true);
+        Property p_enableRocks = props.push(configuration.get("Rocks", "Enable", true));
+        Property p_replaceStoneDrops = props.push(configuration.get("Rocks", "ReplaceStoneDrops", true));
+        Property p_replaceIronOreDrops = props.push(configuration.get("Rocks", "ReplaceIronOreDrops", true));
+        Property p_replaceGoldOreDrops = props.push(configuration.get("Rocks", "ReplaceGoldOreDrops", true));
+        Property p_replaceModOreDrops = props.push(configuration.get("Rocks", "ReplaceModOreDrops", true));
+        Property p_replacePoorOreDrops = props.push(configuration.get("Rocks", "ReplacePoorOreDrops", true));
+        Property p_cobbleRequiresClay = props.push(configuration.get("Rocks", "CobbleRequiresClay", true));
 
         configuration.addCustomCategoryComment("Scraping", "Settings for the Scraping feature and enchant");
-        Property p_enableScraping = configuration.get("Scraping", "Enable", true);
-        Property p_enableToolScraping = configuration.get("Scraping", "EnableToolScraping", true);
-        Property p_enableArmorScraping = configuration.get("Scraping", "EnableArmorScraping", true);
+        Property p_enableScraping = props.push(configuration.get("Scraping", "Enable", true));
+        Property p_enableToolScraping = props.push(configuration.get("Scraping", "EnableToolScraping", true));
+        Property p_enableArmorScraping = props.push(configuration.get("Scraping", "EnableArmorScraping", true));
 
         configuration.addCustomCategoryComment("DryingRack", "Settings for the drying rack block");
-        Property p_enableMeatRotting = configuration.get("DryingRack", "EnableMeatRotting", true);
-        Property p_enableRottenDrying = configuration.get("DryingRack", "EnableRottenDrying", true);
-        Property p_enableJerky = configuration.get("DryingRack", "EnableJerky", true);
-        Property p_enableMeatDrying = configuration.get("DryingRack", "EnableMeatDrying", true);
-        Property p_enableLeatherTanning = configuration.get("DryingRack", "EnableLeatherTanning", true);
-        Property p_enableSaddleCrafting = configuration.get("DryingRack", "EnableSaddleCrafting", true);
+        Property p_enableMeatRotting = props.push(configuration.get("DryingRack", "EnableMeatRotting", true));
+        Property p_enableRottenDrying = props.push(configuration.get("DryingRack", "EnableRottenDrying", true));
+        Property p_enableJerky = props.push(configuration.get("DryingRack", "EnableJerky", true));
+        Property p_enableMeatDrying = props.push(configuration.get("DryingRack", "EnableMeatDrying", true));
+        Property p_enableLeatherTanning = props.push(configuration.get("DryingRack", "EnableLeatherTanning", true));
+        Property p_enableSaddleCrafting = props.push(configuration.get("DryingRack", "EnableSaddleCrafting", true));
 
         configuration.addCustomCategoryComment("TorchFire", "Settings for the torch setting fire to entities");
-        Property p_enableTorchFire = configuration.get("TorchFire", "Enable", true);
+        Property p_enableTorchFire = props.push(configuration.get("TorchFire", "Enable", true));
 
         configuration.addCustomCategoryComment("Bread", "Settings for the dough/bread replacements");
-        Property p_enableBread = configuration.get("Bread", "Enable", true);
-        Property p_removeVanillaBread = configuration.get("Bread", "RemoveVanillaBread", true);
+        Property p_enableBread = props.push(configuration.get("Bread", "Enable", true));
+        Property p_removeVanillaBread = props.push(configuration.get("Bread", "RemoveVanillaBread", true));
 
         configuration.addCustomCategoryComment("Chopping", "Settings for the chopping block");
-        Property p_importPlanksRecipes = configuration.get("Chopping", "ImportPlanksRecipes", true);
-        Property p_removePlanksRecipes = configuration.get("Chopping", "RemovePlanksRecipes", true);
-        Property p_choppingDegradeChance = configuration.get("Chopping", "DegradeChance", 0.06);
-        Property p_choppingExhaustion = configuration.get("Chopping", "Exhaustion", 0.0025);
+        Property p_importPlanksRecipes = props.push(configuration.get("Chopping", "ImportPlanksRecipes", true));
+        Property p_removePlanksRecipes = props.push(configuration.get("Chopping", "RemovePlanksRecipes", true));
+        Property p_choppingDegradeChance = props.push(configuration.get("Chopping", "DegradeChance", 0.06));
+        Property p_choppingExhaustion = props.push(configuration.get("Chopping", "Exhaustion", 0.0025));
         p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
 
         configuration.addCustomCategoryComment("Fibres", "Settings for the fibre collection");
-        Property p_dropfibersFromGrass = configuration.get("Fibres", "DropFibresFromGrass", true);
-        Property p_dropStringsFromSheep = configuration.get("Fibres", "DropStringFromSheep", true);
-        Property p_enableStringCrafting = configuration.get("Fibres", "EnableStringCrafting", true);
+        Property p_dropfibersFromGrass = props.push(configuration.get("Fibres", "DropFibresFromGrass", true));
+        Property p_dropStringsFromSheep = props.push(configuration.get("Fibres", "DropStringFromSheep", true));
+        Property p_enableStringCrafting = props.push(configuration.get("Fibres", "EnableStringCrafting", true));
+
+        configuration.addCustomCategoryComment("Slimes", "Settings for slime merging.");
+        Property p_mergeSlimes = props.push(configuration.get("Slimes", "Merge", true));
+        p_mergeSlimes.setComment("If enabled, slimes will have new AI rules to feel attracted to other slimes, and if 4 slimes of the same size are nearby they will merge into a slime of higher size.");
 
         boolean hasList = configuration.hasCategory("CustomAxes");
         configuration.addCustomCategoryComment("CustomAxes", "Custom Chopping Block axe values for when mods have axes that don't declare themselves to be axes.");
@@ -151,35 +168,9 @@ public class ConfigManager
         enableStringCrafting = p_enableStringCrafting.getBoolean();
         dropFibersFromGrass = p_dropfibersFromGrass.getBoolean();
         dropStringFromSheep = p_dropStringsFromSheep.getBoolean();
+        mergeSlimes = p_mergeSlimes.getBoolean();
 
-        boolean anyDefault = !p_removeSticksFromPlanks.wasRead();
-        anyDefault = anyDefault || !p_enableRocks.wasRead();
-        anyDefault = anyDefault || !p_replaceStoneDrops.wasRead();
-        anyDefault = anyDefault || !p_replaceIronOreDrops.wasRead();
-        anyDefault = anyDefault || !p_replaceGoldOreDrops.wasRead();
-        anyDefault = anyDefault || !p_replaceModOreDrops.wasRead();
-        anyDefault = anyDefault || !p_replacePoorOreDrops.wasRead();
-        anyDefault = anyDefault || !p_cobbleRequiresClay.wasRead();
-        anyDefault = anyDefault || !p_enableScraping.wasRead();
-        anyDefault = anyDefault || !p_enableToolScraping.wasRead();
-        anyDefault = anyDefault || !p_enableArmorScraping.wasRead();
-        anyDefault = anyDefault || !p_enableMeatRotting.wasRead();
-        anyDefault = anyDefault || !p_enableJerky.wasRead();
-        anyDefault = anyDefault || !p_enableRottenDrying.wasRead();
-        anyDefault = anyDefault || !p_enableMeatDrying.wasRead();
-        anyDefault = anyDefault || !p_enableLeatherTanning.wasRead();
-        anyDefault = anyDefault || !p_enableSaddleCrafting.wasRead();
-        anyDefault = anyDefault || !p_enableTorchFire.wasRead();
-        anyDefault = anyDefault || !p_enableBread.wasRead();
-        anyDefault = anyDefault || !p_removeVanillaBread.wasRead();
-        anyDefault = anyDefault || !p_importPlanksRecipes.wasRead();
-        anyDefault = anyDefault || !p_removePlanksRecipes.wasRead();
-        anyDefault = anyDefault || !p_choppingDegradeChance.wasRead();
-        anyDefault = anyDefault || !p_choppingExhaustion.wasRead();
-        anyDefault = anyDefault || !p_enableStringCrafting.wasRead();
-        anyDefault = anyDefault || !p_dropfibersFromGrass.wasRead();
-        anyDefault = anyDefault || !p_dropStringsFromSheep.wasRead();
-        anyDefault = anyDefault || !hasList;
+        boolean anyDefault = !props.stream().allMatch(Property::wasRead) || !hasList;
 
         if (anyDefault)
             configuration.save();

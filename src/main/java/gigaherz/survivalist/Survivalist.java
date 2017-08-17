@@ -19,6 +19,7 @@ import gigaherz.survivalist.sawmill.TileSawmill;
 import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.scraping.MessageScraping;
+import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
@@ -354,6 +355,11 @@ public class Survivalist
         if (ConfigManager.instance.dropStringFromSheep)
         {
             StringEventHandling.register();
+        }
+
+        if (ConfigManager.instance.mergeSlimes)
+        {
+            SlimeMerger.register();
         }
 
         registerNetwork();

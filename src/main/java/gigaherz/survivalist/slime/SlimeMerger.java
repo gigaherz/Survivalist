@@ -12,6 +12,7 @@ import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ReportedException;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,15 +24,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-@Mod.EventBusSubscriber
 public class SlimeMerger
 {
     private static final int BIG_SLIME = 8;
     private static final int AGE_LIMIT = 200;
     private static Random rand = new Random();
 
+    public static void register()
+    {
+        MinecraftForge.EVENT_BUS.register(new SlimeMerger());
+    }
+
     @SubscribeEvent
-    public static void slimeConstruct(EntityJoinWorldEvent event)
+    public void slimeConstruct(EntityJoinWorldEvent event)
     {
         Entity entity = event.getEntity();
 
