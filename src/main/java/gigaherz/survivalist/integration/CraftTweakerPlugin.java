@@ -1,18 +1,14 @@
 package gigaherz.survivalist.integration;
 
-/*
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.oredict.IOreDictEntry;
+import crafttweaker.mc1120.item.MCItemStack;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
-import gigaherz.survivalist.integration.chopping.ChoppingRecipeWrapper;
-import gigaherz.survivalist.integration.drying.DryingRecipeWrapper;
-import minetweaker.MineTweakerAPI;
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemStack;
-import minetweaker.api.oredict.IOreDictEntry;
-import minetweaker.mc1112.item.MCItemStack;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Loader;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -20,12 +16,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MineTweakerPlugin
+public class CraftTweakerPlugin
 {
     public static void init()
     {
-        MineTweakerAPI.registerClass(DryableZen.class);
-        MineTweakerAPI.registerClass(ChoppableZen.class);
+        CraftTweakerAPI.registerClass(DryableZen.class);
+        CraftTweakerAPI.registerClass(ChoppableZen.class);
     }
 
     private static boolean isOredict(IIngredient ing)
@@ -71,8 +67,6 @@ public class MineTweakerPlugin
                 recipe = Dryable.registerRecipe(toOredictName(input), toStack(output), time);
             else
                 recipe = Dryable.registerRecipe(toStack(input), toStack(output), time);
-
-            WrapperHelper.addJeiRecipe(recipe);
         }
 
         @ZenMethod
@@ -83,7 +77,6 @@ public class MineTweakerPlugin
                     .collect(Collectors.toList());
 
             Dryable.RECIPES.removeAll(toRemove);
-            WrapperHelper.removeDryingRecipes(toRemove);
         }
 
         @ZenMethod
@@ -108,7 +101,6 @@ public class MineTweakerPlugin
             }
 
             Dryable.RECIPES.removeAll(toRemove);
-            WrapperHelper.removeDryingRecipes(toRemove);
         }
     }
 
@@ -129,8 +121,6 @@ public class MineTweakerPlugin
                 recipe = Choppable.registerRecipe(toOredictName(input), toStack(output));
             else
                 recipe = Choppable.registerRecipe(toStack(input), toStack(output));
-
-            WrapperHelper.addJeiRecipe(recipe);
         }
 
         @ZenMethod
@@ -147,8 +137,6 @@ public class MineTweakerPlugin
                 recipe = Choppable.registerRecipe(toOredictName(input), toStack(output)).setOutputMultiplier(outputMultiplier);
             else
                 recipe = Choppable.registerRecipe(toStack(input), toStack(output)).setOutputMultiplier(outputMultiplier);
-
-            WrapperHelper.addJeiRecipe(recipe);
         }
 
         @ZenMethod
@@ -174,7 +162,6 @@ public class MineTweakerPlugin
                     .collect(Collectors.toList());
 
             Choppable.RECIPES.removeAll(toRemove);
-            WrapperHelper.removeChoppingRecipes(toRemove);
         }
 
         @ZenMethod
@@ -204,80 +191,6 @@ public class MineTweakerPlugin
             }
 
             Choppable.RECIPES.removeAll(toRemove);
-            WrapperHelper.removeChoppingRecipes(toRemove);
-        }
-    }
-
-    public static class WrapperHelper
-    {
-        public static void addJeiRecipe(Dryable.DryingRecipe recipe)
-        {
-            Object rcp = recipe;
-            if (Loader.isModLoaded("jei"))
-            {
-                rcp = JeiWrapper.wrap(recipe);
-            }
-
-            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(rcp);
-        }
-
-        public static void addJeiRecipe(Choppable.ChoppingRecipe recipe)
-        {
-            Object rcp = recipe;
-            if (Loader.isModLoaded("jei"))
-            {
-                rcp = JeiWrapper.wrap(recipe);
-            }
-
-            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(rcp);
-        }
-
-        public static void removeJeiRecipe(Dryable.DryingRecipe recipe)
-        {
-            Object rcp = recipe;
-            if (Loader.isModLoaded("jei"))
-            {
-                rcp = JeiWrapper.wrap(recipe);
-            }
-
-            MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(rcp);
-        }
-
-        public static void removeDryingRecipes(List<Dryable.DryingRecipe> recipe)
-        {
-            recipe.forEach(WrapperHelper::removeJeiRecipe);
-        }
-
-        public static void removeJeiRecipe(Choppable.ChoppingRecipe recipe)
-        {
-            Object rcp = recipe;
-            if (Loader.isModLoaded("jei"))
-            {
-                rcp = JeiWrapper.wrap(recipe);
-            }
-
-            MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(rcp);
-        }
-
-        public static void removeChoppingRecipes(List<Choppable.ChoppingRecipe> recipe)
-        {
-            recipe.forEach(WrapperHelper::removeJeiRecipe);
-        }
-
-        private static class JeiWrapper
-        {
-            static Object wrap(Dryable.DryingRecipe recipe)
-            {
-                Object wrap = DryingRecipeWrapper.wrap(recipe);
-                return wrap != null ? wrap : recipe;
-            }
-
-            static Object wrap(Choppable.ChoppingRecipe recipe)
-            {
-                Object wrap = ChoppingRecipeWrapper.wrap(recipe);
-                return wrap != null ? wrap : recipe;
-            }
         }
     }
 }
-*/

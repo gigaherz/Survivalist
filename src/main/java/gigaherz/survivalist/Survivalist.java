@@ -21,7 +21,7 @@ import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.scraping.MessageScraping;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
-import net.minecraft.client.audio.Sound;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
@@ -34,11 +34,13 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -358,17 +360,17 @@ public class Survivalist
 
         proxy.preInit();
 
-        /*if (Loader.isModLoaded("crafttweaker"))
+        if (Loader.isModLoaded("crafttweaker"))
         {
             try
             {
-                Class.forName("gigaherz.survivalist.integration.MineTweakerPlugin").getMethod("init").invoke(null);
+                Class.forName("gigaherz.survivalist.integration.CraftTweakerPlugin").getMethod("init").invoke(null);
             }
             catch (Exception e)
             {
                 throw new ReportedException(new CrashReport("Error initializing minetweaker integration", e));
             }
-        }*/
+        }
 
     }
 
