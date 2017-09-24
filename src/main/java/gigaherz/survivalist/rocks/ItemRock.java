@@ -76,7 +76,7 @@ public class ItemRock extends ItemStateful
         if (!worldIn.isRemote)
         {
             EntityRock entity = new EntityRock(worldIn, playerIn);
-            entity.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+            entity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
             worldIn.spawnEntity(entity);
         }
 

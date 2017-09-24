@@ -215,6 +215,11 @@ public class TileSawmill extends TileEntity implements ITickable
                 {
                     ++this.cookTime;
 
+                    if (this.totalCookTime == 0)
+                    {
+                        this.totalCookTime = choppingRecipe.getSawmillTime();
+                    }
+
                     if (this.cookTime >= this.totalCookTime)
                     {
                         this.cookTime = 0;
