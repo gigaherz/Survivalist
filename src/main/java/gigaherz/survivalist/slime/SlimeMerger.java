@@ -184,7 +184,7 @@ public class SlimeMerger
                         && entity.getClass() == mobIn.getClass()
                         && entity.ticksExisted > AGE_LIMIT
                         && !entity.isInvisible()
-                        && entity.getDistanceToEntity(mobIn) <= range
+                        && entity.getDistance(mobIn) <= range
                         && ((EntitySlime) entity).getSlimeSize() == mobIn.getSlimeSize()
                         && EntityAITarget.isSuitableTarget(mobIn, entity, false, true);
             };

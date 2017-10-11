@@ -1,13 +1,10 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "type" : "forge:ore_dict",
-      "ore": "logWood"
-    }
+    { "item" : "minecraft:log", "data": 3 }
   ],
   "result": {
     "item": "survivalist:chopping_block",
-    "data": 0
+    "data": 12
   }
 }

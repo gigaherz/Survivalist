@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item" : "minecraft:log2", "data": 0 }
+  ],
+  "result": {
+    "item": "survivalist:chopping_block2",
+    "data": 0
+  }
+}

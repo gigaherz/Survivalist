@@ -279,7 +279,7 @@ public class ItemBreakingTracker
 
                 CombatTrackerIntercept interceptTracker = new CombatTrackerIntercept(player);
                 ReflectionHelper.setPrivateValue(EntityLivingBase.class, player, interceptTracker,
-                        "field_94063_bt", "_combatTracker");
+                        "field_94063_bt", "combatTracker");
             }
         }
 

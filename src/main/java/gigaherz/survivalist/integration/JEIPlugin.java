@@ -1,6 +1,5 @@
 package gigaherz.survivalist.integration;
 
-import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
@@ -54,7 +53,16 @@ public class JEIPlugin implements IModPlugin
         registry.addRecipes(Choppable.RECIPES, ChoppingCategory.UID);
         if (Survivalist.chopping_block != null)
         {
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block), ChoppingCategory.UID);
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1,0), ChoppingCategory.UID);
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 4), ChoppingCategory.UID);
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 8), ChoppingCategory.UID);
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 12), ChoppingCategory.UID);
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block2, 1, 0), ChoppingCategory.UID);
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block2, 1, 4), ChoppingCategory.UID);
+        }
+        if (Survivalist.sawmill != null)
+        {
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.sawmill), ChoppingCategory.UID);
         }
     }
 
