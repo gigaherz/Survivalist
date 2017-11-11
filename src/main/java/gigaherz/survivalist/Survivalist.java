@@ -56,10 +56,14 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.ForgeRegistry;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber
 @Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.12.0,1.13.0)")
@@ -444,10 +448,15 @@ public class Survivalist
             for (IRecipe r : recipes)
             {
                 ItemStack output = r.getRecipeOutput();
+                int ore = OreDictionary.getOreID("plankWood");
                 if (output.getItem() == Items.STICK)
                 {
-                    recipeRegistry.remove(r.getRegistryName());
-                    recipeRegistry.register(DummyRecipe.from(r));
+                    boolean isPlanksInput = r.getIngredients().stream().allMatch(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).anyMatch(input -> ArrayUtils.contains(OreDictionary.getOreIDs(input), ore)));
+                    if (isPlanksInput)
+                    {
+                        recipeRegistry.remove(r.getRegistryName());
+                        recipeRegistry.register(DummyRecipe.from(r));
+                    }
                 }
             }
         }

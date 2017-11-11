@@ -22,7 +22,7 @@ repositories {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.1.3"
+version = "2.1.4"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Survivalist-1.12.2"
 
