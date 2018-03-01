@@ -275,6 +275,8 @@ public class Survivalist
         OreDictionary.registerOre("nuggetTin", nugget.getStack(OreMaterial.TIN));
         OreDictionary.registerOre("nuggetLead", nugget.getStack(OreMaterial.LEAD));
         OreDictionary.registerOre("nuggetSilver", nugget.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("nuggetAluminum", nugget.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("nuggetAluminium", nugget.getStack(OreMaterial.ALUMINUM));
 
         OreDictionary.registerOre("rockOreIron", rock_ore.getStack(OreMaterial.IRON));
         OreDictionary.registerOre("rockOreGold", rock_ore.getStack(OreMaterial.GOLD));
@@ -282,6 +284,8 @@ public class Survivalist
         OreDictionary.registerOre("rockOreTin", rock_ore.getStack(OreMaterial.TIN));
         OreDictionary.registerOre("rockOreLead", rock_ore.getStack(OreMaterial.LEAD));
         OreDictionary.registerOre("rockOreSilver", rock_ore.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("rockOreAluminum", rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("rockOreAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
 
         OreDictionary.registerOre("oreNuggetIron", rock_ore.getStack(OreMaterial.IRON));
         OreDictionary.registerOre("oreNuggetGold", rock_ore.getStack(OreMaterial.GOLD));
@@ -289,6 +293,8 @@ public class Survivalist
         OreDictionary.registerOre("oreNuggetTin", rock_ore.getStack(OreMaterial.TIN));
         OreDictionary.registerOre("oreNuggetLead", rock_ore.getStack(OreMaterial.LEAD));
         OreDictionary.registerOre("oreNuggetSilver", rock_ore.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("oreNuggetAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("oreNuggetAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
 
         OreDictionary.registerOre("rock", rock.getStack(RockMaterial.NORMAL));
         OreDictionary.registerOre("rock", rock.getStack(RockMaterial.ANDESITE));
