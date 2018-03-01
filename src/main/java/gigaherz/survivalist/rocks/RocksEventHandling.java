@@ -108,6 +108,11 @@ public class RocksEventHandling
                     newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountNormal(), fortune), 5));
                     anyChanged = true;
                 }
+                else if (OreDictionaryHelper.hasOreName(drop, "oreAluminum") || OreDictionaryHelper.hasOreName(drop, "oreAluminium"))
+                {
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountNormal(), fortune), 6));
+                    anyChanged = true;
+                }
                 else
                 {
                     newDrops.add(drop);
@@ -143,6 +148,11 @@ public class RocksEventHandling
                 else if (OreDictionaryHelper.hasOreName(drop, "orePoorSilver"))
                 {
                     newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountPoor(), fortune), 5));
+                    anyChanged = true;
+                }
+                else if (OreDictionaryHelper.hasOreName(drop, "orePoorAluminum") || OreDictionaryHelper.hasOreName(drop, "orePoorAluminium"))
+                {
+                    newDrops.add(new ItemStack(Survivalist.rock_ore, applyFortune(getAmountPoor(), fortune), 6));
                     anyChanged = true;
                 }
                 else
