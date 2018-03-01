@@ -400,6 +400,7 @@ public class Survivalist
         addSmeltingNugget(rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
         addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
         addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
+        addSmeltingNugget(rock_ore.getStack(OreMaterial.ALUMINUM), "nuggetAluminum");
 
         GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
     }
