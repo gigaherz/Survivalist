@@ -12,7 +12,7 @@ public enum OreMaterial implements IStringSerializable
     TIN("tin", ".tin_rock", ".tin_nugget", true),
     LEAD("lead", ".lead_rock", ".lead_nugget", true),
     SILVER("silver", ".silver_rock", ".silver_nugget", true),
-	ALUMINUM("aluminum", ".aluminum_rock", ".aluminum_nugget", true);
+    ALUMINUM("aluminum", ".aluminum_rock", ".aluminum_nugget", true);
 
     final String name;
     final String oreSuffix;
