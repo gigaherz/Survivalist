@@ -145,43 +145,13 @@ public class Survivalist
                 sawmill.createItemBlock(),
 
                 // Items
-                chainmail = new ItemRegistered("chainmail")
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (isInCreativeTab(tab))
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                }.setCreativeTab(CreativeTabs.MATERIALS),
-                tanned_leather = new ItemRegistered("tanned_leather")
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (isInCreativeTab(tab))
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                }.setCreativeTab(CreativeTabs.MATERIALS),
+                chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.MATERIALS),
+                tanned_leather = new ItemRegistered("tanned_leather").setCreativeTab(CreativeTabs.MATERIALS),
                 tanned_helmet = new ItemTannedArmor("tanned_helmet", TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD),
                 tanned_chestplate = new ItemTannedArmor("tanned_chestplate", Survivalist.TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST),
                 tanned_leggings = new ItemTannedArmor("tanned_leggings", TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS),
                 tanned_boots = new ItemTannedArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET),
-                jerky = new ItemRegisteredFood("jerky", 4, 1, true)
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (isInCreativeTab(tab))
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                },
+                jerky = new ItemRegisteredFood("jerky", 4, 1, true),
                 nugget = new ItemNugget("nugget"),
                 rock = new ItemRock("rock"),
                 rock_ore = new ItemOreRock("rock_ore"),
@@ -190,7 +160,7 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enableBread && isInCreativeTab(tab))
+                        if (ConfigManager.instance.enableBread)
                         {
                             super.getSubItems(tab, subItems);
                         }
@@ -201,56 +171,16 @@ public class Survivalist
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
                     {
-                        if (ConfigManager.instance.enableBread && isInCreativeTab(tab))
+                        if (ConfigManager.instance.enableBread)
                         {
                             super.getSubItems(tab, subItems);
                         }
                     }
                 },
-                hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F)
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (isInCreativeTab(tab))
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                }.setCreativeTab(CreativeTabs.TOOLS),
-                pick = new ItemRegisteredPick("pick", TOOL_FLINT)
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (isInCreativeTab(tab))
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                }.setCreativeTab(CreativeTabs.TOOLS),
-                spade = new ItemRegisteredSpade("spade", TOOL_FLINT)
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (isInCreativeTab(tab))
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                }.setCreativeTab(CreativeTabs.TOOLS),
-                plant_fibres = new ItemRegistered("plant_fibres")
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (isInCreativeTab(tab))
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                }.setCreativeTab(CreativeTabs.MATERIALS)
+                hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F).setCreativeTab(CreativeTabs.TOOLS),
+                pick = new ItemRegisteredPick("pick", TOOL_FLINT).setCreativeTab(CreativeTabs.TOOLS),
+                spade = new ItemRegisteredSpade("spade", TOOL_FLINT).setCreativeTab(CreativeTabs.TOOLS),
+                plant_fibres = new ItemRegistered("plant_fibres").setCreativeTab(CreativeTabs.MATERIALS)
         );
 
         registerOredictNames();
@@ -397,6 +327,7 @@ public class Survivalist
         EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
         logger.debug("Last used id: %i", entityId);
 
+        TOOL_FLINT.setRepairItem(new ItemStack(Items.FLINT));
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 

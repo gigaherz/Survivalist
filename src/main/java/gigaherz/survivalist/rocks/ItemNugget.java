@@ -49,8 +49,11 @@ public class ItemNugget extends ItemStateful
         {
             for (OreMaterial type : ORE.getAllowedValues())
             {
-                IItemState state = getDefaultState().withProperty(ORE, type);
-                subItems.add(state.getStack());
+                if (type != OreMaterial.IRON)
+                {
+                    IItemState state = getDefaultState().withProperty(ORE, type);
+                    subItems.add(state.getStack());
+                }
             }
         }
     }

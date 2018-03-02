@@ -204,7 +204,7 @@ public abstract class BlockChopping extends BlockRegistered
 
         ItemStack heldItem = playerIn.getHeldItem(hand);
 
-        if (heldItem == ItemStack.EMPTY)
+        if (heldItem.getCount() <= 0)
         {
             ItemStack extracted = chopper.getSlotInventory().extractItem(0, 1, false);
             if (extracted.getCount() > 0)
