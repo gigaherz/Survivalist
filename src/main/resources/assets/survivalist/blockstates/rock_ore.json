@@ -11,7 +11,8 @@
       "copper": { "textures": { "layer0": "survivalist:items/copper_ore_rock" } },
       "tin": { "textures": { "layer0": "survivalist:items/tin_ore_rock" } },
       "lead": { "textures": { "layer0": "survivalist:items/lead_ore_rock" } },
-      "silver": { "textures": { "layer0": "survivalist:items/silver_ore_rock" } }
+      "silver": { "textures": { "layer0": "survivalist:items/silver_ore_rock" } },
+      "aluminum": { "textures": { "layer0": "survivalist:items/aluminum_ore_rock" } }
     }
   }
 }

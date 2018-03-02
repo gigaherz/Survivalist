@@ -10,7 +10,8 @@
       "copper": { "textures": { "layer0": "survivalist:items/copper_nugget" } },
       "tin": { "textures": { "layer0": "survivalist:items/tin_nugget" } },
       "lead": { "textures": { "layer0": "survivalist:items/lead_nugget" } },
-      "silver": { "textures": { "layer0": "survivalist:items/silver_nugget" } }
+      "silver": { "textures": { "layer0": "survivalist:items/silver_nugget" } },
+      "aluminum": { "textures": { "layer0": "survivalist:items/aluminum_nugget" } }
     }
   }
 }
