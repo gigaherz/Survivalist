@@ -1,7 +1,6 @@
 package gigaherz.survivalist.sawmill;
 
 import gigaherz.survivalist.api.Choppable;
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -85,10 +84,10 @@ public class TileSawmill extends TileEntity implements ITickable
     {
         if (capability == ITEMS_CAP)
         {
-            if (facing == EnumFacing.UP) return (T)top;
-            if (facing == EnumFacing.DOWN) return (T)bottom;
-            if (facing != null) return (T)sides;
-            return (T)inventory;
+            if (facing == EnumFacing.UP) return (T) top;
+            if (facing == EnumFacing.DOWN) return (T) bottom;
+            if (facing != null) return (T) sides;
+            return (T) inventory;
         }
 
         return super.getCapability(capability, facing);
@@ -115,8 +114,8 @@ public class TileSawmill extends TileEntity implements ITickable
 
         compound.setTag("Items", ITEMS_CAP.writeNBT(inventory, null));
 
-        compound.setInteger("BurnTime", (short)this.remainingBurnTime);
-        compound.setInteger("CookTime", (short)this.cookTime);
+        compound.setInteger("BurnTime", (short) this.remainingBurnTime);
+        compound.setInteger("CookTime", (short) this.cookTime);
 
         return compound;
     }

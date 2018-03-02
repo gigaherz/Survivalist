@@ -1,10 +1,11 @@
 package gigaherz.survivalist.scraping;
 
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.item.ItemStack;
 
 public class EnchantmentScraping extends Enchantment
 {
@@ -18,6 +19,18 @@ public class EnchantmentScraping extends Enchantment
     @Override
     public int getMaxLevel()
     {
-        return 3;
+        return ConfigManager.instance.enableScraping ? 3 : 0;
+    }
+
+    @Override
+    public boolean isTreasureEnchantment()
+    {
+        return ConfigManager.instance.scrapingIsTreasure;
+    }
+
+    @Override
+    public boolean canApply(ItemStack stack)
+    {
+        return ConfigManager.instance.enableScraping;
     }
 }

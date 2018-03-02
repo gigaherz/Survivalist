@@ -1,7 +1,6 @@
 package gigaherz.survivalist.sawmill;
 
 import gigaherz.common.BlockRegistered;
-import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.GuiHandler;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.BlockHorizontal;
@@ -43,7 +42,7 @@ public class BlockSawmill extends BlockRegistered
         setCreativeTab(CreativeTabs.DECORATIONS);
         setDefaultState(getBlockState().getBaseState()
                 .withProperty(FACING, EnumFacing.NORTH)
-                .withProperty(POWERED,false));
+                .withProperty(POWERED, false));
     }
 
     @Override
@@ -81,7 +80,7 @@ public class BlockSawmill extends BlockRegistered
 
         if (tileentity instanceof TileSawmill)
         {
-            return state.withProperty(POWERED, ((TileSawmill)tileentity).isBurning());
+            return state.withProperty(POWERED, ((TileSawmill) tileentity).isBurning());
         }
 
         return state;
@@ -113,9 +112,9 @@ public class BlockSawmill extends BlockRegistered
         if (stateIn.getActualState(worldIn, pos).getValue(POWERED))
         {
             EnumFacing enumfacing = stateIn.getValue(FACING);
-            double x = (double)pos.getX() + 0.5D;
-            double y = (double)pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
-            double z = (double)pos.getZ() + 0.5D;
+            double x = (double) pos.getX() + 0.5D;
+            double y = (double) pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
+            double z = (double) pos.getZ() + 0.5D;
             double d4 = rand.nextDouble() * 0.6D - 0.3D;
 
             if (rand.nextDouble() < 0.1D)
@@ -142,7 +141,7 @@ public class BlockSawmill extends BlockRegistered
                     z += 0.52D;
             }
 
-            worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x , y, z, 0.0D, 0.0D, 0.0D);
+            worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, y, z, 0.0D, 0.0D, 0.0D);
             worldIn.spawnParticle(EnumParticleTypes.FLAME, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
@@ -204,7 +203,7 @@ public class BlockSawmill extends BlockRegistered
 
         if (te instanceof TileSawmill)
         {
-            dropInventoryItems(worldIn, pos, ((TileSawmill)te).getInventory());
+            dropInventoryItems(worldIn, pos, ((TileSawmill) te).getInventory());
             worldIn.updateComparatorOutputLevel(pos, this);
         }
 
@@ -237,7 +236,7 @@ public class BlockSawmill extends BlockRegistered
     {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof TileSawmill)
-            return ItemHandlerHelper.calcRedstoneFromInventory(((TileSawmill)te).getInventory());
+            return ItemHandlerHelper.calcRedstoneFromInventory(((TileSawmill) te).getInventory());
         return 0;
     }
 

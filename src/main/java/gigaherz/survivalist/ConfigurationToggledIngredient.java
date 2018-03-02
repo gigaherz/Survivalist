@@ -9,8 +9,6 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 
-import java.util.function.BooleanSupplier;
-
 public class ConfigurationToggledIngredient implements IIngredientFactory
 {
     @Override

@@ -4,7 +4,6 @@ import gigaherz.survivalist.Survivalist;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class EnchantmentChaining extends Enchantment
 {

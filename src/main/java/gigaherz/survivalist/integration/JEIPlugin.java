@@ -53,7 +53,7 @@ public class JEIPlugin implements IModPlugin
         registry.addRecipes(Choppable.RECIPES, ChoppingCategory.UID);
         if (Survivalist.chopping_block != null)
         {
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1,0), ChoppingCategory.UID);
+            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 0), ChoppingCategory.UID);
             registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 4), ChoppingCategory.UID);
             registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 8), ChoppingCategory.UID);
             registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 12), ChoppingCategory.UID);

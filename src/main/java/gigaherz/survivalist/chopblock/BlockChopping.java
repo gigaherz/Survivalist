@@ -54,14 +54,14 @@ public abstract class BlockChopping extends BlockRegistered
         @Override
         public int getMetaFromState(IBlockState state)
         {
-            return state.getValue(DAMAGE) | (state.getValue(VARIANT).getMetadata()<<2);
+            return state.getValue(DAMAGE) | (state.getValue(VARIANT).getMetadata() << 2);
         }
 
         @Deprecated
         @Override
         public IBlockState getStateFromMeta(int meta)
         {
-            return getDefaultState().withProperty(DAMAGE, (meta & 3) % 3).withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta>>2));
+            return getDefaultState().withProperty(DAMAGE, (meta & 3) % 3).withProperty(VARIANT, BlockPlanks.EnumType.byMetadata(meta >> 2));
         }
 
         @Override
@@ -69,9 +69,11 @@ public abstract class BlockChopping extends BlockRegistered
         {
             for (Integer i : DAMAGE.getAllowedValues())
             {
-                for(BlockPlanks.EnumType variant : VARIANT.getAllowedValues())
+                for (BlockPlanks.EnumType variant : VARIANT.getAllowedValues())
+                {
                     list.add(new ItemStack(this, 1, this.getMetaFromState(getDefaultState()
-                            .withProperty(DAMAGE,i).withProperty(VARIANT,variant))));
+                            .withProperty(DAMAGE, i).withProperty(VARIANT, variant))));
+                }
             }
         }
 
@@ -101,14 +103,14 @@ public abstract class BlockChopping extends BlockRegistered
         @Override
         public int getMetaFromState(IBlockState state)
         {
-            return state.getValue(DAMAGE) | ((state.getValue(VARIANT).getMetadata()-4)<<2);
+            return state.getValue(DAMAGE) | ((state.getValue(VARIANT).getMetadata() - 4) << 2);
         }
 
         @Deprecated
         @Override
         public IBlockState getStateFromMeta(int meta)
         {
-            return getDefaultState().withProperty(DAMAGE, (meta & 3) % 3).withProperty(VARIANT, BlockPlanks.EnumType.byMetadata((meta>>2)+4));
+            return getDefaultState().withProperty(DAMAGE, (meta & 3) % 3).withProperty(VARIANT, BlockPlanks.EnumType.byMetadata((meta >> 2) + 4));
         }
 
         @Override
@@ -116,9 +118,11 @@ public abstract class BlockChopping extends BlockRegistered
         {
             for (Integer i : DAMAGE.getAllowedValues())
             {
-                for(BlockPlanks.EnumType variant : VARIANT.getAllowedValues())
+                for (BlockPlanks.EnumType variant : VARIANT.getAllowedValues())
+                {
                     list.add(new ItemStack(this, 1, this.getMetaFromState(getDefaultState()
-                            .withProperty(DAMAGE,i).withProperty(VARIANT,variant))));
+                            .withProperty(DAMAGE, i).withProperty(VARIANT, variant))));
+                }
             }
         }
 
@@ -348,11 +352,11 @@ public abstract class BlockChopping extends BlockRegistered
         {
             int meta = stack.getMetadata();
 
-            int damage = meta&3;
+            int damage = meta & 3;
             if (damage > subNames.length)
                 return getUnlocalizedName();
 
-            return "tile." + Survivalist.MODID + subNames[damage] + ((BlockChopping)block).getVariantName(meta) + "_chopping_block";
+            return "tile." + Survivalist.MODID + subNames[damage] + ((BlockChopping) block).getVariantName(meta) + "_chopping_block";
         }
     }
 }

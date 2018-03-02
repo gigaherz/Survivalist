@@ -32,6 +32,7 @@ item.survivalist.tanned_boots.name=Tanned Leather Boots
 
 enchantment.survivalist.scraping=Scrapping
 text.survivalist.scraping.message1=Your %s broke but you got %dx%s in return!"
+tooltip.survivalist.scraping.disabled= - The scrapping feature is disabled, this enchantment will do nothing.
 
 tile.survivalist.rack.name=Drying Rack
 text.survivalist.rack.title=Drying

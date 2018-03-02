@@ -4,7 +4,6 @@ import gigaherz.common.state.IItemState;
 import gigaherz.common.state.IItemStateManager;
 import gigaherz.common.state.ItemStateful;
 import gigaherz.common.state.implementation.ItemStateManager;
-import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.creativetab.CreativeTabs;

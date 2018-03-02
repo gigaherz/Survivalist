@@ -14,7 +14,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ReportedException;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -79,7 +78,7 @@ public class SlimeMerger
                 return false;
             List<EntitySlime> list = slime.world
                     .getEntitiesWithinAABB(EntitySlime.class,
-                            slime.getEntityBoundingBox().grow(slime.getSlimeSize()*1.5, slime.getSlimeSize(), slime.getSlimeSize()*1.5),
+                            slime.getEntityBoundingBox().grow(slime.getSlimeSize() * 1.5, slime.getSlimeSize(), slime.getSlimeSize() * 1.5),
                             (other) -> other != slime
                                     && other.isEntityAlive()
                                     && other.getClass() == slime.getClass()
@@ -92,13 +91,13 @@ public class SlimeMerger
         public void startExecuting()
         {
             List<EntitySlime> list = slime.world
-                .getEntitiesWithinAABB(EntitySlime.class,
-                        slime.getEntityBoundingBox().grow(slime.getSlimeSize()*1.5, slime.getSlimeSize(), slime.getSlimeSize()*1.5),
-                        (other) -> other != slime
-                                && other.isEntityAlive()
-                                && other.getClass() == slime.getClass()
-                                && other.ticksExisted > AGE_LIMIT
-                                && other.getSlimeSize() == slime.getSlimeSize());
+                    .getEntitiesWithinAABB(EntitySlime.class,
+                            slime.getEntityBoundingBox().grow(slime.getSlimeSize() * 1.5, slime.getSlimeSize(), slime.getSlimeSize() * 1.5),
+                            (other) -> other != slime
+                                    && other.isEntityAlive()
+                                    && other.getClass() == slime.getClass()
+                                    && other.ticksExisted > AGE_LIMIT
+                                    && other.getSlimeSize() == slime.getSlimeSize());
             if (list.size() >= 3)
             {
                 Collections.sort(list, this.sorter);
@@ -108,12 +107,12 @@ public class SlimeMerger
                 double z = slime.posZ;
 
                 int size = slime.getSlimeSize() + 1;
-                for(int i=0;i<8*size;i++)
+                for (int i = 0; i < 8 * size; i++)
                 {
                     float angle = rand.nextFloat();
-                    float speed = size * (1+rand.nextFloat() * 0.5f);
+                    float speed = size * (1 + rand.nextFloat() * 0.5f);
                     slime.world.spawnParticle(EnumParticleTypes.SLIME, slime.posX, slime.posY, slime.posZ,
-                            speed * Math.cos(angle), 1,speed*Math.sin(angle));
+                            speed * Math.cos(angle), 1, speed * Math.sin(angle));
                 }
 
                 for (int i = 0; i < 3; i++)
@@ -123,12 +122,12 @@ public class SlimeMerger
                     y += target.posY;
                     z += target.posZ;
                     target.setDead();
-                    for(int j=0;j<8*size;j++)
+                    for (int j = 0; j < 8 * size; j++)
                     {
                         float angle = rand.nextFloat();
-                        float speed = size * (1+rand.nextFloat() * 0.5f);
+                        float speed = size * (1 + rand.nextFloat() * 0.5f);
                         slime.world.spawnParticle(EnumParticleTypes.SLIME, target.posX, target.posY, target.posZ,
-                                speed * Math.cos(angle), 1,speed*Math.sin(angle));
+                                speed * Math.cos(angle), 1, speed * Math.sin(angle));
                     }
                 }
 
@@ -140,7 +139,7 @@ public class SlimeMerger
                 try
                 {
                     setSlimeSizeMethod.invoke(slime, newSize, true);
-                    slime.setPosition(x,y,z);
+                    slime.setPosition(x, y, z);
                 }
                 catch (ReflectiveOperationException e)
                 {

@@ -4,8 +4,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.Int2DoubleArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
-import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -34,6 +32,7 @@ public class ConfigManager
     public final boolean replacePoorOreDrops;
     public final boolean cobbleRequiresClay;
     public final boolean enableScraping;
+    public final boolean scrapingIsTreasure;
     public final boolean enableToolScraping;
     public final boolean enableArmorScraping;
     public final boolean enableMeatRotting;
@@ -94,6 +93,7 @@ public class ConfigManager
 
         configuration.addCustomCategoryComment("Scraping", "Settings for the Scraping feature and enchant");
         Property p_enableScraping = props.push(configuration.get("Scraping", "Enable", true));
+        Property p_scrapingIsTreasure = props.push(configuration.get("Scraping", "IsTreasureEnchantment", false));
         Property p_enableToolScraping = props.push(configuration.get("Scraping", "EnableToolScraping", true));
         Property p_enableArmorScraping = props.push(configuration.get("Scraping", "EnableArmorScraping", true));
 
@@ -150,6 +150,7 @@ public class ConfigManager
         replacePoorOreDrops = p_replacePoorOreDrops.getBoolean();
         cobbleRequiresClay = p_cobbleRequiresClay.getBoolean();
         enableScraping = p_enableScraping.getBoolean();
+        scrapingIsTreasure = p_scrapingIsTreasure.getBoolean();
         enableToolScraping = p_enableToolScraping.getBoolean();
         enableArmorScraping = p_enableArmorScraping.getBoolean();
         enableJerky = p_enableJerky.getBoolean();

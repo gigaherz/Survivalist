@@ -62,8 +62,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber
 @Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.12.0,1.13.0)")
@@ -317,7 +315,6 @@ public class Survivalist
                 throw new ReportedException(new CrashReport("Error initializing minetweaker integration", e));
             }
         }
-
     }
 
     @Mod.EventHandler
@@ -359,7 +356,7 @@ public class Survivalist
 
     private static void replaceVanillaRecipes()
     {
-        ForgeRegistry<IRecipe> recipeRegistry = (ForgeRegistry<IRecipe>)ForgeRegistries.RECIPES;
+        ForgeRegistry<IRecipe> recipeRegistry = (ForgeRegistry<IRecipe>) ForgeRegistries.RECIPES;
         ArrayList<IRecipe> recipes = Lists.newArrayList(recipeRegistry.getValues());
 
         logger.warn("#################################");
