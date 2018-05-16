@@ -1,6 +1,7 @@
 package gigaherz.survivalist.integration.chopping;
 
 import gigaherz.common.client.StackRenderingHelper;
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.api.Choppable;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -69,19 +70,19 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper
                 stack = null;
                 break;
             case 1: // wood
-                amount = 1.0 * multiplier;
+                amount = ConfigManager.instance.getAxeLevelMultiplier(1) * multiplier;
                 stack = new ItemStack(Items.WOODEN_AXE);
                 break;
             case 2: // stone
-                amount = 2.0 * multiplier;
+                amount = ConfigManager.instance.getAxeLevelMultiplier(2) * multiplier;
                 stack = new ItemStack(Items.STONE_AXE);
                 break;
             case 3: // iron
-                amount = 3.0 * multiplier;
+                amount = ConfigManager.instance.getAxeLevelMultiplier(3) * multiplier;
                 stack = new ItemStack(Items.IRON_AXE);
                 break;
             case 4: // diamond
-                amount = 4.0 * multiplier;
+                amount = ConfigManager.instance.getAxeLevelMultiplier(4) * multiplier;
                 stack = new ItemStack(Items.DIAMOND_AXE);
                 break;
         }
