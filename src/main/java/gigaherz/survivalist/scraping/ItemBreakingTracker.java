@@ -203,8 +203,12 @@ public class ItemBreakingTracker
 
         private void onItemBroken(EntityPlayer player, ItemStack stack)
         {
-            int survivalism = EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping, stack);
-            boolean fortune = rnd.nextDouble() > 0.9 / (1 + survivalism);
+            int scrappingLevel = EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping, stack);
+
+            if (player.getClass().getName().equals("com.rwtema.extrautils2.fakeplayer.XUFakePlayer"))
+                return;
+
+            boolean fortune = rnd.nextDouble() > 0.9 / (1 + scrappingLevel);
 
             ItemStack ret = null;
 

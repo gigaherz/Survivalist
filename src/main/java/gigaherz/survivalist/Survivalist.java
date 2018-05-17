@@ -64,7 +64,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION, acceptedMinecraftVersions = "[1.12.0,1.13.0)")
+@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION,
+        acceptedMinecraftVersions = "[1.12.0,1.13.0)",
+        dependencies = "after:forestry")
 public class Survivalist
 {
     public static final String MODID = "survivalist";

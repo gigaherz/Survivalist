@@ -3,13 +3,16 @@ package gigaherz.survivalist.misc;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.Survivalist;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Field;
@@ -35,7 +38,8 @@ public class FibersEventHandling
         if (ev.isSilkTouching())
             return;
 
-        if (ev.getState().getBlock() != Blocks.TALLGRASS || ev.getState().getValue(BlockTallGrass.TYPE) == DEAD_BUSH)
+
+        if (!isFibreSource(ev.getState()))
             return;
 
         List<ItemStack> drops = ev.getDrops();
@@ -71,5 +75,40 @@ public class FibersEventHandling
                 throw ex;
             }
         }
+    }
+
+    @GameRegistry.ObjectHolder("biomesoplenty:grass_0")
+    public static Block bopPlant0 = null;
+
+    @GameRegistry.ObjectHolder("biomesoplenty:grass_0")
+    public static Block bopPlant1 = null;
+
+    @GameRegistry.ObjectHolder("biomesoplenty:double_plant")
+    public static Block bopPlantDouble = null;
+
+    @GameRegistry.ObjectHolder("biomesoplenty:ivy")
+    public static Block bopVineIvy = null;
+
+    @GameRegistry.ObjectHolder("biomesoplenty:willow_vine")
+    public static Block bopVineWillow = null;
+
+    @GameRegistry.ObjectHolder("biomesoplenty:flower_vine")
+    public static Block bopVineFlowering = null;
+
+    private boolean isFibreSource(IBlockState state)
+    {
+        // vanilla grass
+        if (state.getBlock() == Blocks.TALLGRASS && state.getValue(BlockTallGrass.TYPE) != DEAD_BUSH)
+            return true;
+        // vanila vines
+        if (state.getBlock() == Blocks.VINE)
+            return true;
+        // BOP grass
+        if (state.getBlock() == bopPlant0 || state.getBlock() == bopPlant1 || state.getBlock() == bopPlantDouble)
+            return true;
+        // BOP vines
+        if (state.getBlock() == bopVineIvy || state.getBlock() == bopVineWillow || state.getBlock() == bopVineFlowering)
+            return true;
+        return false;
     }
 }
