@@ -83,9 +83,11 @@ public class BlockRack extends BlockRegistered
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+        if (worldIn.isRemote)
+            return true;
 
-        if (!(tileEntity instanceof TileRack) || playerIn.isSneaking())
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
+        if (!(tileEntity instanceof TileRack))
             return false;
 
         playerIn.openGui(Survivalist.instance, GuiHandler.GUI_RACK, worldIn, pos.getX(), pos.getY(), pos.getZ());

@@ -129,9 +129,9 @@ public class Survivalist
                 chopping_block2 = new BlockChopping.NewLog("chopping_block2"),
                 sawmill = new BlockSawmill("sawmill")
         );
-        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName().toString());
-        GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName().toString());
-        GameRegistry.registerTileEntity(TileSawmill.class, sawmill.getRegistryName().toString());
+        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName());
+        GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName());
+        GameRegistry.registerTileEntity(TileSawmill.class, sawmill.getRegistryName());
     }
 
     @SubscribeEvent
@@ -359,7 +359,7 @@ public class Survivalist
     private static void replaceVanillaRecipes()
     {
         ForgeRegistry<IRecipe> recipeRegistry = (ForgeRegistry<IRecipe>) ForgeRegistries.RECIPES;
-        ArrayList<IRecipe> recipes = Lists.newArrayList(recipeRegistry.getValues());
+        ArrayList<IRecipe> recipes = Lists.newArrayList(recipeRegistry.getValuesCollection());
 
         logger.warn("#################################");
         logger.warn("## Removing vanilla recipes if enabled in settings, 'Dangerous alternative' messages are expected and not a bug...");

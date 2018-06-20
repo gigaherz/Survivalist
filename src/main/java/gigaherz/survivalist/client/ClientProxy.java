@@ -127,4 +127,36 @@ public class ClientProxy implements IModProxy
             }
         });
     }
+
+    /*
+    private final Field f_curBlockDamageMP = ReflectionHelper.findField(PlayerControllerMP.class, "field_78770_f","curBlockDamageMP");
+    private final Field f_leftClickCounter = ReflectionHelper.findField(Minecraft.class, "field_71429_W","leftClickCounter");
+
+    @Override
+    public float getCurrentBlockDamageMP()
+    {
+        try
+        {
+            return (float)f_curBlockDamageMP.get(Minecraft.getMinecraft().playerController);
+        }
+        catch (IllegalAccessException e)
+        {
+            return 0;
+        }
+    }
+
+    @Override
+    public void resetBlockRemoving()
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+        try
+        {
+            f_leftClickCounter.set(mc, 0);
+        }
+        catch (IllegalAccessException e)
+        {
+            // Do Nothing
+        }
+        mc.playerController.resetBlockRemoving();
+    }*/
 }

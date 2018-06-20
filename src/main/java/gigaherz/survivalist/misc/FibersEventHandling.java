@@ -38,7 +38,6 @@ public class FibersEventHandling
         if (ev.isSilkTouching())
             return;
 
-
         if (!isFibreSource(ev.getState()))
             return;
 
@@ -77,10 +76,10 @@ public class FibersEventHandling
         }
     }
 
-    @GameRegistry.ObjectHolder("biomesoplenty:grass_0")
+    @GameRegistry.ObjectHolder("biomesoplenty:plant_0")
     public static Block bopPlant0 = null;
 
-    @GameRegistry.ObjectHolder("biomesoplenty:grass_0")
+    @GameRegistry.ObjectHolder("biomesoplenty:plant_1")
     public static Block bopPlant1 = null;
 
     @GameRegistry.ObjectHolder("biomesoplenty:double_plant")

@@ -38,6 +38,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -82,6 +83,9 @@ public class ItemBreakingTracker
 
     public Collection<ItemStack> after()
     {
+        if (equipmentSlots == null)
+            return Collections.emptyList();
+
         List<ItemStack> changes = Lists.newArrayList();
         List<ItemStack> equipment = Lists.newArrayList(player.getArmorInventoryList());
         for (int i = 0; i < equipment.size(); i++)

@@ -191,7 +191,7 @@ public abstract class BlockChopping extends BlockRegistered
     }
 
     @Override
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
     {
         return getStateFromMeta(meta);
     }
@@ -199,14 +199,19 @@ public abstract class BlockChopping extends BlockRegistered
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
+        ItemStack heldItem = playerIn.getHeldItem(hand);
+
+        if (worldIn.isRemote)
+        {
+            return (heldItem.getCount() <= 0) || Choppable.isValidInput(heldItem);
+        }
+
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
         if (!(tileEntity instanceof TileChopping) || playerIn.isSneaking())
             return false;
 
         TileChopping chopper = (TileChopping) tileEntity;
-
-        ItemStack heldItem = playerIn.getHeldItem(hand);
 
         if (heldItem.getCount() <= 0)
         {
@@ -245,38 +250,53 @@ public abstract class BlockChopping extends BlockRegistered
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        if (tileentity instanceof TileChopping)
+        if (!(tileentity instanceof TileChopping))
         {
-            TileChopping chopper = (TileChopping) tileentity;
-            ItemStack heldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
+            return;
+        }
 
-            int harvestLevel = getAxeLevel(heldItem, playerIn);
-            if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
+        TileChopping chopper = (TileChopping) tileentity;
+
+        /*
+        if (chopper.getSlotInventory().getStackInSlot(0).getCount() > 0)
+        {
+            if (Survivalist.proxy.getCurrentBlockDamageMP() > 0f)
+                Survivalist.proxy.resetBlockRemoving();
+        }
+        */
+
+        if (worldIn.isRemote)
+            return;
+
+        ItemStack heldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
+
+        int harvestLevel = getAxeLevel(heldItem, playerIn);
+        if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
+        {
+            if (worldIn.rand.nextFloat() < ConfigManager.instance.choppingDegradeChance)
             {
-                if (worldIn.rand.nextFloat() < ConfigManager.instance.choppingDegradeChance)
+                IBlockState state = worldIn.getBlockState(pos);
+                int damage = state.getValue(DAMAGE);
+                if (damage < 2)
                 {
-                    int damage = worldIn.getBlockState(pos).getValue(DAMAGE);
-                    if (damage < 2)
-                    {
-                        worldIn.setBlockState(pos, getDefaultState().withProperty(DAMAGE, damage + 1));
-                    }
-                    else
-                    {
-                        worldIn.setBlockToAir(pos);
-                    }
+                    worldIn.setBlockState(pos, state.withProperty(DAMAGE, damage + 1));
                 }
-
-                if (ConfigManager.instance.choppingExhaustion > 0)
-                    playerIn.addExhaustion(ConfigManager.instance.choppingExhaustion);
-
-                if (heldItem.getCount() > 0 && !playerIn.capabilities.isCreativeMode)
+                else
                 {
-                    heldItem.damageItem(1, playerIn);
-                    if (heldItem.getCount() <= 0)
-                    {
-                        net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(playerIn, heldItem, EnumHand.MAIN_HAND);
-                        playerIn.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
-                    }
+                    worldIn.setBlockToAir(pos);
+                }
+            }
+
+            if (ConfigManager.instance.choppingExhaustion > 0)
+                playerIn.addExhaustion(ConfigManager.instance.choppingExhaustion);
+
+            if (heldItem.getCount() > 0 && !playerIn.capabilities.isCreativeMode)
+            {
+                heldItem.damageItem(1, playerIn);
+                if (heldItem.getCount() <= 0)
+                {
+                    net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(playerIn, heldItem, EnumHand.MAIN_HAND);
+                    playerIn.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
                 }
             }
         }

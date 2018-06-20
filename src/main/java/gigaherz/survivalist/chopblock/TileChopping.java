@@ -78,6 +78,8 @@ public class TileChopping extends TileEntity
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
+        for (int i = 0; i < slotInventory.getSlots(); i++)
+        { slotInventory.setStackInSlot(i, ItemStack.EMPTY); }
         CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(slotInventory, null, compound.getTag("Inventory"));
     }
 
