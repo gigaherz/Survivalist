@@ -1,6 +1,5 @@
 package gigaherz.survivalist.chopblock;
 
-import gigaherz.common.BlockRegistered;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
@@ -26,12 +25,16 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 
-public abstract class BlockChopping extends BlockRegistered
+@Mod.EventBusSubscriber(modid = Survivalist.MODID)
+public abstract class BlockChopping extends Block
 {
     public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 2);
     protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
@@ -39,11 +42,6 @@ public abstract class BlockChopping extends BlockRegistered
     public static class OldLog extends BlockChopping
     {
         public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = BlockOldLog.VARIANT;
-
-        public OldLog(String name)
-        {
-            super(name);
-        }
 
         @Override
         protected BlockStateContainer createBlockState()
@@ -80,19 +78,13 @@ public abstract class BlockChopping extends BlockRegistered
         @Override
         protected String getVariantName(int meta)
         {
-            return getStateFromMeta(meta).getValue(VARIANT).getUnlocalizedName();
+            return getStateFromMeta(meta).getValue(VARIANT).getTranslationKey();
         }
     }
 
     public static class NewLog extends BlockChopping
     {
         public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = BlockNewLog.VARIANT;
-
-        public NewLog(String name)
-        {
-            super(name);
-            setUnlocalizedName("chopping_block." + name);
-        }
 
         @Override
         protected BlockStateContainer createBlockState()
@@ -129,13 +121,13 @@ public abstract class BlockChopping extends BlockRegistered
         @Override
         protected String getVariantName(int meta)
         {
-            return getStateFromMeta(meta).getValue(VARIANT).getUnlocalizedName();
+            return getStateFromMeta(meta).getValue(VARIANT).getTranslationKey();
         }
     }
 
-    public BlockChopping(String name)
+    public BlockChopping()
     {
-        super(name, Material.WOOD);
+        super(Material.WOOD);
         setCreativeTab(CreativeTabs.DECORATIONS);
         setSoundType(SoundType.WOOD);
         setHardness(5.0F);
@@ -245,28 +237,34 @@ public abstract class BlockChopping extends BlockRegistered
         return false;
     }
 
-    @Override
-    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
+    @SubscribeEvent
+    public static void interactEvent(PlayerInteractEvent.LeftClickBlock event)
+    {
+        EntityPlayer player = event.getEntityPlayer();
+        World world = player.world;
+        BlockPos pos = event.getPos();
+        IBlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+        if(block instanceof BlockChopping)
+        {
+            if (((BlockChopping)block).interceptClick(world, pos, state, player))
+                event.setCanceled(true);
+        }
+    }
+
+    private boolean interceptClick(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn)
     {
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
         if (!(tileentity instanceof TileChopping))
-        {
-            return;
-        }
+            return false;
 
         TileChopping chopper = (TileChopping) tileentity;
-
-        /*
-        if (chopper.getSlotInventory().getStackInSlot(0).getCount() > 0)
-        {
-            if (Survivalist.proxy.getCurrentBlockDamageMP() > 0f)
-                Survivalist.proxy.resetBlockRemoving();
-        }
-        */
+        if (chopper.getSlotInventory().getStackInSlot(0).getCount() <= 0)
+            return false;
 
         if (worldIn.isRemote)
-            return;
+            return true;
 
         ItemStack heldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
 
@@ -275,7 +273,6 @@ public abstract class BlockChopping extends BlockRegistered
         {
             if (worldIn.rand.nextFloat() < ConfigManager.instance.choppingDegradeChance)
             {
-                IBlockState state = worldIn.getBlockState(pos);
                 int damage = state.getValue(DAMAGE);
                 if (damage < 2)
                 {
@@ -301,6 +298,12 @@ public abstract class BlockChopping extends BlockRegistered
             }
         }
 
+        return true;
+    }
+
+    @Override
+    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
+    {
         super.onBlockClicked(worldIn, pos, playerIn);
     }
 
@@ -343,12 +346,6 @@ public abstract class BlockChopping extends BlockRegistered
 
     protected abstract String getVariantName(int meta);
 
-    @Override
-    public ItemBlock createItemBlock()
-    {
-        return (ItemBlock) new AsItem(this).setRegistryName(getRegistryName());
-    }
-
     public static class AsItem extends ItemBlock
     {
         public AsItem(Block block)
@@ -368,13 +365,13 @@ public abstract class BlockChopping extends BlockRegistered
         };
 
         @Override
-        public String getUnlocalizedName(ItemStack stack)
+        public String getTranslationKey(ItemStack stack)
         {
             int meta = stack.getMetadata();
 
             int damage = meta & 3;
             if (damage > subNames.length)
-                return getUnlocalizedName();
+                return getTranslationKey();
 
             return "tile." + Survivalist.MODID + subNames[damage] + ((BlockChopping) block).getVariantName(meta) + "_chopping_block";
         }

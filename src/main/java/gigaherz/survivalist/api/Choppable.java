@@ -1,8 +1,8 @@
 package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
-import gigaherz.common.OreDictionaryHelper;
 import gigaherz.survivalist.ConfigManager;
+import gigaherz.survivalist.misc.OreDictionaryHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -80,7 +80,7 @@ public class Choppable
 
         public ItemStack getResults(ItemStack input, EntityPlayer player, int axeLevel, int fortune, Random random)
         {
-            double number = 0.4f * getOutputMultiplier();
+            double number = ConfigManager.instance.choppingWithEmptyHand * getOutputMultiplier();
 
             if (axeLevel >= 0)
                 number = Math.max(0, getOutputMultiplier() * ConfigManager.instance.getAxeLevelMultiplier(axeLevel)) * (1 + random.nextFloat() * fortune);

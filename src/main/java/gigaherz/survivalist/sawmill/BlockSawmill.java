@@ -1,8 +1,8 @@
 package gigaherz.survivalist.sawmill;
 
-import gigaherz.common.BlockRegistered;
 import gigaherz.survivalist.GuiHandler;
 import gigaherz.survivalist.Survivalist;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -29,14 +29,14 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BlockSawmill extends BlockRegistered
+public class BlockSawmill extends Block
 {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
     public static final PropertyBool POWERED = PropertyBool.create("powered");
 
-    public BlockSawmill(String name)
+    public BlockSawmill()
     {
-        super(name, Material.ROCK);
+        super(Material.ROCK);
         setHardness(3.5F);
         setSoundType(SoundType.STONE);
         setCreativeTab(CreativeTabs.DECORATIONS);
@@ -55,7 +55,7 @@ public class BlockSawmill extends BlockRegistered
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+        EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y)
         {

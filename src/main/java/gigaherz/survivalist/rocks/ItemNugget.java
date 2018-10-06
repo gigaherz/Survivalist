@@ -1,10 +1,10 @@
 package gigaherz.survivalist.rocks;
 
-import gigaherz.common.state.IItemState;
-import gigaherz.common.state.IItemStateManager;
-import gigaherz.common.state.ItemStateful;
-import gigaherz.common.state.implementation.ItemStateManager;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.state.IItemState;
+import gigaherz.survivalist.state.IItemStateManager;
+import gigaherz.survivalist.state.ItemStateful;
+import gigaherz.survivalist.state.implementation.ItemStateManager;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -14,11 +14,11 @@ public class ItemNugget extends ItemStateful
 {
     public static final PropertyEnum<OreMaterial> ORE = PropertyEnum.create("ore", OreMaterial.class, OreMaterial.NUGGETS);
 
-    public ItemNugget(String name)
+    public ItemNugget()
     {
-        super(name);
+        super();
         setHasSubtypes(true);
-        setUnlocalizedName(Survivalist.MODID + ".nugget");
+        setTranslationKey(Survivalist.MODID + ".nugget");
         setCreativeTab(CreativeTabs.MATERIALS);
     }
 
@@ -29,12 +29,12 @@ public class ItemNugget extends ItemStateful
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack)
+    public String getTranslationKey(ItemStack stack)
     {
         IItemState state = getStateManager().get(stack.getMetadata());
 
         if (state == null)
-            return getUnlocalizedName();
+            return getTranslationKey();
 
         String subName = state.getValue(ORE).getUnlocalizedNuggetSuffix();
 

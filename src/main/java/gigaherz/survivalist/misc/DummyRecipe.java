@@ -1,4 +1,4 @@
-package gigaherz.survivalist.common;
+package gigaherz.survivalist.misc;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;

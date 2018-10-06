@@ -48,6 +48,7 @@ public class ConfigManager
     public final boolean removePlanksRecipes;
     public final float choppingDegradeChance;
     public final float choppingExhaustion;
+    public final float choppingWithEmptyHand;
     public final boolean enableStringCrafting;
     public final boolean dropFibersFromGrass;
     public final boolean dropStringFromSheep;
@@ -117,6 +118,7 @@ public class ConfigManager
         Property p_removePlanksRecipes = props.push(configuration.get("Chopping", "RemovePlanksRecipes", true));
         Property p_choppingDegradeChance = props.push(configuration.get("Chopping", "DegradeChance", 0.06));
         Property p_choppingExhaustion = props.push(configuration.get("Chopping", "Exhaustion", 0.0025));
+        Property p_choppingWithEmptyHand = props.push(configuration.get("Chopping", "EmptyHandFactor", 0.4));
         p_choppingDegradeChance.setComment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.");
 
         configuration.addCustomCategoryComment("Fibres", "Settings for the fibre collection");
@@ -170,6 +172,7 @@ public class ConfigManager
         dropFibersFromGrass = p_dropfibersFromGrass.getBoolean();
         dropStringFromSheep = p_dropStringsFromSheep.getBoolean();
         mergeSlimes = p_mergeSlimes.getBoolean();
+        choppingWithEmptyHand = (float) p_choppingWithEmptyHand.getDouble();
 
         boolean anyDefault = !props.stream().allMatch(Property::wasRead) || !hasList;
 

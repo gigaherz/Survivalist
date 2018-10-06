@@ -2,9 +2,9 @@ package gigaherz.survivalist.rocks;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import gigaherz.common.OreDictionaryHelper;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.misc.OreDictionaryHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

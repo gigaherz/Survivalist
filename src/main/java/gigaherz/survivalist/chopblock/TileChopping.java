@@ -25,7 +25,7 @@ public class TileChopping extends TileEntity
 {
     private static final Random RANDOM = new Random();
 
-    private ItemStackHandler slotInventory = new ItemStackHandler()
+    private ItemStackHandler slotInventory = new ItemStackHandler(1)
     {
         @Override
         protected int getStackLimit(int slot, ItemStack stack)
@@ -78,8 +78,6 @@ public class TileChopping extends TileEntity
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-        for (int i = 0; i < slotInventory.getSlots(); i++)
-        { slotInventory.setStackInSlot(i, ItemStack.EMPTY); }
         CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(slotInventory, null, compound.getTag("Inventory"));
     }
 
@@ -94,13 +92,15 @@ public class TileChopping extends TileEntity
     @Override
     public NBTTagCompound getUpdateTag()
     {
-        return writeToNBT(new NBTTagCompound());
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setTag("Item", slotInventory.getStackInSlot(0).serializeNBT());
+        return compound;
     }
 
     @Override
     public void handleUpdateTag(NBTTagCompound tag)
     {
-        readFromNBT(tag);
+        slotInventory.setStackInSlot(0, new ItemStack(tag.getCompoundTag("Item")));
     }
 
     @Nullable

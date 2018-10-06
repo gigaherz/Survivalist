@@ -1,16 +1,16 @@
-package gigaherz.survivalist.common;
+package gigaherz.survivalist.armor;
 
-import gigaherz.common.ItemRegisteredArmor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class ItemTannedArmor extends ItemRegisteredArmor
+public class ItemTannedArmor extends ItemArmor
 {
-    public ItemTannedArmor(String name, ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn)
+    public ItemTannedArmor(ItemArmor.ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn)
     {
-        super(name, materialIn, renderIndexIn, equipmentSlotIn);
+        super(materialIn, renderIndexIn, equipmentSlotIn);
     }
 
     @Override

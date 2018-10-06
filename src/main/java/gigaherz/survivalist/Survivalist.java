@@ -1,14 +1,14 @@
 package gigaherz.survivalist;
 
 import com.google.common.collect.Lists;
-import gigaherz.common.*;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.TileChopping;
-import gigaherz.survivalist.common.DummyRecipe;
-import gigaherz.survivalist.common.ItemTannedArmor;
+import gigaherz.survivalist.misc.DummyRecipe;
+import gigaherz.survivalist.armor.ItemTannedArmor;
 import gigaherz.survivalist.misc.FibersEventHandling;
+import gigaherz.survivalist.misc.OreDictionaryHelper;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.network.UpdateFields;
 import gigaherz.survivalist.rack.BlockRack;
@@ -28,10 +28,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -84,31 +81,53 @@ public class Survivalist
 
     private GuiHandler guiHandler = new GuiHandler();
 
+    @GameRegistry.ObjectHolder(MODID + ":scraping")
     public static EnchantmentScraping scraping;
 
+    @GameRegistry.ObjectHolder(MODID + ":chainmail")
     public static Item chainmail;
+    @GameRegistry.ObjectHolder(MODID + ":tanned_leather")
     public static Item tanned_leather;
+    @GameRegistry.ObjectHolder(MODID + ":jerky")
     public static Item jerky;
+    @GameRegistry.ObjectHolder(MODID + ":nugget")
     public static ItemNugget nugget;
+    @GameRegistry.ObjectHolder(MODID + ":rock")
     public static ItemRock rock;
+    @GameRegistry.ObjectHolder(MODID + ":rock_ore")
     public static ItemOreRock rock_ore;
+    @GameRegistry.ObjectHolder(MODID + ":dough")
     public static Item dough;
+    @GameRegistry.ObjectHolder(MODID + ":round_bread")
     public static Item round_bread;
+    @GameRegistry.ObjectHolder(MODID + ":hatchet")
     public static Item hatchet;
+    @GameRegistry.ObjectHolder(MODID + ":pick")
     public static Item pick;
+    @GameRegistry.ObjectHolder(MODID + ":spade")
     public static Item spade;
+    @GameRegistry.ObjectHolder(MODID + ":plant_fibres")
     public static Item plant_fibres;
 
+    @GameRegistry.ObjectHolder(MODID + ":tanned_helmet")
     public static Item tanned_helmet;
+    @GameRegistry.ObjectHolder(MODID + ":tanned_chestplate")
     public static Item tanned_chestplate;
+    @GameRegistry.ObjectHolder(MODID + ":tanned_leggings")
     public static Item tanned_leggings;
+    @GameRegistry.ObjectHolder(MODID + ":tanned_boots")
     public static Item tanned_boots;
 
-    public static BlockRegistered rack;
-    public static BlockRegistered chopping_block;
-    public static BlockRegistered chopping_block2;
-    public static BlockRegistered sawmill;
+    @GameRegistry.ObjectHolder(MODID + ":rack")
+    public static Block rack;
+    @GameRegistry.ObjectHolder(MODID + ":chopping_block")
+    public static Block chopping_block;
+    @GameRegistry.ObjectHolder(MODID + ":chopping_block2")
+    public static Block chopping_block2;
+    @GameRegistry.ObjectHolder(MODID + ":sawmill")
+    public static Block sawmill;
 
+    @GameRegistry.ObjectHolder(MODID + ":shlop")
     public static SoundEvent shlop;
 
     public static ItemArmor.ArmorMaterial TANNED_LEATHER =
@@ -124,14 +143,11 @@ public class Survivalist
     public static void registerBlocks(RegistryEvent.Register<Block> event)
     {
         event.getRegistry().registerAll(
-                rack = new BlockRack("rack"),
-                chopping_block = new BlockChopping.OldLog("chopping_block"),
-                chopping_block2 = new BlockChopping.NewLog("chopping_block2"),
-                sawmill = new BlockSawmill("sawmill")
+                withName(new BlockRack(), "rack"),
+                withName(new BlockChopping.OldLog(), "chopping_block"),
+                withName(new BlockChopping.NewLog(),"chopping_block2", "chopping_block"),
+                withName(new BlockSawmill(),"sawmill")
         );
-        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName());
-        GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName());
-        GameRegistry.registerTileEntity(TileSawmill.class, sawmill.getRegistryName());
     }
 
     @SubscribeEvent
@@ -139,23 +155,23 @@ public class Survivalist
     {
         event.getRegistry().registerAll(
                 // ItemBlocks
-                rack.createItemBlock(),
-                chopping_block.createItemBlock(),
-                chopping_block2.createItemBlock(),
-                sawmill.createItemBlock(),
+                forBlock(rack),
+                forBlock(chopping_block),
+                forBlock(chopping_block2),
+                forBlock(sawmill),
 
                 // Items
-                chainmail = new ItemRegistered("chainmail").setCreativeTab(CreativeTabs.MATERIALS),
-                tanned_leather = new ItemRegistered("tanned_leather").setCreativeTab(CreativeTabs.MATERIALS),
-                tanned_helmet = new ItemTannedArmor("tanned_helmet", TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD),
-                tanned_chestplate = new ItemTannedArmor("tanned_chestplate", Survivalist.TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST),
-                tanned_leggings = new ItemTannedArmor("tanned_leggings", TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS),
-                tanned_boots = new ItemTannedArmor("tanned_boots", TANNED_LEATHER, 0, EntityEquipmentSlot.FEET),
-                jerky = new ItemRegisteredFood("jerky", 4, 1, true),
-                nugget = new ItemNugget("nugget"),
-                rock = new ItemRock("rock"),
-                rock_ore = new ItemOreRock("rock_ore"),
-                dough = new ItemRegisteredFood("dough", 5, 0.6f, true)
+                withName(new Item(),"chainmail").setCreativeTab(CreativeTabs.MATERIALS),
+                withName(new Item(), "tanned_leather").setCreativeTab(CreativeTabs.MATERIALS),
+                withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD), "tanned_helmet"),
+                withName(new ItemTannedArmor(Survivalist.TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST), "tanned_chestplate"),
+                withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS), "tanned_leggings"),
+                withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.FEET), "tanned_boots"),
+                withName(new ItemFood(4, 1, true), "jerky"),
+                withName(new ItemNugget(), "nugget"),
+                withName(new ItemRock(), "rock"),
+                withName(new ItemOreRock(), "rock_ore"),
+                withName(new ItemFood(5, 0.6f, true)
                 {
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
@@ -165,8 +181,8 @@ public class Survivalist
                             super.getSubItems(tab, subItems);
                         }
                     }
-                },
-                round_bread = new ItemRegisteredFood("round_bread", 8, 0.6f, true)
+                }, "dough"),
+                withName(new ItemFood(8, 0.6f, true)
                 {
                     @Override
                     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
@@ -176,21 +192,31 @@ public class Survivalist
                             super.getSubItems(tab, subItems);
                         }
                     }
-                },
-                hatchet = new ItemRegisteredAxe("hatchet", TOOL_FLINT, 8.0F, -3.1F).setCreativeTab(CreativeTabs.TOOLS),
-                pick = new ItemRegisteredPick("pick", TOOL_FLINT).setCreativeTab(CreativeTabs.TOOLS),
-                spade = new ItemRegisteredSpade("spade", TOOL_FLINT).setCreativeTab(CreativeTabs.TOOLS),
-                plant_fibres = new ItemRegistered("plant_fibres").setCreativeTab(CreativeTabs.MATERIALS)
+                }, "round_bread"),
+                withName(new ItemAxe(TOOL_FLINT, 8.0F, -3.1F){}.setCreativeTab(CreativeTabs.TOOLS), "hatchet"),
+                withName(new ItemPickaxe(TOOL_FLINT){}.setCreativeTab(CreativeTabs.TOOLS), "pick"),
+                withName(new ItemSpade(TOOL_FLINT).setCreativeTab(CreativeTabs.TOOLS), "spade"),
+                withName(new Item(),"plant_fibres").setCreativeTab(CreativeTabs.MATERIALS)
         );
 
-        registerOredictNames();
+        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName());
+        GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName());
+        GameRegistry.registerTileEntity(TileSawmill.class, sawmill.getRegistryName());
     }
 
     @SubscribeEvent
     public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
     {
         event.getRegistry().registerAll(
-                shlop = new SoundEvent(location("mob.slime.merge")).setRegistryName(location("shlop"))
+                new SoundEvent(location("mob.slime.merge")).setRegistryName(location("shlop"))
+        );
+    }
+
+    @SubscribeEvent
+    public static void registerEnchantments(RegistryEvent.Register<Enchantment> event)
+    {
+        event.getRegistry().registerAll(
+                withName(new EnchantmentScraping(), "scraping")
         );
     }
 
@@ -236,17 +262,10 @@ public class Survivalist
     }
 
     @SubscribeEvent
-    public static void registerEnchantments(RegistryEvent.Register<Enchantment> event)
-    {
-        event.getRegistry().registerAll(
-                //chaining = new EnchantmentChaining(),
-                scraping = new EnchantmentScraping()
-        );
-    }
-
-    @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
     {
+        registerOredictNames();
+
         Dryable.registerStockRecipes();
         Choppable.registerStockRecipes();
 
@@ -448,6 +467,32 @@ public class Survivalist
 
         logger.warn("## Vanilla recipes removed.");
     }
+
+    private static Item withName(Item item, String name)
+    {
+        return item.setRegistryName(name).setTranslationKey(MODID + "." + name);
+    }
+
+    private static Block withName(Block block, String name)
+    {
+        return block.setRegistryName(name).setTranslationKey(MODID + "." + name);
+    }
+
+    private static Block withName(Block block, String name, String translationBaseName)
+    {
+        return block.setRegistryName(name).setTranslationKey(MODID + "." + translationBaseName);
+    }
+
+    private static Enchantment withName(Enchantment block, String name)
+    {
+        return block.setRegistryName(name).setName(MODID + "." + name);
+    }
+
+    private static Item forBlock(Block block)
+    {
+        return new ItemBlock(block).setRegistryName(block.getRegistryName());
+    }
+
 
     public static ResourceLocation location(String path)
     {

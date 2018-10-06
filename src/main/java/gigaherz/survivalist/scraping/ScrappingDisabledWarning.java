@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(Side.CLIENT)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = Survivalist.MODID)
 public class ScrappingDisabledWarning
 {
     @SubscribeEvent

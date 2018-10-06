@@ -27,10 +27,10 @@ group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-namin
 archivesBaseName = "Survivalist-1.12.2"
 
 minecraft {
-    version = "1.12.2-14.23.4.2707"
+    version = "1.12.2-14.23.4.2760"
     runDir = "run"
 
-    mappings = "snapshot_20180601"
+    mappings = "stable_39"
 
     replace "@VERSION@", project.version
     replaceIn "Survivalist.java"
@@ -43,9 +43,6 @@ configurations {
 }
 
 dependencies {
-    deobfCompile "gigaherz.commons:gigaherz.commons-1.12.1:0.6.4"
-    embed "gigaherz.commons:gigaherz.commons-1.12.1:0.6.4"
-
     deobfCompile "mezz.jei:jei_1.12.2:4.10.0.199:api"
     runtime "mezz.jei:jei_1.12.2:4.10.0.199"
 
@@ -53,12 +50,16 @@ dependencies {
 }
 
 jar {
-    into('/') {
+    into('/META-INF/libraries') {
         from configurations.embed
     }
 
     manifest {
-        attributes("ContainedDeps": configurations.embed.collect { it.getName() }.join(' '))
+        attributes([
+                "ContainedDeps": configurations.embed.collect { it.getName() }.join(' '),
+                "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}",
+                'Timestamp': System.currentTimeMillis()
+        ])
     }
 }
 
