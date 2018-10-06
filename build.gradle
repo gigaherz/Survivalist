@@ -22,24 +22,17 @@ repositories {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.1.5"
+version = "2.1.6"
 group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Survivalist-1.12.2"
 
 minecraft {
-    version = "1.12.2-14.23.4.2760"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
-
     mappings = "stable_39"
 
     replace "@VERSION@", project.version
     replaceIn "Survivalist.java"
-}
-
-configurations {
-    // configuration that holds jars to embed inside the jar
-    embed
-    embed.transitive = false;
 }
 
 dependencies {
@@ -50,13 +43,8 @@ dependencies {
 }
 
 jar {
-    into('/META-INF/libraries') {
-        from configurations.embed
-    }
-
     manifest {
         attributes([
-                "ContainedDeps": configurations.embed.collect { it.getName() }.join(' '),
                 "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}",
                 'Timestamp': System.currentTimeMillis()
         ])
