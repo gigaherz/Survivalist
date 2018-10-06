@@ -93,7 +93,7 @@ public class ConfigManager
         Property p_cobbleRequiresClay = props.push(configuration.get("Rocks", "CobbleRequiresClay", true));
 
         configuration.addCustomCategoryComment("Scraping", "Settings for the Scraping feature and enchant");
-        Property p_enableScraping = props.push(configuration.get("Scraping", "Enable", true));
+        Property p_enableScraping = props.push(configuration.get("Scraping", "Enable", false));
         Property p_scrapingIsTreasure = props.push(configuration.get("Scraping", "IsTreasureEnchantment", false));
         Property p_enableToolScraping = props.push(configuration.get("Scraping", "EnableToolScraping", true));
         Property p_enableArmorScraping = props.push(configuration.get("Scraping", "EnableArmorScraping", true));
