@@ -5,6 +5,7 @@ import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.chopblock.BlockChopping;
 import gigaherz.survivalist.chopblock.RenderChoppingBlock;
 import gigaherz.survivalist.chopblock.TileChopping;
+import gigaherz.survivalist.rack.RackBakedModel;
 import gigaherz.survivalist.rack.RenderRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.rocks.EntityRock;
@@ -21,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -44,6 +46,8 @@ public class ClientEvents
         ClientRegistry.bindTileEntitySpecialRenderer(TileChopping.class, new RenderChoppingBlock());
 
         OBJLoader.INSTANCE.addDomain(Survivalist.MODID);
+
+        ModelLoaderRegistry.registerLoader(new RackBakedModel.ModelLoader());
 
         new ItemStateMapper(Survivalist.nugget).registerAllModelsExplicitly();
         new ItemStateMapper(Survivalist.rock_ore).registerAllModelsExplicitly();

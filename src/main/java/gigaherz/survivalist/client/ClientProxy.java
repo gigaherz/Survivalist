@@ -5,6 +5,10 @@ import gigaherz.survivalist.network.UpdateFields;
 import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import org.lwjgl.util.vector.Matrix3f;
+import org.lwjgl.util.vector.Quaternion;
+
+import javax.vecmath.Matrix3d;
 
 public class ClientProxy implements IModProxy
 {

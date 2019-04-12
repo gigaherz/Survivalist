@@ -1,10 +1,12 @@
 package gigaherz.survivalist.rack;
 
+import com.google.common.base.Predicates;
 import gigaherz.survivalist.GuiHandler;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -14,15 +16,60 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.Arrays;
 
 public class BlockRack extends Block
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+
+    public static final IUnlistedProperty<RackItemsStateData> CONTAINED_ITEMS = new IUnlistedProperty<RackItemsStateData>()
+    {
+        public String getName()
+        {
+            return Survivalist.location("contained_items").toString();
+        }
+
+        public boolean isValid(RackItemsStateData state)
+        {
+            return state != null && Arrays.stream(state.stacks).allMatch(Predicates.notNull());
+        }
+
+        public Class<RackItemsStateData> getType()
+        {
+            return RackItemsStateData.class;
+        }
+
+        public String valueToString(RackItemsStateData state)
+        {
+            return state.toString();
+        }
+    };
+
+    @Override
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
+    {
+        IExtendedBlockState extended = (IExtendedBlockState) super.getExtendedState(state, world, pos);
+
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof TileRack)
+        {
+            TileRack tr = ((TileRack)te);
+            extended = extended.withProperty(CONTAINED_ITEMS, new RackItemsStateData(tr.getItems()));
+        }
+
+        return extended;
+    }
 
     public BlockRack()
     {
@@ -57,7 +104,7 @@ public class BlockRack extends Block
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, FACING);
+        return new ExtendedBlockState(this, new IProperty[]{FACING}, new IUnlistedProperty[]{CONTAINED_ITEMS});
     }
 
     @Deprecated
@@ -71,6 +118,18 @@ public class BlockRack extends Block
     public int getMetaFromState(IBlockState state)
     {
         return state.getValue(FACING).ordinal();
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer()
+    {
+        return BlockRenderLayer.SOLID;
+    }
+
+    @Override
+    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
+    {
+        return layer == BlockRenderLayer.SOLID || layer == BlockRenderLayer.CUTOUT;
     }
 
     @Override

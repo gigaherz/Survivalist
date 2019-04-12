@@ -22,9 +22,12 @@ import gigaherz.survivalist.scraping.MessageScraping;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBat;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -51,14 +54,18 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.ForgeRegistry;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
 @Mod(modid = Survivalist.MODID, version = Survivalist.VERSION,
@@ -130,11 +137,11 @@ public class Survivalist
     @GameRegistry.ObjectHolder(MODID + ":shlop")
     public static SoundEvent shlop;
 
-    public static ItemArmor.ArmorMaterial TANNED_LEATHER =
+    public static final ItemArmor.ArmorMaterial TANNED_LEATHER =
             EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
                     new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 1);
 
-    public static ItemTool.ToolMaterial TOOL_FLINT =
+    public static final ItemTool.ToolMaterial TOOL_FLINT =
             EnumHelper.addToolMaterial("flint", 1, 150, 5.0F, 1.5F, 5);
 
     public static SimpleNetworkWrapper channel;
@@ -164,35 +171,15 @@ public class Survivalist
                 withName(new Item(),"chainmail").setCreativeTab(CreativeTabs.MATERIALS),
                 withName(new Item(), "tanned_leather").setCreativeTab(CreativeTabs.MATERIALS),
                 withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD), "tanned_helmet"),
-                withName(new ItemTannedArmor(Survivalist.TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST), "tanned_chestplate"),
+                withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST), "tanned_chestplate"),
                 withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS), "tanned_leggings"),
                 withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.FEET), "tanned_boots"),
                 withName(new ItemFood(4, 1, true), "jerky"),
                 withName(new ItemNugget(), "nugget"),
                 withName(new ItemRock(), "rock"),
                 withName(new ItemOreRock(), "rock_ore"),
-                withName(new ItemFood(5, 0.6f, true)
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (ConfigManager.instance.enableBread)
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                }, "dough"),
-                withName(new ItemFood(8, 0.6f, true)
-                {
-                    @Override
-                    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
-                    {
-                        if (ConfigManager.instance.enableBread)
-                        {
-                            super.getSubItems(tab, subItems);
-                        }
-                    }
-                }, "round_bread"),
+                withName(new ItemSurvivalistBread(5, false), "dough"),
+                withName(new ItemSurvivalistBread(8, false), "round_bread"),
                 withName(new ItemAxe(TOOL_FLINT, 8.0F, -3.1F){}.setCreativeTab(CreativeTabs.TOOLS), "hatchet"),
                 withName(new ItemPickaxe(TOOL_FLINT){}.setCreativeTab(CreativeTabs.TOOLS), "pick"),
                 withName(new ItemSpade(TOOL_FLINT).setCreativeTab(CreativeTabs.TOOLS), "spade"),
@@ -375,6 +362,21 @@ public class Survivalist
         ConfigManager.instance.parseChoppingAxes();
     }
 
+    @SubscribeEvent
+    public void missingMapping(@Nonnull final RegistryEvent.MissingMappings<Block> event)
+    {
+        event.getAllMappings().forEach((mapping) -> {
+            if (mapping.key.getNamespace().equals(MODID))
+            {
+                final Block newBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(MODID, mapping.key.getPath()));
+                if (newBlock != null)
+                {
+                    mapping.remap(newBlock);
+                }
+            }
+        });
+    }
+
     private static void replaceVanillaRecipes()
     {
         ForgeRegistry<IRecipe> recipeRegistry = (ForgeRegistry<IRecipe>) ForgeRegistries.RECIPES;
@@ -497,5 +499,23 @@ public class Survivalist
     public static ResourceLocation location(String path)
     {
         return new ResourceLocation(MODID, path);
+    }
+
+    private static class ItemSurvivalistBread extends ItemFood
+    {
+
+        public ItemSurvivalistBread(int amount, boolean isWolfFood)
+        {
+            super(amount, isWolfFood);
+        }
+
+        @Override
+        public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
+        {
+            if (ConfigManager.instance.enableBread)
+            {
+                super.getSubItems(tab, subItems);
+            }
+        }
     }
 }

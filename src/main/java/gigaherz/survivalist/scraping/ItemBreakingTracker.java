@@ -32,6 +32,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.tuple.Triple;
@@ -286,8 +287,7 @@ public class ItemBreakingTracker
                 EntityPlayer player = (EntityPlayer) ev.getEntity();
 
                 CombatTrackerIntercept interceptTracker = new CombatTrackerIntercept(player);
-                ReflectionHelper.setPrivateValue(EntityLivingBase.class, player, interceptTracker,
-                        "field_94063_bt", "combatTracker");
+                ObfuscationReflectionHelper.setPrivateValue(EntityLivingBase.class, player, interceptTracker, "field_94063_bt");
             }
         }
 

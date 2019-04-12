@@ -14,6 +14,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ReportedException;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -54,7 +55,7 @@ public class SlimeMerger
 
         static
         {
-            setSlimeSizeMethod = ReflectionHelper.findMethod(EntitySlime.class, "setSlimeSize", "func_70799_a", int.class, boolean.class);
+            setSlimeSizeMethod = ObfuscationReflectionHelper.findMethod(EntitySlime.class, "func_70799_a", void.class, int.class, boolean.class);
         }
 
         private final EntitySlime slime;
@@ -167,7 +168,7 @@ public class SlimeMerger
 
         static
         {
-            predicateField = ReflectionHelper.findField(EntityAIFindEntityNearest.class, "field_179443_c", "predicate");
+            predicateField = ObfuscationReflectionHelper.findField(EntityAIFindEntityNearest.class, "field_179443_c");
         }
 
         private final EntitySlime slime;

@@ -144,4 +144,14 @@ public class TileRack extends TileEntity implements ITickable
     {
         return items;
     }
+
+    public ItemStack[] getItems()
+    {
+        return new ItemStack[] {
+                items.getStackInSlot(0),
+                items.getStackInSlot(1),
+                items.getStackInSlot(2),
+                items.getStackInSlot(3)
+        };
+    }
 }

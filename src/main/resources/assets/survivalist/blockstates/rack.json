@@ -1,10 +1,18 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "survivalist:rack.obj"
+    "model": "survivalist:custom/rack_with_items",
+    "custom": {
+      "base_model": "survivalist:rack.obj",
+      "transform_3": { "translation":  [0.85,0.3,0.624], "scale":  0.7},
+      "transform_2": { "translation":  [0.85,0.3,0.812], "scale":  0.7},
+      "transform_1": { "translation":  [0.85,0.3,1.000], "scale":  0.7},
+      "transform_0": { "translation":  [0.85,0.3,1.188], "scale":  0.7}
+    }
   },
   "variants": {
-    "inventory": [{ "transform": "forge:default-block" }],
+    "inventory": [{ "model": "survivalist:rack.obj", "transform": "forge:default-block" }],
+    "normal": [{  }],
     "facing": {
       "east": {
         "y": 90

@@ -3,8 +3,8 @@ package gigaherz.survivalist.integration;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
-import crafttweaker.mc1120.item.MCItemStack;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.api.Dryable;
@@ -73,7 +73,7 @@ public class CraftTweakerPlugin
         public static void removeRecipe(final IIngredient output)
         {
             List<Dryable.DryingRecipe> toRemove = Dryable.RECIPES.stream()
-                    .filter(recipe -> output.matches(new MCItemStack(recipe.getOutput())))
+                    .filter(recipe -> output.matches(CraftTweakerMC.getIItemStack(recipe.getOutput())))
                     .collect(Collectors.toList());
 
             Dryable.RECIPES.removeAll(toRemove);
@@ -87,7 +87,7 @@ public class CraftTweakerPlugin
             {
                 toRemove = Dryable.RECIPES.stream().filter(recipe ->
                         recipe instanceof Dryable.DryingOreRecipe &&
-                                output.matches(new MCItemStack(recipe.getOutput())) &&
+                                output.matches(CraftTweakerMC.getIItemStack(recipe.getOutput())) &&
                                 ((Dryable.DryingOreRecipe) recipe).getOreName().equals(toOredictName(input))
                 ).collect(Collectors.toList());
             }
@@ -95,8 +95,8 @@ public class CraftTweakerPlugin
             {
                 toRemove = Dryable.RECIPES.stream().filter(recipe ->
                         recipe instanceof Dryable.DryingItemRecipe &&
-                                output.matches(new MCItemStack(recipe.getOutput())) &&
-                                input.matches(new MCItemStack(((Dryable.DryingItemRecipe) recipe).getInput()))
+                                output.matches(CraftTweakerMC.getIItemStack(recipe.getOutput())) &&
+                                input.matches(CraftTweakerMC.getIItemStack(((Dryable.DryingItemRecipe) recipe).getInput()))
                 ).collect(Collectors.toList());
             }
 
@@ -158,7 +158,7 @@ public class CraftTweakerPlugin
         public static void removeRecipe(final IIngredient output)
         {
             List<Choppable.ChoppingRecipe> toRemove = Choppable.RECIPES.stream()
-                    .filter(recipe -> output.matches(new MCItemStack(recipe.getOutput())))
+                    .filter(recipe -> output.matches(CraftTweakerMC.getIItemStack(recipe.getOutput())))
                     .collect(Collectors.toList());
 
             Choppable.RECIPES.removeAll(toRemove);
@@ -172,12 +172,12 @@ public class CraftTweakerPlugin
             {
                 toRemove = Choppable.RECIPES.stream().filter(recipe ->
                         recipe instanceof Choppable.ChoppingOreRecipe &&
-                                output.matches(new MCItemStack(recipe.getOutput())) &&
+                                output.matches(CraftTweakerMC.getIItemStack(recipe.getOutput())) &&
                                 ((Choppable.ChoppingOreRecipe) recipe).getOreName().equals(toOredictName(input))
                 ).collect(Collectors.toList());
                 Choppable.RECIPES.removeIf(recipe ->
                         recipe instanceof Choppable.ChoppingOreRecipe &&
-                                output.matches(new MCItemStack(recipe.getOutput())) &&
+                                output.matches(CraftTweakerMC.getIItemStack(recipe.getOutput())) &&
                                 ((Choppable.ChoppingOreRecipe) recipe).getOreName().equals(toOredictName(input))
                 );
             }
@@ -185,8 +185,8 @@ public class CraftTweakerPlugin
             {
                 toRemove = Choppable.RECIPES.stream().filter(recipe ->
                         recipe instanceof Choppable.ChoppingItemRecipe &&
-                                output.matches(new MCItemStack(recipe.getOutput())) &&
-                                input.matches(new MCItemStack(((Choppable.ChoppingItemRecipe) recipe).getInput()))
+                                output.matches(CraftTweakerMC.getIItemStack(recipe.getOutput())) &&
+                                input.matches(CraftTweakerMC.getIItemStack(((Choppable.ChoppingItemRecipe) recipe).getInput()))
                 ).collect(Collectors.toList());
             }
 
