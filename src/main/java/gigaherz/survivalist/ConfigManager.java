@@ -2,15 +2,14 @@ package gigaherz.survivalist;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.ints.Int2DoubleArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -21,82 +20,55 @@ import java.util.regex.Pattern;
 
 public class ConfigManager
 {
-    public static ConfigManager instance;
+    public static final ServerConfig SERVER;
+    public static final ForgeConfigSpec SERVER_SPEC;
 
-    public final boolean removeSticksFromPlanks;
-    public final boolean enableRocks;
-    public final boolean replaceStoneDrops;
-    public final boolean replaceIronOreDrops;
-    public final boolean replaceGoldOreDrops;
-    public final boolean replaceModOreDrops;
-    public final boolean replacePoorOreDrops;
-    public final boolean cobbleRequiresClay;
-    public final boolean enableScraping;
-    public final boolean scrapingIsTreasure;
-    public final boolean enableToolScraping;
-    public final boolean enableArmorScraping;
-    public final boolean enableMeatRotting;
-    public final boolean enableJerky;
-    public final boolean enableRottenDrying;
-    public final boolean enableMeatDrying;
-    public final boolean enableLeatherTanning;
-    public final boolean enableTorchFire;
-    public final boolean enableBread;
-    public final boolean removeVanillaBread;
-    public final boolean enableSaddleCrafting;
-    public final boolean importPlanksRecipes;
-    public final boolean removePlanksRecipes;
-    public final float choppingDegradeChance;
-    public final float choppingExhaustion;
-    public final float choppingWithEmptyHand;
-    public final boolean enableStringCrafting;
-    public final boolean dropFibersFromGrass;
-    public final boolean dropStringFromSheep;
-    public final boolean mergeSlimes;
-    public final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
-    private final ConfigCategory customAxes;
-    private final ConfigCategory axeMultipliers;
-    public final Int2DoubleMap axeLevelMap = new Int2DoubleArrayMap();
-
-    public static void loadConfig(Configuration configuration)
+    static
     {
-        instance = new ConfigManager(configuration);
+        final Pair<ServerConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
+        SERVER_SPEC = specPair.getRight();
+        SERVER = specPair.getLeft();
     }
 
-    public final Configuration config;
-
-    private static class AllProperties extends ArrayList<Property>
+    public static class ServerConfig
     {
-        public Property push(Property p)
+        public final ForgeConfigSpec.BooleanValue removeSticksFromPlanks;
+        public final ForgeConfigSpec.BooleanValue enableRocks;
+        public final ForgeConfigSpec.BooleanValue replaceStoneDrops;
+        public final ForgeConfigSpec.BooleanValue replaceIronOreDrops;
+        public final ForgeConfigSpec.BooleanValue replaceGoldOreDrops;
+        public final ForgeConfigSpec.BooleanValue replaceModOreDrops;
+        public final ForgeConfigSpec.BooleanValue replacePoorOreDrops;
+        public final ForgeConfigSpec.BooleanValue cobbleRequiresClay;
+        public final ForgeConfigSpec.BooleanValue enableScraping;
+        public final ForgeConfigSpec.BooleanValue scrapingIsTreasure;
+        public final ForgeConfigSpec.BooleanValue enableToolScraping;
+        public final ForgeConfigSpec.BooleanValue enableArmorScraping;
+
+        ServerConfig(ForgeConfigSpec.Builder builder)
         {
-            this.add(p);
-            return p;
-        }
-    }
-
-    public ConfigManager(Configuration configuration)
-    {
-        this.config = configuration;
-
-        AllProperties props = new AllProperties();
-
-        configuration.addCustomCategoryComment("Sticks", "Settings for stick crafting");
-        Property p_removeSticksFromPlanks = props.push(configuration.get("Sticks", "RemoveSticksFromPlanksRecipes", true));
-
-        configuration.addCustomCategoryComment("Rocks", "Settings for rock and ore rock drops");
-        Property p_enableRocks = props.push(configuration.get("Rocks", "Enable", true));
-        Property p_replaceStoneDrops = props.push(configuration.get("Rocks", "ReplaceStoneDrops", true));
-        Property p_replaceIronOreDrops = props.push(configuration.get("Rocks", "ReplaceIronOreDrops", true));
-        Property p_replaceGoldOreDrops = props.push(configuration.get("Rocks", "ReplaceGoldOreDrops", true));
-        Property p_replaceModOreDrops = props.push(configuration.get("Rocks", "ReplaceModOreDrops", true));
-        Property p_replacePoorOreDrops = props.push(configuration.get("Rocks", "ReplacePoorOreDrops", true));
-        Property p_cobbleRequiresClay = props.push(configuration.get("Rocks", "CobbleRequiresClay", true));
-
-        configuration.addCustomCategoryComment("Scraping", "Settings for the Scraping feature and enchant");
-        Property p_enableScraping = props.push(configuration.get("Scraping", "Enable", false));
-        Property p_scrapingIsTreasure = props.push(configuration.get("Scraping", "IsTreasureEnchantment", false));
-        Property p_enableToolScraping = props.push(configuration.get("Scraping", "EnableToolScraping", true));
-        Property p_enableArmorScraping = props.push(configuration.get("Scraping", "EnableArmorScraping", true));
+            builder.comment("Settings for stick crafting").push("sticks");
+            removeSticksFromPlanks = builder.define("RemoveSticksFromPlanksRecipes", true);
+            builder.pop();
+            builder.comment("Settings for rock and ore rock drops").push("rocks");
+            enableRocks = builder.define("Enable", true);
+            replaceStoneDrops = builder.define("ReplaceStoneDrops", true);
+            replaceIronOreDrops = builder.define("ReplaceIronOreDrops", true);
+            replaceGoldOreDrops = builder.define("ReplaceGoldOreDrops", true);
+            replaceModOreDrops = builder.define("ReplaceModOreDrops", true);
+            replacePoorOreDrops = builder.define("ReplacePoorOreDrops", true);
+            cobbleRequiresClay = builder.define("CobbleRequiresClay", true);
+            builder.pop();
+            builder.comment("Settings for the Scraping feature and enchant").push("scraping");
+            enableScraping = builder.define("Enable", false);
+            scrapingIsTreasure = builder.define("IsTreasureEnchantment", false);
+            enableToolScraping = builder.define("EnableToolScraping", true);
+            enableArmorScraping = builder.define("EnableArmorScraping", true);
+            builder.pop();
+            /*builder.comment("Settings for the drying rack block").push("drying_rack");
+            removeSticksFromPlanks = builder.define("RemoveSticksFromPlanksRecipes", true);
+            builder.pop();*/
+/*
 
         configuration.addCustomCategoryComment("DryingRack", "Settings for the drying rack block");
         Property p_enableMeatRotting = props.push(configuration.get("DryingRack", "EnableMeatRotting", true));
@@ -105,6 +77,53 @@ public class ConfigManager
         Property p_enableMeatDrying = props.push(configuration.get("DryingRack", "EnableMeatDrying", true));
         Property p_enableLeatherTanning = props.push(configuration.get("DryingRack", "EnableLeatherTanning", true));
         Property p_enableSaddleCrafting = props.push(configuration.get("DryingRack", "EnableSaddleCrafting", true));
+
+
+ */
+        }
+    }
+
+    public static final boolean removeSticksFromPlanks = true;
+    public static final boolean enableRocks = true;
+    public static final boolean replaceStoneDrops = true;
+    public static final boolean replaceIronOreDrops = true;
+    public static final boolean replaceGoldOreDrops = true;
+    public static final boolean replaceModOreDrops = true;
+    public static final boolean replacePoorOreDrops = true;
+    public static final boolean cobbleRequiresClay = true;
+    public static final boolean enableScraping = true;
+    public static final boolean scrapingIsTreasure = true;
+    public static final boolean enableToolScraping = true;
+    public static final boolean enableArmorScraping = true;
+    public static final boolean enableMeatRotting = true;
+    public static final boolean enableJerky = true;
+    public static final boolean enableRottenDrying = true;
+    public static final boolean enableMeatDrying = true;
+    public static final boolean enableLeatherTanning = true;
+    public static final boolean enableTorchFire = true;
+    public static final boolean enableBread = true;
+    public static final boolean removeVanillaBread = true;
+    public static final boolean enableSaddleCrafting = true;
+    public static final boolean importPlanksRecipes = true;
+    public static final boolean removePlanksRecipes = true;
+    public static final float choppingDegradeChance = 0.2f;
+    public static final float choppingExhaustion = 0.2f;
+    public static final float choppingWithEmptyHand = 0.2f;
+    public static final boolean enableStringCrafting = true;
+    public static final boolean dropFibersFromGrass = true;
+    public static final boolean dropStringFromSheep = true;
+    public static final boolean mergeSlimes = true;
+
+    public static final List<Pair<ItemStack, Integer>> customChoppingAxes = Lists.newArrayList();
+    public static final Int2DoubleMap axeLevelMap = new Int2DoubleArrayMap();
+
+    public static final Map<String,Integer> customAxes = Maps.newHashMap();
+
+    public ConfigManager()
+    {
+        /*this.config = configuration;
+
+        AllProperties props = new AllProperties();
 
         configuration.addCustomCategoryComment("TorchFire", "Settings for the torch setting fire to entities");
         Property p_enableTorchFire = props.push(configuration.get("TorchFire", "Enable", true));
@@ -141,53 +160,17 @@ public class ConfigManager
         );
         axeMultipliers = configuration.getCategory("AxeMultipliers");
 
-        configuration.load();
-
-        removeSticksFromPlanks = p_removeSticksFromPlanks.getBoolean();
-        enableRocks = p_enableRocks.getBoolean();
-        replaceStoneDrops = p_replaceStoneDrops.getBoolean();
-        replaceIronOreDrops = p_replaceIronOreDrops.getBoolean();
-        replaceGoldOreDrops = p_replaceGoldOreDrops.getBoolean();
-        replaceModOreDrops = p_replaceModOreDrops.getBoolean();
-        replacePoorOreDrops = p_replacePoorOreDrops.getBoolean();
-        cobbleRequiresClay = p_cobbleRequiresClay.getBoolean();
-        enableScraping = p_enableScraping.getBoolean();
-        scrapingIsTreasure = p_scrapingIsTreasure.getBoolean();
-        enableToolScraping = p_enableToolScraping.getBoolean();
-        enableArmorScraping = p_enableArmorScraping.getBoolean();
-        enableJerky = p_enableJerky.getBoolean();
-        enableMeatRotting = p_enableMeatRotting.getBoolean();
-        enableRottenDrying = p_enableRottenDrying.getBoolean();
-        enableMeatDrying = p_enableMeatDrying.getBoolean();
-        enableLeatherTanning = p_enableLeatherTanning.getBoolean();
-        enableSaddleCrafting = p_enableSaddleCrafting.getBoolean();
-        enableTorchFire = p_enableTorchFire.getBoolean();
-        enableBread = p_enableBread.getBoolean();
-        removeVanillaBread = p_removeVanillaBread.getBoolean();
-        importPlanksRecipes = p_importPlanksRecipes.getBoolean();
-        removePlanksRecipes = p_removePlanksRecipes.getBoolean();
-        choppingDegradeChance = (float) p_choppingDegradeChance.getDouble();
-        choppingExhaustion = (float) p_choppingExhaustion.getDouble();
-        enableStringCrafting = p_enableStringCrafting.getBoolean();
-        dropFibersFromGrass = p_dropfibersFromGrass.getBoolean();
-        dropStringFromSheep = p_dropStringsFromSheep.getBoolean();
-        mergeSlimes = p_mergeSlimes.getBoolean();
-        choppingWithEmptyHand = (float) p_choppingWithEmptyHand.getDouble();
-
-        boolean anyDefault = !props.stream().allMatch(Property::wasRead) || !hasList;
-
-        if (anyDefault)
-            configuration.save();
+         */
     }
 
-    private final Pattern itemRegex = Pattern.compile("^(?<item>[a-zA-Z-0-9_]+:[a-zA-Z-0-9_]+)(?:@(?<meta>[0-9]+))?$");
+    private static final Pattern itemRegex = Pattern.compile("^(?<item>[a-zA-Z-0-9_]+:[a-zA-Z-0-9_]+)$");
 
-    public void parseChoppingAxes()
+    public static void parseChoppingAxes()
     {
-        for (Map.Entry<String, Property> entry : this.customAxes.entrySet())
+        for (Map.Entry<String, Integer> entry : customAxes.entrySet())
         {
             String key = entry.getKey();
-            int level = entry.getValue().getInt(-1);
+            int level = entry.getValue();
             if (level < 0)
                 continue;
 
@@ -206,16 +189,13 @@ public class ConfigManager
                 continue;
             }
 
-            String metaString = matcher.group("meta");
-            int meta = Strings.isNullOrEmpty(metaString) ? 0 : Integer.parseInt(metaString);
-
-            ItemStack stack = new ItemStack(item, 1, meta);
+            ItemStack stack = new ItemStack(item, 1);
 
             customChoppingAxes.add(Pair.of(stack, level));
         }
     }
 
-    public int getAxeLevel(ItemStack stack)
+    public static int getAxeLevel(ItemStack stack)
     {
         for (Pair<ItemStack, Integer> customAxe : customChoppingAxes)
         {
@@ -227,21 +207,21 @@ public class ConfigManager
         return -1;
     }
 
-    public double getAxeLevelMultiplier(int axeLevel)
+    public static double getAxeLevelMultiplier(int axeLevel)
     {
         if (axeLevelMap.containsKey(axeLevel))
             return axeLevelMap.get(axeLevel);
 
         double value = 1 + axeLevel;
 
-        if (axeMultipliers != null)
+        /*if (axeMultipliers != null)
         {
             Property p = axeMultipliers.get("AxeLevel" + axeLevel);
             if (p != null && p.wasRead())
             {
                 value = p.getDouble();
             }
-        }
+        }*/
 
         axeLevelMap.put(axeLevel, value);
         return value;

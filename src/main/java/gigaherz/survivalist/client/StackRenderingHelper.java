@@ -1,15 +1,18 @@
 package gigaherz.survivalist.client;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Random;
 
 public class StackRenderingHelper
 {
@@ -17,14 +20,14 @@ public class StackRenderingHelper
     {
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.enableRescaleNormal();
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        renderEngine.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+        renderEngine.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+        renderEngine.getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 
         GlStateManager.pushMatrix();
 
@@ -32,14 +35,14 @@ public class StackRenderingHelper
         setupGuiTransform(xPos, yPos, model.isGui3d());
         model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.GUI, false);
 
-        GlStateManager.translate(-0.5F, -0.5F, -0.5F);
+        GlStateManager.translatef(-0.5F, -0.5F, -0.5F);
 
         renderItem(model, color);
 
         GlStateManager.popMatrix();
 
-        renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        renderEngine.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+        renderEngine.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+        renderEngine.getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 
         RenderHelper.disableStandardItemLighting();
     }
@@ -50,7 +53,10 @@ public class StackRenderingHelper
         BufferBuilder worldrenderer = tessellator.getBuffer();
         worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
-        for (BakedQuad bakedquad : model.getQuads(null, null, 0))
+        Random random = new Random();
+        random.setSeed(42);
+
+        for (BakedQuad bakedquad : model.getQuads(null, null, random))
         {
             LightUtil.renderQuadColor(worldrenderer, bakedquad, color);
         }
@@ -60,10 +66,10 @@ public class StackRenderingHelper
 
     private static void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d)
     {
-        GlStateManager.translate(xPosition, yPosition, 150);
-        GlStateManager.translate(8.0F, 8.0F, 0.0F);
-        GlStateManager.scale(1.0F, -1.0F, 1.0F);
-        GlStateManager.scale(16.0F, 16.0F, 16.0F);
+        GlStateManager.translatef(xPosition, yPosition, 150);
+        GlStateManager.translatef(8.0F, 8.0F, 0.0F);
+        GlStateManager.scalef(1.0F, -1.0F, 1.0F);
+        GlStateManager.scalef(16.0F, 16.0F, 16.0F);
 
         if (isGui3d)
         {

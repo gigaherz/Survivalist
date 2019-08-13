@@ -1,50 +1,52 @@
 package gigaherz.survivalist.chopblock;
 
-import net.minecraft.block.state.IBlockState;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class RenderChoppingBlock extends TileEntitySpecialRenderer<TileChopping>
+public class RenderChoppingBlock extends TileEntityRenderer<ChoppingBlockTileEntity>
 {
-    final Minecraft mc = Minecraft.getMinecraft();
+    final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(TileChopping te, double x, double y, double z, float partialTicks, int destroyStage, float p_192841_10_)
+    public void render(ChoppingBlockTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-        IBlockState state = te.getWorld().getBlockState(te.getPos());
-        if (!(state.getBlock() instanceof BlockChopping))
+        BlockState state = te.getWorld().getBlockState(te.getPos());
+        if (!(state.getBlock() instanceof ChoppingBlock))
             return;
 
         if (destroyStage < 0)
         {
             GlStateManager.disableLighting();
             GlStateManager.pushMatrix();
-            GlStateManager.translate(x + 0.5, y + 0.65, z + 0.5);
+            GlStateManager.translated(x + 0.5, y + 0.65, z + 0.5);
 
-            IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-            assert inv != null;
-            ItemStack stack = inv.getStackInSlot(0);
-            if (stack.getCount() > 0)
-            {
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(0, -4.5 / 16.0f, 0);
-                GlStateManager.scale(2, 2, 2);
-                GlStateManager.color(1f, 1f, 1f, 1f);
+            LazyOptional<IItemHandler> linv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+            linv.ifPresent((inv) -> {
+                ItemStack stack = inv.getStackInSlot(0);
+                if (stack.getCount() > 0)
+                {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translated(0, -4.5 / 16.0f, 0);
+                    GlStateManager.scaled(2, 2, 2);
+                    GlStateManager.color4f(1f, 1f, 1f, 1f);
 
-                mc.getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
+                    mc.getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
                 /*int breakStage = te.getBreakStage();
                 if (breakStage >= 0)
                 {
                     renderItem(stack, ItemCameraTransforms.TransformType.GROUND, breakStage);
                 }*/
 
-                GlStateManager.popMatrix();
-            }
+                    GlStateManager.popMatrix();
+                }
+            });
 
             GlStateManager.popMatrix();
             GlStateManager.enableLighting();

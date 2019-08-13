@@ -3,10 +3,8 @@ package gigaherz.survivalist.api;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.misc.OreDictionaryHelper;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.item.Items;
 
 import java.util.List;
 
@@ -53,29 +51,7 @@ public class Dryable
 
         public boolean accepts(ItemStack stack)
         {
-            return OreDictionary.itemMatches(input, stack, false);
-        }
-    }
-
-    public static class DryingOreRecipe extends DryingRecipe
-    {
-        private String oreName;
-
-        public DryingOreRecipe(String oreName, int time, ItemStack right)
-        {
-            super(time, right);
-            this.oreName = oreName;
-        }
-
-        public String getOreName()
-        {
-            return oreName;
-        }
-
-        @Override
-        public boolean accepts(ItemStack stack)
-        {
-            return OreDictionaryHelper.hasOreName(stack, oreName);
+            return ItemStack.areItemStacksEqual(input, stack);
         }
     }
 
@@ -83,9 +59,10 @@ public class Dryable
 
     public static void registerStockRecipes()
     {
+        /*
         if (ConfigManager.instance.enableLeatherTanning)
         {
-            registerRecipe(new ItemStack(Items.LEATHER), new ItemStack(Survivalist.tanned_leather), 30 * 20);
+            registerRecipe(new ItemStack(Items.LEATHER), new ItemStack(Survivalist.Items.tanned_leather), 30 * 20);
         }
 
         if (ConfigManager.instance.enableMeatRotting)
@@ -99,31 +76,16 @@ public class Dryable
         {
             if (ConfigManager.instance.enableRottenDrying)
             {
-                registerRecipe(new ItemStack(Items.ROTTEN_FLESH), new ItemStack(Survivalist.jerky), 15 * 20);
+                registerRecipe(new ItemStack(Items.ROTTEN_FLESH), new ItemStack(Survivalist.Items.jerky), 15 * 20);
             }
             if (ConfigManager.instance.enableMeatDrying)
             {
-                registerRecipe(new ItemStack(Items.COOKED_BEEF), new ItemStack(Survivalist.jerky), 15 * 20);
-                registerRecipe(new ItemStack(Items.COOKED_MUTTON), new ItemStack(Survivalist.jerky), 15 * 20);
-                registerRecipe(new ItemStack(Items.COOKED_PORKCHOP), new ItemStack(Survivalist.jerky), 15 * 20);
+                registerRecipe(new ItemStack(Items.COOKED_BEEF), new ItemStack(Survivalist.Items.jerky), 15 * 20);
+                registerRecipe(new ItemStack(Items.COOKED_MUTTON), new ItemStack(Survivalist.Items.jerky), 15 * 20);
+                registerRecipe(new ItemStack(Items.COOKED_PORKCHOP), new ItemStack(Survivalist.Items.jerky), 15 * 20);
             }
         }
-    }
-
-    public static DryingRecipe registerRecipe(ItemStack input, ItemStack output, int time)
-    {
-        return registerRecipe(new DryingItemRecipe(input, time, output));
-    }
-
-    public static DryingRecipe registerRecipe(String input, ItemStack output, int time)
-    {
-        return registerRecipe(new DryingOreRecipe(input, time, output));
-    }
-
-    private static DryingRecipe registerRecipe(DryingRecipe recipe)
-    {
-        RECIPES.add(recipe);
-        return recipe;
+         */
     }
 
     public static int getDryingTime(ItemStack stack)

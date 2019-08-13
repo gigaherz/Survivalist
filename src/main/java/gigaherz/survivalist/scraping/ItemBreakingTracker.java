@@ -3,23 +3,20 @@ package gigaherz.survivalist.scraping;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
-import net.minecraft.item.ItemTool;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.CombatTracker;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -28,13 +25,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.network.NetworkDirection;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
@@ -47,17 +45,14 @@ public class ItemBreakingTracker
 {
     public static final ResourceLocation PROP_KEY = Survivalist.location("ItemBreakingTracker");
 
-    EntityPlayer player;
+    PlayerEntity player;
     World world;
 
     ItemStack[] equipmentSlots;
 
-    @Nullable
-    public static ItemBreakingTracker get(EntityPlayer p)
+    public static LazyOptional<ItemBreakingTracker> get(PlayerEntity p)
     {
-        if (p.hasCapability(Handler.TRACKER, null))
-            return p.getCapability(Handler.TRACKER, null);
-        return null;
+        return p.getCapability(Handler.TRACKER, null);
     }
 
     public static void register()
@@ -67,7 +62,7 @@ public class ItemBreakingTracker
 
     public void init(Entity entity, World world)
     {
-        this.player = (EntityPlayer) entity;
+        this.player = (PlayerEntity) entity;
         this.world = world;
     }
 
@@ -122,30 +117,30 @@ public class ItemBreakingTracker
             CapabilityManager.INSTANCE.register(ItemBreakingTracker.class, new Capability.IStorage<ItemBreakingTracker>()
             {
                 @Override
-                public NBTBase writeNBT(Capability<ItemBreakingTracker> capability, ItemBreakingTracker instance, EnumFacing side)
+                public INBT writeNBT(Capability<ItemBreakingTracker> capability, ItemBreakingTracker instance, Direction side)
                 {
-                    return new NBTTagCompound();
+                    return new CompoundNBT();
                 }
 
                 @Override
-                public void readNBT(Capability<ItemBreakingTracker> capability, ItemBreakingTracker instance, EnumFacing side, NBTBase nbt)
+                public void readNBT(Capability<ItemBreakingTracker> capability, ItemBreakingTracker instance, Direction side, INBT nbt)
                 {
 
                 }
-            }, () -> null);
+            }, () -> { throw new RuntimeException("Creating default instances is not supported for this capability."); });
 
             registerScrapoingConversions();
         }
 
         void registerScrapoingConversions()
         {
-            if (ConfigManager.instance.enableToolScraping)
+            if (ConfigManager.enableToolScraping)
             {
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_SHOVEL), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_HOE), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_AXE), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_PICKAXE), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_SWORD), new ItemStack(Blocks.PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_SHOVEL), new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_HOE), new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_AXE), new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_PICKAXE), new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Items.STICK)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_SWORD), new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Items.STICK)));
 
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.STONE_SHOVEL), new ItemStack(Blocks.COBBLESTONE), new ItemStack(Items.STICK)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.STONE_HOE), new ItemStack(Blocks.COBBLESTONE), new ItemStack(Items.STICK)));
@@ -172,22 +167,22 @@ public class ItemBreakingTracker
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_SWORD), new ItemStack(Items.DIAMOND), new ItemStack(Items.STICK)));
             }
 
-            if (ConfigManager.instance.enableArmorScraping)
+            if (ConfigManager.enableArmorScraping)
             {
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_BOOTS), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_HELMET), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_CHESTPLATE), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_LEGGINGS), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_boots), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_helmet), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_chestplate), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_leggings), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_boots), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_helmet), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_chestplate), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_leggings), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
 
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_BOOTS), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_HELMET), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
@@ -206,7 +201,7 @@ public class ItemBreakingTracker
             }
         }
 
-        private void onItemBroken(EntityPlayer player, ItemStack stack)
+        private void onItemBroken(PlayerEntity player, ItemStack stack)
         {
             int scrappingLevel = EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping, stack);
 
@@ -236,13 +231,13 @@ public class ItemBreakingTracker
             {
                 Survivalist.logger.debug("Item broke (" + stack + ") and the player got " + ret + " in return!");
 
-                Survivalist.channel.sendTo(new MessageScraping(stack, ret), (EntityPlayerMP) player);
+                Survivalist.channel.sendTo(new MessageScraping(stack, ret), ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 
-                EntityItem entityitem = new EntityItem(player.world, player.posX, player.posY + 0.5, player.posZ, ret);
-                entityitem.motionX = 0;
-                entityitem.motionZ = 0;
+                ItemEntity entityitem = new ItemEntity(player.world, player.posX, player.posY + 0.5, player.posZ, ret);
+                //entityitem.motionX = 0;
+                //entityitem.motionZ = 0;
 
-                player.world.spawnEntity(entityitem);
+                player.world.addEntity(entityitem);
             }
         }
 
@@ -256,7 +251,7 @@ public class ItemBreakingTracker
 
             Item item = stack.getItem();
 
-            if (!(item instanceof ItemTool) && !(item instanceof ItemSword))
+            if (!(item instanceof TieredItem))
                 return;
 
             onItemBroken(ev.getEntityPlayer(), stack);
@@ -268,11 +263,11 @@ public class ItemBreakingTracker
             if (ev.getEntity().world.isRemote)
                 return;
 
-            if (ev.getEntity() instanceof EntityPlayer)
+            if (ev.getEntity() instanceof PlayerEntity)
             {
-                EntityPlayer player = (EntityPlayer) ev.getEntityLiving();
+                PlayerEntity player = (PlayerEntity) ev.getEntityLiving();
 
-                ItemBreakingTracker.get(player).before();
+                ItemBreakingTracker.get(player).ifPresent(ItemBreakingTracker::before);
             }
         }
 
@@ -282,22 +277,24 @@ public class ItemBreakingTracker
             if (ev.getEntity().world.isRemote)
                 return;
 
-            if (ev.getEntity() instanceof EntityPlayer)
+            if (ev.getEntity() instanceof PlayerEntity)
             {
-                EntityPlayer player = (EntityPlayer) ev.getEntity();
+                PlayerEntity player = (PlayerEntity) ev.getEntity();
 
                 CombatTrackerIntercept interceptTracker = new CombatTrackerIntercept(player);
-                ObfuscationReflectionHelper.setPrivateValue(EntityLivingBase.class, player, interceptTracker, "field_94063_bt");
+                ObfuscationReflectionHelper.setPrivateValue(LivingEntity.class, player, interceptTracker, "field_94063_bt");
             }
         }
 
-        public void onTrackDamage(EntityPlayer player)
+        public void onTrackDamage(PlayerEntity player)
         {
-            Collection<ItemStack> missing = ItemBreakingTracker.get(player).after();
-            for (ItemStack broken : missing)
-            {
-                onItemBroken(player, broken);
-            }
+            ItemBreakingTracker.get(player).ifPresent((tracker) -> {
+                Collection<ItemStack> missing = tracker.after();
+                for (ItemStack broken : missing)
+                {
+                    onItemBroken(player, broken);
+                }
+            });
         }
 
         @SubscribeEvent
@@ -305,36 +302,28 @@ public class ItemBreakingTracker
         {
             final Entity entity = e.getObject();
 
-            if (!(entity instanceof EntityPlayerMP))
+            if (!(entity instanceof ServerPlayerEntity))
                 return;
 
             if (entity.world == null || entity.world.isRemote)
                 return;
 
-            if (entity.hasCapability(TRACKER, null))
-                return;
-
             e.addCapability(PROP_KEY, new ICapabilityProvider()
             {
                 ItemBreakingTracker cap = new ItemBreakingTracker();
+                LazyOptional<ItemBreakingTracker> cap_provider = LazyOptional.of(() -> cap);
 
                 {
                     cap.init(entity, entity.world);
                 }
 
-                @Override
-                public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-                {
-                    return capability == TRACKER;
-                }
-
                 @SuppressWarnings("unchecked")
                 @Override
-                public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+                public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing)
                 {
                     if (capability == TRACKER)
-                        return (T) cap;
-                    return null;
+                        return cap_provider.cast();
+                    return LazyOptional.empty();
                 }
             });
         }
@@ -344,9 +333,9 @@ public class ItemBreakingTracker
     public static class CombatTrackerIntercept extends CombatTracker
     {
         CombatTracker inner;
-        EntityPlayer entity;
+        PlayerEntity entity;
 
-        public CombatTrackerIntercept(EntityPlayer fighterIn)
+        public CombatTrackerIntercept(PlayerEntity fighterIn)
         {
             super(fighterIn);
             inner = fighterIn.getCombatTracker();
@@ -368,7 +357,7 @@ public class ItemBreakingTracker
         }
 
         @Override
-        public EntityLivingBase getBestAttacker()
+        public LivingEntity getBestAttacker()
         {
             return inner.getBestAttacker();
         }
@@ -386,7 +375,7 @@ public class ItemBreakingTracker
         }
 
         @Override
-        public EntityLivingBase getFighter()
+        public LivingEntity getFighter()
         {
             return inner.getFighter();
         }

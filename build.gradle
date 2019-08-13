@@ -1,75 +1,96 @@
 buildscript {
     repositories {
+        mavenLocal()
+        maven { url = 'http://files.minecraftforge.net/maven' }
         jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
+
+apply plugin: 'java'
+apply plugin: 'net.minecraftforge.gradle'
+//apply plugin: 'maven-publish'
 
 repositories {
-    maven {
-        url "http://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        url 'http://dogforce-games.com/maven/'
-    }
-    maven {
-        url 'https://maven.blamejared.com/'
-    }
+    mavenLocal()
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+version = "3.0.0"
+group= "gigaherz.survivalist"
+archivesBaseName = "Survivalist-1.14.4"
 
-version = "2.1.6"
-group= "gigaherz.survivalist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Survivalist-1.12.2"
+//sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
 
 minecraft {
-    version = "1.12.2-14.23.5.2824"
-    runDir = "run"
-    mappings = "stable_39"
+    mappings channel: 'snapshot', version: '20190720-1.14.3'
 
-    replace "@VERSION@", project.version
-    replaceIn "Survivalist.java"
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'CONFIG'
+            property 'forge.logging.console.level', 'debug'
+
+            ideaModule "${project.name}.main"
+
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            ideaModule "${project.name}.main"
+
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+        }
+    }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.15.0.273:api"
-    runtime "mezz.jei:jei_1.12.2:4.15.0.273"
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.45'
+
+    //deobfCompile "mezz.jei:jei_1.12.2:4.15.0.273:api"
+    //runtime "mezz.jei:jei_1.12.2:4.15.0.273"
 
     //deobfCompile 'CraftTweaker2:CraftTweaker2-API:4.1.11.500'
-    deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.16.535'
+    //deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.16.535'
 
-    compile fileTree(dir: 'libs', include: '*.jar')
+    //compile fileTree(dir: 'libs', include: '*.jar')
 }
+
+/*
+jar {
+    into('/') {
+        from configurations.embed
+    }
+
+    manifest {
+        attributes("ContainedDeps": configurations.embed.collect { it.getName() }.join(' '))
+    }
+}
+*/
 
 jar {
     manifest {
         attributes([
-                "Maven-Artifact":"${project.group}:${project.archivesBaseName}:${project.version}",
-                'Timestamp': System.currentTimeMillis()
+                "Specification-Title": "survivalist",
+                "Specification-Vendor": "gigaherz",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"gigaherz",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
-    }
-}
-
-compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    options.encoding = 'UTF-8'
-}
-
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
     }
 }

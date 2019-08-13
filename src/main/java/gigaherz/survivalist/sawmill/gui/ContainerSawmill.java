@@ -1,93 +1,101 @@
 package gigaherz.survivalist.sawmill.gui;
 
-import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.network.UpdateFields;
+import gigaherz.survivalist.misc.IntArrayWrapper;
 import gigaherz.survivalist.sawmill.TileSawmill;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
+import net.minecraft.util.IIntArray;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerSawmill
-        extends Container
+public class ContainerSawmill extends Container
 {
-    private TileSawmill tile;
-    private int[] prevFields;
+    @ObjectHolder("survivalist:sawmill")
+    public static ContainerType<ContainerSawmill> TYPE;
 
-    public ContainerSawmill(TileSawmill tileEntity, InventoryPlayer playerInventory)
+    private IIntArray fields;
+
+    public ContainerSawmill(int windowId, PlayerInventory playerInventory)
     {
-        this.tile = tileEntity;
-        prevFields = this.tile.getFields();
-        for (int i = 0; i < prevFields.length; i++) { prevFields[i]--; }
+        this(windowId, playerInventory, new ItemStackHandler(4), new IntArrayWrapper(new int[4]));
+    }
 
-        IItemHandler inv = tileEntity.getInventory();
+    public ContainerSawmill(int windowId, TileSawmill tileEntity, PlayerInventory playerInventory)
+    {
+        this(windowId, playerInventory, tileEntity.inventory, tileEntity);
+    }
 
-        addSlotToContainer(new SlotItemHandler(inv, 0, 56, 17));
-        addSlotToContainer(new SlotItemHandlerFuel(inv, 1, 56, 53));
-        addSlotToContainer(new SlotItemHandlerOutput(inv, 2, 116, 35));
+    public ContainerSawmill(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
+    {
+        super(TYPE, windowId);
+
+        fields = dryTimes;
+
+        addSlot(new SlotItemHandler(inventory, 0, 56, 17));
+        addSlot(new SlotItemHandlerFuel(inventory, 1, 56, 53));
+        addSlot(new SlotItemHandlerOutput(inventory, 2, 116, 35));
 
         bindPlayerInventory(playerInventory);
     }
 
-    private void bindPlayerInventory(InventoryPlayer playerInventory)
+    private void bindPlayerInventory(PlayerInventory playerInventory)
     {
         for (int i = 0; i < 3; ++i)
         {
             for (int j = 0; j < 9; ++j)
             {
-                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
 
         for (int k = 0; k < 9; ++k)
         {
-            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
+            this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player)
+    public boolean canInteractWith(PlayerEntity player)
     {
         return true;
     }
 
-    @Override
-    public void detectAndSendChanges()
+    public int getRemainingBurnTime()
     {
-        super.detectAndSendChanges();
-
-        boolean needUpdate = false;
-
-        int[] fields = this.tile.getFields();
-        for (int i = 0; i < prevFields.length; i++)
-        {
-            if (prevFields[i] != fields[i])
-            {
-                prevFields[i] = fields[i];
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            this.listeners.stream().filter(watcher -> watcher instanceof EntityPlayerMP).forEach(watcher ->
-                    Survivalist.channel.sendTo(new UpdateFields(this.windowId, prevFields), (EntityPlayerMP) watcher));
-        }
+        return fields.get(0);
     }
 
-    public void updateFields(int[] data)
+    public int getTotalBurnTime()
     {
-        this.tile.setFields(data);
+        return fields.get(1);
     }
 
+    public int getCookTime()
+    {
+        return fields.get(2);
+    }
+
+    public int getTotalCookTime()
+    {
+        return fields.get(3);
+    }
+
+    public boolean isBurning()
+    {
+        return getRemainingBurnTime() > 0;
+    }
+
+
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
@@ -115,7 +123,7 @@ public class ContainerSawmill
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (TileEntityFurnace.isItemFuel(itemstack1))
+                else if (AbstractFurnaceTileEntity.isFuel(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 1, 2, false))
                     {

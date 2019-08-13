@@ -1,5 +1,5 @@
 package gigaherz.survivalist.integration.drying;
-
+/*
 import gigaherz.survivalist.Survivalist;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -66,3 +66,4 @@ public class DryingCategory implements IRecipeCategory<DryingRecipeWrapper>
         itemStacks.set(ingredients);
     }
 }
+*/

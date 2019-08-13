@@ -1,123 +1,55 @@
 package gigaherz.survivalist.rack;
 
-import com.google.common.base.Predicates;
-import gigaherz.survivalist.GuiHandler;
-import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.Arrays;
+import javax.annotation.Nullable;
 
 public class BlockRack extends Block
 {
-    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public static final IUnlistedProperty<RackItemsStateData> CONTAINED_ITEMS = new IUnlistedProperty<RackItemsStateData>()
+    public BlockRack(Properties properties)
     {
-        public String getName()
-        {
-            return Survivalist.location("contained_items").toString();
-        }
-
-        public boolean isValid(RackItemsStateData state)
-        {
-            return state != null && Arrays.stream(state.stacks).allMatch(Predicates.notNull());
-        }
-
-        public Class<RackItemsStateData> getType()
-        {
-            return RackItemsStateData.class;
-        }
-
-        public String valueToString(RackItemsStateData state)
-        {
-            return state.toString();
-        }
-    };
-
-    @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
-        IExtendedBlockState extended = (IExtendedBlockState) super.getExtendedState(state, world, pos);
-
-        TileEntity te = world.getTileEntity(pos);
-        if (te instanceof TileRack)
-        {
-            TileRack tr = ((TileRack)te);
-            extended = extended.withProperty(CONTAINED_ITEMS, new RackItemsStateData(tr.getItems()));
-        }
-
-        return extended;
-    }
-
-    public BlockRack()
-    {
-        super(Material.WOOD);
-        setCreativeTab(CreativeTabs.DECORATIONS);
-        setSoundType(SoundType.WOOD);
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-        setHardness(1.0F);
-        setResistance(1.0F);
-        setLightOpacity(0);
-    }
-
-    @Deprecated
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
+        super(properties);
+        setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH));
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state)
+    public boolean hasTileEntity(BlockState state)
     {
         return true;
     }
 
+    @Nullable
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
+    public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
         return new TileRack();
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
     {
-        return new ExtendedBlockState(this, new IProperty[]{FACING}, new IUnlistedProperty[]{CONTAINED_ITEMS});
-    }
-
-    @Deprecated
-    @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        return getDefaultState().withProperty(FACING, EnumFacing.HORIZONTALS[meta & 3]);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return state.getValue(FACING).ordinal();
+        builder.add(FACING);
     }
 
     @Override
@@ -127,19 +59,21 @@ public class BlockRack extends Block
     }
 
     @Override
-    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
+    public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer)
     {
         return layer == BlockRenderLayer.SOLID || layer == BlockRenderLayer.CUTOUT;
     }
 
+    @Nullable
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
+    public BlockState getStateForPlacement(BlockItemUseContext context)
     {
-        return getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
+        return getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
     }
 
+    @Deprecated
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
         if (worldIn.isRemote)
             return true;
@@ -148,23 +82,25 @@ public class BlockRack extends Block
         if (!(tileEntity instanceof TileRack))
             return false;
 
-        playerIn.openGui(Survivalist.instance, GuiHandler.GUI_RACK, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        NetworkHooks.openGui((ServerPlayerEntity)player, (TileRack)tileEntity, pos);
 
         return true;
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-
-        if (tileentity instanceof TileRack)
+        if (newState.getBlock() != state.getBlock())
         {
-            dropInventoryItems(worldIn, pos, ((TileRack) tileentity).inventory());
-            worldIn.updateComparatorOutputLevel(pos, this);
-        }
+            TileEntity tileentity = worldIn.getTileEntity(pos);
 
-        super.breakBlock(worldIn, pos, state);
+            if (tileentity instanceof TileRack)
+            {
+                dropInventoryItems(worldIn, pos, ((TileRack) tileentity).inventory());
+                worldIn.updateComparatorOutputLevel(pos, this);
+            }
+        }
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     private static void dropInventoryItems(World worldIn, BlockPos pos, IItemHandler inventory)

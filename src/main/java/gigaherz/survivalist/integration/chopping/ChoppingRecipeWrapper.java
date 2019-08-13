@@ -1,5 +1,5 @@
 package gigaherz.survivalist.integration.chopping;
-
+/*
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.api.Choppable;
 import gigaherz.survivalist.client.StackRenderingHelper;
@@ -147,3 +147,4 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper
         }
     }
 }
+*/

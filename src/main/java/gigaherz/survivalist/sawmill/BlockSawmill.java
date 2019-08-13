@@ -1,28 +1,23 @@
 package gigaherz.survivalist.sawmill;
 
-import gigaherz.survivalist.GuiHandler;
-import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -31,87 +26,42 @@ import java.util.Random;
 
 public class BlockSawmill extends Block
 {
-    public static final PropertyDirection FACING = BlockHorizontal.FACING;
-    public static final PropertyBool POWERED = PropertyBool.create("powered");
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public BlockSawmill()
+    public BlockSawmill(Properties properties)
     {
-        super(Material.ROCK);
-        setHardness(3.5F);
-        setSoundType(SoundType.STONE);
-        setCreativeTab(CreativeTabs.DECORATIONS);
-        setDefaultState(getBlockState().getBaseState()
-                .withProperty(FACING, EnumFacing.NORTH)
-                .withProperty(POWERED, false));
+        super(properties);
+        setDefaultState(getStateContainer().getBaseState()
+                .with(FACING, Direction.NORTH)
+                .with(POWERED, false));
     }
 
     @Override
-    protected BlockStateContainer createBlockState()
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
     {
-        return new BlockStateContainer(this, FACING, POWERED);
-    }
-
-    @Deprecated
-    @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        EnumFacing enumfacing = EnumFacing.byIndex(meta);
-
-        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
-            enumfacing = EnumFacing.NORTH;
-        }
-
-        return this.getDefaultState().withProperty(FACING, enumfacing);
+        builder.add(FACING, POWERED);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state)
+    public int getLightValue(BlockState state, IEnviromentBlockReader world, BlockPos pos)
     {
-        return (state.getValue(POWERED) ? 8 : 0) |
-                state.getValue(FACING).getIndex();
+        return state.get(POWERED) ? 15 : 0;
     }
 
     @Deprecated
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    public int getLightValue(BlockState state)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-
-        if (tileentity instanceof TileSawmill)
-        {
-            return state.withProperty(POWERED, ((TileSawmill) tileentity).isBurning());
-        }
-
-        return state;
-    }
-
-    @Deprecated
-    @Override
-    public int getLightValue(IBlockState state)
-    {
-        return state.getValue(POWERED) ? 15 : 0;
+        return state.get(POWERED) ? 15 : 0;
     }
 
     @Override
-    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
+    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {
-        IBlockState other = world.getBlockState(pos);
-        if (other.getBlock() != this)
+        if (stateIn.get(POWERED))
         {
-            return other.getLightValue(world, pos);
-        }
-        return state.getActualState(world, pos).getValue(POWERED) ? 15 : 0;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @SuppressWarnings("incomplete-switch")
-    @Override
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-    {
-        if (stateIn.getActualState(worldIn, pos).getValue(POWERED))
-        {
-            EnumFacing enumfacing = stateIn.getValue(FACING);
+            Direction enumfacing = stateIn.get(FACING);
             double x = (double) pos.getX() + 0.5D;
             double y = (double) pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
             double z = (double) pos.getZ() + 0.5D;
@@ -141,63 +91,48 @@ public class BlockSawmill extends Block
                     z += 0.52D;
             }
 
-            worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x, y, z, 0.0D, 0.0D, 0.0D);
-            worldIn.spawnParticle(EnumParticleTypes.FLAME, x, y, z, 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(ParticleTypes.FLAME, x, y, z, 0.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
         if (worldIn.isRemote)
             return true;
 
         TileEntity te = worldIn.getTileEntity(pos);
 
-        if (te instanceof TileSawmill)
-            playerIn.openGui(Survivalist.instance, GuiHandler.GUI_SAWMILL, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        // TODO
+        //if (te instanceof TileSawmill)
+        //    player.openGui(Survivalist.instance, GuiHandler.GUI_SAWMILL, worldIn, pos.getX(), pos.getY(), pos.getZ());
 
         return true;
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state)
+    public boolean hasTileEntity(BlockState state)
     {
         return true;
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
+    public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
         return new TileSawmill();
     }
 
-    @Deprecated
+    @Nullable
     @Override
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    public BlockState getStateForPlacement(BlockItemUseContext context)
     {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-        worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
-
-        /*if (stack.hasDisplayName())
-        {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-
-            if (tileentity instanceof TileSawmill)
-            {
-                ((TileSawmill)tileentity).setCustomInventoryName(stack.getDisplayName());
-            }
-        }*/
-    }
-
-    @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
         TileEntity te = worldIn.getTileEntity(pos);
 
@@ -207,7 +142,7 @@ public class BlockSawmill extends Block
             worldIn.updateComparatorOutputLevel(pos, this);
         }
 
-        super.breakBlock(worldIn, pos, state);
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     private static void dropInventoryItems(World worldIn, BlockPos pos, IItemHandler inventory)
@@ -225,14 +160,14 @@ public class BlockSawmill extends Block
 
     @Deprecated
     @Override
-    public boolean hasComparatorInputOverride(IBlockState state)
+    public boolean hasComparatorInputOverride(BlockState state)
     {
         return true;
     }
 
     @Deprecated
     @Override
-    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos)
+    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
     {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof TileSawmill)
@@ -240,17 +175,15 @@ public class BlockSawmill extends Block
         return 0;
     }
 
-    @Deprecated
     @Override
-    public IBlockState withRotation(IBlockState state, Rotation rot)
+    public BlockState rotate(BlockState state, Rotation rot)
     {
-        return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
+        return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
-    @Deprecated
     @Override
-    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+    public BlockState mirror(BlockState state, Mirror mirrorIn)
     {
-        return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
+        return state.with(FACING, mirrorIn.toRotation(state.get(FACING)).rotate(state.get(FACING)));
     }
 }

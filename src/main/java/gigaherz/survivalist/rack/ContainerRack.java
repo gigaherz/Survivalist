@@ -1,38 +1,58 @@
 package gigaherz.survivalist.rack;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
+import gigaherz.survivalist.misc.IntArrayWrapper;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIntArray;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.registries.ObjectHolder;
 
 public class ContainerRack extends Container
 {
-    protected TileRack tile;
-    private int[] prevRemaining;
+    @ObjectHolder("survivalist:rack")
+    public static ContainerType<ContainerRack> TYPE = null;
 
-    public ContainerRack(TileRack tileEntity, InventoryPlayer playerInventory)
+    public final IIntArray dryTimeRemainingArray;
+
+    public ContainerRack(int windowId, PlayerInventory playerInventory)
     {
-        this.tile = tileEntity;
-        prevRemaining = new int[tile.dryTimeRemaining.length];
-
-        addSlotToContainer(new SlotItemHandler(tile.items, 0, 26, 34));
-        addSlotToContainer(new SlotItemHandler(tile.items, 1, 62, 34));
-        addSlotToContainer(new SlotItemHandler(tile.items, 2, 98, 34));
-        addSlotToContainer(new SlotItemHandler(tile.items, 3, 134, 34));
-
-        bindPlayerInventory(playerInventory);
+        this(windowId, playerInventory, new ItemStackHandler(4), new IntArrayWrapper(new int[4]));
     }
 
-    protected void bindPlayerInventory(InventoryPlayer playerInventory)
+    public ContainerRack(int windowId, TileRack tileRack, PlayerInventory playerInventory)
+    {
+        this(windowId, playerInventory, tileRack.items, new IntArrayWrapper(tileRack.dryTimeRemaining));
+    }
+
+    public ContainerRack(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
+    {
+        super(TYPE, windowId);
+
+        dryTimeRemainingArray = dryTimes;
+
+        addSlot(new SlotItemHandler(inventory, 0, 26, 34));
+        addSlot(new SlotItemHandler(inventory, 1, 62, 34));
+        addSlot(new SlotItemHandler(inventory, 2, 98, 34));
+        addSlot(new SlotItemHandler(inventory, 3, 134, 34));
+
+        bindPlayerInventory(playerInventory);
+
+        this.trackIntArray(dryTimeRemainingArray);
+    }
+
+    protected void bindPlayerInventory(PlayerInventory playerInventory)
     {
         for (int y = 0; y < 3; y++)
         {
             for (int x = 0; x < 9; x++)
             {
-                addSlotToContainer(new Slot(playerInventory,
+                addSlot(new Slot(playerInventory,
                         x + y * 9 + 9,
                         8 + x * 18, 84 + y * 18));
             }
@@ -40,43 +60,25 @@ public class ContainerRack extends Container
 
         for (int x = 0; x < 9; x++)
         {
-            addSlotToContainer(new Slot(playerInventory, x, 8 + x * 18, 142));
+            addSlot(new Slot(playerInventory, x, 8 + x * 18, 142));
         }
     }
 
-    @Override
-    public void detectAndSendChanges()
-    {
-        super.detectAndSendChanges();
-
-        for (int j = 0; j < prevRemaining.length; j++)
-        {
-            if (prevRemaining[j] != tile.dryTimeRemaining[j])
-            {
-                for (IContainerListener icrafting : this.listeners)
-                {
-                    icrafting.sendWindowProperty(this, j, tile.dryTimeRemaining[j]);
-                }
-                prevRemaining[j] = tile.dryTimeRemaining[j];
-            }
-        }
-    }
-
-    @Override
+    /*@Override
     public void updateProgressBar(int id, int data)
     {
         if (id < this.tile.dryTimeRemaining.length)
             this.tile.dryTimeRemaining[id] = data;
-    }
+    }*/
 
     @Override
-    public boolean canInteractWith(EntityPlayer player)
+    public boolean canInteractWith(PlayerEntity player)
     {
-        return tile.isUseableByPlayer(player);
+        return true; // fixme
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
+    public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex)
     {
         Slot slot = this.inventorySlots.get(slotIndex);
         if (slot == null || !slot.getHasStack())

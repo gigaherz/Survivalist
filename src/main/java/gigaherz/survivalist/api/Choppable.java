@@ -2,12 +2,13 @@ package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.misc.OreDictionaryHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.item.Items;
+import net.minecraft.tags.Tag;
+import net.minecraftforge.common.Tags;
 
 import java.util.List;
 import java.util.Random;
@@ -78,12 +79,12 @@ public class Choppable
             return this;
         }
 
-        public ItemStack getResults(ItemStack input, EntityPlayer player, int axeLevel, int fortune, Random random)
+        public ItemStack getResults(ItemStack input, PlayerEntity player, int axeLevel, int fortune, Random random)
         {
-            double number = ConfigManager.instance.choppingWithEmptyHand * getOutputMultiplier();
+            double number = ConfigManager.choppingWithEmptyHand * getOutputMultiplier();
 
             if (axeLevel >= 0)
-                number = Math.max(0, getOutputMultiplier() * ConfigManager.instance.getAxeLevelMultiplier(axeLevel)) * (1 + random.nextFloat() * fortune);
+                number = Math.max(0, getOutputMultiplier() * ConfigManager.getAxeLevelMultiplier(axeLevel)) * (1 + random.nextFloat() * fortune);
 
             int whole = (int) Math.floor(number);
             double remainder = number - whole;
@@ -143,29 +144,7 @@ public class Choppable
 
         public boolean accepts(ItemStack stack)
         {
-            return OreDictionary.itemMatches(input, stack, false);
-        }
-    }
-
-    public static class ChoppingOreRecipe extends ChoppingRecipe
-    {
-        private String oreName;
-
-        public ChoppingOreRecipe(String oreName, ItemStack output)
-        {
-            super(output);
-            this.oreName = oreName;
-        }
-
-        public String getOreName()
-        {
-            return oreName;
-        }
-
-        @Override
-        public boolean accepts(ItemStack stack)
-        {
-            return stack.getCount() > 0 && OreDictionaryHelper.hasOreName(stack, oreName);
+            return ItemStack.areItemStacksEqual(input, stack);
         }
     }
 
@@ -173,29 +152,11 @@ public class Choppable
 
     public static void registerStockRecipes()
     {
-        registerRecipe("plankWood", new ItemStack(Items.STICK))
-                .setOutputMultiplier(2.0);
-        if (ConfigManager.instance.enableStringCrafting)
+        //registerRecipe("plankWood", new ItemStack(Items.STICK)).setOutputMultiplier(2.0);
+        if (ConfigManager.enableStringCrafting)
         {
-            registerRecipe(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.STRING))
-                    .setMaxOutput(4);
+            //registerRecipe(new ItemStack(Tags.Items., 1), new ItemStack(Items.STRING)).setMaxOutput(4);
         }
-    }
-
-    public static ChoppingRecipe registerRecipe(ItemStack input, ItemStack output)
-    {
-        return registerRecipe(new ChoppingItemRecipe(input, output));
-    }
-
-    public static ChoppingRecipe registerRecipe(String input, ItemStack output)
-    {
-        return registerRecipe(new ChoppingOreRecipe(input, output));
-    }
-
-    private static ChoppingRecipe registerRecipe(ChoppingRecipe recipe)
-    {
-        RECIPES.add(recipe);
-        return recipe;
     }
 
     public static ChoppingRecipe find(ItemStack stack)

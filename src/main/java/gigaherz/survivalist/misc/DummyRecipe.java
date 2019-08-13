@@ -1,46 +1,78 @@
 package gigaherz.survivalist.misc;
 
-import net.minecraft.inventory.InventoryCrafting;
+import com.google.gson.JsonObject;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class DummyRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
+public class DummyRecipe implements ICraftingRecipe
 {
-    private final ItemStack output;
+    final ResourceLocation id;
 
-    public DummyRecipe(ItemStack output)
+    public DummyRecipe(ResourceLocation id)
     {
-        this.output = output;
-    }
-
-    public static IRecipe from(IRecipe other)
-    {
-        return new DummyRecipe(other.getRecipeOutput()).setRegistryName(other.getRegistryName());
+        this.id = id;
     }
 
     @Override
-    public boolean matches(InventoryCrafting inv, World worldIn)
+    public boolean matches(CraftingInventory inv, World worldIn)
     {
         return false;
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv)
+    public ItemStack getCraftingResult(CraftingInventory inv)
     {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean canFit(int width, int height)
+    public ItemStack getRecipeOutput()
     {
-        return false;
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getRecipeOutput()
+    public ResourceLocation getId()
     {
-        return output;
+        return id;
+    }
+
+    @Override
+    public IRecipeSerializer<?> getSerializer()
+    {
+        return null;
+    }
+
+    @Override
+    public IRecipeType<?> getType()
+    {
+        return null;
+    }
+
+    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DummyRecipe>
+    {
+        @Override
+        public DummyRecipe read(ResourceLocation recipeId, JsonObject json)
+        {
+            return new DummyRecipe(recipeId);
+        }
+
+        @Override
+        public DummyRecipe read(ResourceLocation recipeId, PacketBuffer buffer)
+        {
+            return new DummyRecipe(recipeId);
+        }
+
+        @Override
+        public void write(PacketBuffer buffer, DummyRecipe recipe)
+        {
+            // nothing to write
+        }
     }
 }

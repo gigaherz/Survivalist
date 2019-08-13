@@ -1,29 +1,29 @@
 package gigaherz.survivalist.torchfire;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.Random;
 
 public class TorchFireEventHandling
 {
-    Random rnd = new Random();
+    private final Random rnd = new Random();
 
     @SubscribeEvent
     public void onAttackEntity(AttackEntityEvent ev)
     {
         if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().world.isRemote)
         {
-            ItemStack stack = ev.getEntityPlayer().getHeldItem(EnumHand.MAIN_HAND);
-            if (stack.getCount() > 0 && stack.getItem() instanceof ItemBlock)
+            ItemStack stack = ev.getEntityPlayer().getHeldItem(Hand.MAIN_HAND);
+            if (stack.getCount() > 0 && stack.getItem() instanceof BlockItem)
             {
-                ItemBlock b = (ItemBlock) stack.getItem();
+                BlockItem b = (BlockItem) stack.getItem();
                 Block bl = b.getBlock();
                 if (bl == Blocks.TORCH)
                 {

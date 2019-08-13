@@ -1,45 +1,55 @@
 package gigaherz.survivalist.rocks;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IRendersAsItem;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileItemEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ObjectHolder;
 
-public class EntityRock extends EntityThrowable
+public class EntityRock extends ProjectileItemEntity
 {
-    public EntityRock(World worldIn)
-    {
-        super(worldIn);
-    }
+    @ObjectHolder("survivalist:rock")
+    public static EntityType<EntityRock> TYPE;
 
-    public EntityRock(World worldIn, EntityLivingBase throwerIn)
-    {
-        super(worldIn, throwerIn);
-    }
+    private Item item;
 
-    public EntityRock(World worldIn, double x, double y, double z)
+    public EntityRock(World worldIn, PlayerEntity playerIn, ItemRock itemRock)
     {
-        super(worldIn, x, y, z);
+        super(TYPE, playerIn, worldIn);
+        this.item = itemRock;
     }
 
     @Override
     protected void onImpact(RayTraceResult result)
     {
-        if (result.entityHit != null)
+        if (result instanceof EntityRayTraceResult)
         {
-            result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 1);
+            ((EntityRayTraceResult)result).getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 1);
         }
 
         for (int j = 0; j < 8; ++j)
         {
-            this.world.spawnParticle(EnumParticleTypes.SNOWBALL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+            this.world.addParticle(ParticleTypes.ITEM_SNOWBALL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
         }
 
         if (!this.world.isRemote)
         {
-            this.setDead();
+            this.remove();
         }
+    }
+
+    @Override
+    protected Item func_213885_i()
+    {
+        return item;
     }
 }

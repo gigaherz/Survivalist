@@ -1,0 +1,30 @@
+
+modLoader="javafml"
+loaderVersion="[28,)"
+#updateJSONURL="http://myurl.me/"
+issueTrackerURL="https://github.com/gigaherz/Survivalist/issues"
+displayURL="https://github.com/gigaherz/Survivalist"
+logoFile="logo.png"
+credits="Thanks for this example mod goes to Java"
+authors="gigaherz"
+
+[[mods]]
+modId="survivalist"
+version="${file.jarVersion}"
+displayName="Survivalist"
+description='''
+The toolkit for the rustic adventurer
+'''
+
+[[dependencies.survivalist]]
+   modId="forge"
+   mandatory=true
+   versionRange="[28.0.45,)"
+   ordering="NONE"
+   side="BOTH"
+[[dependencies.survivalist]]
+   modId="minecraft"
+   mandatory=true
+   versionRange="[1.14.4,1.15)"
+   ordering="NONE"
+   side="BOTH"

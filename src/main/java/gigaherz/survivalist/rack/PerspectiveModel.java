@@ -7,19 +7,12 @@ import com.google.common.collect.Streams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gigaherz.survivalist.Survivalist;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -29,7 +22,6 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -57,7 +49,7 @@ public class PerspectiveModel implements IBakedModel
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, long rand)
     {
         return baseModel.getQuads(state, side, rand);
     }
@@ -154,7 +146,7 @@ public class PerspectiveModel implements IBakedModel
         @Override
         public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
         {
-            TextureAtlasSprite particleSprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+            TextureAtlasSprite particleSprite = Minecraft.getInstance().getTextureMapBlocks().getMissingSprite();
             if (particle != null)
                 particleSprite = bakedTextureGetter.apply(particle);
 

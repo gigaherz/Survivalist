@@ -1,12 +1,12 @@
 package gigaherz.survivalist;
-
+/*
 import gigaherz.survivalist.rack.ContainerRack;
 import gigaherz.survivalist.rack.GuiRack;
 import gigaherz.survivalist.rack.TileRack;
 import gigaherz.survivalist.sawmill.TileSawmill;
 import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
 import gigaherz.survivalist.sawmill.gui.GuiSawmill;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -21,7 +21,7 @@ public class GuiHandler implements IGuiHandler
 
     @Nullable
     @Override
-    public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
+    public Object getServerGuiElement(int id, PlayerEntity player, World world, int x, int y, int z)
     {
         TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 
@@ -46,7 +46,7 @@ public class GuiHandler implements IGuiHandler
 
     @Nullable
     @Override
-    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
+    public Object getClientGuiElement(int id, PlayerEntity player, World world, int x, int y, int z)
     {
         TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 
@@ -69,3 +69,4 @@ public class GuiHandler implements IGuiHandler
         return null;
     }
 }
+*/

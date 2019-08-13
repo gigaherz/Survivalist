@@ -1,76 +1,74 @@
 package gigaherz.survivalist.rack;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import gigaherz.survivalist.Survivalist;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class RenderRack extends TileEntitySpecialRenderer<TileRack>
+public class RenderRack extends TileEntityRenderer<TileRack>
 {
-
     @Override
-    public void render(TileRack te, double x, double y, double z, float partialTicks, int destroyStage, float p_192841_10_)
+    public void render(TileRack te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-        IBlockState state = te.getWorld().getBlockState(te.getPos());
-        if (state.getBlock() != Survivalist.rack)
+        BlockState state = te.getWorld().getBlockState(te.getPos());
+        if (state.getBlock() != Survivalist.Blocks.rack)
             return;
 
-        bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent((inv) -> {
+            bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
-        GlStateManager.disableLighting();
+            GlStateManager.disableLighting();
 
-        IItemHandler inv = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        assert inv != null;
+            GlStateManager.pushMatrix();
 
-        GlStateManager.pushMatrix();
+            float angle = -state.get(BlockRack.FACING).getHorizontalAngle();
+            GlStateManager.translated(x + 0.5, y + 0.65, z + 0.5);
+            GlStateManager.rotated(angle, 0, 1, 0);
 
-        float angle = -state.getValue(BlockRack.FACING).getHorizontalAngle();
-        GlStateManager.translate(x + 0.5, y + 0.65, z + 0.5);
-        GlStateManager.rotate(angle, 0, 1, 0);
+            Minecraft mc = Minecraft.getInstance();
 
-        Minecraft mc = Minecraft.getMinecraft();
-
-        RenderItem renderItem = mc.getRenderItem();
-        World world = mc.world;
-        for (int i = 0; i < 4; i++)
-        {
-            ItemStack stack = inv.getStackInSlot(i);
-            if (stack.getCount() > 0)
+            ItemRenderer renderItem = mc.getItemRenderer();
+            World world = mc.world;
+            for (int i = 0; i < 4; i++)
             {
-                GlStateManager.pushMatrix();
-
-                float zz = (i - 1.5f) * 0.1875f;
-
-                GlStateManager.translate(0, 0, zz);
-
-                GlStateManager.scale(1.5f,1.5f,1.5f);
-
-                GlStateManager.color(1f, 1f, 1f, 1f);
-
-                mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
-                IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
-                model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.FIXED, false);
-                if (model.isBuiltInRenderer())
+                ItemStack stack = inv.getStackInSlot(i);
+                if (stack.getCount() > 0)
                 {
-                    renderItem.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
+                    GlStateManager.pushMatrix();
+
+                    float zz = (i - 1.5f) * 0.1875f;
+
+                    GlStateManager.translated(0, 0, zz);
+
+                    GlStateManager.scalef(1.5f,1.5f,1.5f);
+
+                    GlStateManager.color4f(1f, 1f, 1f, 1f);
+
+                    mc.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
+                    IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
+                    model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.FIXED, false);
+                    if (model.isBuiltInRenderer())
+                    {
+                        renderItem.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
+                    }
+
+                    GlStateManager.popMatrix();
                 }
-
-                GlStateManager.popMatrix();
             }
-        }
 
-        GlStateManager.popMatrix();
+            GlStateManager.popMatrix();
 
-        GlStateManager.enableLighting();
+            GlStateManager.enableLighting();
+        });
     }
 }

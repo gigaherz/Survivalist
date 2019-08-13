@@ -2,32 +2,32 @@ package gigaherz.survivalist.scraping;
 
 import gigaherz.survivalist.ConfigManager;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 
 public class EnchantmentScraping extends Enchantment
 {
     public EnchantmentScraping()
     {
-        super(Rarity.COMMON, EnumEnchantmentType.BREAKABLE, EntityEquipmentSlot.values());
+        super(Rarity.COMMON, EnchantmentType.BREAKABLE, EquipmentSlotType.values());
     }
 
     @Override
     public int getMaxLevel()
     {
-        return ConfigManager.instance.enableScraping ? 3 : 0;
+        return ConfigManager.enableScraping ? 3 : 0;
     }
 
     @Override
     public boolean isTreasureEnchantment()
     {
-        return ConfigManager.instance.scrapingIsTreasure;
+        return ConfigManager.scrapingIsTreasure;
     }
 
     @Override
     public boolean canApply(ItemStack stack)
     {
-        return ConfigManager.instance.enableScraping;
+        return ConfigManager.enableScraping;
     }
 }

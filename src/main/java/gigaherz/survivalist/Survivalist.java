@@ -1,318 +1,439 @@
 package gigaherz.survivalist;
 
-import com.google.common.collect.Lists;
-import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.api.Dryable;
-import gigaherz.survivalist.chopblock.BlockChopping;
-import gigaherz.survivalist.chopblock.TileChopping;
-import gigaherz.survivalist.misc.DummyRecipe;
-import gigaherz.survivalist.armor.ItemTannedArmor;
+import gigaherz.survivalist.chopblock.ChoppingBlock;
+import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.misc.FibersEventHandling;
-import gigaherz.survivalist.misc.OreDictionaryHelper;
 import gigaherz.survivalist.misc.StringEventHandling;
-import gigaherz.survivalist.network.UpdateFields;
 import gigaherz.survivalist.rack.BlockRack;
+import gigaherz.survivalist.rack.ContainerRack;
+import gigaherz.survivalist.rack.GuiRack;
 import gigaherz.survivalist.rack.TileRack;
-import gigaherz.survivalist.rocks.*;
+import gigaherz.survivalist.rocks.ItemRock;
+import gigaherz.survivalist.rocks.RocksEventHandling;
 import gigaherz.survivalist.sawmill.BlockSawmill;
 import gigaherz.survivalist.sawmill.TileSawmill;
+import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
+import gigaherz.survivalist.sawmill.gui.GuiSawmill;
 import gigaherz.survivalist.scraping.EnchantmentScraping;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
 import gigaherz.survivalist.scraping.MessageScraping;
-import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBat;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.EnumHelper;
+import net.minecraft.util.SoundEvents;
+import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.registries.ForgeRegistry;
-import org.apache.commons.lang3.ArrayUtils;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.registries.ObjectHolder;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
-@Mod(modid = Survivalist.MODID, version = Survivalist.VERSION,
-        acceptedMinecraftVersions = "[1.12.0,1.13.0)",
-        dependencies = "after:forestry")
+@Mod(Survivalist.MODID)
 public class Survivalist
 {
     public static final String MODID = "survivalist";
-    public static final String VERSION = "@VERSION@";
-    private static final String CHANNEL = "survivalist";
 
-    // The instance of your mod that Forge uses.
-    @Mod.Instance(value = Survivalist.MODID)
     public static Survivalist instance;
 
-    @SidedProxy(clientSide = "gigaherz.survivalist.client.ClientProxy", serverSide = "gigaherz.survivalist.server.ServerProxy")
-    public static IModProxy proxy;
+    public static Logger logger = LogManager.getLogger(MODID);
 
-    public static Logger logger;
-
-    private GuiHandler guiHandler = new GuiHandler();
-
-    @GameRegistry.ObjectHolder(MODID + ":scraping")
+    @ObjectHolder(MODID + ":scraping")
     public static EnchantmentScraping scraping;
 
-    @GameRegistry.ObjectHolder(MODID + ":chainmail")
-    public static Item chainmail;
-    @GameRegistry.ObjectHolder(MODID + ":tanned_leather")
-    public static Item tanned_leather;
-    @GameRegistry.ObjectHolder(MODID + ":jerky")
-    public static Item jerky;
-    @GameRegistry.ObjectHolder(MODID + ":nugget")
-    public static ItemNugget nugget;
-    @GameRegistry.ObjectHolder(MODID + ":rock")
-    public static ItemRock rock;
-    @GameRegistry.ObjectHolder(MODID + ":rock_ore")
-    public static ItemOreRock rock_ore;
-    @GameRegistry.ObjectHolder(MODID + ":dough")
-    public static Item dough;
-    @GameRegistry.ObjectHolder(MODID + ":round_bread")
-    public static Item round_bread;
-    @GameRegistry.ObjectHolder(MODID + ":hatchet")
-    public static Item hatchet;
-    @GameRegistry.ObjectHolder(MODID + ":pick")
-    public static Item pick;
-    @GameRegistry.ObjectHolder(MODID + ":spade")
-    public static Item spade;
-    @GameRegistry.ObjectHolder(MODID + ":plant_fibres")
-    public static Item plant_fibres;
+    public static final String CHANNEL = MODID;
+    private static final String PROTOCOL_VERSION = "1.0";
+    public static SimpleChannel channel = NetworkRegistry.ChannelBuilder
+            .named(new ResourceLocation(MODID, CHANNEL))
+            .clientAcceptedVersions(PROTOCOL_VERSION::equals)
+            .serverAcceptedVersions(PROTOCOL_VERSION::equals)
+            .networkProtocolVersion(() -> PROTOCOL_VERSION)
+            .simpleChannel();
 
-    @GameRegistry.ObjectHolder(MODID + ":tanned_helmet")
-    public static Item tanned_helmet;
-    @GameRegistry.ObjectHolder(MODID + ":tanned_chestplate")
-    public static Item tanned_chestplate;
-    @GameRegistry.ObjectHolder(MODID + ":tanned_leggings")
-    public static Item tanned_leggings;
-    @GameRegistry.ObjectHolder(MODID + ":tanned_boots")
-    public static Item tanned_boots;
+    @SuppressWarnings("ConstantConditions")
+    @Nonnull
+    private static <T> T sneakyNull() {
+        return null;
+    }
 
-    @GameRegistry.ObjectHolder(MODID + ":rack")
-    public static Block rack;
-    @GameRegistry.ObjectHolder(MODID + ":chopping_block")
-    public static Block chopping_block;
-    @GameRegistry.ObjectHolder(MODID + ":chopping_block2")
-    public static Block chopping_block2;
-    @GameRegistry.ObjectHolder(MODID + ":sawmill")
-    public static Block sawmill;
+    @ObjectHolder(MODID)
+    public static class Items
+    {
+        public static final Item tanned_leather = sneakyNull();
+        public static final Item chainmail = sneakyNull();
+        public static final Item jerky = sneakyNull();
+        public static final Item copper_nugget = sneakyNull();
+        public static final Item tin_nugget = sneakyNull();
+        public static final Item lead_nugget = sneakyNull();
+        public static final Item silver_nugget = sneakyNull();
+        public static final Item aluminum_nugget = sneakyNull();
+        public static final ItemRock rock_stone = sneakyNull();
+        public static final ItemRock rock_andesite = sneakyNull();
+        public static final ItemRock rock_diorite = sneakyNull();
+        public static final ItemRock rock_granite = sneakyNull();
+        public static final ItemRock rock_iron_ore = sneakyNull();
+        public static final ItemRock rock_gold_ore = sneakyNull();
+        public static final ItemRock rock_copper_ore = sneakyNull();
+        public static final ItemRock rock_tin_ore = sneakyNull();
+        public static final ItemRock rock_lead_ore = sneakyNull();
+        public static final ItemRock rock_silver_ore = sneakyNull();
+        public static final ItemRock rock_aluminum_ore = sneakyNull();
+        public static final Item dough = sneakyNull();
+        public static final Item round_bread = sneakyNull();
+        public static final Item hatchet = sneakyNull();
+        public static final Item pick = sneakyNull();
+        public static final Item spade = sneakyNull();
+        public static final Item plant_fibres = sneakyNull();
+        public static final Item tanned_helmet = sneakyNull();
+        public static final Item tanned_chestplate = sneakyNull();
+        public static final Item tanned_leggings = sneakyNull();
+        public static final Item tanned_boots = sneakyNull();
+    }
 
-    @GameRegistry.ObjectHolder(MODID + ":shlop")
+    @ObjectHolder("survivalist")
+    public static class Blocks {
+        public static final Block rack = sneakyNull();
+        public static final Block oak_chopping_block = sneakyNull();
+        public static final Block birch_chopping_block = sneakyNull();
+        public static final Block spruce_chopping_block = sneakyNull();
+        public static final Block jungle_chopping_block = sneakyNull();
+        public static final Block dark_oak_chopping_block = sneakyNull();
+        public static final Block acacia_chopping_block = sneakyNull();
+        public static final Block sawmill = sneakyNull();
+    }
+
+    @ObjectHolder(MODID + ":shlop")
     public static SoundEvent shlop;
 
-    public static final ItemArmor.ArmorMaterial TANNED_LEATHER =
-            EnumHelper.addArmorMaterial("tanned_leather", MODID + ":tanned_leather", 12,
-                    new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 1);
+    public static final IArmorMaterial TANNED_LEATHER = new IArmorMaterial()
+    {
+        private final int[] armors = new int[]{1, 2, 3, 1};
+        private final Tag<Item> leather_tag = new ItemTags.Wrapper(new ResourceLocation("survivalist:items/tanned_leather"));
+        private final Ingredient leather_tag_ingredient = Ingredient.fromTag(leather_tag);
 
-    public static final ItemTool.ToolMaterial TOOL_FLINT =
-            EnumHelper.addToolMaterial("flint", 1, 150, 5.0F, 1.5F, 5);
+        @Override
+        public int getDurability(EquipmentSlotType slotIn)
+        {
+            return 12;
+        }
 
-    public static SimpleNetworkWrapper channel;
+        @Override
+        public int getDamageReductionAmount(EquipmentSlotType slotIn)
+        {
+            return 0;
+        }
 
-    @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event)
+        @Override
+        public int getEnchantability()
+        {
+            return 15;
+        }
+
+        @Override
+        public SoundEvent getSoundEvent()
+        {
+            return SoundEvents.ITEM_ARMOR_EQUIP_LEATHER;
+        }
+
+        @Override
+        public Ingredient getRepairMaterial()
+        {
+            return leather_tag_ingredient;
+        }
+
+        @Override
+        public String getName()
+        {
+            return "tanned_leather";
+        }
+
+        @Override
+        public float getToughness()
+        {
+            return 1;
+        }
+    };
+
+    public static final IItemTier TOOL_FLINT = new IItemTier()
+    {
+        private final Tag<Item> flint_tag = new ItemTags.Wrapper(new ResourceLocation("forge:items/flint"));
+        private final Ingredient flint_tag_ingredient = Ingredient.fromTag(flint_tag);
+
+        @Override
+        public int getMaxUses()
+        {
+            return 150;
+        }
+
+        @Override
+        public float getEfficiency()
+        {
+            return 5.0f;
+        }
+
+        @Override
+        public float getAttackDamage()
+        {
+            return 1.5f;
+        }
+
+        @Override
+        public int getHarvestLevel()
+        {
+            return 1;
+        }
+
+        @Override
+        public int getEnchantability()
+        {
+            return 5;
+        }
+
+        @Override
+        public Ingredient getRepairMaterial()
+        {
+            return flint_tag_ingredient;
+        }
+    };
+
+    public static final Food food_jerky = new Food.Builder().hunger(4).saturation(1).meat().build();
+    public static final Food food_dough = new Food.Builder().hunger(4).saturation(1).meat().build();
+    public static final Food food_bread = new Food.Builder().hunger(8).saturation(3).meat().build();
+
+    //public static SimpleNetworkWrapper channel;
+
+    public Survivalist()
+    {
+        instance = this;
+
+        ModLoadingContext modLoadingContext = ModLoadingContext.get();
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        modEventBus.addGenericListener(Item.class, this::registerItems);
+        modEventBus.addGenericListener(Block.class, this::registerBlocks);
+        modEventBus.addGenericListener(TileEntityType.class, this::registerTileEntities);
+        modEventBus.addGenericListener(Enchantment.class, this::registerEnchantments);
+        modEventBus.addGenericListener(SoundEvent.class, this::registerSounds);
+        modEventBus.addGenericListener(EntityType.class, this::registerEntities);
+        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(this::loadComplete);
+        //modEventBus.addListener(this::modConfig);
+
+
+
+        //MinecraftForge.EVENT_BUS.addListener(this::anvilChange);
+
+        //modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigData.SERVER_SPEC);
+        //modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigData.CLIENT_SPEC);
+    }
+
+    private void registerBlocks(RegistryEvent.Register<Block> event)
     {
         event.getRegistry().registerAll(
-                withName(new BlockRack(), "rack"),
-                withName(new BlockChopping.OldLog(), "chopping_block"),
-                withName(new BlockChopping.NewLog(),"chopping_block2", "chopping_block"),
-                withName(new BlockSawmill(),"sawmill")
+                withName(new BlockRack(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f)), "rack"),
+                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "oak_chopping_block"),
+                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "birch_chopping_block"),
+                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "spruce_chopping_block"),
+                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "jungle_chopping_block"),
+                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "dark_oak_chopping_block"),
+                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "acacia_chopping_block"),
+                withName(new BlockSawmill(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.STONE)),"sawmill")
         );
     }
 
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event)
+    private void registerItems(RegistryEvent.Register<Item> event)
     {
         event.getRegistry().registerAll(
                 // ItemBlocks
-                forBlock(rack),
-                forBlock(chopping_block),
-                forBlock(chopping_block2),
-                forBlock(sawmill),
+                forBlock(Blocks.rack, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.oak_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.birch_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.spruce_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.jungle_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.dark_oak_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.acacia_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.sawmill, new Item.Properties().group(ItemGroup.DECORATIONS)),
 
                 // Items
-                withName(new Item(),"chainmail").setCreativeTab(CreativeTabs.MATERIALS),
-                withName(new Item(), "tanned_leather").setCreativeTab(CreativeTabs.MATERIALS),
-                withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.HEAD), "tanned_helmet"),
-                withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.CHEST), "tanned_chestplate"),
-                withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.LEGS), "tanned_leggings"),
-                withName(new ItemTannedArmor(TANNED_LEATHER, 0, EntityEquipmentSlot.FEET), "tanned_boots"),
-                withName(new ItemFood(4, 1, true), "jerky"),
-                withName(new ItemNugget(), "nugget"),
-                withName(new ItemRock(), "rock"),
-                withName(new ItemOreRock(), "rock_ore"),
-                withName(new ItemSurvivalistBread(5, false), "dough"),
-                withName(new ItemSurvivalistBread(8, false), "round_bread"),
-                withName(new ItemAxe(TOOL_FLINT, 8.0F, -3.1F){}.setCreativeTab(CreativeTabs.TOOLS), "hatchet"),
-                withName(new ItemPickaxe(TOOL_FLINT){}.setCreativeTab(CreativeTabs.TOOLS), "pick"),
-                withName(new ItemSpade(TOOL_FLINT).setCreativeTab(CreativeTabs.TOOLS), "spade"),
-                withName(new Item(),"plant_fibres").setCreativeTab(CreativeTabs.MATERIALS)
-        );
+                withName(new Item(new Item.Properties().group(ItemGroup.MATERIALS)),"chainmail"),
+                withName(new Item(new Item.Properties().group(ItemGroup.MATERIALS)),"tanned_leather"),
 
-        GameRegistry.registerTileEntity(TileRack.class, rack.getRegistryName());
-        GameRegistry.registerTileEntity(TileChopping.class, chopping_block.getRegistryName());
-        GameRegistry.registerTileEntity(TileSawmill.class, sawmill.getRegistryName());
+                withName(new Item(new Item.Properties().group(ItemGroup.MATERIALS).food(food_jerky)), "jerky"),
+                withName(new Item(new Item.Properties().group(ItemGroup.MATERIALS).food(food_dough)), "dough"),
+                withName(new Item(new Item.Properties().group(ItemGroup.MATERIALS).food(food_bread)), "round_bread"),
+
+
+                withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "copper_nugget"),
+                withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "tin_nugget"),
+                withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "lead_nugget"),
+                withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "silver_nugget"),
+                withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "aluminum_nugget"),
+
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_stone"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_andesite"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_diorite"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_granite"),
+
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_iron_ore"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_gold_ore"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_copper_ore"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_tin_ore"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_lead_ore"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_silver_ore"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_aluminum_ore"),
+
+                withName(new AxeItem(TOOL_FLINT, 8.0F, -3.1F, new Item.Properties().group(ItemGroup.TOOLS)){}, "hatchet"),
+                withName(new PickaxeItem(TOOL_FLINT, 4, -2.6F, new Item.Properties().group(ItemGroup.TOOLS)){}, "pick"),
+                withName(new ShovelItem(TOOL_FLINT, 3, -2.1F, new Item.Properties().group(ItemGroup.TOOLS)), "spade"),
+
+                withName(new ArmorItem(TANNED_LEATHER, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.TOOLS)), "tanned_helmet"),
+                withName(new ArmorItem(TANNED_LEATHER, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.TOOLS)), "tanned_chestplate"),
+                withName(new ArmorItem(TANNED_LEATHER, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.TOOLS)), "tanned_leggings"),
+                withName(new ArmorItem(TANNED_LEATHER, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.TOOLS)), "tanned_boots"),
+
+                withName(new Item(new Item.Properties().group(ItemGroup.MATERIALS)),"plant_fibres")
+        );
     }
 
-    @SubscribeEvent
-    public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
+    private void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event)
+    {
+        event.getRegistry().registerAll(
+                TileEntityType.Builder.create(TileRack::new).build(null).setRegistryName("rack"),
+                TileEntityType.Builder.create(ChoppingBlockTileEntity::new).build(null).setRegistryName("chopping_block"),
+                TileEntityType.Builder.create(TileSawmill::new).build(null).setRegistryName("sawmill")
+        );
+    }
+
+    private void registerContainers(RegistryEvent.Register<ContainerType<?>> event)
+    {
+        event.getRegistry().registerAll(
+                new ContainerType<>(ContainerRack::new),
+                new ContainerType<>(ContainerSawmill::new)
+        );
+    }
+
+    private void registerSounds(RegistryEvent.Register<SoundEvent> event)
     {
         event.getRegistry().registerAll(
                 new SoundEvent(location("mob.slime.merge")).setRegistryName(location("shlop"))
         );
     }
 
-    @SubscribeEvent
-    public static void registerEnchantments(RegistryEvent.Register<Enchantment> event)
+    private void registerEnchantments(RegistryEvent.Register<Enchantment> event)
     {
         event.getRegistry().registerAll(
                 withName(new EnchantmentScraping(), "scraping")
         );
     }
 
+    private void registerEntities(RegistryEvent.Register<EntityType<?>> event)
+    {
+        //EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
+    }
+
     private static void registerOredictNames()
     {
-        OreDictionary.registerOre("materialLeather", tanned_leather);
-        OreDictionary.registerOre("materialTannedLeather", tanned_leather);
-        OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
+        /*OreDictionary.registerOre("materialLeather", Items.tanned_leather);
+        OreDictionary.registerOre("materialTannedLeather", Items.tanned_leather);
+        OreDictionary.registerOre("materialHardenedLeather", Items.tanned_leather);
 
-        OreDictionary.registerOre("nuggetIron", nugget.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("nuggetCopper", nugget.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("nuggetTin", nugget.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("nuggetLead", nugget.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("nuggetSilver", nugget.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("nuggetAluminum", nugget.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("nuggetAluminium", nugget.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("nuggetIron", Items.nugget.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("nuggetCopper", Items.nugget.getStack(OreMaterial.COPPER));
+        OreDictionary.registerOre("nuggetTin", Items.nugget.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("nuggetLead", Items.nugget.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("nuggetSilver", Items.nugget.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("nuggetAluminum", Items.nugget.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("nuggetAluminium", Items.nugget.getStack(OreMaterial.ALUMINUM));
 
-        OreDictionary.registerOre("rockOreIron", rock_ore.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("rockOreGold", rock_ore.getStack(OreMaterial.GOLD));
-        OreDictionary.registerOre("rockOreCopper", rock_ore.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("rockOreTin", rock_ore.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("rockOreLead", rock_ore.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("rockOreSilver", rock_ore.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("rockOreAluminum", rock_ore.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("rockOreAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("rockOreIron", Items.rock_ore.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("rockOreGold", Items.rock_ore.getStack(OreMaterial.GOLD));
+        OreDictionary.registerOre("rockOreCopper", Items.rock_ore.getStack(OreMaterial.COPPER));
+        OreDictionary.registerOre("rockOreTin", Items.rock_ore.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("rockOreLead", Items.rock_ore.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("rockOreSilver", Items.rock_ore.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("rockOreAluminum", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("rockOreAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
 
-        OreDictionary.registerOre("oreNuggetIron", rock_ore.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("oreNuggetGold", rock_ore.getStack(OreMaterial.GOLD));
-        OreDictionary.registerOre("oreNuggetCopper", rock_ore.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("oreNuggetTin", rock_ore.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("oreNuggetLead", rock_ore.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("oreNuggetSilver", rock_ore.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("oreNuggetAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("oreNuggetAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("oreNuggetIron", Items.rock_ore.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("oreNuggetGold", Items.rock_ore.getStack(OreMaterial.GOLD));
+        OreDictionary.registerOre("oreNuggetCopper", Items.rock_ore.getStack(OreMaterial.COPPER));
+        OreDictionary.registerOre("oreNuggetTin", Items.rock_ore.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("oreNuggetLead", Items.rock_ore.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("oreNuggetSilver", Items.rock_ore.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("oreNuggetAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("oreNuggetAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
 
-        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.NORMAL));
-        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.ANDESITE));
-        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.DIORITE));
-        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.GRANITE));
-        OreDictionary.registerOre("rockAndesite", rock.getStack(RockMaterial.ANDESITE));
-        OreDictionary.registerOre("rockDiorite", rock.getStack(RockMaterial.DIORITE));
-        OreDictionary.registerOre("rockGranite", rock.getStack(RockMaterial.GRANITE));
+        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.NORMAL));
+        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.ANDESITE));
+        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.DIORITE));
+        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.GRANITE));
+        OreDictionary.registerOre("rockAndesite", Items.rock.getStack(RockMaterial.ANDESITE));
+        OreDictionary.registerOre("rockDiorite", Items.rock.getStack(RockMaterial.DIORITE));
+        OreDictionary.registerOre("rockGranite", Items.rock.getStack(RockMaterial.GRANITE));*/
     }
 
-    @SubscribeEvent
-    public static void registerRecipes(RegistryEvent.Register<IRecipe> event)
+    public void commonSetup(FMLCommonSetupEvent event)
     {
-        registerOredictNames();
+        //ConfigManager.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
 
-        Dryable.registerStockRecipes();
-        Choppable.registerStockRecipes();
-
-        replaceVanillaRecipes();
-    }
-
-    private void registerNetwork()
-    {
-        logger.info("Registering network channel...");
-
-        channel = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL);
-
-        int messageNumber = 0;
-        channel.registerMessage(MessageScraping.Handler.class, MessageScraping.class, messageNumber++, Side.CLIENT);
-        channel.registerMessage(UpdateFields.Handler.class, UpdateFields.class, messageNumber++, Side.CLIENT);
-        logger.debug("Final message number: " + messageNumber);
-    }
-
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        logger = event.getModLog();
-
-        ConfigManager.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
-
-        if (ConfigManager.instance.enableTorchFire)
+        if (ConfigManager.enableTorchFire)
         {
             TorchFireEventHandling.register();
         }
 
-        if (ConfigManager.instance.enableScraping)
+        if (ConfigManager.enableScraping)
         {
             ItemBreakingTracker.register();
         }
 
-        if (ConfigManager.instance.enableRocks)
+        if (ConfigManager.enableRocks)
         {
             RocksEventHandling.register();
         }
 
-        if (ConfigManager.instance.dropFibersFromGrass)
+        if (ConfigManager.dropFibersFromGrass)
         {
             FibersEventHandling.register();
         }
 
-        if (ConfigManager.instance.dropStringFromSheep)
+        if (ConfigManager.dropStringFromSheep)
         {
             StringEventHandling.register();
         }
 
-        if (ConfigManager.instance.mergeSlimes)
+        /*if (ConfigManager.instance.mergeSlimes)
         {
             SlimeMerger.register();
-        }
+        }*/
 
-        registerNetwork();
-
-        proxy.preInit();
-
-        if (Loader.isModLoaded("crafttweaker"))
+        /*if (Loader.isModLoaded("crafttweaker"))
         {
             try
             {
@@ -322,199 +443,78 @@ public class Survivalist
             {
                 throw new ReportedException(new CrashReport("Error initializing minetweaker integration", e));
             }
-        }
+        }*/
+
+        logger.info("Registering network channel...");
+
+        int messageNumber = 0;
+        channel.registerMessage(messageNumber++, MessageScraping.class, MessageScraping::encode, MessageScraping::new, MessageScraping::handle);
+        logger.debug("Final message number: " + messageNumber);
+        /*
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.ALUMINUM), "nuggetAluminum");
+
+        GameRegistry.addSmelting(Items.dough, new ItemStack(Items.round_bread), 0);
+         */
     }
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
+    public void clientSetup(FMLClientSetupEvent event)
     {
-        int entityId = 1;
-        EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
-        logger.debug("Last used id: %i", entityId);
-
-        TOOL_FLINT.setRepairItem(new ItemStack(Items.FLINT));
-
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
-
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.ALUMINUM), "nuggetAluminum");
-
-        GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
+        ScreenManager.registerFactory(ContainerRack.TYPE, GuiRack::new);
+        ScreenManager.registerFactory(ContainerSawmill.TYPE, GuiSawmill::new);
     }
 
-    private static void addSmeltingNugget(ItemStack stack, String ore)
+    public void loadComplete(FMLLoadCompleteEvent event)
     {
-        List<ItemStack> matches = OreDictionary.getOres(ore);
-        if (matches.size() > 0)
-        {
-            GameRegistry.addSmelting(stack, matches.get(0), 0.1f);
-        }
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-        ConfigManager.instance.parseChoppingAxes();
-    }
-
-    @SubscribeEvent
-    public void missingMapping(@Nonnull final RegistryEvent.MissingMappings<Block> event)
-    {
-        event.getAllMappings().forEach((mapping) -> {
-            if (mapping.key.getNamespace().equals(MODID))
-            {
-                final Block newBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(MODID, mapping.key.getPath()));
-                if (newBlock != null)
-                {
-                    mapping.remap(newBlock);
-                }
-            }
-        });
-    }
-
-    private static void replaceVanillaRecipes()
-    {
-        ForgeRegistry<IRecipe> recipeRegistry = (ForgeRegistry<IRecipe>) ForgeRegistries.RECIPES;
-        ArrayList<IRecipe> recipes = Lists.newArrayList(recipeRegistry.getValuesCollection());
-
-        logger.warn("#################################");
-        logger.warn("## Removing vanilla recipes if enabled in settings, 'Dangerous alternative' messages are expected and not a bug...");
-
-        if (ConfigManager.instance.enableBread)
-        {
-            if (ConfigManager.instance.removeVanillaBread)
-            {
-                for (IRecipe r : recipes)
-                {
-                    ItemStack output = r.getRecipeOutput();
-                    if (output.getItem() == Items.BREAD)
-                    {
-                        recipeRegistry.remove(r.getRegistryName());
-                        recipeRegistry.register(DummyRecipe.from(r));
-                    }
-                }
-            }
-        }
-
-        if (ConfigManager.instance.removeSticksFromPlanks)
-        {
-            for (IRecipe r : recipes)
-            {
-                ItemStack output = r.getRecipeOutput();
-                int ore = OreDictionary.getOreID("plankWood");
-                if (output.getItem() == Items.STICK)
-                {
-                    boolean isPlanksInput = r.getIngredients().stream().allMatch(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).anyMatch(input -> ArrayUtils.contains(OreDictionary.getOreIDs(input), ore)));
-                    if (isPlanksInput)
-                    {
-                        recipeRegistry.remove(r.getRegistryName());
-                        recipeRegistry.register(DummyRecipe.from(r));
-                    }
-                }
-            }
-        }
-
-        if (ConfigManager.instance.importPlanksRecipes || ConfigManager.instance.removePlanksRecipes)
-        {
-            for (IRecipe r : recipes)
-            {
-                ItemStack output = r.getRecipeOutput();
-                if (output.getCount() > 0 && OreDictionaryHelper.hasOreName(output, "plankWood"))
-                {
-                    List<Ingredient> inputs = r.getIngredients();
-                    Ingredient logInput = null;
-
-                    for (Ingredient input : inputs)
-                    {
-                        boolean anyWood = false;
-                        for (ItemStack stack : input.getMatchingStacks())
-                        {
-                            if (OreDictionaryHelper.hasOreName(stack, "logWood"))
-                            {
-                                anyWood = true;
-                            }
-                        }
-
-                        if (!anyWood || logInput != null)
-                        {
-                            logInput = null;
-                            break;
-                        }
-                        logInput = input;
-                    }
-
-                    if (logInput != null)
-                    {
-                        if (ConfigManager.instance.removePlanksRecipes)
-                        {
-                            recipeRegistry.remove(r.getRegistryName());
-                            recipeRegistry.register(DummyRecipe.from(r));
-                        }
-                        if (ConfigManager.instance.importPlanksRecipes)
-                        {
-                            for (ItemStack stack : logInput.getMatchingStacks())
-                            {
-                                Choppable.registerRecipe(stack.copy(), output.copy());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        logger.warn("## Vanilla recipes removed.");
+        ConfigManager.parseChoppingAxes();
     }
 
     private static Item withName(Item item, String name)
     {
-        return item.setRegistryName(name).setTranslationKey(MODID + "." + name);
+        return item.setRegistryName(name);
     }
 
     private static Block withName(Block block, String name)
     {
-        return block.setRegistryName(name).setTranslationKey(MODID + "." + name);
-    }
-
-    private static Block withName(Block block, String name, String translationBaseName)
-    {
-        return block.setRegistryName(name).setTranslationKey(MODID + "." + translationBaseName);
+        return block.setRegistryName(name);
     }
 
     private static Enchantment withName(Enchantment block, String name)
     {
-        return block.setRegistryName(name).setName(MODID + "." + name);
+        return block.setRegistryName(name);
     }
 
-    private static Item forBlock(Block block)
+    private static Item forBlock(Block block, Item.Properties properties)
     {
-        return new ItemBlock(block).setRegistryName(block.getRegistryName());
+        return new BlockItem(block, properties).setRegistryName(block.getRegistryName());
     }
-
 
     public static ResourceLocation location(String path)
     {
         return new ResourceLocation(MODID, path);
     }
 
-    private static class ItemSurvivalistBread extends ItemFood
+    private static class ItemSurvivalist extends Item
     {
+        private final Supplier<Boolean> isEnabled;
 
-        public ItemSurvivalistBread(int amount, boolean isWolfFood)
+        public ItemSurvivalist(Item.Properties properties, Supplier<Boolean> isEnabled)
         {
-            super(amount, isWolfFood);
+            super(properties);
+            this.isEnabled = isEnabled;
         }
 
         @Override
-        public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
+        public void fillItemGroup(ItemGroup tab, NonNullList<ItemStack> subItems)
         {
-            if (ConfigManager.instance.enableBread)
+            if (isEnabled.get()) // ConfigManager.instance.enableBread
             {
-                super.getSubItems(tab, subItems);
+                super.fillItemGroup(tab, subItems);
             }
         }
     }

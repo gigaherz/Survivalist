@@ -1,60 +1,56 @@
 package gigaherz.survivalist.rack;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.Dryable;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
-public class GuiRack extends GuiContainer
+public class GuiRack extends ContainerScreen<ContainerRack>
 {
-    protected static final String titleString = "text." + Survivalist.MODID + ".rack.title";
-
     protected ResourceLocation guiTextureLocation = Survivalist.location("textures/gui/rack.png");
-    protected InventoryPlayer player;
-    protected TileRack tile;
 
-    public GuiRack(TileRack tileEntity, InventoryPlayer inventory)
+    public GuiRack(ContainerRack container, PlayerInventory inventory, ITextComponent title)
     {
-        super(new ContainerRack(tileEntity, inventory));
-        this.player = inventory;
-        this.tile = tileEntity;
+        super(container, inventory, title);
         this.ySize = 165;
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    public void render(int mouseX, int mouseY, float partialTicks)
     {
-        this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderBackground();
+        super.render(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j)
     {
-        String name = I18n.format(titleString);
-        mc.fontRenderer.drawString(name, (xSize - mc.fontRenderer.getStringWidth(name)) / 2, 6, 0x404040);
-        mc.fontRenderer.drawString(I18n.format(this.player.getName()), 8, ySize - 96 + 2, 0x404040);
+        String name = this.title.getFormattedText();
+        font.drawString(name, (xSize - font.getStringWidth(name)) / 2, 6, 0x404040);
+        font.drawString(playerInventory.getDisplayName().getFormattedText(), 8, ySize - 96 + 2, 0x404040);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
 
-        mc.renderEngine.bindTexture(guiTextureLocation);
-        this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+        minecraft.textureManager.bindTexture(guiTextureLocation);
+        this.blit(x, y, 0, 0, xSize, ySize);
 
-        for (int s = 0; s < tile.dryTimeRemaining.length; s++)
+
+
+        for (int s = 0; s < container.dryTimeRemainingArray.size(); s++)
         {
-            int mt = Dryable.getDryingTime(inventorySlots.getSlot(s).getStack());
-            int ct = tile.dryTimeRemaining[s];
+            int mt = Dryable.getDryingTime(container.getSlot(s).getStack());
+            int ct = container.dryTimeRemainingArray.get(s);
 
             if (ct > 0 && mt > 0)
             {
@@ -62,7 +58,7 @@ public class GuiRack extends GuiContainer
                 int ny = (int) Math.ceil(ct * 20.0 / mt);
                 int sy = 20 - ny;
 
-                this.drawTexturedModalRect(sx, y + 32 + sy, 176, sy, 9, ny);
+                this.blit(sx, y + 32 + sy, 176, sy, 9, ny);
             }
         }
     }

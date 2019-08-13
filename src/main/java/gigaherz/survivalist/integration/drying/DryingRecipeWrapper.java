@@ -1,5 +1,6 @@
 package gigaherz.survivalist.integration.drying;
 
+/*
 import gigaherz.survivalist.api.Dryable;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -102,3 +103,4 @@ public class DryingRecipeWrapper implements IRecipeWrapper
         }
     }
 }
+*/

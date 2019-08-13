@@ -1,8 +1,8 @@
 package gigaherz.survivalist.sawmill.gui;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.item.Items;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -16,7 +16,7 @@ public class SlotItemHandlerFuel extends SlotItemHandler
     @Override
     public boolean isItemValid(ItemStack stack)
     {
-        return TileEntityFurnace.isItemFuel(stack);
+        return AbstractFurnaceTileEntity.isFuel(stack);
     }
 
     public int getItemStackLimit(ItemStack stack)

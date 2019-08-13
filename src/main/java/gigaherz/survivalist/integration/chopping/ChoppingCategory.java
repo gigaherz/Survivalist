@@ -1,5 +1,5 @@
 package gigaherz.survivalist.integration.chopping;
-
+/*
 import gigaherz.survivalist.Survivalist;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -66,3 +66,4 @@ public class ChoppingCategory implements IRecipeCategory<ChoppingRecipeWrapper>
         itemStacks.set(ingredients);
     }
 }
+*/

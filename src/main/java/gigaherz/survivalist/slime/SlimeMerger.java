@@ -3,27 +3,21 @@ package gigaherz.survivalist.slime;
 import com.google.common.base.Predicate;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIFindEntityNearest;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAITarget;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ReportedException;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
+/*
 public class SlimeMerger
 {
     private static final int BIG_SLIME = 8;
@@ -40,28 +34,28 @@ public class SlimeMerger
     {
         Entity entity = event.getEntity();
 
-        if (!(entity instanceof EntitySlime))
+        if (!(entity instanceof SlimeEntity))
             return;
 
-        EntitySlime slime = (EntitySlime) entity;
+        SlimeEntity slime = (SlimeEntity) entity;
 
-        slime.tasks.addTask(7, new AISlimeMerge(slime));
-        slime.targetTasks.addTask(5, new EntityAIFindOtherSlimeNearest(slime));
+        slime.goalSelector.addGoal(7, new AISlimeMerge(slime));
+        slime.targetSelector.addGoal(5, new EntityAIFindOtherSlimeNearest(slime));
     }
 
-    static class AISlimeMerge extends EntityAIBase
+    static class AISlimeMerge extends Goal
     {
         private static Method setSlimeSizeMethod;
 
         static
         {
-            setSlimeSizeMethod = ObfuscationReflectionHelper.findMethod(EntitySlime.class, "func_70799_a", void.class, int.class, boolean.class);
+            setSlimeSizeMethod = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", void.class, int.class, boolean.class);
         }
 
-        private final EntitySlime slime;
+        private final SlimeEntity slime;
         private final EntityAINearestAttackableTarget.Sorter sorter;
 
-        public AISlimeMerge(EntitySlime slimeIn)
+        public AISlimeMerge(SlimeEntity slimeIn)
         {
             this.slime = slimeIn;
             this.setMutexBits(2);
@@ -77,8 +71,8 @@ public class SlimeMerger
                 return false;
             if (rand.nextFloat() > 0.5)
                 return false;
-            List<EntitySlime> list = slime.world
-                    .getEntitiesWithinAABB(EntitySlime.class,
+            List<SlimeEntity> list = slime.world
+                    .getEntitiesWithinAABB(SlimeEntity.class,
                             slime.getEntityBoundingBox().grow(slime.getSlimeSize() * 1.5, slime.getSlimeSize(), slime.getSlimeSize() * 1.5),
                             (other) -> other != slime
                                     && other.isEntityAlive()
@@ -91,8 +85,8 @@ public class SlimeMerger
         @Override
         public void startExecuting()
         {
-            List<EntitySlime> list = slime.world
-                    .getEntitiesWithinAABB(EntitySlime.class,
+            List<SlimeEntity> list = slime.world
+                    .getEntitiesWithinAABB(SlimeEntity.class,
                             slime.getEntityBoundingBox().grow(slime.getSlimeSize() * 1.5, slime.getSlimeSize(), slime.getSlimeSize() * 1.5),
                             (other) -> other != slime
                                     && other.isEntityAlive()
@@ -118,7 +112,7 @@ public class SlimeMerger
 
                 for (int i = 0; i < 3; i++)
                 {
-                    EntitySlime target = list.get(i);
+                    SlimeEntity target = list.get(i);
                     x += target.posX;
                     y += target.posY;
                     z += target.posZ;
@@ -171,11 +165,11 @@ public class SlimeMerger
             predicateField = ObfuscationReflectionHelper.findField(EntityAIFindEntityNearest.class, "field_179443_c");
         }
 
-        private final EntitySlime slime;
+        private final SlimeEntity slime;
 
-        public EntityAIFindOtherSlimeNearest(final EntitySlime mobIn)
+        public EntityAIFindOtherSlimeNearest(final SlimeEntity mobIn)
         {
-            super(mobIn, EntitySlime.class);
+            super(mobIn, SlimeEntity.class);
             this.slime = mobIn;
             Predicate<EntityLivingBase> predicate = entity -> {
                 double range = EntityAIFindOtherSlimeNearest.this.getFollowRange();
@@ -185,7 +179,7 @@ public class SlimeMerger
                         && entity.ticksExisted > AGE_LIMIT
                         && !entity.isInvisible()
                         && entity.getDistance(mobIn) <= range
-                        && ((EntitySlime) entity).getSlimeSize() == mobIn.getSlimeSize()
+                        && ((SlimeEntity) entity).getSlimeSize() == mobIn.getSlimeSize()
                         && EntityAITarget.isSuitableTarget(mobIn, entity, false, true);
             };
 
@@ -220,3 +214,4 @@ public class SlimeMerger
         }
     }
 }
+*/

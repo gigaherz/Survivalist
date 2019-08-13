@@ -4,19 +4,17 @@ import com.google.common.collect.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gigaherz.survivalist.Survivalist;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.renderer.texture.ISprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -24,17 +22,20 @@ import net.minecraftforge.client.model.ForgeBlockStateV1;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
-import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.resource.IResourceType;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -49,17 +50,29 @@ public class RackBakedModel implements IBakedModel
             Maps.newHashMap(), Maps.newHashMap(), Maps.newHashMap(), Maps.newHashMap()
     };
 
-    public RackBakedModel(TextureAtlasSprite particle, IBakedModel rackBakedModel, TRSRTransformation[] itemTransforms)
+    private final ItemOverrideList overrides;
+
+    public RackBakedModel(ModelBakery bakery, IUnbakedModel original, Function<ResourceLocation, IUnbakedModel> modelGetter,
+                          Function<ResourceLocation, TextureAtlasSprite> textureGetter, VertexFormat format,
+                          TextureAtlasSprite particle, IBakedModel rackBakedModel, TRSRTransformation[] itemTransforms)
     {
         this.particle = particle;
         this.rackBakedModel = rackBakedModel;
         this.itemTransforms = itemTransforms;
+        this.overrides = new ItemOverrideList(bakery, original, modelGetter, textureGetter, Collections.emptyList(), format);
     }
 
-    private static final EnumFacing[] faces = Streams.concat(Arrays.stream(EnumFacing.VALUES), Stream.of((EnumFacing)null)).toArray(EnumFacing[]::new);
+    private static final Direction[] faces = Streams.concat(Arrays.stream(Direction.values()), Stream.of((Direction)null)).toArray(Direction[]::new);
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand)
+    {
+        return getQuads(state, side, rand, null);
+    }
+
+    @Nonnull
+    @Override
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nullable IModelData extraData)
     {
         List<BakedQuad> quads = Lists.newArrayList();
 
@@ -68,13 +81,12 @@ public class RackBakedModel implements IBakedModel
         {
             quads.addAll(rackBakedModel.getQuads(state, side, rand));
         }
-        else if (renderLayer == BlockRenderLayer.CUTOUT && side == null && state instanceof IExtendedBlockState)
+        else if (renderLayer == BlockRenderLayer.CUTOUT && side == null && extraData != null)
         {
-            RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-            World world = Minecraft.getMinecraft().world;
+            ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
+            World world = Minecraft.getInstance().world;
 
-            IExtendedBlockState estate = ((IExtendedBlockState)state);
-            RackItemsStateData items = estate.getValue(BlockRack.CONTAINED_ITEMS);
+            RackItemsStateData items = extraData.getData(TileRack.CONTAINED_ITEMS_DATA);
 
             for(int i = 0; i < 4; i++)
             {
@@ -96,7 +108,7 @@ public class RackBakedModel implements IBakedModel
                     Matrix4f matrix = new Matrix4f();
                     matrix.setIdentity();
 
-                    Matrix4f matrix2 = itemTransforms[i].getMatrix();
+                    Matrix4f matrix2 = itemTransforms[i].getMatrix(Direction.NORTH); // FIXME
                     if (matrix2 != null)
                     {
                         matrix.mul(matrix2);
@@ -108,7 +120,7 @@ public class RackBakedModel implements IBakedModel
                     }
 
                     cachedQuads = Lists.newArrayList();
-                    for (EnumFacing face : faces)
+                    for (Direction face : faces)
                     {
                         List<BakedQuad> inQuads = model.getQuads(null, face, rand);
                         List<BakedQuad> outQuads = QuadTransformer.processMany(inQuads, matrix);
@@ -158,10 +170,10 @@ public class RackBakedModel implements IBakedModel
     @Override
     public ItemOverrideList getOverrides()
     {
-        return new ItemOverrideList(Collections.emptyList());
+        return overrides;
     }
 
-    public static class Model implements IModel
+    public static class Model implements IUnbakedModel
     {
         private final ResourceLocation particle;
         private final ResourceLocation baseModel;
@@ -195,24 +207,23 @@ public class RackBakedModel implements IBakedModel
         }
 
         @Override
-        public Collection<ResourceLocation> getTextures()
+        public Collection<ResourceLocation> getTextures(Function<ResourceLocation, IUnbakedModel> modelGetter, Set<String> missingTextureErrors)
         {
             if (particle != null)
                 return Collections.singletonList(particle);
             return Collections.emptyList();
         }
 
+        @Nullable
         @Override
-        public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
+        public IBakedModel bake(ModelBakery bakery, Function<ResourceLocation, TextureAtlasSprite> spriteGetter, ISprite sprite, VertexFormat format)
         {
-            TextureAtlasSprite particleSprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-            if (particle != null)
-                particleSprite = bakedTextureGetter.apply(particle);
+            TextureAtlasSprite particleSprite = spriteGetter.apply(particle);
 
             IModel rackModel = baseModel == null ? ModelLoaderRegistry.getMissingModel() : ModelLoaderRegistry.getModelOrMissing(baseModel);
-            IBakedModel rackBakedModel = rackModel.bake(state, format, bakedTextureGetter);
+            IBakedModel rackBakedModel = rackModel.bake(bakery, spriteGetter, sprite, format);
 
-            Optional<TRSRTransformation> baseTransform = state.apply(Optional.empty());
+            Optional<TRSRTransformation> baseTransform = sprite.getState().apply(Optional.empty());
             if (baseTransform.isPresent())
             {
                 TRSRTransformation value = baseTransform.get();
@@ -222,7 +233,7 @@ public class RackBakedModel implements IBakedModel
                 transformations[3] = value.compose(transformations[3]);
             }
 
-            return new RackBakedModel(particleSprite, rackBakedModel, transformations);
+            return new RackBakedModel(bakery, this, bakery::getUnbakedModel, spriteGetter, format, particleSprite, rackBakedModel, transformations);
         }
 
         @Override
@@ -232,7 +243,7 @@ public class RackBakedModel implements IBakedModel
         }
 
         @Override
-        public IModel retexture(ImmutableMap<String, String> textures)
+        public IUnbakedModel retexture(ImmutableMap<String, String> textures)
         {
             String particleTexture = textures.get("particle");
             while (particleTexture != null && particleTexture.startsWith("#"))
@@ -248,7 +259,7 @@ public class RackBakedModel implements IBakedModel
                 .registerTypeAdapter(TRSRTransformation.class, ForgeBlockStateV1.TRSRDeserializer.INSTANCE)
                 .create();
         @Override
-        public IModel process(ImmutableMap<String, String> customData)
+        public IUnbakedModel process(ImmutableMap<String, String> customData)
         {
             ResourceLocation baseModel = this.baseModel;
             if (customData.containsKey("base_model"))
@@ -283,7 +294,7 @@ public class RackBakedModel implements IBakedModel
         }
 
         @Override
-        public IModel loadModel(ResourceLocation modelLocation) throws Exception
+        public IUnbakedModel loadModel(ResourceLocation modelLocation) throws Exception
         {
             return new Model();
         }
@@ -291,7 +302,13 @@ public class RackBakedModel implements IBakedModel
         @Override
         public void onResourceManagerReload(IResourceManager resourceManager)
         {
-            // Nothing to do
+
+        }
+
+        @Override
+        public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate)
+        {
+
         }
     }
 }

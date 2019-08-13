@@ -1,35 +1,41 @@
 package gigaherz.survivalist.sawmill;
 
 import gigaherz.survivalist.api.Choppable;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.AbstractFurnaceTileEntity;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSawmill extends TileEntity implements ITickable
+public class TileSawmill extends TileEntity implements ITickableTileEntity, IIntArray
 {
+    @ObjectHolder("survivalist:sawmill")
+    public static TileEntityType<TileSawmill> TYPE;
+
     @CapabilityInject(IItemHandler.class)
     public static Capability<IItemHandler> ITEMS_CAP;
 
-    private final ItemStackHandler inventory = new ItemStackHandler(3);
+    public final ItemStackHandler inventory = new ItemStackHandler(3);
     private final RangedWrapper top = new RangedWrapper(inventory, 0, 1);
     private final RangedWrapper sides = new RangedWrapper(inventory, 1, 2)
     {
@@ -37,7 +43,7 @@ public class TileSawmill extends TileEntity implements ITickable
         @Override
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
         {
-            if (!TileEntityFurnace.isItemFuel(stack))
+            if (!AbstractFurnaceTileEntity.isFuel(stack))
                 return stack;
 
             return super.insertItem(slot, stack, simulate);
@@ -53,10 +59,20 @@ public class TileSawmill extends TileEntity implements ITickable
         }
     };
 
+    private final LazyOptional<IItemHandler> combined_provider = LazyOptional.of(() -> inventory);
+    private final LazyOptional<IItemHandler> top_provider = LazyOptional.of(() -> top);
+    private final LazyOptional<IItemHandler> sides_provider = LazyOptional.of(() -> sides);
+    private final LazyOptional<IItemHandler> bottom_provider = LazyOptional.of(() -> bottom);
+
     private int remainingBurnTime;
     private int totalBurnTime;
     private int cookTime;
     private int totalCookTime;
+
+    public TileSawmill()
+    {
+        super(TYPE);
+    }
 
     public boolean isBurning()
     {
@@ -69,53 +85,43 @@ public class TileSawmill extends TileEntity implements ITickable
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-    {
-        if (capability == ITEMS_CAP)
-            return true;
-
-        return super.hasCapability(capability, facing);
-    }
-
-    @Nullable
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == ITEMS_CAP)
         {
-            if (facing == EnumFacing.UP) return (T) top;
-            if (facing == EnumFacing.DOWN) return (T) bottom;
-            if (facing != null) return (T) sides;
-            return (T) inventory;
+            if (facing == Direction.UP) return top_provider.cast();
+            if (facing == Direction.DOWN) return bottom_provider.cast();
+            if (facing != null) return sides_provider.cast();
+            return combined_provider.cast();
         }
 
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound)
+    public void read(CompoundNBT compound)
     {
-        super.readFromNBT(compound);
+        super.read(compound);
 
-        ITEMS_CAP.readNBT(inventory, null, compound.getTag("Items"));
+        ITEMS_CAP.readNBT(inventory, null, compound.get("Items"));
 
-        remainingBurnTime = compound.getInteger("BurnTime");
-        totalBurnTime = TileEntityFurnace.getItemBurnTime(inventory.getStackInSlot(1));
+        remainingBurnTime = compound.getInt("BurnTime");
+        totalBurnTime = getBurnTime(inventory.getStackInSlot(1));
 
-        cookTime = compound.getInteger("CookTime");
+        cookTime = compound.getInt("CookTime");
         totalCookTime = Choppable.getSawmillTime(inventory.getStackInSlot(0));
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    public CompoundNBT write(CompoundNBT compound)
     {
-        compound = super.writeToNBT(compound);
+        compound = super.write(compound);
 
-        compound.setTag("Items", ITEMS_CAP.writeNBT(inventory, null));
+        compound.put("Items", ITEMS_CAP.writeNBT(inventory, null));
 
-        compound.setInteger("BurnTime", (short) this.remainingBurnTime);
-        compound.setInteger("CookTime", (short) this.cookTime);
+        compound.putInt("BurnTime", (short) this.remainingBurnTime);
+        compound.putInt("CookTime", (short) this.cookTime);
 
         return compound;
     }
@@ -134,42 +140,46 @@ public class TileSawmill extends TileEntity implements ITickable
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
+    public CompoundNBT getUpdateTag()
     {
-        return writeToNBT(new NBTTagCompound());
+        return write(new CompoundNBT());
     }
 
     @Override
-    public void handleUpdateTag(NBTTagCompound tag)
+    public void handleUpdateTag(CompoundNBT tag)
     {
-        readFromNBT(tag);
+        read(tag);
     }
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
+    public SUpdateTileEntityPacket getUpdatePacket()
     {
-        return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
+        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
         handleUpdateTag(pkt.getNbtCompound());
 
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
         world.notifyBlockUpdate(pos, state, state, 3);
-        world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
+        //world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
+    }
+
+    private int getBurnTime(ItemStack p_213997_1_) {
+        if (p_213997_1_.isEmpty()) {
+            return 0;
+        } else {
+            Item item = p_213997_1_.getItem();
+            int ret = p_213997_1_.getBurnTime();
+            return net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(p_213997_1_, ret == -1 ? AbstractFurnaceTileEntity.getBurnTimes().getOrDefault(item, 0) : ret);
+        }
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-    {
-        return oldState.getBlock() != newSate.getBlock();
-    }
-
-    @Override
-    public void update()
+    public void tick()
     {
         boolean wasBurning = this.isBurning();
         boolean changes = false;
@@ -189,7 +199,7 @@ public class TileSawmill extends TileEntity implements ITickable
             {
                 if (!this.isBurning() && this.canWork(choppingRecipe))
                 {
-                    this.totalBurnTime = TileEntityFurnace.getItemBurnTime(fuel);
+                    this.totalBurnTime = getBurnTime(fuel);
                     this.remainingBurnTime = this.totalBurnTime;
 
                     if (this.isBurning())
@@ -241,9 +251,9 @@ public class TileSawmill extends TileEntity implements ITickable
         if (wasBurning != this.isBurning())
         {
             changes = true;
-            IBlockState state = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
             world.notifyBlockUpdate(pos, state, state, 3);
-            world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
+            //world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
         }
 
         if (changes)
@@ -314,5 +324,36 @@ public class TileSawmill extends TileEntity implements ITickable
     public int getTotalBurnTime()
     {
         return totalBurnTime;
+    }
+
+    @Override
+    public int get(int index)
+    {
+        switch(index)
+        {
+            case 0: return remainingBurnTime;
+            case 1: return totalBurnTime;
+            case 2: return cookTime;
+            case 3: return totalCookTime;
+        }
+        return 0;
+    }
+
+    @Override
+    public void set(int index, int value)
+    {
+        switch(index)
+        {
+            case 0: remainingBurnTime=value;
+            case 1: totalBurnTime=value;
+            case 2: cookTime=value;
+            case 3: totalCookTime=value;
+        }
+    }
+
+    @Override
+    public int size()
+    {
+        return 4;
     }
 }

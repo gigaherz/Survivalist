@@ -1,28 +1,19 @@
 package gigaherz.survivalist.scraping;
 
 import gigaherz.survivalist.Survivalist;
-import io.netty.buffer.ByteBuf;
+import gigaherz.survivalist.client.ClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class MessageScraping
-        implements IMessage
 {
-    private ItemStack stack;
-    private ItemStack ret;
-
-    public MessageScraping()
-    {
-    }
+    public final ItemStack stack;
+    public final ItemStack ret;
 
     public MessageScraping(ItemStack stack, ItemStack ret)
     {
@@ -30,40 +21,20 @@ public class MessageScraping
         this.ret = ret;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf)
+    public MessageScraping(PacketBuffer buf)
     {
-        stack = ByteBufUtils.readItemStack(buf);
-        ret = ByteBufUtils.readItemStack(buf);
+        stack = buf.readItemStack();
+        ret = buf.readItemStack();
     }
 
-    @Override
-    public void toBytes(ByteBuf buf)
+    public void encode(PacketBuffer buf)
     {
-        ByteBufUtils.writeItemStack(buf, stack);
-        ByteBufUtils.writeItemStack(buf, ret);
+        buf.writeItemStack(stack);
+        buf.writeItemStack(ret);
     }
 
-    public static class Handler implements IMessageHandler<MessageScraping, IMessage>
+    public void handle(Supplier<NetworkEvent.Context> ctx)
     {
-        @Nullable
-        @Override
-        public IMessage onMessage(MessageScraping message, MessageContext ctx)
-        {
-            Minecraft.getMinecraft().addScheduledTask(() ->
-                    Minecraft.getMinecraft().player.sendMessage(
-                            new TextComponentTranslation("text." + Survivalist.MODID + ".scraping.message1",
-                                    makeClickable(message.stack.getTextComponent()),
-                                    new TextComponentString("" + message.ret.getCount()),
-                                    makeClickable(message.ret.getTextComponent()))));
-
-            return null; // no response in this case
-        }
-
-        private ITextComponent makeClickable(ITextComponent textComponent)
-        {
-            //textComponent.getStyle().setClickEvent()
-            return textComponent;
-        }
+        ClientEvents.handleScrapingMessage(this);
     }
 }

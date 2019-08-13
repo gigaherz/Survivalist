@@ -2,16 +2,16 @@ package gigaherz.survivalist.chaining;
 
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.inventory.EquipmentSlotType;
 
 public class EnchantmentChaining extends Enchantment
 {
     public EnchantmentChaining()
     {
-        super(Rarity.UNCOMMON, EnumEnchantmentType.WEAPON, EntityEquipmentSlot.values());
+        super(Rarity.UNCOMMON, EnchantmentType.WEAPON, EquipmentSlotType.values());
         setRegistryName("chaining");
-        setName(Survivalist.MODID + ".chaining");
+        //setName(Survivalist.MODID + ".chaining");
     }
 
     @Override

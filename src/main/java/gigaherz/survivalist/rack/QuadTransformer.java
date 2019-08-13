@@ -1,7 +1,7 @@
 package gigaherz.survivalist.rack;
 
 import com.google.common.collect.Lists;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 
@@ -42,7 +42,7 @@ public class QuadTransformer
         for (positionIndex = 0; positionIndex < fmt.getElementCount(); positionIndex++)
         {
             VertexFormatElement el = fmt.getElement(positionIndex);
-            if (el.getUsage() == VertexFormatElement.EnumUsage.POSITION)
+            if (el.getUsage() == VertexFormatElement.Usage.POSITION)
             {
                 positionElement = el;
                 break;
@@ -50,7 +50,7 @@ public class QuadTransformer
         }
         if (positionIndex == fmt.getElementCount() || positionElement == null)
             throw new RuntimeException("WAT? Position not found");
-        if (positionElement.getType() != VertexFormatElement.EnumType.FLOAT)
+        if (positionElement.getType() != VertexFormatElement.Type.FLOAT)
             throw new RuntimeException("WAT? Position not FLOAT");
         if (positionElement.getSize() < 3)
             throw new RuntimeException("WAT? Position not 3D");
