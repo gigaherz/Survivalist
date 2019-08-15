@@ -3,7 +3,9 @@ package gigaherz.survivalist.sawmill;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
@@ -18,6 +20,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -102,11 +105,11 @@ public class BlockSawmill extends Block
         if (worldIn.isRemote)
             return true;
 
-        TileEntity te = worldIn.getTileEntity(pos);
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
+        if (!(tileEntity instanceof INamedContainerProvider))
+            return false;
 
-        // TODO
-        //if (te instanceof TileSawmill)
-        //    player.openGui(Survivalist.instance, GuiHandler.GUI_SAWMILL, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileEntity);
 
         return true;
     }

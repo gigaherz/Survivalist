@@ -20,6 +20,12 @@ public class DummyRecipe implements ICraftingRecipe
     }
 
     @Override
+    public boolean canFit(int width, int height)
+    {
+        return false;
+    }
+
+    @Override
     public boolean matches(CraftingInventory inv, World worldIn)
     {
         return false;

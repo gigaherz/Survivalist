@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
@@ -79,10 +80,10 @@ public class BlockRack extends Block
             return true;
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (!(tileEntity instanceof TileRack))
+        if (!(tileEntity instanceof INamedContainerProvider))
             return false;
 
-        NetworkHooks.openGui((ServerPlayerEntity)player, (TileRack)tileEntity, pos);
+        NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileEntity);
 
         return true;
     }

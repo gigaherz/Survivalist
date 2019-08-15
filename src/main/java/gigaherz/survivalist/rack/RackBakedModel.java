@@ -283,13 +283,11 @@ public class RackBakedModel implements IBakedModel
 
     public static class ModelLoader implements ICustomModelLoader
     {
-        public static final ResourceLocation FAKE_LOCATION = Survivalist.location("models/block/custom/rack_with_items");
+        public static final ResourceLocation FAKE_LOCATION = Survivalist.location("models/custom/rack_with_items");
 
         @Override
         public boolean accepts(ResourceLocation modelLocation)
         {
-            if (!modelLocation.getNamespace().equals(Survivalist.MODID))
-                return false;
             return modelLocation.equals(FAKE_LOCATION);
         }
 

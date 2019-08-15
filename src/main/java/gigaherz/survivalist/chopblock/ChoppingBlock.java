@@ -16,6 +16,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
@@ -26,17 +28,19 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = Survivalist.MODID)
 public class ChoppingBlock extends Block
 {
-    public static final IntegerProperty DAMAGE = IntegerProperty.create("damage", 0, 2);
-    protected static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+    protected static final VoxelShape SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
 
-    public ChoppingBlock(Properties properties)
+    private final Supplier<BlockState> breaksInto;
+
+    public ChoppingBlock(@Nullable Supplier<BlockState> breaksInto, Properties properties)
     {
         super(properties);
-        setDefaultState(getStateContainer().getBaseState().with(DAMAGE, 0));
+        this.breaksInto = breaksInto != null ? breaksInto : (() -> Blocks.AIR.getDefaultState());
     }
 
     @Override
@@ -52,17 +56,10 @@ public class ChoppingBlock extends Block
         return new ChoppingBlockTileEntity();
     }
 
-    /*@Deprecated
     @Override
-    public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos)
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        return AABB;
-    }*/
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> container)
-    {
-        container.add(DAMAGE);
+        return SHAPE;
     }
 
     @Override
@@ -150,15 +147,7 @@ public class ChoppingBlock extends Block
         {
             if (worldIn.rand.nextFloat() < ConfigManager.choppingDegradeChance)
             {
-                int damage = state.get(DAMAGE);
-                if (damage < 2)
-                {
-                    worldIn.setBlockState(pos, state.with(DAMAGE, damage + 1));
-                }
-                else
-                {
-                    worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
-                }
+                worldIn.setBlockState(pos, breaksInto.get());
             }
 
             if (ConfigManager.choppingExhaustion > 0)

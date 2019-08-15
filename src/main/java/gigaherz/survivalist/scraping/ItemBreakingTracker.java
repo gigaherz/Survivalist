@@ -3,7 +3,6 @@ package gigaherz.survivalist.scraping;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -43,7 +42,7 @@ import java.util.Random;
 
 public class ItemBreakingTracker
 {
-    public static final ResourceLocation PROP_KEY = Survivalist.location("ItemBreakingTracker");
+    public static final ResourceLocation PROP_KEY = Survivalist.location("item_breaking_tracker");
 
     PlayerEntity player;
     World world;
@@ -174,15 +173,15 @@ public class ItemBreakingTracker
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_CHESTPLATE), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_LEGGINGS), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_boots), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_helmet), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_chestplate), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_leggings), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.TANNED_BOOTS), new ItemStack(Survivalist.Items.TANNED_LEATHER, 2), new ItemStack(Survivalist.Items.TANNED_LEATHER)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.TANNED_HELMET), new ItemStack(Survivalist.Items.TANNED_LEATHER, 2), new ItemStack(Survivalist.Items.TANNED_LEATHER)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.TANNED_CHESTPLATE), new ItemStack(Survivalist.Items.TANNED_LEATHER, 2), new ItemStack(Survivalist.Items.TANNED_LEATHER)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.TANNED_LEGGINGS), new ItemStack(Survivalist.Items.TANNED_LEATHER, 2), new ItemStack(Survivalist.Items.TANNED_LEATHER)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(Survivalist.Items.CHAINMAIL, 2), new ItemStack(Survivalist.Items.CHAINMAIL)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(Survivalist.Items.CHAINMAIL, 2), new ItemStack(Survivalist.Items.CHAINMAIL)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(Survivalist.Items.CHAINMAIL, 2), new ItemStack(Survivalist.Items.CHAINMAIL)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(Survivalist.Items.CHAINMAIL, 2), new ItemStack(Survivalist.Items.CHAINMAIL)));
 
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_BOOTS), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_HELMET), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));

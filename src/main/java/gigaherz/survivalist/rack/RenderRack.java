@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 public class RenderRack extends TileEntityRenderer<TileRack>
 {
@@ -20,7 +19,7 @@ public class RenderRack extends TileEntityRenderer<TileRack>
     public void render(TileRack te, double x, double y, double z, float partialTicks, int destroyStage)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
-        if (state.getBlock() != Survivalist.Blocks.rack)
+        if (state.getBlock() != Survivalist.Blocks.RACK)
             return;
 
         te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent((inv) -> {

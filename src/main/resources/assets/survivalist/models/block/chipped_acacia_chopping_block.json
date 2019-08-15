@@ -1,0 +1,9 @@
+{
+  "parent": "survivalist:block/chopping_block",
+  "textures": {
+    "bottom": "block/acacia_log_top",
+    "top": "survivalist:block/used/acacia_slab_top",
+    "side": "survivalist:block/used/acacia_slab",
+    "particle": "block/acacia_log"
+  }
+}

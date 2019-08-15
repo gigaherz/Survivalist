@@ -4,10 +4,7 @@ import gigaherz.survivalist.chopblock.ChoppingBlock;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.misc.FibersEventHandling;
 import gigaherz.survivalist.misc.StringEventHandling;
-import gigaherz.survivalist.rack.BlockRack;
-import gigaherz.survivalist.rack.ContainerRack;
-import gigaherz.survivalist.rack.GuiRack;
-import gigaherz.survivalist.rack.TileRack;
+import gigaherz.survivalist.rack.*;
 import gigaherz.survivalist.rocks.ItemRock;
 import gigaherz.survivalist.rocks.RocksEventHandling;
 import gigaherz.survivalist.sawmill.BlockSawmill;
@@ -35,8 +32,9 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -47,6 +45,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -85,47 +84,59 @@ public class Survivalist
     @ObjectHolder(MODID)
     public static class Items
     {
-        public static final Item tanned_leather = sneakyNull();
-        public static final Item chainmail = sneakyNull();
-        public static final Item jerky = sneakyNull();
-        public static final Item copper_nugget = sneakyNull();
-        public static final Item tin_nugget = sneakyNull();
-        public static final Item lead_nugget = sneakyNull();
-        public static final Item silver_nugget = sneakyNull();
-        public static final Item aluminum_nugget = sneakyNull();
-        public static final ItemRock rock_stone = sneakyNull();
-        public static final ItemRock rock_andesite = sneakyNull();
-        public static final ItemRock rock_diorite = sneakyNull();
-        public static final ItemRock rock_granite = sneakyNull();
-        public static final ItemRock rock_iron_ore = sneakyNull();
-        public static final ItemRock rock_gold_ore = sneakyNull();
-        public static final ItemRock rock_copper_ore = sneakyNull();
-        public static final ItemRock rock_tin_ore = sneakyNull();
-        public static final ItemRock rock_lead_ore = sneakyNull();
-        public static final ItemRock rock_silver_ore = sneakyNull();
-        public static final ItemRock rock_aluminum_ore = sneakyNull();
-        public static final Item dough = sneakyNull();
-        public static final Item round_bread = sneakyNull();
-        public static final Item hatchet = sneakyNull();
-        public static final Item pick = sneakyNull();
-        public static final Item spade = sneakyNull();
-        public static final Item plant_fibres = sneakyNull();
-        public static final Item tanned_helmet = sneakyNull();
-        public static final Item tanned_chestplate = sneakyNull();
-        public static final Item tanned_leggings = sneakyNull();
-        public static final Item tanned_boots = sneakyNull();
+        public static final Item TANNED_LEATHER = sneakyNull();
+        public static final Item CHAINMAIL = sneakyNull();
+        public static final Item JERKY = sneakyNull();
+        public static final Item COPPER_NUGGET = sneakyNull();
+        public static final Item TIN_NUGGET = sneakyNull();
+        public static final Item LEAD_NUGGET = sneakyNull();
+        public static final Item SILVER_NUGGET = sneakyNull();
+        public static final Item ALUMINUM_NUGGET = sneakyNull();
+        public static final ItemRock STONE_ROCK = sneakyNull();
+        public static final ItemRock ANDESITE_ROCK = sneakyNull();
+        public static final ItemRock DIORITE_ROCK = sneakyNull();
+        public static final ItemRock GRANITE_ROCK = sneakyNull();
+        public static final ItemRock IRON_ORE_ROCK = sneakyNull();
+        public static final ItemRock GOLD_ORE_ROCK = sneakyNull();
+        public static final ItemRock COPPER_ORE_ROCK = sneakyNull();
+        public static final ItemRock TIN_ORE_ROCK = sneakyNull();
+        public static final ItemRock LEAD_ORE_ROCK = sneakyNull();
+        public static final ItemRock SILVER_ORE_ROCK = sneakyNull();
+        public static final ItemRock ALUMINUM_ORE_ROCK = sneakyNull();
+        public static final Item DOUGH = sneakyNull();
+        public static final Item ROUND_BREAD = sneakyNull();
+        public static final Item HATCHET = sneakyNull();
+        public static final Item PICK = sneakyNull();
+        public static final Item SPADE = sneakyNull();
+        public static final Item PLANT_FIBRES = sneakyNull();
+        public static final Item TANNED_HELMET = sneakyNull();
+        public static final Item TANNED_CHESTPLATE = sneakyNull();
+        public static final Item TANNED_LEGGINGS = sneakyNull();
+        public static final Item TANNED_BOOTS = sneakyNull();
     }
 
     @ObjectHolder("survivalist")
     public static class Blocks {
-        public static final Block rack = sneakyNull();
-        public static final Block oak_chopping_block = sneakyNull();
-        public static final Block birch_chopping_block = sneakyNull();
-        public static final Block spruce_chopping_block = sneakyNull();
-        public static final Block jungle_chopping_block = sneakyNull();
-        public static final Block dark_oak_chopping_block = sneakyNull();
-        public static final Block acacia_chopping_block = sneakyNull();
-        public static final Block sawmill = sneakyNull();
+        public static final Block RACK = sneakyNull();
+        public static final Block OAK_CHOPPING_BLOCK = sneakyNull();
+        public static final Block BIRCH_CHOPPING_BLOCK = sneakyNull();
+        public static final Block SPRUCE_CHOPPING_BLOCK = sneakyNull();
+        public static final Block JUNGLE_CHOPPING_BLOCK = sneakyNull();
+        public static final Block DARK_OAK_CHOPPING_BLOCK = sneakyNull();
+        public static final Block ACACIA_CHOPPING_BLOCK = sneakyNull();
+        public static final Block CHIPPED_OAK_CHOPPING_BLOCK = sneakyNull();
+        public static final Block CHIPPED_BIRCH_CHOPPING_BLOCK = sneakyNull();
+        public static final Block CHIPPED_SPRUCE_CHOPPING_BLOCK = sneakyNull();
+        public static final Block CHIPPED_JUNGLE_CHOPPING_BLOCK = sneakyNull();
+        public static final Block CHIPPED_DARK_OAK_CHOPPING_BLOCK = sneakyNull();
+        public static final Block CHIPPED_ACACIA_CHOPPING_BLOCK = sneakyNull();
+        public static final Block DAMAGED_OAK_CHOPPING_BLOCK = sneakyNull();
+        public static final Block DAMAGED_BIRCH_CHOPPING_BLOCK = sneakyNull();
+        public static final Block DAMAGED_SPRUCE_CHOPPING_BLOCK = sneakyNull();
+        public static final Block DAMAGED_JUNGLE_CHOPPING_BLOCK = sneakyNull();
+        public static final Block DAMAGED_DARK_OAK_CHOPPING_BLOCK = sneakyNull();
+        public static final Block DAMAGED_ACACIA_CHOPPING_BLOCK = sneakyNull();
+        public static final Block SAWMILL = sneakyNull();
     }
 
     @ObjectHolder(MODID + ":shlop")
@@ -241,6 +252,7 @@ public class Survivalist
         modEventBus.addGenericListener(Enchantment.class, this::registerEnchantments);
         modEventBus.addGenericListener(SoundEvent.class, this::registerSounds);
         modEventBus.addGenericListener(EntityType.class, this::registerEntities);
+        modEventBus.addGenericListener(ContainerType.class, this::registerContainers);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::loadComplete);
@@ -258,12 +270,30 @@ public class Survivalist
     {
         event.getRegistry().registerAll(
                 withName(new BlockRack(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f)), "rack"),
-                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "oak_chopping_block"),
-                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "birch_chopping_block"),
-                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "spruce_chopping_block"),
-                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "jungle_chopping_block"),
-                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "dark_oak_chopping_block"),
-                withName(new ChoppingBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "acacia_chopping_block"),
+
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "oak_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_BIRCH_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "birch_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_SPRUCE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "spruce_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_JUNGLE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "jungle_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "dark_oak_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_ACACIA_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "acacia_chopping_block"),
+
+
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_oak_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_BIRCH_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_birch_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_SPRUCE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_spruce_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_JUNGLE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_jungle_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_dark_oak_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_ACACIA_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_acacia_chopping_block"),
+
+
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_oak_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_birch_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_spruce_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_jungle_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_dark_oak_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_acacia_chopping_block"),
+
                 withName(new BlockSawmill(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.STONE)),"sawmill")
         );
     }
@@ -272,14 +302,29 @@ public class Survivalist
     {
         event.getRegistry().registerAll(
                 // ItemBlocks
-                forBlock(Blocks.rack, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.oak_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.birch_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.spruce_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.jungle_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.dark_oak_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.acacia_chopping_block, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.sawmill, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.RACK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.SAWMILL, new Item.Properties().group(ItemGroup.DECORATIONS)),
+
+                forBlock(Blocks.OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.BIRCH_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.SPRUCE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.JUNGLE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.DARK_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.ACACIA_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+
+                forBlock(Blocks.CHIPPED_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_BIRCH_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_SPRUCE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_JUNGLE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_ACACIA_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+
+                forBlock(Blocks.DAMAGED_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.DAMAGED_BIRCH_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.DAMAGED_SPRUCE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.DAMAGED_JUNGLE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.DAMAGED_ACACIA_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
 
                 // Items
                 withName(new Item(new Item.Properties().group(ItemGroup.MATERIALS)),"chainmail"),
@@ -296,18 +341,18 @@ public class Survivalist
                 withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "silver_nugget"),
                 withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "aluminum_nugget"),
 
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_stone"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_andesite"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_diorite"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_granite"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "stone_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "andesite_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "diorite_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "granite_rock"),
 
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_iron_ore"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_gold_ore"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_copper_ore"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_tin_ore"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_lead_ore"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_silver_ore"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "rock_aluminum_ore"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "iron_ore_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "gold_ore_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "copper_ore_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "tin_ore_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "lead_ore_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "silver_ore_rock"),
+                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "aluminum_ore_rock"),
 
                 withName(new AxeItem(TOOL_FLINT, 8.0F, -3.1F, new Item.Properties().group(ItemGroup.TOOLS)){}, "hatchet"),
                 withName(new PickaxeItem(TOOL_FLINT, 4, -2.6F, new Item.Properties().group(ItemGroup.TOOLS)){}, "pick"),
@@ -325,24 +370,42 @@ public class Survivalist
     private void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event)
     {
         event.getRegistry().registerAll(
-                TileEntityType.Builder.create(TileRack::new).build(null).setRegistryName("rack"),
-                TileEntityType.Builder.create(ChoppingBlockTileEntity::new).build(null).setRegistryName("chopping_block"),
-                TileEntityType.Builder.create(TileSawmill::new).build(null).setRegistryName("sawmill")
+                withName(TileEntityType.Builder.create(TileRack::new, Blocks.RACK).build(null), "rack"),
+                withName(TileEntityType.Builder.create(ChoppingBlockTileEntity::new,
+                        Blocks.OAK_CHOPPING_BLOCK,
+                        Blocks.BIRCH_CHOPPING_BLOCK,
+                        Blocks.SPRUCE_CHOPPING_BLOCK,
+                        Blocks.JUNGLE_CHOPPING_BLOCK,
+                        Blocks.DARK_OAK_CHOPPING_BLOCK,
+                        Blocks.ACACIA_CHOPPING_BLOCK,
+                        Blocks.CHIPPED_OAK_CHOPPING_BLOCK,
+                        Blocks.CHIPPED_BIRCH_CHOPPING_BLOCK,
+                        Blocks.CHIPPED_SPRUCE_CHOPPING_BLOCK,
+                        Blocks.CHIPPED_JUNGLE_CHOPPING_BLOCK,
+                        Blocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK,
+                        Blocks.CHIPPED_ACACIA_CHOPPING_BLOCK,
+                        Blocks.DAMAGED_OAK_CHOPPING_BLOCK,
+                        Blocks.DAMAGED_BIRCH_CHOPPING_BLOCK,
+                        Blocks.DAMAGED_SPRUCE_CHOPPING_BLOCK,
+                        Blocks.DAMAGED_JUNGLE_CHOPPING_BLOCK,
+                        Blocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK,
+                        Blocks.DAMAGED_ACACIA_CHOPPING_BLOCK).build(null), "chopping_block"),
+                withName(TileEntityType.Builder.create(TileSawmill::new, Blocks.SAWMILL).build(null), "sawmill")
         );
     }
 
     private void registerContainers(RegistryEvent.Register<ContainerType<?>> event)
     {
         event.getRegistry().registerAll(
-                new ContainerType<>(ContainerRack::new),
-                new ContainerType<>(ContainerSawmill::new)
+                withName(new ContainerType<>(ContainerRack::new), "rack"),
+                withName(new ContainerType<>(ContainerSawmill::new), "sawmill")
         );
     }
 
     private void registerSounds(RegistryEvent.Register<SoundEvent> event)
     {
         event.getRegistry().registerAll(
-                new SoundEvent(location("mob.slime.merge")).setRegistryName(location("shlop"))
+                withName(new SoundEvent(location("mob.slime.merge")), "shlop")
         );
     }
 
@@ -467,6 +530,8 @@ public class Survivalist
     {
         ScreenManager.registerFactory(ContainerRack.TYPE, GuiRack::new);
         ScreenManager.registerFactory(ContainerSawmill.TYPE, GuiSawmill::new);
+        OBJLoader.INSTANCE.addDomain(MODID);
+        ModelLoaderRegistry.registerLoader(new RackBakedModel.ModelLoader());
     }
 
     public void loadComplete(FMLLoadCompleteEvent event)
@@ -474,24 +539,20 @@ public class Survivalist
         ConfigManager.parseChoppingAxes();
     }
 
-    private static Item withName(Item item, String name)
+    private static <R extends T, T extends IForgeRegistryEntry<T>> R withName(R obj, ResourceLocation name)
     {
-        return item.setRegistryName(name);
+        obj.setRegistryName(name);
+        return obj;
     }
 
-    private static Block withName(Block block, String name)
+    private static <R extends T, T extends IForgeRegistryEntry<T>> R withName(R obj, String name)
     {
-        return block.setRegistryName(name);
+        return withName(obj, new ResourceLocation(MODID, name));
     }
 
-    private static Enchantment withName(Enchantment block, String name)
+    private static BlockItem forBlock(Block block, Item.Properties properties)
     {
-        return block.setRegistryName(name);
-    }
-
-    private static Item forBlock(Block block, Item.Properties properties)
-    {
-        return new BlockItem(block, properties).setRegistryName(block.getRegistryName());
+        return withName(new BlockItem(block, properties), block.getRegistryName());
     }
 
     public static ResourceLocation location(String path)

@@ -1,24 +1,12 @@
 {
-    "forge_marker": 1,
-    "defaults": {
-        "model": "survivalist:sawmill",
-        "transform": "forge:default-block"
-    },
     "variants": {
-        "inventory": [{}],
-        "facing": {
-            "north": {  },
-            "south": { "y": 180 },
-            "west": { "y": 270 },
-            "east": { "y": 90 }
-        },
-        "powered": {
-            "false": {},
-            "true": {
-                "textures": {
-                    "front": "survivalist:blocks/sawmill_front_on"
-                }
-            }
-        }
+        "facing=north,powered=false": { "model": "survivalist:block/sawmill" },
+        "facing=north,powered=true": { "model": "survivalist:block/sawmill_powered" },
+        "facing=east,powered=false": { "model": "survivalist:block/sawmill", "y": 90 },
+        "facing=east,powered=true": { "model": "survivalist:block/sawmill_powered", "y": 90 },
+        "facing=south,powered=false": { "model": "survivalist:block/sawmill", "y": 180 },
+        "facing=south,powered=true": { "model": "survivalist:block/sawmill_powered", "y": 180 },
+        "facing=west,powered=false": { "model": "survivalist:block/sawmill", "y": 270 },
+        "facing=west,powered=true": { "model": "survivalist:block/sawmill_powered", "y": 270 }
     }
 }

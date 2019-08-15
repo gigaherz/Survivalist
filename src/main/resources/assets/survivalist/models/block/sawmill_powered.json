@@ -1,0 +1,6 @@
+{
+    "parent": "survivalist:block/sawmill",
+    "textures": {
+        "front": "survivalist:block/sawmill_front_on"
+    }
+}

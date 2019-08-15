@@ -1,0 +1,9 @@
+{
+  "parent": "survivalist:block/chopping_block",
+  "textures": {
+    "bottom": "block/oak_log_top",
+    "top": "survivalist:block/used/oak_slab_top",
+    "side": "survivalist:block/used/oak_slab",
+    "particle": "block/oak_log"
+  }
+}

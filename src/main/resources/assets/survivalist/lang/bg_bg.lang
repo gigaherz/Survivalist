@@ -1,9 +1,9 @@
 item.survivalist.chainmail.name=Ризница
 item.survivalist.iron_nugget.name=Железен Къшей
 item.survivalist.rock.name=Скала
-item.survivalist.rock_andesite.name=Скала от Андезит
-item.survivalist.rock_diorite.name=Скала от Диорит
-item.survivalist.rock_granite.name=Скала от Гранит
+item.survivalist.andesite_rock.name=Скала от Андезит
+item.survivalist.diorite_rock.name=Скала от Диорит
+item.survivalist.granite_rock.name=Скала от Гранит
 item.survivalist.iron_rock.name=Скала от Желязна Руда
 item.survivalist.gold_rock.name=Скала от Златна Руда
 item.survivalist.tanned_leather.name=Загоряла Кожа

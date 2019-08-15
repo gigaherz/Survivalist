@@ -1,11 +1,9 @@
 package gigaherz.survivalist.misc;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -14,9 +12,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -52,7 +47,7 @@ public class FibersEventHandling
         try
         {
             if (rnd.nextFloat() < 0.12f)
-                drops.add(new ItemStack(Survivalist.Items.plant_fibres));
+                drops.add(new ItemStack(Survivalist.Items.PLANT_FIBRES));
         }
         catch (UnsupportedOperationException ex)
         {

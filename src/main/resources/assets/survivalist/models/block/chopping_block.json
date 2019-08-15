@@ -1,11 +1,5 @@
 {
   "parent": "block/block",
-  "textures": {
-    "bottom": "blocks/log_oak_top",
-    "top": "blocks/log_oak_top",
-    "side": "blocks/log_oak",
-    "particle": "blocks/log_oak"
-  },
   "elements": [
     {
       "from": [ 0, 0, 0 ],

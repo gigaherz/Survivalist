@@ -1,7 +1,12 @@
 package gigaherz.survivalist.sawmill;
 
 import gigaherz.survivalist.api.Choppable;
+import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,6 +20,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -27,7 +34,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSawmill extends TileEntity implements ITickableTileEntity, IIntArray
+public class TileSawmill extends TileEntity implements ITickableTileEntity, IIntArray, INamedContainerProvider
 {
     @ObjectHolder("survivalist:sawmill")
     public static TileEntityType<TileSawmill> TYPE;
@@ -355,5 +362,18 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
     public int size()
     {
         return 4;
+    }
+
+    @Override
+    public ITextComponent getDisplayName()
+    {
+        return new TranslationTextComponent("text.survivalist.container.sawmill");
+    }
+
+    @Nullable
+    @Override
+    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player)
+    {
+        return new ContainerSawmill(windowId, this, playerInventory);
     }
 }

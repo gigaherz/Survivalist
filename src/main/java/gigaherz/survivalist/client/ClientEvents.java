@@ -41,10 +41,6 @@ public class ClientEvents
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
         ClientRegistry.bindTileEntitySpecialRenderer(ChoppingBlockTileEntity.class, new RenderChoppingBlock());
-
-        OBJLoader.INSTANCE.addDomain(Survivalist.MODID);
-
-        ModelLoaderRegistry.registerLoader(new RackBakedModel.ModelLoader());
     }
 
     public static void handleScrapingMessage(MessageScraping message)
