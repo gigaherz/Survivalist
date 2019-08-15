@@ -51,7 +51,7 @@ public class FibersEventHandling
         try
         {
             if (rnd.nextFloat() < 0.12f)
-                drops.add(new ItemStack(Survivalist.plant_fibres));
+                drops.add(new ItemStack(Survivalist.Items.plant_fibres));
         }
         catch (UnsupportedOperationException ex)
         {
@@ -67,7 +67,7 @@ public class FibersEventHandling
             try
             {
                 nonNullListDelegate.set(drops, Lists.newArrayList(drops));
-                drops.add(new ItemStack(Survivalist.plant_fibres));
+                drops.add(new ItemStack(Survivalist.Items.plant_fibres));
             }
             catch (IllegalAccessException e)
             {

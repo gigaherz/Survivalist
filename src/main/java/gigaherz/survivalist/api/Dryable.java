@@ -85,7 +85,7 @@ public class Dryable
     {
         if (ConfigManager.instance.enableLeatherTanning)
         {
-            registerRecipe(new ItemStack(Items.LEATHER), new ItemStack(Survivalist.tanned_leather), 30 * 20);
+            registerRecipe(new ItemStack(Items.LEATHER), new ItemStack(Survivalist.Items.tanned_leather), 30 * 20);
         }
 
         if (ConfigManager.instance.enableMeatRotting)
@@ -99,13 +99,13 @@ public class Dryable
         {
             if (ConfigManager.instance.enableRottenDrying)
             {
-                registerRecipe(new ItemStack(Items.ROTTEN_FLESH), new ItemStack(Survivalist.jerky), 15 * 20);
+                registerRecipe(new ItemStack(Items.ROTTEN_FLESH), new ItemStack(Survivalist.Items.jerky), 15 * 20);
             }
             if (ConfigManager.instance.enableMeatDrying)
             {
-                registerRecipe(new ItemStack(Items.COOKED_BEEF), new ItemStack(Survivalist.jerky), 15 * 20);
-                registerRecipe(new ItemStack(Items.COOKED_MUTTON), new ItemStack(Survivalist.jerky), 15 * 20);
-                registerRecipe(new ItemStack(Items.COOKED_PORKCHOP), new ItemStack(Survivalist.jerky), 15 * 20);
+                registerRecipe(new ItemStack(Items.COOKED_BEEF), new ItemStack(Survivalist.Items.jerky), 15 * 20);
+                registerRecipe(new ItemStack(Items.COOKED_MUTTON), new ItemStack(Survivalist.Items.jerky), 15 * 20);
+                registerRecipe(new ItemStack(Items.COOKED_PORKCHOP), new ItemStack(Survivalist.Items.jerky), 15 * 20);
             }
         }
     }

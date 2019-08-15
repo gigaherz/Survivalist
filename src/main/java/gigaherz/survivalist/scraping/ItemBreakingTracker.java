@@ -34,7 +34,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
@@ -179,15 +178,15 @@ public class ItemBreakingTracker
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_CHESTPLATE), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_LEGGINGS), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_boots), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_helmet), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_chestplate), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.tanned_leggings), new ItemStack(Survivalist.tanned_leather, 2), new ItemStack(Survivalist.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_boots), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_helmet), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_chestplate), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.tanned_leggings), new ItemStack(Survivalist.Items.tanned_leather, 2), new ItemStack(Survivalist.Items.tanned_leather)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(Survivalist.chainmail, 2), new ItemStack(Survivalist.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(Survivalist.Items.chainmail, 2), new ItemStack(Survivalist.Items.chainmail)));
 
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_BOOTS), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_HELMET), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));

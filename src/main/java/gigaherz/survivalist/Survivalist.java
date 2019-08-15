@@ -22,13 +22,9 @@ import gigaherz.survivalist.scraping.MessageScraping;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBat;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
@@ -54,7 +50,6 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.ForgeRegistry;
 import org.apache.commons.lang3.ArrayUtils;
@@ -64,8 +59,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
 @Mod(modid = Survivalist.MODID, version = Survivalist.VERSION,
@@ -91,39 +84,32 @@ public class Survivalist
     @GameRegistry.ObjectHolder(MODID + ":scraping")
     public static EnchantmentScraping scraping;
 
-    @GameRegistry.ObjectHolder(MODID + ":chainmail")
-    public static Item chainmail;
-    @GameRegistry.ObjectHolder(MODID + ":tanned_leather")
-    public static Item tanned_leather;
-    @GameRegistry.ObjectHolder(MODID + ":jerky")
-    public static Item jerky;
-    @GameRegistry.ObjectHolder(MODID + ":nugget")
-    public static ItemNugget nugget;
-    @GameRegistry.ObjectHolder(MODID + ":rock")
-    public static ItemRock rock;
-    @GameRegistry.ObjectHolder(MODID + ":rock_ore")
-    public static ItemOreRock rock_ore;
-    @GameRegistry.ObjectHolder(MODID + ":dough")
-    public static Item dough;
-    @GameRegistry.ObjectHolder(MODID + ":round_bread")
-    public static Item round_bread;
-    @GameRegistry.ObjectHolder(MODID + ":hatchet")
-    public static Item hatchet;
-    @GameRegistry.ObjectHolder(MODID + ":pick")
-    public static Item pick;
-    @GameRegistry.ObjectHolder(MODID + ":spade")
-    public static Item spade;
-    @GameRegistry.ObjectHolder(MODID + ":plant_fibres")
-    public static Item plant_fibres;
+    @SuppressWarnings("ConstantConditions")
+    @Nonnull
+    private static <T> T sneakyNull() {
+        return null;
+    }
 
-    @GameRegistry.ObjectHolder(MODID + ":tanned_helmet")
-    public static Item tanned_helmet;
-    @GameRegistry.ObjectHolder(MODID + ":tanned_chestplate")
-    public static Item tanned_chestplate;
-    @GameRegistry.ObjectHolder(MODID + ":tanned_leggings")
-    public static Item tanned_leggings;
-    @GameRegistry.ObjectHolder(MODID + ":tanned_boots")
-    public static Item tanned_boots;
+    @GameRegistry.ObjectHolder(MODID)
+    public static class Items
+    {
+        public static final Item tanned_leather = sneakyNull();
+        public static final Item chainmail = sneakyNull();
+        public static final Item jerky = sneakyNull();
+        public static final ItemNugget nugget = sneakyNull();
+        public static final ItemRock rock = sneakyNull();
+        public static final ItemOreRock rock_ore = sneakyNull();
+        public static final Item dough = sneakyNull();
+        public static final Item round_bread = sneakyNull();
+        public static final Item hatchet = sneakyNull();
+        public static final Item pick = sneakyNull();
+        public static final Item spade = sneakyNull();
+        public static final Item plant_fibres = sneakyNull();
+        public static final Item tanned_helmet = sneakyNull();
+        public static final Item tanned_chestplate = sneakyNull();
+        public static final Item tanned_leggings = sneakyNull();
+        public static final Item tanned_boots = sneakyNull();
+    }
 
     @GameRegistry.ObjectHolder(MODID + ":rack")
     public static Block rack;
@@ -209,43 +195,43 @@ public class Survivalist
 
     private static void registerOredictNames()
     {
-        OreDictionary.registerOre("materialLeather", tanned_leather);
-        OreDictionary.registerOre("materialTannedLeather", tanned_leather);
-        OreDictionary.registerOre("materialHardenedLeather", tanned_leather);
+        OreDictionary.registerOre("materialLeather", Items.tanned_leather);
+        OreDictionary.registerOre("materialTannedLeather", Items.tanned_leather);
+        OreDictionary.registerOre("materialHardenedLeather", Items.tanned_leather);
 
-        OreDictionary.registerOre("nuggetIron", nugget.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("nuggetCopper", nugget.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("nuggetTin", nugget.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("nuggetLead", nugget.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("nuggetSilver", nugget.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("nuggetAluminum", nugget.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("nuggetAluminium", nugget.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("nuggetIron", Items.nugget.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("nuggetCopper", Items.nugget.getStack(OreMaterial.COPPER));
+        OreDictionary.registerOre("nuggetTin", Items.nugget.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("nuggetLead", Items.nugget.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("nuggetSilver", Items.nugget.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("nuggetAluminum", Items.nugget.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("nuggetAluminium", Items.nugget.getStack(OreMaterial.ALUMINUM));
 
-        OreDictionary.registerOre("rockOreIron", rock_ore.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("rockOreGold", rock_ore.getStack(OreMaterial.GOLD));
-        OreDictionary.registerOre("rockOreCopper", rock_ore.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("rockOreTin", rock_ore.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("rockOreLead", rock_ore.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("rockOreSilver", rock_ore.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("rockOreAluminum", rock_ore.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("rockOreAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("rockOreIron", Items.rock_ore.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("rockOreGold", Items.rock_ore.getStack(OreMaterial.GOLD));
+        OreDictionary.registerOre("rockOreCopper", Items.rock_ore.getStack(OreMaterial.COPPER));
+        OreDictionary.registerOre("rockOreTin", Items.rock_ore.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("rockOreLead", Items.rock_ore.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("rockOreSilver", Items.rock_ore.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("rockOreAluminum", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("rockOreAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
 
-        OreDictionary.registerOre("oreNuggetIron", rock_ore.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("oreNuggetGold", rock_ore.getStack(OreMaterial.GOLD));
-        OreDictionary.registerOre("oreNuggetCopper", rock_ore.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("oreNuggetTin", rock_ore.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("oreNuggetLead", rock_ore.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("oreNuggetSilver", rock_ore.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("oreNuggetAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("oreNuggetAluminium", rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("oreNuggetIron", Items.rock_ore.getStack(OreMaterial.IRON));
+        OreDictionary.registerOre("oreNuggetGold", Items.rock_ore.getStack(OreMaterial.GOLD));
+        OreDictionary.registerOre("oreNuggetCopper", Items.rock_ore.getStack(OreMaterial.COPPER));
+        OreDictionary.registerOre("oreNuggetTin", Items.rock_ore.getStack(OreMaterial.TIN));
+        OreDictionary.registerOre("oreNuggetLead", Items.rock_ore.getStack(OreMaterial.LEAD));
+        OreDictionary.registerOre("oreNuggetSilver", Items.rock_ore.getStack(OreMaterial.SILVER));
+        OreDictionary.registerOre("oreNuggetAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
+        OreDictionary.registerOre("oreNuggetAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
 
-        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.NORMAL));
-        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.ANDESITE));
-        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.DIORITE));
-        OreDictionary.registerOre("rock", rock.getStack(RockMaterial.GRANITE));
-        OreDictionary.registerOre("rockAndesite", rock.getStack(RockMaterial.ANDESITE));
-        OreDictionary.registerOre("rockDiorite", rock.getStack(RockMaterial.DIORITE));
-        OreDictionary.registerOre("rockGranite", rock.getStack(RockMaterial.GRANITE));
+        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.NORMAL));
+        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.ANDESITE));
+        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.DIORITE));
+        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.GRANITE));
+        OreDictionary.registerOre("rockAndesite", Items.rock.getStack(RockMaterial.ANDESITE));
+        OreDictionary.registerOre("rockDiorite", Items.rock.getStack(RockMaterial.DIORITE));
+        OreDictionary.registerOre("rockGranite", Items.rock.getStack(RockMaterial.GRANITE));
     }
 
     @SubscribeEvent
@@ -332,19 +318,19 @@ public class Survivalist
         EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
         logger.debug("Last used id: %i", entityId);
 
-        TOOL_FLINT.setRepairItem(new ItemStack(Items.FLINT));
+        TOOL_FLINT.setRepairItem(new ItemStack(net.minecraft.init.Items.FLINT));
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
-        addSmeltingNugget(rock_ore.getStack(OreMaterial.ALUMINUM), "nuggetAluminum");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
+        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.ALUMINUM), "nuggetAluminum");
 
-        GameRegistry.addSmelting(dough, new ItemStack(round_bread), 0);
+        GameRegistry.addSmelting(Items.dough, new ItemStack(Items.round_bread), 0);
     }
 
     private static void addSmeltingNugget(ItemStack stack, String ore)
@@ -392,7 +378,7 @@ public class Survivalist
                 for (IRecipe r : recipes)
                 {
                     ItemStack output = r.getRecipeOutput();
-                    if (output.getItem() == Items.BREAD)
+                    if (output.getItem() == net.minecraft.init.Items.BREAD)
                     {
                         recipeRegistry.remove(r.getRegistryName());
                         recipeRegistry.register(DummyRecipe.from(r));
@@ -407,7 +393,7 @@ public class Survivalist
             {
                 ItemStack output = r.getRecipeOutput();
                 int ore = OreDictionary.getOreID("plankWood");
-                if (output.getItem() == Items.STICK)
+                if (output.getItem() == net.minecraft.init.Items.STICK)
                 {
                     boolean isPlanksInput = r.getIngredients().stream().allMatch(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).anyMatch(input -> ArrayUtils.contains(OreDictionary.getOreIDs(input), ore)));
                     if (isPlanksInput)

@@ -40,7 +40,7 @@ public class ClientEvents
     public static void registerModels(ModelRegistryEvent event)
     {
         RenderingRegistry.registerEntityRenderingHandler(EntityRock.class,
-                manager -> new RenderSnowball<>(manager, Survivalist.rock, Minecraft.getMinecraft().getRenderItem()));
+                manager -> new RenderSnowball<>(manager, Survivalist.Items.rock, Minecraft.getMinecraft().getRenderItem()));
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
         ClientRegistry.bindTileEntitySpecialRenderer(TileChopping.class, new RenderChoppingBlock());
@@ -49,41 +49,41 @@ public class ClientEvents
 
         ModelLoaderRegistry.registerLoader(new RackBakedModel.ModelLoader());
 
-        new ItemStateMapper(Survivalist.nugget).registerAllModelsExplicitly();
-        new ItemStateMapper(Survivalist.rock_ore).registerAllModelsExplicitly();
-        new ItemStateMapper(Survivalist.rock).registerAllModelsExplicitly();
+        new ItemStateMapper(Survivalist.Items.nugget).registerAllModelsExplicitly();
+        new ItemStateMapper(Survivalist.Items.rock_ore).registerAllModelsExplicitly();
+        new ItemStateMapper(Survivalist.Items.rock).registerAllModelsExplicitly();
 
-        ModelLoader.setCustomModelResourceLocation(Survivalist.chainmail, 0,
-                new ModelResourceLocation(Survivalist.chainmail.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Survivalist.tanned_leather, 0,
-                new ModelResourceLocation(Survivalist.tanned_leather.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Survivalist.jerky, 0,
-                new ModelResourceLocation(Survivalist.jerky.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.chainmail, 0,
+                new ModelResourceLocation(Survivalist.Items.chainmail.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.tanned_leather, 0,
+                new ModelResourceLocation(Survivalist.Items.tanned_leather.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.jerky, 0,
+                new ModelResourceLocation(Survivalist.Items.jerky.getRegistryName(), "inventory"));
 
-        ModelLoader.setCustomModelResourceLocation(Survivalist.tanned_helmet, 0,
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.tanned_helmet, 0,
                 new ModelResourceLocation(Survivalist.location("tanned_armor"), "part=helmet"));
-        ModelLoader.setCustomModelResourceLocation(Survivalist.tanned_chestplate, 0,
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.tanned_chestplate, 0,
                 new ModelResourceLocation(Survivalist.location("tanned_armor"), "part=chestplate"));
-        ModelLoader.setCustomModelResourceLocation(Survivalist.tanned_leggings, 0,
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.tanned_leggings, 0,
                 new ModelResourceLocation(Survivalist.location("tanned_armor"), "part=leggings"));
-        ModelLoader.setCustomModelResourceLocation(Survivalist.tanned_boots, 0,
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.tanned_boots, 0,
                 new ModelResourceLocation(Survivalist.location("tanned_armor"), "part=boots"));
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(Survivalist.rack), 0,
                 new ModelResourceLocation(Survivalist.rack.getRegistryName(), "inventory"));
 
-        ModelLoader.setCustomModelResourceLocation(Survivalist.dough, 0,
-                new ModelResourceLocation(Survivalist.dough.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.dough, 0,
+                new ModelResourceLocation(Survivalist.Items.dough.getRegistryName(), "inventory"));
 
-        ModelLoader.setCustomModelResourceLocation(Survivalist.round_bread, 0,
-                new ModelResourceLocation(Survivalist.round_bread.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.round_bread, 0,
+                new ModelResourceLocation(Survivalist.Items.round_bread.getRegistryName(), "inventory"));
 
-        ModelLoader.setCustomModelResourceLocation(Survivalist.hatchet, 0,
-                new ModelResourceLocation(Survivalist.hatchet.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Survivalist.pick, 0,
-                new ModelResourceLocation(Survivalist.pick.getRegistryName(), "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Survivalist.spade, 0,
-                new ModelResourceLocation(Survivalist.spade.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.hatchet, 0,
+                new ModelResourceLocation(Survivalist.Items.hatchet.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.pick, 0,
+                new ModelResourceLocation(Survivalist.Items.pick.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.spade, 0,
+                new ModelResourceLocation(Survivalist.Items.spade.getRegistryName(), "inventory"));
 
         NonNullList<ItemStack> stacks1 = NonNullList.create();
         Survivalist.chopping_block.getSubBlocks(CreativeTabs.SEARCH, stacks1);
@@ -117,7 +117,7 @@ public class ClientEvents
             }
         });
 
-        ModelLoader.setCustomModelResourceLocation(Survivalist.plant_fibres, 0, new ModelResourceLocation(Survivalist.plant_fibres.getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Survivalist.Items.plant_fibres, 0, new ModelResourceLocation(Survivalist.Items.plant_fibres.getRegistryName(), "inventory"));
 
         Item item = Item.getItemFromBlock(Survivalist.sawmill);
         assert item != null;
