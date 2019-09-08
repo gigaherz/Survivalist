@@ -1,0 +1,8 @@
+{
+  "type": "survivalist:drying",
+  "ingredient": {
+    "tag": "survivalist:meat"
+  },
+  "result": "survivalist:jerky",
+  "dryingTime": 200
+}

@@ -1,8 +1,7 @@
 package gigaherz.survivalist.rack;
 
-import com.google.common.base.Predicates;
-import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.api.Dryable;
+import gigaherz.survivalist.api.DryingContext;
+import gigaherz.survivalist.api.DryingRecipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,6 +15,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
@@ -26,11 +26,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class TileRack extends TileEntity implements ITickableTileEntity, INamedContainerProvider
 {
@@ -43,7 +45,7 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
 
     public int[] dryTimeRemaining = new int[4];
 
-    public ItemStackHandler items = new ItemStackHandler(4)
+    public final ItemStackHandler items = new ItemStackHandler(4)
     {
         @Override
         protected int getStackLimit(int slot, ItemStack stack)
@@ -64,6 +66,14 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
         }
     };
     public final LazyOptional<IItemHandler> itemsProvider = LazyOptional.of(() -> items);
+
+    private final NonNullList<ItemStack> oldItems = NonNullList.withSize(4, ItemStack.EMPTY);
+    private final DryingContext[] dryingSlots = {
+            new DryingContext(new RangedWrapper(items, 0, 1)),
+            new DryingContext(new RangedWrapper(items, 1, 2)),
+            new DryingContext(new RangedWrapper(items, 2, 3)),
+            new DryingContext(new RangedWrapper(items, 3, 4)),
+    };
 
     public TileRack()
     {
@@ -108,26 +118,29 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
         for (int i = 0; i < 4; i++)
         {
             ItemStack stack = items.getStackInSlot(i);
-            int dryTime = Dryable.getDryingTime(stack);
-            if (dryTime >= 0)
+            if (ItemStack.areItemStacksEqual(stack, oldItems.get(i)))
             {
-                if (dryTimeRemaining[i] <= 0)
+                if (dryTimeRemaining[i] > 0)
                 {
-                    dryTimeRemaining[i] = dryTime;
-                }
-                else
-                {
-                    dryTimeRemaining[i]--;
-                    if (dryTimeRemaining[i] <= 0)
+                    final int index = i;
+                    Optional<DryingRecipe> recipe = DryingRecipe.getRecipe(world, dryingSlots[index]);
+                    if (recipe.isPresent())
                     {
-                        stack = Dryable.getDryingResult(stack);
-                        items.setStackInSlot(i, stack);
+                        if (--dryTimeRemaining[index] <= 0) {
+                            ItemStack result = recipe.get().getCraftingResult(dryingSlots[index]);
+                            items.setStackInSlot(index, result);
+                        }
+                    }
+                    else
+                    {
+                        dryTimeRemaining[index] = 0;
                     }
                 }
             }
             else
             {
-                dryTimeRemaining[i] = 0;
+                oldItems.set(i, stack);
+                dryTimeRemaining[i] = DryingRecipe.getDryingTime(world, dryingSlots[i]);
             }
         }
     }

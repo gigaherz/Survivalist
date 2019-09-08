@@ -18,11 +18,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
@@ -233,13 +231,13 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
 
                     if (this.totalCookTime == 0)
                     {
-                        this.totalCookTime = choppingRecipe.getSawmillTime();
+                        this.totalCookTime = choppingRecipe.getSawingTime();
                     }
 
                     if (this.cookTime >= this.totalCookTime)
                     {
                         this.cookTime = 0;
-                        this.totalCookTime = choppingRecipe.getSawmillTime();
+                        this.totalCookTime = choppingRecipe.getSawingTime();
                         this.processItem();
                         changes = true;
                     }

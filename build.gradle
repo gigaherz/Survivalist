@@ -28,7 +28,7 @@ compileJava {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190720-1.14.3'
+    mappings channel: 'snapshot', version: '20190821-1.14.3'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -58,7 +58,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.45'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.55'
 
     //deobfCompile "mezz.jei:jei_1.12.2:4.15.0.273:api"
     //runtime "mezz.jei:jei_1.12.2:4.15.0.273"

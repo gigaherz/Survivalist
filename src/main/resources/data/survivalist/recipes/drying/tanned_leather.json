@@ -1,0 +1,8 @@
+{
+  "type": "survivalist:drying",
+  "ingredient": {
+    "item": "minecraft:leather"
+  },
+  "result": "survivalist:tanned_leather",
+  "dryingTime": 200
+}

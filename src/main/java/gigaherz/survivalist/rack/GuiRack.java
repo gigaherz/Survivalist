@@ -2,7 +2,7 @@ package gigaherz.survivalist.rack;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.api.Dryable;
+import gigaherz.survivalist.api.DryingRecipe;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -49,7 +49,7 @@ public class GuiRack extends ContainerScreen<ContainerRack>
 
         for (int s = 0; s < container.dryTimeRemainingArray.size(); s++)
         {
-            int mt = Dryable.getDryingTime(container.getSlot(s).getStack());
+            int mt = DryingRecipe.getDryingTime(minecraft.world, container.getSlot(s).getStack());
             int ct = container.dryTimeRemainingArray.get(s);
 
             if (ct > 0 && mt > 0)

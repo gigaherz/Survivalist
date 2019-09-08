@@ -2,33 +2,150 @@ package gigaherz.survivalist.api;
 
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tags.Tag;
-import net.minecraftforge.common.Tags;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.List;
 import java.util.Random;
 
 public class Choppable
 {
-    public static abstract class ChoppingRecipe
+    public static class ChoppingContext implements IInventory
     {
-        private ItemStack output;
-        private double outputMultiplier = 1.0;
-        private double hitCountMultiplier = 1.0;
-        private int maxOutput;
-        private int sawmillTime = 100;
+        final IItemHandlerModifiable inner;
 
-        public ChoppingRecipe(ItemStack output)
+        final PlayerEntity player;
+        final int axeLevel;
+        final int fortune;
+        final Random random;
+
+        public ChoppingContext(IItemHandlerModifiable inner, PlayerEntity player, int axeLevel, int fortune, Random random)
         {
-            this.output = output;
+            this.inner = inner;
+            this.player = player;
+            this.axeLevel = axeLevel;
+            this.fortune = fortune;
+            this.random = random;
         }
 
-        public abstract boolean accepts(ItemStack stack);
+        @Override
+        public int getSizeInventory()
+        {
+            return inner.getSlots();
+        }
+
+        @Override
+        public boolean isEmpty()
+        {
+            for(int i=0;i<inner.getSlots();i++)
+            {
+                if (inner.getStackInSlot(i).getCount() > 0)
+                    return false;
+            }
+            return true;
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int index)
+        {
+            return inner.getStackInSlot(index);
+        }
+
+        @Override
+        public ItemStack decrStackSize(int index, int count)
+        {
+            return inner.extractItem(index, count, false);
+        }
+
+        @Override
+        public ItemStack removeStackFromSlot(int index)
+        {
+            return inner.extractItem(index, 64, false);
+        }
+
+        @Override
+        public void setInventorySlotContents(int index, ItemStack stack)
+        {
+            inner.setStackInSlot(index, stack);
+        }
+
+        @Override
+        public void markDirty()
+        {
+        }
+
+        @Override
+        public boolean isUsableByPlayer(PlayerEntity player)
+        {
+            return true;
+        }
+
+        @Override
+        public void clear()
+        {
+            for(int i=0;i<inner.getSlots();i++)
+            {
+                inner.setStackInSlot(i, ItemStack.EMPTY);
+            }
+        }
+
+        public PlayerEntity getPlayer()
+        {
+            return player;
+        }
+
+        public IItemHandlerModifiable getInner()
+        {
+            return inner;
+        }
+
+        public int getAxeLevel()
+        {
+            return axeLevel;
+        }
+
+        public int getFortune()
+        {
+            return fortune;
+        }
+
+        public Random getRandom()
+        {
+            return random;
+        }
+    }
+
+    public static class ChoppingRecipe implements IRecipe<ChoppingContext>
+    {
+        private final ResourceLocation id;
+        private final String group;
+        private final Ingredient input;
+        private final ItemStack output;
+        private final double outputMultiplier ;
+        private final double hitCountMultiplier;
+        private final int maxOutput;
+        private final int sawingTime;
+
+        public ChoppingRecipe(ResourceLocation id, String group, Ingredient input, ItemStack output, double outputMultiplier, double hitCountMultiplier, int maxOutput,
+                              int sawingTime)
+        {
+            this.id = id;
+            this.group = group;
+            this.input = input;
+            this.output = output;
+            this.outputMultiplier = outputMultiplier;
+            this.hitCountMultiplier = hitCountMultiplier;
+            this.maxOutput = maxOutput;
+            this.sawingTime = sawingTime;
+        }
 
         public ItemStack getOutput()
         {
@@ -40,43 +157,20 @@ public class Choppable
             return outputMultiplier;
         }
 
-        public ChoppingRecipe setOutputMultiplier(double outputMultiplier)
-        {
-            this.outputMultiplier = outputMultiplier;
-            return this;
-        }
 
         public double getHitCountMultiplier()
         {
             return hitCountMultiplier;
         }
 
-        public ChoppingRecipe setHitCountMultiplier(double hitCountMultiplier)
+        public int getSawingTime()
         {
-            this.hitCountMultiplier = hitCountMultiplier;
-            return this;
-        }
-
-        public int getSawmillTime()
-        {
-            return sawmillTime;
-        }
-
-        public ChoppingRecipe setSawmillTime(int sawmillTime)
-        {
-            this.sawmillTime = sawmillTime;
-            return this;
+            return sawingTime;
         }
 
         public int getMaxOutput()
         {
             return maxOutput;
-        }
-
-        public ChoppingRecipe setMaxOutput(int maxOutput)
-        {
-            this.maxOutput = maxOutput;
-            return this;
         }
 
         public ItemStack getResults(ItemStack input, PlayerEntity player, int axeLevel, int fortune, Random random)
@@ -125,30 +219,51 @@ public class Choppable
 
             return ItemStack.EMPTY;
         }
+
+        @Override
+        public boolean matches(ChoppingContext inv, World worldIn)
+        {
+            return input.test(inv.getStackInSlot(0));
+        }
+
+        @Override
+        public ItemStack getCraftingResult(ChoppingContext inv)
+        {
+            return inv.getPlayer() != null
+                    ? getResults(inv.getStackInSlot(0), inv.getPlayer(), inv.getAxeLevel(), inv.getFortune(), inv.getRandom())
+                    : getResultsSawmill();
+        }
+
+        @Override
+        public boolean canFit(int width, int height)
+        {
+            return true;
+        }
+
+        @Override
+        public ItemStack getRecipeOutput()
+        {
+            return output;
+        }
+
+        @Override
+        public ResourceLocation getId()
+        {
+            return id;
+        }
+
+        @Override
+        public IRecipeSerializer<?> getSerializer()
+        {
+            return null;
+        }
+
+        @Override
+        public IRecipeType<?> getType()
+        {
+            return null;
+        }
     }
-
-    public static class ChoppingItemRecipe extends ChoppingRecipe
-    {
-        private ItemStack input;
-
-        public ChoppingItemRecipe(ItemStack input, ItemStack output)
-        {
-            super(output);
-            this.input = input;
-        }
-
-        public ItemStack getInput()
-        {
-            return input;
-        }
-
-        public boolean accepts(ItemStack stack)
-        {
-            return ItemStack.areItemStacksEqual(input, stack);
-        }
-    }
-
-    public static final List<ChoppingRecipe> RECIPES = Lists.newArrayList();
 
     public static void registerStockRecipes()
     {
@@ -161,7 +276,7 @@ public class Choppable
 
     public static ChoppingRecipe find(ItemStack stack)
     {
-        if (stack.getCount() <= 0)
+        /*if (stack.getCount() <= 0)
             return null;
 
         for (ChoppingRecipe recipe : RECIPES)
@@ -169,7 +284,7 @@ public class Choppable
             if (recipe.accepts(stack))
                 return recipe;
         }
-
+*/
         return null;
     }
 
@@ -187,6 +302,6 @@ public class Choppable
     public static int getSawmillTime(ItemStack stack)
     {
         ChoppingRecipe recipe = find(stack);
-        return recipe != null ? recipe.getSawmillTime() : 0;
+        return recipe != null ? recipe.getSawingTime() : 0;
     }
 }

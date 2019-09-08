@@ -1,5 +1,6 @@
 package gigaherz.survivalist;
 
+import gigaherz.survivalist.api.DryingRecipe;
 import gigaherz.survivalist.chopblock.ChoppingBlock;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.misc.FibersEventHandling;
@@ -24,6 +25,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -140,7 +142,7 @@ public class Survivalist
     }
 
     @ObjectHolder(MODID + ":shlop")
-    public static SoundEvent shlop;
+    public static SoundEvent SOUND_SHLOP;
 
     public static final IArmorMaterial TANNED_LEATHER = new IArmorMaterial()
     {
@@ -253,6 +255,7 @@ public class Survivalist
         modEventBus.addGenericListener(SoundEvent.class, this::registerSounds);
         modEventBus.addGenericListener(EntityType.class, this::registerEntities);
         modEventBus.addGenericListener(ContainerType.class, this::registerContainers);
+        modEventBus.addGenericListener(IRecipeSerializer.class, this::registerRecipeSerializers);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::loadComplete);
@@ -270,31 +273,31 @@ public class Survivalist
     {
         event.getRegistry().registerAll(
                 withName(new BlockRack(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f)), "rack"),
+                withName(new BlockSawmill(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.STONE)),"sawmill"),
 
                 withName(new ChoppingBlock((() -> Blocks.CHIPPED_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "oak_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.CHIPPED_BIRCH_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "birch_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.CHIPPED_SPRUCE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "spruce_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.CHIPPED_JUNGLE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "jungle_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "dark_oak_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.CHIPPED_ACACIA_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "acacia_chopping_block"),
-
-
                 withName(new ChoppingBlock((() -> Blocks.DAMAGED_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_oak_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.DAMAGED_BIRCH_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_birch_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.DAMAGED_SPRUCE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_spruce_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.DAMAGED_JUNGLE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_jungle_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_dark_oak_chopping_block"),
-                withName(new ChoppingBlock((() -> Blocks.DAMAGED_ACACIA_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_acacia_chopping_block"),
-
-
                 withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_oak_chopping_block"),
-                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_birch_chopping_block"),
-                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_spruce_chopping_block"),
-                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_jungle_chopping_block"),
-                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_dark_oak_chopping_block"),
-                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_acacia_chopping_block"),
 
-                withName(new BlockSawmill(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.STONE)),"sawmill")
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_BIRCH_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "birch_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_BIRCH_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_birch_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_birch_chopping_block"),
+
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_SPRUCE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "spruce_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_SPRUCE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_spruce_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_spruce_chopping_block"),
+
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_JUNGLE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "jungle_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_JUNGLE_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_jungle_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_jungle_chopping_block"),
+
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "dark_oak_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_dark_oak_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_dark_oak_chopping_block"),
+
+                withName(new ChoppingBlock((() -> Blocks.CHIPPED_ACACIA_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "acacia_chopping_block"),
+                withName(new ChoppingBlock((() -> Blocks.DAMAGED_ACACIA_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_acacia_chopping_block"),
+                withName(new ChoppingBlock(null, Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "damaged_acacia_chopping_block")
         );
     }
 
@@ -306,24 +309,27 @@ public class Survivalist
                 forBlock(Blocks.SAWMILL, new Item.Properties().group(ItemGroup.DECORATIONS)),
 
                 forBlock(Blocks.OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.BIRCH_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.SPRUCE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.JUNGLE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.DARK_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.ACACIA_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-
                 forBlock(Blocks.CHIPPED_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.CHIPPED_BIRCH_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.CHIPPED_SPRUCE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.CHIPPED_JUNGLE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-                forBlock(Blocks.CHIPPED_ACACIA_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
-
                 forBlock(Blocks.DAMAGED_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+
+                forBlock(Blocks.BIRCH_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_BIRCH_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
                 forBlock(Blocks.DAMAGED_BIRCH_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+
+                forBlock(Blocks.SPRUCE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_SPRUCE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
                 forBlock(Blocks.DAMAGED_SPRUCE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+
+                forBlock(Blocks.JUNGLE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_JUNGLE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
                 forBlock(Blocks.DAMAGED_JUNGLE_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+
+                forBlock(Blocks.DARK_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
                 forBlock(Blocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+
+                forBlock(Blocks.ACACIA_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
+                forBlock(Blocks.CHIPPED_ACACIA_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
                 forBlock(Blocks.DAMAGED_ACACIA_CHOPPING_BLOCK, new Item.Properties().group(ItemGroup.DECORATIONS)),
 
                 // Items
@@ -419,6 +425,11 @@ public class Survivalist
     private void registerEntities(RegistryEvent.Register<EntityType<?>> event)
     {
         //EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
+    }
+
+    private void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event)
+    {
+        event.getRegistry().register(new DryingRecipe.Serializer().setRegistryName("drying"));
     }
 
     private static void registerOredictNames()
