@@ -2,6 +2,9 @@
   "forge_marker": 1,
   "defaults": {
     "model": "survivalist:custom/rack_with_items",
+    "textures": {
+      "particle": "minecraft:block/oak_planks"
+    },
     "custom": {
       "base_model": "survivalist:block/rack.obj",
       "transform_3": { "translation":  [0.85,0.3,0.624], "scale":  0.7},

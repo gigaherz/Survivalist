@@ -4,6 +4,7 @@ import com.google.common.collect.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.misc.QuadTransformer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -31,12 +32,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class RackBakedModel implements IBakedModel
@@ -178,6 +176,7 @@ public class RackBakedModel implements IBakedModel
         private final ResourceLocation particle;
         private final ResourceLocation baseModel;
         private final TRSRTransformation[] transformations;
+        private IUnbakedModel baseModelModel;
 
         public Model()
         {
@@ -209,9 +208,16 @@ public class RackBakedModel implements IBakedModel
         @Override
         public Collection<ResourceLocation> getTextures(Function<ResourceLocation, IUnbakedModel> modelGetter, Set<String> missingTextureErrors)
         {
+            List<ResourceLocation> list = new ArrayList<>();
             if (particle != null)
-                return Collections.singletonList(particle);
-            return Collections.emptyList();
+                list.add(particle);
+            if (baseModel != null)
+            {
+                if (baseModelModel == null)
+                    baseModelModel = ModelLoaderRegistry.getModelOrMissing(baseModel);
+                list.addAll(baseModelModel.getTextures(modelGetter, missingTextureErrors));
+            }
+            return list;
         }
 
         @Nullable
@@ -220,7 +226,17 @@ public class RackBakedModel implements IBakedModel
         {
             TextureAtlasSprite particleSprite = spriteGetter.apply(particle);
 
-            IModel rackModel = baseModel == null ? ModelLoaderRegistry.getMissingModel() : ModelLoaderRegistry.getModelOrMissing(baseModel);
+            IModel rackModel;
+            if (baseModel == null)
+            {
+                rackModel = ModelLoaderRegistry.getMissingModel();
+            }
+            else
+            {
+                if (baseModelModel == null)
+                    baseModelModel = ModelLoaderRegistry.getModelOrMissing(baseModel);
+                rackModel = baseModelModel;
+            }
             IBakedModel rackBakedModel = rackModel.bake(bakery, spriteGetter, sprite, format);
 
             Optional<TRSRTransformation> baseTransform = sprite.getState().apply(Optional.empty());
@@ -266,7 +282,7 @@ public class RackBakedModel implements IBakedModel
             {
                 String data = GSON.fromJson(customData.get("base_model"), String.class);
                 baseModel = new ResourceLocation(data);
-                baseModel = new ResourceLocation(baseModel.getNamespace(), "block/" + baseModel.getPath());
+                //baseModel = new ResourceLocation(baseModel.getNamespace(), "block/" + baseModel.getPath());
             }
             TRSRTransformation[] transformations = Arrays.copyOf(this.transformations, 4);
             for(int i=0;i<4;i++)

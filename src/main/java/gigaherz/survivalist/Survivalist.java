@@ -1,11 +1,13 @@
 package gigaherz.survivalist;
 
+import com.google.common.collect.Lists;
 import gigaherz.survivalist.api.DryingRecipe;
 import gigaherz.survivalist.chopblock.ChoppingBlock;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.misc.FibersEventHandling;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.*;
+import gigaherz.survivalist.rocks.RockEntity;
 import gigaherz.survivalist.rocks.ItemRock;
 import gigaherz.survivalist.rocks.RocksEventHandling;
 import gigaherz.survivalist.sawmill.BlockSawmill;
@@ -21,6 +23,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
@@ -53,6 +56,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
@@ -79,66 +84,66 @@ public class Survivalist
 
     @SuppressWarnings("ConstantConditions")
     @Nonnull
-    private static <T> T sneakyNull() {
+    private static <T> T toBeInitializedLater() {
         return null;
     }
 
     @ObjectHolder(MODID)
     public static class Items
     {
-        public static final Item TANNED_LEATHER = sneakyNull();
-        public static final Item CHAINMAIL = sneakyNull();
-        public static final Item JERKY = sneakyNull();
-        public static final Item COPPER_NUGGET = sneakyNull();
-        public static final Item TIN_NUGGET = sneakyNull();
-        public static final Item LEAD_NUGGET = sneakyNull();
-        public static final Item SILVER_NUGGET = sneakyNull();
-        public static final Item ALUMINUM_NUGGET = sneakyNull();
-        public static final ItemRock STONE_ROCK = sneakyNull();
-        public static final ItemRock ANDESITE_ROCK = sneakyNull();
-        public static final ItemRock DIORITE_ROCK = sneakyNull();
-        public static final ItemRock GRANITE_ROCK = sneakyNull();
-        public static final ItemRock IRON_ORE_ROCK = sneakyNull();
-        public static final ItemRock GOLD_ORE_ROCK = sneakyNull();
-        public static final ItemRock COPPER_ORE_ROCK = sneakyNull();
-        public static final ItemRock TIN_ORE_ROCK = sneakyNull();
-        public static final ItemRock LEAD_ORE_ROCK = sneakyNull();
-        public static final ItemRock SILVER_ORE_ROCK = sneakyNull();
-        public static final ItemRock ALUMINUM_ORE_ROCK = sneakyNull();
-        public static final Item DOUGH = sneakyNull();
-        public static final Item ROUND_BREAD = sneakyNull();
-        public static final Item HATCHET = sneakyNull();
-        public static final Item PICK = sneakyNull();
-        public static final Item SPADE = sneakyNull();
-        public static final Item PLANT_FIBRES = sneakyNull();
-        public static final Item TANNED_HELMET = sneakyNull();
-        public static final Item TANNED_CHESTPLATE = sneakyNull();
-        public static final Item TANNED_LEGGINGS = sneakyNull();
-        public static final Item TANNED_BOOTS = sneakyNull();
+        public static final Item TANNED_LEATHER = toBeInitializedLater();
+        public static final Item CHAINMAIL = toBeInitializedLater();
+        public static final Item JERKY = toBeInitializedLater();
+        public static final Item COPPER_NUGGET = toBeInitializedLater();
+        public static final Item TIN_NUGGET = toBeInitializedLater();
+        public static final Item LEAD_NUGGET = toBeInitializedLater();
+        public static final Item SILVER_NUGGET = toBeInitializedLater();
+        public static final Item ALUMINUM_NUGGET = toBeInitializedLater();
+        public static final ItemRock STONE_ROCK = toBeInitializedLater();
+        public static final ItemRock ANDESITE_ROCK = toBeInitializedLater();
+        public static final ItemRock DIORITE_ROCK = toBeInitializedLater();
+        public static final ItemRock GRANITE_ROCK = toBeInitializedLater();
+        public static final ItemRock IRON_ORE_ROCK = toBeInitializedLater();
+        public static final ItemRock GOLD_ORE_ROCK = toBeInitializedLater();
+        public static final ItemRock COPPER_ORE_ROCK = toBeInitializedLater();
+        public static final ItemRock TIN_ORE_ROCK = toBeInitializedLater();
+        public static final ItemRock LEAD_ORE_ROCK = toBeInitializedLater();
+        public static final ItemRock SILVER_ORE_ROCK = toBeInitializedLater();
+        public static final ItemRock ALUMINUM_ORE_ROCK = toBeInitializedLater();
+        public static final Item DOUGH = toBeInitializedLater();
+        public static final Item ROUND_BREAD = toBeInitializedLater();
+        public static final Item HATCHET = toBeInitializedLater();
+        public static final Item PICK = toBeInitializedLater();
+        public static final Item SPADE = toBeInitializedLater();
+        public static final Item PLANT_FIBRES = toBeInitializedLater();
+        public static final Item TANNED_HELMET = toBeInitializedLater();
+        public static final Item TANNED_CHESTPLATE = toBeInitializedLater();
+        public static final Item TANNED_LEGGINGS = toBeInitializedLater();
+        public static final Item TANNED_BOOTS = toBeInitializedLater();
     }
 
     @ObjectHolder("survivalist")
     public static class Blocks {
-        public static final Block RACK = sneakyNull();
-        public static final Block OAK_CHOPPING_BLOCK = sneakyNull();
-        public static final Block BIRCH_CHOPPING_BLOCK = sneakyNull();
-        public static final Block SPRUCE_CHOPPING_BLOCK = sneakyNull();
-        public static final Block JUNGLE_CHOPPING_BLOCK = sneakyNull();
-        public static final Block DARK_OAK_CHOPPING_BLOCK = sneakyNull();
-        public static final Block ACACIA_CHOPPING_BLOCK = sneakyNull();
-        public static final Block CHIPPED_OAK_CHOPPING_BLOCK = sneakyNull();
-        public static final Block CHIPPED_BIRCH_CHOPPING_BLOCK = sneakyNull();
-        public static final Block CHIPPED_SPRUCE_CHOPPING_BLOCK = sneakyNull();
-        public static final Block CHIPPED_JUNGLE_CHOPPING_BLOCK = sneakyNull();
-        public static final Block CHIPPED_DARK_OAK_CHOPPING_BLOCK = sneakyNull();
-        public static final Block CHIPPED_ACACIA_CHOPPING_BLOCK = sneakyNull();
-        public static final Block DAMAGED_OAK_CHOPPING_BLOCK = sneakyNull();
-        public static final Block DAMAGED_BIRCH_CHOPPING_BLOCK = sneakyNull();
-        public static final Block DAMAGED_SPRUCE_CHOPPING_BLOCK = sneakyNull();
-        public static final Block DAMAGED_JUNGLE_CHOPPING_BLOCK = sneakyNull();
-        public static final Block DAMAGED_DARK_OAK_CHOPPING_BLOCK = sneakyNull();
-        public static final Block DAMAGED_ACACIA_CHOPPING_BLOCK = sneakyNull();
-        public static final Block SAWMILL = sneakyNull();
+        public static final Block RACK = toBeInitializedLater();
+        public static final Block OAK_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block BIRCH_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block SPRUCE_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block JUNGLE_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block DARK_OAK_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block ACACIA_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block CHIPPED_OAK_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block CHIPPED_BIRCH_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block CHIPPED_SPRUCE_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block CHIPPED_JUNGLE_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block CHIPPED_DARK_OAK_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block CHIPPED_ACACIA_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block DAMAGED_OAK_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block DAMAGED_BIRCH_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block DAMAGED_SPRUCE_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block DAMAGED_JUNGLE_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block DAMAGED_DARK_OAK_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block DAMAGED_ACACIA_CHOPPING_BLOCK = toBeInitializedLater();
+        public static final Block SAWMILL = toBeInitializedLater();
     }
 
     @ObjectHolder(MODID + ":shlop")
@@ -413,6 +418,7 @@ public class Survivalist
         event.getRegistry().registerAll(
                 withName(new SoundEvent(location("mob.slime.merge")), "shlop")
         );
+
     }
 
     private void registerEnchantments(RegistryEvent.Register<Enchantment> event)
@@ -425,6 +431,16 @@ public class Survivalist
     private void registerEntities(RegistryEvent.Register<EntityType<?>> event)
     {
         //EntityRegistry.registerModEntity(location("thrown_rock"), EntityRock.class, "ThrownRock", entityId++, this, 80, 3, true);
+        event.getRegistry().registerAll(
+                EntityType.Builder.<RockEntity>create(RockEntity::new, EntityClassification.MISC)
+                        .size(.5f, .5f)
+                        .immuneToFire()
+                        .setTrackingRange(80)
+                        .setUpdateInterval(3)
+                        .setShouldReceiveVelocityUpdates(true)
+                        .setCustomClientFactory((packet,world) -> new RockEntity(RockEntity.TYPE, world))
+                    .build("survivalist:thrown_rock").setRegistryName("thrown_rock")
+        );
     }
 
     private void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event)

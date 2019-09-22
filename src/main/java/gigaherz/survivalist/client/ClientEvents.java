@@ -1,47 +1,46 @@
 package gigaherz.survivalist.client;
 
-import com.google.common.collect.Maps;
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.chopblock.ChoppingBlock;
-import gigaherz.survivalist.chopblock.RenderChoppingBlock;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
-import gigaherz.survivalist.rack.RackBakedModel;
+import gigaherz.survivalist.chopblock.RenderChoppingBlock;
 import gigaherz.survivalist.rack.RenderRack;
 import gigaherz.survivalist.rack.TileRack;
-import gigaherz.survivalist.rocks.EntityRock;
-import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
+import gigaherz.survivalist.rocks.RockEntity;
 import gigaherz.survivalist.scraping.MessageScraping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Map;
-
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Survivalist.MODID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Survivalist.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientEvents
 {
     // ----------------------------------------------------------- Item/Block Models
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event)
     {
-        RenderingRegistry.registerEntityRenderingHandler(EntityRock.class,
+        OBJLoader.INSTANCE.addDomain(Survivalist.MODID);
+        RenderingRegistry.registerEntityRenderingHandler(RockEntity.class,
                 manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer()));
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
         ClientRegistry.bindTileEntitySpecialRenderer(ChoppingBlockTileEntity.class, new RenderChoppingBlock());
     }
+
+    /*@SubscribeEvent
+    public static void lateInit(FMLLoadCompleteEvent event)
+    {
+        Minecraft.getInstance().getRenderManager().register(EntityRock.class,
+                new SpriteRenderer<>(Minecraft.getInstance().getRenderManager(), Minecraft.getInstance().getItemRenderer()));
+    }*/
 
     public static void handleScrapingMessage(MessageScraping message)
     {

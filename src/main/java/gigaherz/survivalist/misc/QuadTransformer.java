@@ -1,4 +1,4 @@
-package gigaherz.survivalist.rack;
+package gigaherz.survivalist.misc;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.model.BakedQuad;

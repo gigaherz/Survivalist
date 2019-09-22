@@ -145,7 +145,6 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing)
     {

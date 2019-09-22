@@ -30,7 +30,7 @@ public class ItemRock extends Item
 
         if (!worldIn.isRemote)
         {
-            EntityRock entity = new EntityRock(worldIn, playerIn, this);
+            RockEntity entity = new RockEntity(worldIn, playerIn, this);
             entity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
             worldIn.addEntity(entity);
         }

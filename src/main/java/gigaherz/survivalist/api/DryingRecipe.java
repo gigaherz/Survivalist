@@ -1,5 +1,7 @@
 package gigaherz.survivalist.api;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
