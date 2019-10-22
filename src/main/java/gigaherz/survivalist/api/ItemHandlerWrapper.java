@@ -3,15 +3,31 @@ package gigaherz.survivalist.api;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class DryingContext implements IInventory
-{
-    final IItemHandlerModifiable inner;
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
-    public DryingContext(IItemHandlerModifiable inner)
+public class ItemHandlerWrapper implements IInventory
+{
+    protected final IItemHandlerModifiable inner;
+
+    @Nullable
+    protected final Supplier<Vec3d> location;
+    protected final int distance;
+
+    public ItemHandlerWrapper(IItemHandlerModifiable inner)
+    {
+        this(inner, null, 0);
+    }
+
+    public ItemHandlerWrapper(IItemHandlerModifiable inner, @Nullable Supplier<Vec3d> location, int distance)
     {
         this.inner = inner;
+        this.distance = distance;
+        this.location = location;
     }
 
     @Override
@@ -63,7 +79,9 @@ public class DryingContext implements IInventory
     @Override
     public boolean isUsableByPlayer(PlayerEntity player)
     {
-        return true;
+        if (location == null)
+            return true;
+        return player.getPositionVec().distanceTo(location.get()) <= distance;
     }
 
     @Override

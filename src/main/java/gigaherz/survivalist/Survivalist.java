@@ -25,6 +25,7 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
@@ -37,6 +38,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.ToolType;
@@ -54,6 +57,8 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -265,8 +270,6 @@ public class Survivalist
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::loadComplete);
         //modEventBus.addListener(this::modConfig);
-
-
 
         //MinecraftForge.EVENT_BUS.addListener(this::anvilChange);
 

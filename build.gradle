@@ -58,7 +58,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.18-model-hacks'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.61'
 
     //deobfCompile "mezz.jei:jei_1.12.2:4.15.0.273:api"
     //runtime "mezz.jei:jei_1.12.2:4.15.0.273"

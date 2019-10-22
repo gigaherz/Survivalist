@@ -21,7 +21,7 @@ import net.minecraftforge.registries.ObjectHolder;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
-public class DryingRecipe implements IRecipe<DryingContext>
+public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
 {
     @ObjectHolder("survivalist:drying")
     public static IRecipeSerializer<?> SERIALIZER = null;
@@ -36,14 +36,14 @@ public class DryingRecipe implements IRecipe<DryingContext>
         }
     });
 
-    public static int getDryingTime(World world, DryingContext ctx)
+    public static int getDryingTime(World world, ItemHandlerWrapper ctx)
     {
         return world.getRecipeManager().getRecipe(DRYING, ctx, world).map(DryingRecipe::getDryTime).orElse(0);
     }
 
     public static int getDryingTime(World world, final ItemStack input)
     {
-        DryingContext ctx = new DryingContext(new IItemHandlerModifiable()
+        ItemHandlerWrapper ctx = new ItemHandlerWrapper(new IItemHandlerModifiable()
         {
             @Override
             public void setStackInSlot(int slot, @Nonnull ItemStack stack)
@@ -93,12 +93,12 @@ public class DryingRecipe implements IRecipe<DryingContext>
         return world.getRecipeManager().getRecipe(DRYING, ctx, world).map(DryingRecipe::getDryTime).orElse(200);
     }
 
-    public static ItemStack getDryingResult(World world, DryingContext ctx)
+    public static ItemStack getDryingResult(World world, ItemHandlerWrapper ctx)
     {
         return world.getRecipeManager().getRecipe(DRYING, ctx, world).map(r -> r.getCraftingResult(ctx)).orElse(ItemStack.EMPTY);
     }
 
-    public static Optional<DryingRecipe> getRecipe(World world, DryingContext ctx)
+    public static Optional<DryingRecipe> getRecipe(World world, ItemHandlerWrapper ctx)
     {
         return world.getRecipeManager().getRecipe(DRYING, ctx, world);
     }
@@ -136,13 +136,13 @@ public class DryingRecipe implements IRecipe<DryingContext>
     }
 
     @Override
-    public boolean matches(DryingContext inv, World worldIn)
+    public boolean matches(ItemHandlerWrapper inv, World worldIn)
     {
         return input.test(inv.getStackInSlot(0));
     }
 
     @Override
-    public ItemStack getCraftingResult(DryingContext inv)
+    public ItemStack getCraftingResult(ItemHandlerWrapper inv)
     {
         return input.test(inv.getStackInSlot(0)) ? output.copy() : ItemStack.EMPTY;
     }

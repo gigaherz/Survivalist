@@ -1,7 +1,6 @@
 package gigaherz.survivalist.sawmill.gui;
 
 import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.misc.IntArrayWrapper;
 import gigaherz.survivalist.sawmill.TileSawmill;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,6 +10,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -25,7 +25,7 @@ public class ContainerSawmill extends Container
 
     public ContainerSawmill(int windowId, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, new ItemStackHandler(4), new IntArrayWrapper(new int[4]));
+        this(windowId, playerInventory, new ItemStackHandler(4), new IntArray(4));
     }
 
     public ContainerSawmill(int windowId, TileSawmill tileEntity, PlayerInventory playerInventory)

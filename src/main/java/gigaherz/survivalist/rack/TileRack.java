@@ -1,6 +1,6 @@
 package gigaherz.survivalist.rack;
 
-import gigaherz.survivalist.api.DryingContext;
+import gigaherz.survivalist.api.ItemHandlerWrapper;
 import gigaherz.survivalist.api.DryingRecipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
@@ -68,11 +69,11 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
     public final LazyOptional<IItemHandler> itemsProvider = LazyOptional.of(() -> items);
 
     private final NonNullList<ItemStack> oldItems = NonNullList.withSize(4, ItemStack.EMPTY);
-    private final DryingContext[] dryingSlots = {
-            new DryingContext(new RangedWrapper(items, 0, 1)),
-            new DryingContext(new RangedWrapper(items, 1, 2)),
-            new DryingContext(new RangedWrapper(items, 2, 3)),
-            new DryingContext(new RangedWrapper(items, 3, 4)),
+    private final ItemHandlerWrapper[] dryingSlots = {
+            new ItemHandlerWrapper(new RangedWrapper(items, 0, 1), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 1, 2), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 2, 3), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 3, 4), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
     };
 
     public TileRack()
@@ -122,18 +123,17 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
             {
                 if (dryTimeRemaining[i] > 0)
                 {
-                    final int index = i;
-                    Optional<DryingRecipe> recipe = DryingRecipe.getRecipe(world, dryingSlots[index]);
+                    Optional<DryingRecipe> recipe = DryingRecipe.getRecipe(world, dryingSlots[i]);
                     if (recipe.isPresent())
                     {
-                        if (--dryTimeRemaining[index] <= 0) {
-                            ItemStack result = recipe.get().getCraftingResult(dryingSlots[index]);
-                            items.setStackInSlot(index, result);
+                        if (--dryTimeRemaining[i] <= 0) {
+                            ItemStack result = recipe.get().getCraftingResult(dryingSlots[i]);
+                            items.setStackInSlot(i, result);
                         }
                     }
                     else
                     {
-                        dryTimeRemaining[index] = 0;
+                        dryTimeRemaining[i] = 0;
                     }
                 }
             }

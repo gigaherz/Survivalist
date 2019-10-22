@@ -8,6 +8,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIntArray;
+import net.minecraft.util.IntArray;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -22,7 +23,7 @@ public class ContainerRack extends Container
 
     public ContainerRack(int windowId, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, new ItemStackHandler(4), new IntArrayWrapper(new int[4]));
+        this(windowId, playerInventory, new ItemStackHandler(4), new IntArray(4));
     }
 
     public ContainerRack(int windowId, TileRack tileRack, PlayerInventory playerInventory)
