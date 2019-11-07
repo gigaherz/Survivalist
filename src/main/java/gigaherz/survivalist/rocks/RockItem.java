@@ -6,10 +6,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-public class ItemRock extends Item
+public class RockItem extends Item
 {
 
-    public ItemRock(Properties properties)
+    public RockItem(Properties properties)
     {
         super(properties);
     }

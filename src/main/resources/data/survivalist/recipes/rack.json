@@ -6,8 +6,8 @@
     "p p"
   ],
   "key": {
-    "s": { "type":"forge:ore_dict", "ore": "stickWood" },
-    "p": { "type":"forge:ore_dict", "ore": "plankWood" }
+    "s": { "tag":"forge:sticks" },
+    "p": { "tag":"minecraft:planks" }
   },
   "result": {
     "item": "survivalist:rack"

@@ -1,6 +1,7 @@
 package gigaherz.survivalist.misc;
 
 import com.google.common.collect.ImmutableList;
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,6 +32,9 @@ public class FibersEventHandling
     @SubscribeEvent
     public void onHarvestBlock(BlockEvent.HarvestDropsEvent ev)
     {
+        if (!ConfigManager.SERVER.dropFibersFromGrass.get())
+            return;
+
         if (ev.isSilkTouching())
             return;
 

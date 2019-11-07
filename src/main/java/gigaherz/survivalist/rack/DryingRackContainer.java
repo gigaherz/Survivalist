@@ -14,24 +14,24 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerRack extends Container
+public class DryingRackContainer extends Container
 {
     @ObjectHolder("survivalist:rack")
-    public static ContainerType<ContainerRack> TYPE = null;
+    public static ContainerType<DryingRackContainer> TYPE = null;
 
     public final IIntArray dryTimeRemainingArray;
 
-    public ContainerRack(int windowId, PlayerInventory playerInventory)
+    public DryingRackContainer(int windowId, PlayerInventory playerInventory)
     {
         this(windowId, playerInventory, new ItemStackHandler(4), new IntArray(4));
     }
 
-    public ContainerRack(int windowId, TileRack tileRack, PlayerInventory playerInventory)
+    public DryingRackContainer(int windowId, DryingRackTileEntity dryingRackTileEntity, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, tileRack.items, new IntArrayWrapper(tileRack.dryTimeRemaining));
+        this(windowId, playerInventory, dryingRackTileEntity.items, new IntArrayWrapper(dryingRackTileEntity.dryTimeRemaining));
     }
 
-    public ContainerRack(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
+    public DryingRackContainer(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
     {
         super(TYPE, windowId);
 

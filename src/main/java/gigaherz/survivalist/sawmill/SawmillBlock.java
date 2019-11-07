@@ -27,12 +27,12 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BlockSawmill extends Block
+public class SawmillBlock extends Block
 {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public BlockSawmill(Properties properties)
+    public SawmillBlock(Properties properties)
     {
         super(properties);
         setDefaultState(getStateContainer().getBaseState()
@@ -124,7 +124,7 @@ public class BlockSawmill extends Block
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
-        return new TileSawmill();
+        return new SawmillTileEntity();
     }
 
     @Nullable
@@ -139,9 +139,9 @@ public class BlockSawmill extends Block
     {
         TileEntity te = worldIn.getTileEntity(pos);
 
-        if (te instanceof TileSawmill)
+        if (te instanceof SawmillTileEntity)
         {
-            dropInventoryItems(worldIn, pos, ((TileSawmill) te).getInventory());
+            dropInventoryItems(worldIn, pos, ((SawmillTileEntity) te).getInventory());
             worldIn.updateComparatorOutputLevel(pos, this);
         }
 
@@ -173,8 +173,8 @@ public class BlockSawmill extends Block
     public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
     {
         TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof TileSawmill)
-            return ItemHandlerHelper.calcRedstoneFromInventory(((TileSawmill) te).getInventory());
+        if (te instanceof SawmillTileEntity)
+            return ItemHandlerHelper.calcRedstoneFromInventory(((SawmillTileEntity) te).getInventory());
         return 0;
     }
 

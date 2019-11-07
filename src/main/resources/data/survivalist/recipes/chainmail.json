@@ -6,7 +6,7 @@
     " i "
   ],
   "key": {
-    "i": { "type":"forge:ore_dict", "ore": "ingotIron" }
+    "i": { "item":"iron_ingot" }
   },
   "result": {
     "item": "survivalist:chainmail"

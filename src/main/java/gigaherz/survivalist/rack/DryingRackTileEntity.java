@@ -35,12 +35,12 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class TileRack extends TileEntity implements ITickableTileEntity, INamedContainerProvider
+public class DryingRackTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider
 {
     @ObjectHolder("survivalist:rack")
-    public static TileEntityType<TileRack> TYPE = null;
+    public static TileEntityType<DryingRackTileEntity> TYPE = null;
 
-    public static final ModelProperty<RackItemsStateData> CONTAINED_ITEMS_DATA = new ModelProperty<>();
+    public static final ModelProperty<DryingRackItemsStateData> CONTAINED_ITEMS_DATA = new ModelProperty<>();
 
     private final ModelDataMap data = new ModelDataMap.Builder().withProperty(CONTAINED_ITEMS_DATA).build();
 
@@ -58,7 +58,7 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
         protected void onContentsChanged(int slot)
         {
             super.onContentsChanged(slot);
-            TileRack.this.markDirty();
+            DryingRackTileEntity.this.markDirty();
 
             BlockState state = world.getBlockState(pos);
             world.notifyBlockUpdate(pos, state, state, 3);
@@ -76,7 +76,7 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
             new ItemHandlerWrapper(new RangedWrapper(items, 3, 4), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
     };
 
-    public TileRack()
+    public DryingRackTileEntity()
     {
         super(TYPE);
     }
@@ -85,7 +85,7 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
     @Override
     public IModelData getModelData()
     {
-        data.setData(CONTAINED_ITEMS_DATA, new RackItemsStateData(getItems()));
+        data.setData(CONTAINED_ITEMS_DATA, new DryingRackItemsStateData(getItems()));
         return data;
     }
 
@@ -203,6 +203,6 @@ public class TileRack extends TileEntity implements ITickableTileEntity, INamedC
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player)
     {
-        return new ContainerRack(windowId, this, playerInventory);
+        return new DryingRackContainer(windowId, this, playerInventory);
     }
 }

@@ -7,7 +7,7 @@
   ],
   "key": {
     "d": { "item": "minecraft:diamond" },
-    "i": { "type":"forge:ore_dict", "ore": "ingotIron" },
+    "i": { "item": "minecraft:iron_ingot" },
     "c": { "item": "minecraft:cobblestone" }
   },
   "result": {

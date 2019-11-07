@@ -5,9 +5,9 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
 
-public class EnchantmentChaining extends Enchantment
+public class ChainingEnchantment extends Enchantment
 {
-    public EnchantmentChaining()
+    public ChainingEnchantment()
     {
         super(Rarity.UNCOMMON, EnchantmentType.WEAPON, EquipmentSlotType.values());
         setRegistryName("chaining");

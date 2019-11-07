@@ -2,11 +2,11 @@ package gigaherz.survivalist.client;
 
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
-import gigaherz.survivalist.chopblock.RenderChoppingBlock;
-import gigaherz.survivalist.rack.RenderRack;
-import gigaherz.survivalist.rack.TileRack;
+import gigaherz.survivalist.chopblock.ChoppingBlockRenderer;
+import gigaherz.survivalist.rack.DryingRackRenderer;
+import gigaherz.survivalist.rack.DryingRackTileEntity;
 import gigaherz.survivalist.rocks.RockEntity;
-import gigaherz.survivalist.scraping.MessageScraping;
+import gigaherz.survivalist.scraping.ScrapingMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.util.text.ITextComponent;
@@ -31,8 +31,8 @@ public class ClientEvents
         RenderingRegistry.registerEntityRenderingHandler(RockEntity.class,
                 manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer()));
 
-        ClientRegistry.bindTileEntitySpecialRenderer(TileRack.class, new RenderRack());
-        ClientRegistry.bindTileEntitySpecialRenderer(ChoppingBlockTileEntity.class, new RenderChoppingBlock());
+        ClientRegistry.bindTileEntitySpecialRenderer(DryingRackTileEntity.class, new DryingRackRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(ChoppingBlockTileEntity.class, new ChoppingBlockRenderer());
     }
 
     /*@SubscribeEvent
@@ -42,7 +42,7 @@ public class ClientEvents
                 new SpriteRenderer<>(Minecraft.getInstance().getRenderManager(), Minecraft.getInstance().getItemRenderer()));
     }*/
 
-    public static void handleScrapingMessage(MessageScraping message)
+    public static void handleScrapingMessage(ScrapingMessage message)
     {
         Minecraft.getInstance().execute(() -> {
             Minecraft.getInstance().player.sendMessage(

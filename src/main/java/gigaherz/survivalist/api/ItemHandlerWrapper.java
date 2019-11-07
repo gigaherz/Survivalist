@@ -92,4 +92,9 @@ public class ItemHandlerWrapper implements IInventory
             inner.setStackInSlot(i, ItemStack.EMPTY);
         }
     }
+
+    public IItemHandlerModifiable getInner()
+    {
+        return inner;
+    }
 }

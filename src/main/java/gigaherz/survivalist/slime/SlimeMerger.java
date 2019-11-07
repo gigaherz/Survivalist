@@ -1,23 +1,24 @@
 package gigaherz.survivalist.slime;
 
-import com.google.common.base.Predicate;
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-/*
+import java.util.*;
+
 public class SlimeMerger
 {
     private static final int BIG_SLIME = 8;
@@ -32,6 +33,9 @@ public class SlimeMerger
     @SubscribeEvent
     public void slimeConstruct(EntityJoinWorldEvent event)
     {
+        if (!ConfigManager.SERVER.mergeSlimes.get())
+            return;
+        
         Entity entity = event.getEntity();
 
         if (!(entity instanceof SlimeEntity))
@@ -39,11 +43,20 @@ public class SlimeMerger
 
         SlimeEntity slime = (SlimeEntity) entity;
 
-        slime.goalSelector.addGoal(7, new AISlimeMerge(slime));
-        slime.targetSelector.addGoal(5, new EntityAIFindOtherSlimeNearest(slime));
+        slime.goalSelector.addGoal(7, new MergeWithNearbySlimesGoal(slime));
+        slime.targetSelector.addGoal(5, new MoveTowardNearestSlimeGoal(slime));
     }
 
-    static class AISlimeMerge extends Goal
+    private static boolean isValidTarget(SlimeEntity slime, LivingEntity entity)
+    {
+        return entity != slime
+                && entity.isAlive()
+                && entity.getClass() == slime.getClass()
+                && entity.ticksExisted >= AGE_LIMIT
+                && ((SlimeEntity) entity).getSlimeSize() == slime.getSlimeSize();
+    }
+
+    static class MergeWithNearbySlimesGoal extends Goal
     {
         private static Method setSlimeSizeMethod;
 
@@ -53,13 +66,21 @@ public class SlimeMerger
         }
 
         private final SlimeEntity slime;
-        private final EntityAINearestAttackableTarget.Sorter sorter;
+        private final Sorter sorter;
 
-        public AISlimeMerge(SlimeEntity slimeIn)
+        public MergeWithNearbySlimesGoal(SlimeEntity slimeIn)
         {
             this.slime = slimeIn;
-            this.setMutexBits(2);
-            this.sorter = new EntityAINearestAttackableTarget.Sorter(slimeIn);
+            this.setMutexFlags(EnumSet.of(Goal.Flag.LOOK));
+            this.sorter = new Sorter(slimeIn);
+        }
+
+        private List<SlimeEntity> findOtherSlimes()
+        {
+            return slime.world
+                    .getEntitiesWithinAABB(SlimeEntity.class,
+                            slime.getBoundingBox().grow(slime.getSlimeSize() * 1.5, slime.getSlimeSize(), slime.getSlimeSize() * 1.5),
+                            (other) -> isValidTarget(slime, other));
         }
 
         @Override
@@ -71,28 +92,13 @@ public class SlimeMerger
                 return false;
             if (rand.nextFloat() > 0.5)
                 return false;
-            List<SlimeEntity> list = slime.world
-                    .getEntitiesWithinAABB(SlimeEntity.class,
-                            slime.getEntityBoundingBox().grow(slime.getSlimeSize() * 1.5, slime.getSlimeSize(), slime.getSlimeSize() * 1.5),
-                            (other) -> other != slime
-                                    && other.isEntityAlive()
-                                    && other.getClass() == slime.getClass()
-                                    && other.ticksExisted > AGE_LIMIT
-                                    && other.getSlimeSize() == slime.getSlimeSize());
-            return (list.size() >= 3);
+            return (findOtherSlimes().size() >= 3);
         }
 
         @Override
         public void startExecuting()
         {
-            List<SlimeEntity> list = slime.world
-                    .getEntitiesWithinAABB(SlimeEntity.class,
-                            slime.getEntityBoundingBox().grow(slime.getSlimeSize() * 1.5, slime.getSlimeSize(), slime.getSlimeSize() * 1.5),
-                            (other) -> other != slime
-                                    && other.isEntityAlive()
-                                    && other.getClass() == slime.getClass()
-                                    && other.ticksExisted > AGE_LIMIT
-                                    && other.getSlimeSize() == slime.getSlimeSize());
+            List<SlimeEntity> list = findOtherSlimes();
             if (list.size() >= 3)
             {
                 Collections.sort(list, this.sorter);
@@ -106,7 +112,7 @@ public class SlimeMerger
                 {
                     float angle = rand.nextFloat();
                     float speed = size * (1 + rand.nextFloat() * 0.5f);
-                    slime.world.spawnParticle(EnumParticleTypes.SLIME, slime.posX, slime.posY, slime.posZ,
+                    slime.world.addParticle(ParticleTypes.ITEM_SLIME, slime.posX, slime.posY, slime.posZ,
                             speed * Math.cos(angle), 1, speed * Math.sin(angle));
                 }
 
@@ -116,12 +122,12 @@ public class SlimeMerger
                     x += target.posX;
                     y += target.posY;
                     z += target.posZ;
-                    target.setDead();
+                    target.remove();
                     for (int j = 0; j < 8 * size; j++)
                     {
                         float angle = rand.nextFloat();
                         float speed = size * (1 + rand.nextFloat() * 0.5f);
-                        slime.world.spawnParticle(EnumParticleTypes.SLIME, target.posX, target.posY, target.posZ,
+                        slime.world.addParticle(ParticleTypes.ITEM_SLIME, target.posX, target.posY, target.posZ,
                                 speed * Math.cos(angle), 1, speed * Math.sin(angle));
                     }
                 }
@@ -141,7 +147,7 @@ public class SlimeMerger
                     throw new ReportedException(new CrashReport("Could not call method '" + setSlimeSizeMethod.getName() + "'", e));
                 }
 
-                slime.playSound(Survivalist.shlop, 1, 0.8f + rand.nextFloat() * 0.4f);
+                slime.playSound(Survivalist.SOUND_SHLOP, 1, 0.8f + rand.nextFloat() * 0.4f);
             }
 
             super.startExecuting();
@@ -154,43 +160,46 @@ public class SlimeMerger
         }
     }
 
-    public static class EntityAIFindOtherSlimeNearest extends EntityAIFindEntityNearest
+    public static class Sorter implements Comparator<Entity>
     {
-        private static Field predicateField;
+        private final Entity entity;
 
-        int cooldown = 5;
-
-        static
+        public Sorter(Entity entityIn)
         {
-            predicateField = ObfuscationReflectionHelper.findField(EntityAIFindEntityNearest.class, "field_179443_c");
+            this.entity = entityIn;
         }
+
+        public int compare(Entity p_compare_1_, Entity p_compare_2_)
+        {
+            double d0 = this.entity.getDistanceSq(p_compare_1_);
+            double d1 = this.entity.getDistanceSq(p_compare_2_);
+
+            if (d0 < d1)
+            {
+                return -1;
+            }
+            else
+            {
+                return d0 > d1 ? 1 : 0;
+            }
+        }
+    }
+
+    public static class MoveTowardNearestSlimeGoal extends NearestAttackableTargetGoal<SlimeEntity>
+    {
+        private static final int EXECUTE_CHANCE = 20;
 
         private final SlimeEntity slime;
 
-        public EntityAIFindOtherSlimeNearest(final SlimeEntity mobIn)
+        public MoveTowardNearestSlimeGoal(final SlimeEntity mobIn)
         {
-            super(mobIn, SlimeEntity.class);
+            super(mobIn, SlimeEntity.class, EXECUTE_CHANCE, true, true, null);
             this.slime = mobIn;
-            Predicate<EntityLivingBase> predicate = entity -> {
-                double range = EntityAIFindOtherSlimeNearest.this.getFollowRange();
-                return entity != null
-                        && entity != mobIn
-                        && entity.getClass() == mobIn.getClass()
-                        && entity.ticksExisted > AGE_LIMIT
-                        && !entity.isInvisible()
-                        && entity.getDistance(mobIn) <= range
-                        && ((SlimeEntity) entity).getSlimeSize() == mobIn.getSlimeSize()
-                        && EntityAITarget.isSuitableTarget(mobIn, entity, false, true);
-            };
-
-            try
-            {
-                predicateField.set(this, predicate);
-            }
-            catch (IllegalAccessException e)
-            {
-                throw new ReportedException(new CrashReport("Could not set private field '" + predicateField.getName() + "'", e));
-            }
+            this.targetEntitySelector = (new EntityPredicate())
+                    .setSkipAttackChecks()
+                    .setLineOfSiteRequired()
+                    .setDistance(this.getTargetDistance())
+                    .setCustomPredicate(other -> isValidTarget(slime, other));
         }
 
         @Override
@@ -214,4 +223,3 @@ public class SlimeMerger
         }
     }
 }
-*/

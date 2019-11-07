@@ -45,6 +45,9 @@ public class RocksEventHandling
     @SubscribeEvent
     public void onHarvestBlock(BlockEvent.HarvestDropsEvent ev)
     {
+        if (!ConfigManager.SERVER.enableRocks.get())
+            return;
+
         if (ev.isSilkTouching())
             return;
 
@@ -65,42 +68,45 @@ public class RocksEventHandling
             if (drop.getCount() <= 0)
                 continue;
 
-            if (drop.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE) && ConfigManager.replaceStoneDrops)
+            if (ConfigManager.SERVER.replaceStoneDrops.get())
             {
-                newDrops.add(new ItemStack(Survivalist.Items.STONE_ROCK, 4));
-                anyChanged = true;
+                if (drop.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE))
+                {
+                    newDrops.add(new ItemStack(Survivalist.Items.STONE_ROCK, 4));
+                    anyChanged = true;
+                }
+                else if (drop.getItem() == Item.getItemFromBlock(Blocks.STONE))
+                {
+                    newDrops.add(new ItemStack(Survivalist.Items.STONE_ROCK, 4));
+                    anyChanged = true;
+                }
+                else if (drop.getItem() == Item.getItemFromBlock(Blocks.ANDESITE))
+                {
+                    newDrops.add(new ItemStack(Survivalist.Items.ANDESITE_ROCK, 4));
+                    anyChanged = true;
+                }
+                else if (drop.getItem() == Item.getItemFromBlock(Blocks.DIORITE))
+                {
+                    newDrops.add(new ItemStack(Survivalist.Items.DIORITE_ROCK, 4));
+                    anyChanged = true;
+                }
+                else if (drop.getItem() == Item.getItemFromBlock(Blocks.GRANITE))
+                {
+                    newDrops.add(new ItemStack(Survivalist.Items.GRANITE_ROCK, 4));
+                    anyChanged = true;
+                }
             }
-            else if (drop.getItem() == Item.getItemFromBlock(Blocks.STONE) && ConfigManager.replaceStoneDrops)
-            {
-                newDrops.add(new ItemStack(Survivalist.Items.STONE_ROCK, 4));
-                anyChanged = true;
-            }
-            else if (drop.getItem() == Item.getItemFromBlock(Blocks.ANDESITE) && ConfigManager.replaceStoneDrops)
-            {
-                newDrops.add(new ItemStack(Survivalist.Items.ANDESITE_ROCK, 4));
-                anyChanged = true;
-            }
-            else if (drop.getItem() == Item.getItemFromBlock(Blocks.DIORITE) && ConfigManager.replaceStoneDrops)
-            {
-                newDrops.add(new ItemStack(Survivalist.Items.DIORITE_ROCK, 4));
-                anyChanged = true;
-            }
-            else if (drop.getItem() == Item.getItemFromBlock(Blocks.GRANITE) && ConfigManager.replaceStoneDrops)
-            {
-                newDrops.add(new ItemStack(Survivalist.Items.GRANITE_ROCK, 4));
-                anyChanged = true;
-            }
-            else if (ConfigManager.replaceIronOreDrops && TAG_IRON_ORE.contains(drop.getItem()))
+            else if (ConfigManager.SERVER.replaceIronOreDrops.get() && TAG_IRON_ORE.contains(drop.getItem()))
             {
                 newDrops.add(new ItemStack(Survivalist.Items.IRON_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
                 anyChanged = true;
             }
-            else if (ConfigManager.replaceGoldOreDrops && TAG_GOLD_ORE.contains(drop.getItem()))
+            else if (ConfigManager.SERVER.replaceGoldOreDrops.get() && TAG_GOLD_ORE.contains(drop.getItem()))
             {
                 newDrops.add(new ItemStack(Survivalist.Items.GOLD_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
                 anyChanged = true;
             }
-            else if (ConfigManager.replaceModOreDrops)
+            else if (ConfigManager.SERVER.replaceModOreDrops.get())
             {
                 if (TAG_COPPER_ORE.contains(drop.getItem()))
                 {
@@ -132,7 +138,7 @@ public class RocksEventHandling
                     newDrops.add(drop);
                 }
             }
-            else if (ConfigManager.replacePoorOreDrops)
+            else if (ConfigManager.SERVER.replacePoorOreDrops.get())
             {
                 if (TAG_POOR_IRON_ORE.contains(drop.getItem()))
                 {

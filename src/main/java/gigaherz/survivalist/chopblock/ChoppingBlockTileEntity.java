@@ -1,9 +1,9 @@
 package gigaherz.survivalist.chopblock;
 
-import gigaherz.survivalist.api.Choppable;
+import gigaherz.survivalist.api.ChoppingContext;
+import gigaherz.survivalist.api.ChoppingRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -25,6 +25,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.Random;
 
 public class ChoppingBlockTileEntity extends TileEntity
@@ -45,7 +46,8 @@ public class ChoppingBlockTileEntity extends TileEntity
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
         {
-            if (!Choppable.isValidInput(stack))
+            if (!ChoppingRecipe.getRecipe(world, stack)
+                    .isPresent())
                 return stack;
             return super.insertItem(slot, stack, simulate);
         }
@@ -128,32 +130,39 @@ public class ChoppingBlockTileEntity extends TileEntity
         boolean completed = false;
         if (slotInventory.getStackInSlot(0).getCount() > 0)
         {
-            breakingProgress += 25 + Choppable.getHitCountMultiplier(slotInventory.getStackInSlot(0)) * 25 * Math.max(0, axeLevel);
-            if (breakingProgress >= 200)
-            {
-                if (!world.isRemote)
+            ChoppingContext ctx = new ChoppingContext(slotInventory, playerIn, axeLevel, fortune, RANDOM);
+
+            Optional<ChoppingRecipe> foundRecipe = ChoppingRecipe.getRecipe(world, ctx);
+
+            completed = foundRecipe.map(recipe -> {
+
+                boolean completed2 = false;
+
+                breakingProgress += 25 + recipe.getHitCountMultiplier() * 25 * Math.max(0, axeLevel);
+                if (breakingProgress >= 200)
                 {
-                    Choppable.ChoppingRecipe recipe = Choppable.find(slotInventory.getStackInSlot(0));
-                    if (recipe != null)
+                    if (!world.isRemote)
                     {
-                        ItemStack out = recipe.getResults(slotInventory.getStackInSlot(0), playerIn, axeLevel, fortune, RANDOM);
+                        ItemStack out = recipe.getCraftingResult(ctx);
 
                         if (out.getCount() > 0)
                         {
                             //ItemHandlerHelper.giveItemToPlayer(playerIn, out);
                             spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
                         }
+
+                        completed2 = true;
                     }
-
-                    completed = true;
+                    world.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                    slotInventory.setStackInSlot(0, ItemStack.EMPTY);
+                    breakingProgress = 0;
                 }
-                world.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                slotInventory.setStackInSlot(0, ItemStack.EMPTY);
-                breakingProgress = 0;
-            }
 
-            BlockState state = world.getBlockState(pos);
-            world.notifyBlockUpdate(pos, state, state, 3);
+                BlockState state = world.getBlockState(pos);
+                world.notifyBlockUpdate(pos, state, state, 3);
+
+                return completed2;
+            }).orElse(false);
         }
         return completed;
     }

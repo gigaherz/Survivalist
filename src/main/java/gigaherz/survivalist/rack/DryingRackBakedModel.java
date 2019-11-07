@@ -37,7 +37,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class RackBakedModel implements IBakedModel
+public class DryingRackBakedModel implements IBakedModel
 {
     private final TextureAtlasSprite particle;
     private final IBakedModel rackBakedModel;
@@ -50,9 +50,9 @@ public class RackBakedModel implements IBakedModel
 
     private final ItemOverrideList overrides;
 
-    public RackBakedModel(ModelBakery bakery, IUnbakedModel original, Function<ResourceLocation, IUnbakedModel> modelGetter,
-                          Function<ResourceLocation, TextureAtlasSprite> textureGetter, VertexFormat format,
-                          TextureAtlasSprite particle, IBakedModel rackBakedModel, TRSRTransformation[] itemTransforms)
+    public DryingRackBakedModel(ModelBakery bakery, IUnbakedModel original, Function<ResourceLocation, IUnbakedModel> modelGetter,
+                                Function<ResourceLocation, TextureAtlasSprite> textureGetter, VertexFormat format,
+                                TextureAtlasSprite particle, IBakedModel rackBakedModel, TRSRTransformation[] itemTransforms)
     {
         this.particle = particle;
         this.rackBakedModel = rackBakedModel;
@@ -84,7 +84,7 @@ public class RackBakedModel implements IBakedModel
             ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
             World world = Minecraft.getInstance().world;
 
-            RackItemsStateData items = extraData.getData(TileRack.CONTAINED_ITEMS_DATA);
+            DryingRackItemsStateData items = extraData.getData(DryingRackTileEntity.CONTAINED_ITEMS_DATA);
 
             for(int i = 0; i < 4; i++)
             {
@@ -249,7 +249,7 @@ public class RackBakedModel implements IBakedModel
                 transformations[3] = value.compose(transformations[3]);
             }
 
-            return new RackBakedModel(bakery, this, bakery::getUnbakedModel, spriteGetter, format, particleSprite, rackBakedModel, transformations);
+            return new DryingRackBakedModel(bakery, this, bakery::getUnbakedModel, spriteGetter, format, particleSprite, rackBakedModel, transformations);
         }
 
         @Override

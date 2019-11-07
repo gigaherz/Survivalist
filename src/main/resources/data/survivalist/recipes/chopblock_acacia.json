@@ -1,10 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    { "item" : "minecraft:log2", "data": 0 }
+    { "item" : "minecraft:acacia_log"}
   ],
   "result": {
-    "item": "survivalist:chopping_block2",
-    "data": 0
+    "item": "survivalist:acacia_chopping_block"
   }
 }

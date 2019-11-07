@@ -2,18 +2,15 @@ package gigaherz.survivalist.chopblock;
 
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.api.Choppable;
+import gigaherz.survivalist.api.ChoppingRecipe;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -69,7 +66,7 @@ public class ChoppingBlock extends Block
 
         if (worldIn.isRemote)
         {
-            return (heldItem.getCount() <= 0) || Choppable.isValidInput(heldItem);
+            return (heldItem.getCount() <= 0) || ChoppingRecipe.getRecipe(worldIn, heldItem).isPresent();
         }
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -91,7 +88,8 @@ public class ChoppingBlock extends Block
             return false;
         }
 
-        if (Choppable.isValidInput(heldItem))
+        if (ChoppingRecipe.getRecipe(worldIn, heldItem)
+                .isPresent())
         {
             ItemStack remaining = chopper.getSlotInventory().insertItem(0, heldItem, false);
             if (!playerIn.isCreative())
@@ -142,16 +140,16 @@ public class ChoppingBlock extends Block
 
         ItemStack heldItem = playerIn.getHeldItem(Hand.MAIN_HAND);
 
-        int harvestLevel = getAxeLevel(heldItem, playerIn);
+        int harvestLevel = heldItem.getItem().getHarvestLevel(heldItem, ToolType.AXE, playerIn, null);
         if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
         {
-            if (worldIn.rand.nextFloat() < ConfigManager.choppingDegradeChance)
+            if (worldIn.rand.nextFloat() < ConfigManager.SERVER.choppingDegradeChance.get())
             {
                 worldIn.setBlockState(pos, breaksInto.get());
             }
 
-            if (ConfigManager.choppingExhaustion > 0)
-                playerIn.addExhaustion(ConfigManager.choppingExhaustion);
+            if (ConfigManager.SERVER.choppingExhaustion.get() > 0)
+                playerIn.addExhaustion(ConfigManager.SERVER.choppingExhaustion.get().floatValue());
 
             if (heldItem.getCount() > 0 && !playerIn.abilities.isCreativeMode)
             {
@@ -162,16 +160,6 @@ public class ChoppingBlock extends Block
         }
 
         return true;
-    }
-
-    private int getAxeLevel(@Nullable ItemStack heldItem, @Nullable PlayerEntity playerIn)
-    {
-        if (heldItem == null) return -1;
-
-        int level = ConfigManager.getAxeLevel(heldItem);
-        if (level >= 0) return level;
-
-        return heldItem.getItem().getHarvestLevel(heldItem, ToolType.AXE, playerIn, null);
     }
 
     /*@Override

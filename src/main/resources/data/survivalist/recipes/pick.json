@@ -11,8 +11,7 @@
       "item": "minecraft:string"
     },
     {
-      "type" : "forge:ore_dict",
-      "ore": "stickWood"
+      "tag" : "forge:sticks"
     }
   ],
   "result": {

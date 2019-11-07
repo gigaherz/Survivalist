@@ -10,9 +10,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class RenderChoppingBlock extends TileEntityRenderer<ChoppingBlockTileEntity>
+public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileEntity>
 {
-    final Minecraft mc = Minecraft.getInstance();
+    private final Minecraft mc = Minecraft.getInstance();
 
     @Override
     public void render(ChoppingBlockTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)

@@ -1,7 +1,8 @@
 package gigaherz.survivalist.sawmill;
 
-import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
+import gigaherz.survivalist.api.ChoppingContext;
+import gigaherz.survivalist.api.ChoppingRecipe;
+import gigaherz.survivalist.sawmill.gui.SawmillContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,6 +22,8 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
@@ -31,16 +34,25 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Random;
 
-public class TileSawmill extends TileEntity implements ITickableTileEntity, IIntArray, INamedContainerProvider
+public class SawmillTileEntity extends TileEntity implements ITickableTileEntity, IIntArray, INamedContainerProvider
 {
     @ObjectHolder("survivalist:sawmill")
-    public static TileEntityType<TileSawmill> TYPE;
+    public static TileEntityType<SawmillTileEntity> TYPE;
 
     @CapabilityInject(IItemHandler.class)
     public static Capability<IItemHandler> ITEMS_CAP;
 
-    public final ItemStackHandler inventory = new ItemStackHandler(3);
+    public final ItemStackHandler inventory = new ItemStackHandler(3){
+        @Override
+        protected void onContentsChanged(int slot)
+        {
+            super.onContentsChanged(slot);
+            markDirty();
+            needRefreshRecipe = true;
+        }
+    };
     private final RangedWrapper top = new RangedWrapper(inventory, 0, 1);
     private final RangedWrapper sides = new RangedWrapper(inventory, 1, 2)
     {
@@ -69,12 +81,16 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
     private final LazyOptional<IItemHandler> sides_provider = LazyOptional.of(() -> sides);
     private final LazyOptional<IItemHandler> bottom_provider = LazyOptional.of(() -> bottom);
 
+    private static final Random RANDOM = new Random();
+
     private int remainingBurnTime;
     private int totalBurnTime;
     private int cookTime;
     private int totalCookTime;
 
-    public TileSawmill()
+    private boolean needRefreshRecipe = true;
+
+    public SawmillTileEntity()
     {
         super(TYPE);
     }
@@ -112,10 +128,8 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
         ITEMS_CAP.readNBT(inventory, null, compound.get("Items"));
 
         remainingBurnTime = compound.getInt("BurnTime");
-        totalBurnTime = getBurnTime(inventory.getStackInSlot(1));
-
         cookTime = compound.getInt("CookTime");
-        totalCookTime = Choppable.getSawmillTime(inventory.getStackInSlot(0));
+        needRefreshRecipe = true;
     }
 
     @Override
@@ -173,14 +187,9 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
         //world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
     }
 
-    private int getBurnTime(ItemStack p_213997_1_) {
-        if (p_213997_1_.isEmpty()) {
-            return 0;
-        } else {
-            Item item = p_213997_1_.getItem();
-            int ret = p_213997_1_.getBurnTime();
-            return net.minecraftforge.event.ForgeEventFactory.getItemBurnTime(p_213997_1_, ret == -1 ? AbstractFurnaceTileEntity.getBurnTimes().getOrDefault(item, 0) : ret);
-        }
+    public static int getSawmillTime(World world, ItemStack stack)
+    {
+        return ChoppingRecipe.getRecipe(world, stack).map(recipe -> recipe.getSawingTime()).orElse(0);
     }
 
     @Override
@@ -188,6 +197,13 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
     {
         boolean wasBurning = this.isBurning();
         boolean changes = false;
+
+        if (needRefreshRecipe)
+        {
+            totalBurnTime = ForgeHooks.getBurnTime(inventory.getStackInSlot(1));
+            totalCookTime = getSawmillTime(world, inventory.getStackInSlot(0));
+            needRefreshRecipe = false;
+        }
 
         if (this.isBurning())
         {
@@ -197,57 +213,61 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
         if (!this.world.isRemote)
         {
             ItemStack fuel = this.inventory.getStackInSlot(1);
-            ItemStack input = inventory.getStackInSlot(0);
 
-            Choppable.ChoppingRecipe choppingRecipe = Choppable.find(input);
-            if (this.isBurning() || !fuel.isEmpty() && choppingRecipe != null)
+            if (this.isBurning() || !fuel.isEmpty())
             {
-                if (!this.isBurning() && this.canWork(choppingRecipe))
-                {
-                    this.totalBurnTime = getBurnTime(fuel);
-                    this.remainingBurnTime = this.totalBurnTime;
-
-                    if (this.isBurning())
+                ChoppingContext ctx = new ChoppingContext(inventory, null, 0, 0, RANDOM);
+                changes |= ChoppingRecipe.getRecipe(world, ctx).map(choppingRecipe -> {
+                    boolean changes2 = false;
+                    if (!this.isBurning() && this.canWork(ctx, choppingRecipe))
                     {
-                        changes = true;
+                        this.totalBurnTime = ForgeHooks.getBurnTime(fuel);
+                        this.remainingBurnTime = this.totalBurnTime;
 
-                        if (!fuel.isEmpty())
+                        if (this.isBurning())
                         {
-                            Item item = fuel.getItem();
-                            fuel.shrink(1);
+                            changes2 = true;
 
-                            if (fuel.isEmpty())
+                            if (!fuel.isEmpty())
                             {
-                                ItemStack containerItem = item.getContainerItem(fuel);
-                                this.inventory.setStackInSlot(1, containerItem);
+                                Item item = fuel.getItem();
+                                fuel.shrink(1);
+
+                                if (fuel.isEmpty())
+                                {
+                                    ItemStack containerItem = item.getContainerItem(fuel);
+                                    this.inventory.setStackInSlot(1, containerItem);
+                                }
                             }
                         }
                     }
-                }
 
-                if (this.isBurning() && this.canWork(choppingRecipe))
-                {
-                    ++this.cookTime;
-
-                    if (this.totalCookTime == 0)
+                    if (this.isBurning() && this.canWork(ctx, choppingRecipe))
                     {
-                        this.totalCookTime = choppingRecipe.getSawingTime();
-                    }
+                        ++this.cookTime;
 
-                    if (this.cookTime >= this.totalCookTime)
+                        if (this.totalCookTime == 0)
+                        {
+                            this.totalCookTime = choppingRecipe.getSawingTime();
+                        }
+
+                        if (this.cookTime >= this.totalCookTime)
+                        {
+                            this.cookTime = 0;
+                            this.totalCookTime = choppingRecipe.getSawingTime();
+                            this.processItem(ctx, choppingRecipe);
+                            changes2 = true;
+                        }
+                    }
+                    else
                     {
                         this.cookTime = 0;
-                        this.totalCookTime = choppingRecipe.getSawingTime();
-                        this.processItem();
-                        changes = true;
                     }
-                }
-                else
-                {
-                    this.cookTime = 0;
-                }
+
+                    return changes2;
+                }).orElse(false);
             }
-            else if (!this.isBurning() && this.cookTime > 0)
+            if (!this.isBurning() && this.cookTime > 0)
             {
                 this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
             }
@@ -267,23 +287,19 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
         }
     }
 
-    private boolean canWork(@Nullable Choppable.ChoppingRecipe choppingRecipe)
+    private boolean canWork(ChoppingContext ctx, ChoppingRecipe choppingRecipe)
     {
-        return getResult(choppingRecipe).getCount() > 0;
+        return getResult(ctx, choppingRecipe).getCount() > 0;
     }
 
-    private void processItem()
+    private void processItem(ChoppingContext ctx, ChoppingRecipe recipe)
     {
         ItemStack input = inventory.getStackInSlot(0);
 
         if (input.isEmpty())
             return;
 
-        Choppable.ChoppingRecipe choppingRecipe = Choppable.find(input);
-        if (choppingRecipe == null)
-            return;
-
-        ItemStack result = getResult(choppingRecipe);
+        ItemStack result = getResult(ctx, recipe);
         if (result.getCount() <= 0)
             return;
 
@@ -292,12 +308,12 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
         input.shrink(1);
     }
 
-    private ItemStack getResult(@Nullable Choppable.ChoppingRecipe choppingRecipe)
+    private ItemStack getResult(ChoppingContext ctx, @Nullable ChoppingRecipe choppingRecipe)
     {
         if (choppingRecipe == null)
             return ItemStack.EMPTY;
 
-        ItemStack result = choppingRecipe.getResultsSawmill();
+        ItemStack result = choppingRecipe.getCraftingResult(ctx);
 
         ItemStack output = inventory.getStackInSlot(2);
 
@@ -372,6 +388,6 @@ public class TileSawmill extends TileEntity implements ITickableTileEntity, IInt
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player)
     {
-        return new ContainerSawmill(windowId, this, playerInventory);
+        return new SawmillContainer(windowId, this, playerInventory);
     }
 }

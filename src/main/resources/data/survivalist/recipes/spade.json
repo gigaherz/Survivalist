@@ -5,8 +5,7 @@
       "item": "minecraft:flint"
     },
     {
-      "type" : "forge:ore_dict",
-      "ore": "stickWood"
+      "tag" : "forge:sticks"
     }
   ],
   "result": {

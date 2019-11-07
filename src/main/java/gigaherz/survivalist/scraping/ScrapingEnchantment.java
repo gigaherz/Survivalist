@@ -6,9 +6,9 @@ import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 
-public class EnchantmentScraping extends Enchantment
+public class ScrapingEnchantment extends Enchantment
 {
-    public EnchantmentScraping()
+    public ScrapingEnchantment()
     {
         super(Rarity.COMMON, EnchantmentType.BREAKABLE, EquipmentSlotType.values());
     }
@@ -16,18 +16,18 @@ public class EnchantmentScraping extends Enchantment
     @Override
     public int getMaxLevel()
     {
-        return ConfigManager.enableScraping ? 3 : 0;
+        return ConfigManager.SERVER.enableScraping.get() ? 3 : 0;
     }
 
     @Override
     public boolean isTreasureEnchantment()
     {
-        return ConfigManager.scrapingIsTreasure;
+        return ConfigManager.SERVER.scrapingIsTreasure.get();
     }
 
     @Override
     public boolean canApply(ItemStack stack)
     {
-        return ConfigManager.enableScraping;
+        return ConfigManager.SERVER.enableScraping.get();
     }
 }

@@ -1,0 +1,7 @@
+{
+  "type": "survivalist:chopping",
+  "ingredient": {
+    "item": "minecraft:oak_log"
+  },
+  "result": "minecraft:oak_planks"
+}

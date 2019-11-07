@@ -27,7 +27,7 @@ public class RockEntity extends ProjectileItemEntity implements IEntityAdditiona
         super(type, world);
     }
 
-    public RockEntity(World worldIn, PlayerEntity playerIn, ItemRock itemRock)
+    public RockEntity(World worldIn, PlayerEntity playerIn, RockItem itemRock)
     {
         super(TYPE, playerIn, worldIn);
         this.item = itemRock;

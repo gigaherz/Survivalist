@@ -13,10 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class RenderRack extends TileEntityRenderer<TileRack>
+public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
 {
     @Override
-    public void render(TileRack te, double x, double y, double z, float partialTicks, int destroyStage)
+    public void render(DryingRackTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
         if (state.getBlock() != Survivalist.Blocks.RACK)
@@ -29,7 +29,7 @@ public class RenderRack extends TileEntityRenderer<TileRack>
 
             GlStateManager.pushMatrix();
 
-            float angle = -state.get(BlockRack.FACING).getHorizontalAngle();
+            float angle = -state.get(DryingRackBlock.FACING).getHorizontalAngle();
             GlStateManager.translated(x + 0.5, y + 0.65, z + 0.5);
             GlStateManager.rotated(angle, 0, 1, 0);
 

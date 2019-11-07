@@ -1,6 +1,6 @@
 package gigaherz.survivalist;
 
-import com.google.common.collect.Lists;
+import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
 import gigaherz.survivalist.chopblock.ChoppingBlock;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
@@ -8,15 +8,16 @@ import gigaherz.survivalist.misc.FibersEventHandling;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.*;
 import gigaherz.survivalist.rocks.RockEntity;
-import gigaherz.survivalist.rocks.ItemRock;
+import gigaherz.survivalist.rocks.RockItem;
 import gigaherz.survivalist.rocks.RocksEventHandling;
-import gigaherz.survivalist.sawmill.BlockSawmill;
-import gigaherz.survivalist.sawmill.TileSawmill;
-import gigaherz.survivalist.sawmill.gui.ContainerSawmill;
-import gigaherz.survivalist.sawmill.gui.GuiSawmill;
-import gigaherz.survivalist.scraping.EnchantmentScraping;
+import gigaherz.survivalist.sawmill.SawmillBlock;
+import gigaherz.survivalist.sawmill.SawmillTileEntity;
+import gigaherz.survivalist.sawmill.gui.SawmillContainer;
+import gigaherz.survivalist.sawmill.gui.SawmillScreen;
+import gigaherz.survivalist.scraping.ScrapingEnchantment;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
-import gigaherz.survivalist.scraping.MessageScraping;
+import gigaherz.survivalist.scraping.ScrapingMessage;
+import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -25,7 +26,6 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
@@ -38,18 +38,17 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -57,12 +56,8 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
@@ -76,7 +71,7 @@ public class Survivalist
     public static Logger logger = LogManager.getLogger(MODID);
 
     @ObjectHolder(MODID + ":scraping")
-    public static EnchantmentScraping scraping;
+    public static ScrapingEnchantment scraping;
 
     public static final String CHANNEL = MODID;
     private static final String PROTOCOL_VERSION = "1.0";
@@ -104,17 +99,17 @@ public class Survivalist
         public static final Item LEAD_NUGGET = toBeInitializedLater();
         public static final Item SILVER_NUGGET = toBeInitializedLater();
         public static final Item ALUMINUM_NUGGET = toBeInitializedLater();
-        public static final ItemRock STONE_ROCK = toBeInitializedLater();
-        public static final ItemRock ANDESITE_ROCK = toBeInitializedLater();
-        public static final ItemRock DIORITE_ROCK = toBeInitializedLater();
-        public static final ItemRock GRANITE_ROCK = toBeInitializedLater();
-        public static final ItemRock IRON_ORE_ROCK = toBeInitializedLater();
-        public static final ItemRock GOLD_ORE_ROCK = toBeInitializedLater();
-        public static final ItemRock COPPER_ORE_ROCK = toBeInitializedLater();
-        public static final ItemRock TIN_ORE_ROCK = toBeInitializedLater();
-        public static final ItemRock LEAD_ORE_ROCK = toBeInitializedLater();
-        public static final ItemRock SILVER_ORE_ROCK = toBeInitializedLater();
-        public static final ItemRock ALUMINUM_ORE_ROCK = toBeInitializedLater();
+        public static final RockItem STONE_ROCK = toBeInitializedLater();
+        public static final RockItem ANDESITE_ROCK = toBeInitializedLater();
+        public static final RockItem DIORITE_ROCK = toBeInitializedLater();
+        public static final RockItem GRANITE_ROCK = toBeInitializedLater();
+        public static final RockItem IRON_ORE_ROCK = toBeInitializedLater();
+        public static final RockItem GOLD_ORE_ROCK = toBeInitializedLater();
+        public static final RockItem COPPER_ORE_ROCK = toBeInitializedLater();
+        public static final RockItem TIN_ORE_ROCK = toBeInitializedLater();
+        public static final RockItem LEAD_ORE_ROCK = toBeInitializedLater();
+        public static final RockItem SILVER_ORE_ROCK = toBeInitializedLater();
+        public static final RockItem ALUMINUM_ORE_ROCK = toBeInitializedLater();
         public static final Item DOUGH = toBeInitializedLater();
         public static final Item ROUND_BREAD = toBeInitializedLater();
         public static final Item HATCHET = toBeInitializedLater();
@@ -268,20 +263,19 @@ public class Survivalist
         modEventBus.addGenericListener(IRecipeSerializer.class, this::registerRecipeSerializers);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
-        modEventBus.addListener(this::loadComplete);
         //modEventBus.addListener(this::modConfig);
 
         //MinecraftForge.EVENT_BUS.addListener(this::anvilChange);
 
-        //modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigData.SERVER_SPEC);
+        modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigManager.SERVER_SPEC);
         //modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigData.CLIENT_SPEC);
     }
 
     private void registerBlocks(RegistryEvent.Register<Block> event)
     {
         event.getRegistry().registerAll(
-                withName(new BlockRack(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f)), "rack"),
-                withName(new BlockSawmill(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.STONE)),"sawmill"),
+                withName(new DryingRackBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f)), "rack"),
+                withName(new SawmillBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.STONE)),"sawmill"),
 
                 withName(new ChoppingBlock((() -> Blocks.CHIPPED_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "oak_chopping_block"),
                 withName(new ChoppingBlock((() -> Blocks.DAMAGED_OAK_CHOPPING_BLOCK.getDefaultState()), Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0)), "chipped_oak_chopping_block"),
@@ -355,18 +349,18 @@ public class Survivalist
                 withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "silver_nugget"),
                 withName(new Item(new Item.Properties().group(ItemGroup.MISC)), "aluminum_nugget"),
 
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "stone_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "andesite_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "diorite_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "granite_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "stone_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "andesite_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "diorite_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "granite_rock"),
 
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "iron_ore_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "gold_ore_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "copper_ore_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "tin_ore_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "lead_ore_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "silver_ore_rock"),
-                withName(new ItemRock(new Item.Properties().group(ItemGroup.MISC)), "aluminum_ore_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "iron_ore_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "gold_ore_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "copper_ore_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "tin_ore_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "lead_ore_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "silver_ore_rock"),
+                withName(new RockItem(new Item.Properties().group(ItemGroup.MISC)), "aluminum_ore_rock"),
 
                 withName(new AxeItem(TOOL_FLINT, 8.0F, -3.1F, new Item.Properties().group(ItemGroup.TOOLS)){}, "hatchet"),
                 withName(new PickaxeItem(TOOL_FLINT, 4, -2.6F, new Item.Properties().group(ItemGroup.TOOLS)){}, "pick"),
@@ -384,7 +378,7 @@ public class Survivalist
     private void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event)
     {
         event.getRegistry().registerAll(
-                withName(TileEntityType.Builder.create(TileRack::new, Blocks.RACK).build(null), "rack"),
+                withName(TileEntityType.Builder.create(DryingRackTileEntity::new, Blocks.RACK).build(null), "rack"),
                 withName(TileEntityType.Builder.create(ChoppingBlockTileEntity::new,
                         Blocks.OAK_CHOPPING_BLOCK,
                         Blocks.BIRCH_CHOPPING_BLOCK,
@@ -404,15 +398,15 @@ public class Survivalist
                         Blocks.DAMAGED_JUNGLE_CHOPPING_BLOCK,
                         Blocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK,
                         Blocks.DAMAGED_ACACIA_CHOPPING_BLOCK).build(null), "chopping_block"),
-                withName(TileEntityType.Builder.create(TileSawmill::new, Blocks.SAWMILL).build(null), "sawmill")
+                withName(TileEntityType.Builder.create(SawmillTileEntity::new, Blocks.SAWMILL).build(null), "sawmill")
         );
     }
 
     private void registerContainers(RegistryEvent.Register<ContainerType<?>> event)
     {
         event.getRegistry().registerAll(
-                withName(new ContainerType<>(ContainerRack::new), "rack"),
-                withName(new ContainerType<>(ContainerSawmill::new), "sawmill")
+                withName(new ContainerType<>(DryingRackContainer::new), "rack"),
+                withName(new ContainerType<>(SawmillContainer::new), "sawmill")
         );
     }
 
@@ -427,7 +421,7 @@ public class Survivalist
     private void registerEnchantments(RegistryEvent.Register<Enchantment> event)
     {
         event.getRegistry().registerAll(
-                withName(new EnchantmentScraping(), "scraping")
+                withName(new ScrapingEnchantment(), "scraping")
         );
     }
 
@@ -448,7 +442,13 @@ public class Survivalist
 
     private void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event)
     {
-        event.getRegistry().register(new DryingRecipe.Serializer().setRegistryName("drying"));
+        CraftingHelper.register(ConfigurationCondition.Serializer.INSTANCE);
+        CraftingHelper.register(ConfigToggledIngredientSerializer.NAME, ConfigToggledIngredientSerializer.INSTANCE);
+
+        event.getRegistry().registerAll(
+                new DryingRecipe.Serializer().setRegistryName("drying"),
+                new ChoppingRecipe.Serializer().setRegistryName("chopping")
+        );
     }
 
     private static void registerOredictNames()
@@ -496,35 +496,17 @@ public class Survivalist
     {
         //ConfigManager.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
 
-        if (ConfigManager.enableTorchFire)
-        {
-            TorchFireEventHandling.register();
-        }
+        TorchFireEventHandling.register();
 
-        if (ConfigManager.enableScraping)
-        {
-            ItemBreakingTracker.register();
-        }
+        ItemBreakingTracker.register();
 
-        if (ConfigManager.enableRocks)
-        {
-            RocksEventHandling.register();
-        }
+        RocksEventHandling.register();
 
-        if (ConfigManager.dropFibersFromGrass)
-        {
-            FibersEventHandling.register();
-        }
+        FibersEventHandling.register();
 
-        if (ConfigManager.dropStringFromSheep)
-        {
-            StringEventHandling.register();
-        }
+        StringEventHandling.register();
 
-        /*if (ConfigManager.instance.mergeSlimes)
-        {
-            SlimeMerger.register();
-        }*/
+        SlimeMerger.register();
 
         /*if (Loader.isModLoaded("crafttweaker"))
         {
@@ -541,7 +523,7 @@ public class Survivalist
         logger.info("Registering network channel...");
 
         int messageNumber = 0;
-        channel.registerMessage(messageNumber++, MessageScraping.class, MessageScraping::encode, MessageScraping::new, MessageScraping::handle);
+        channel.registerMessage(messageNumber++, ScrapingMessage.class, ScrapingMessage::encode, ScrapingMessage::new, ScrapingMessage::handle);
         logger.debug("Final message number: " + messageNumber);
         /*
         addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
@@ -558,15 +540,10 @@ public class Survivalist
 
     public void clientSetup(FMLClientSetupEvent event)
     {
-        ScreenManager.registerFactory(ContainerRack.TYPE, GuiRack::new);
-        ScreenManager.registerFactory(ContainerSawmill.TYPE, GuiSawmill::new);
+        ScreenManager.registerFactory(DryingRackContainer.TYPE, DryingRackScreen::new);
+        ScreenManager.registerFactory(SawmillContainer.TYPE, SawmillScreen::new);
         OBJLoader.INSTANCE.addDomain(MODID);
-        ModelLoaderRegistry.registerLoader(new RackBakedModel.ModelLoader());
-    }
-
-    public void loadComplete(FMLLoadCompleteEvent event)
-    {
-        ConfigManager.parseChoppingAxes();
+        ModelLoaderRegistry.registerLoader(new DryingRackBakedModel.ModelLoader());
     }
 
     private static <R extends T, T extends IForgeRegistryEntry<T>> R withName(R obj, ResourceLocation name)

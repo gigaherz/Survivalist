@@ -1,7 +1,7 @@
 package gigaherz.survivalist.sawmill.gui;
 
-import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.sawmill.TileSawmill;
+import gigaherz.survivalist.api.ChoppingRecipe;
+import gigaherz.survivalist.sawmill.SawmillTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -16,34 +16,36 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ContainerSawmill extends Container
+public class SawmillContainer extends Container
 {
     @ObjectHolder("survivalist:sawmill")
-    public static ContainerType<ContainerSawmill> TYPE;
+    public static ContainerType<SawmillContainer> TYPE;
 
     private IIntArray fields;
 
-    public ContainerSawmill(int windowId, PlayerInventory playerInventory)
+    public SawmillContainer(int windowId, PlayerInventory playerInventory)
     {
         this(windowId, playerInventory, new ItemStackHandler(4), new IntArray(4));
     }
 
-    public ContainerSawmill(int windowId, TileSawmill tileEntity, PlayerInventory playerInventory)
+    public SawmillContainer(int windowId, SawmillTileEntity tileEntity, PlayerInventory playerInventory)
     {
         this(windowId, playerInventory, tileEntity.inventory, tileEntity);
     }
 
-    public ContainerSawmill(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
+    public SawmillContainer(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
     {
         super(TYPE, windowId);
 
         fields = dryTimes;
 
         addSlot(new SlotItemHandler(inventory, 0, 56, 17));
-        addSlot(new SlotItemHandlerFuel(inventory, 1, 56, 53));
-        addSlot(new SlotItemHandlerOutput(inventory, 2, 116, 35));
+        addSlot(new SawmillFuelSlot(inventory, 1, 56, 53));
+        addSlot(new SawmillOutputSlot(inventory, 2, 116, 35));
 
         bindPlayerInventory(playerInventory);
+
+        trackIntArray(fields);
     }
 
     private void bindPlayerInventory(PlayerInventory playerInventory)
@@ -116,7 +118,8 @@ public class ContainerSawmill extends Container
             }
             else if (index != 1 && index != 0)
             {
-                if (Choppable.isValidInput(itemstack1))
+                if (ChoppingRecipe.getRecipe(playerIn.world, itemstack1)
+                        .isPresent())
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {

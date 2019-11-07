@@ -8,11 +8,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class GuiRack extends ContainerScreen<ContainerRack>
+public class DryingRackScreen extends ContainerScreen<DryingRackContainer>
 {
     protected ResourceLocation guiTextureLocation = Survivalist.location("textures/gui/rack.png");
 
-    public GuiRack(ContainerRack container, PlayerInventory inventory, ITextComponent title)
+    public DryingRackScreen(DryingRackContainer container, PlayerInventory inventory, ITextComponent title)
     {
         super(container, inventory, title);
         this.ySize = 165;

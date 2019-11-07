@@ -27,7 +27,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class BlockRack extends Block
+public class DryingRackBlock extends Block
 {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -117,7 +117,7 @@ public class BlockRack extends Block
         }
     }
 
-    public BlockRack(Properties properties)
+    public DryingRackBlock(Properties properties)
     {
         super(properties);
         setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH));
@@ -139,7 +139,7 @@ public class BlockRack extends Block
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
-        return new TileRack();
+        return new DryingRackTileEntity();
     }
 
     @Override
@@ -190,9 +190,9 @@ public class BlockRack extends Block
         {
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
-            if (tileentity instanceof TileRack)
+            if (tileentity instanceof DryingRackTileEntity)
             {
-                dropInventoryItems(worldIn, pos, ((TileRack) tileentity).inventory());
+                dropInventoryItems(worldIn, pos, ((DryingRackTileEntity) tileentity).inventory());
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
         }

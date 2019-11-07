@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:sapling"
+            "tag": "forge:saplings"
           }
         ]
       }

@@ -1,5 +1,6 @@
 package gigaherz.survivalist.torchfire;
 
+import gigaherz.survivalist.ConfigManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
@@ -18,6 +19,9 @@ public class TorchFireEventHandling
     @SubscribeEvent
     public void onAttackEntity(AttackEntityEvent ev)
     {
+        if (!ConfigManager.SERVER.enableTorchFire.get())
+            return;
+
         if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().world.isRemote)
         {
             ItemStack stack = ev.getEntityPlayer().getHeldItem(Hand.MAIN_HAND);

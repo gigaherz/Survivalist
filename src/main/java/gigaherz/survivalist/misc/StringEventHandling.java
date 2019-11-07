@@ -1,6 +1,7 @@
 package gigaherz.survivalist.misc;
 
 import com.google.common.collect.ImmutableList;
+import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.Survivalist;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -26,6 +27,9 @@ public class StringEventHandling
     @SubscribeEvent
     public void entityDrops(LivingDropsEvent ev)
     {
+        if (ConfigManager.SERVER.dropStringFromSheep.get())
+            return;
+
         Entity entity = ev.getEntity();
         if (!(entity instanceof SheepEntity))
             return;

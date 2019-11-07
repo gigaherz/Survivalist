@@ -10,18 +10,18 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public class MessageScraping
+public class ScrapingMessage
 {
     public final ItemStack stack;
     public final ItemStack ret;
 
-    public MessageScraping(ItemStack stack, ItemStack ret)
+    public ScrapingMessage(ItemStack stack, ItemStack ret)
     {
         this.stack = stack;
         this.ret = ret;
     }
 
-    public MessageScraping(PacketBuffer buf)
+    public ScrapingMessage(PacketBuffer buf)
     {
         stack = buf.readItemStack();
         ret = buf.readItemStack();

@@ -6,9 +6,9 @@ import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotItemHandlerFuel extends SlotItemHandler
+public class SawmillFuelSlot extends SlotItemHandler
 {
-    public SlotItemHandlerFuel(IItemHandler inventory, int index, int xPosition, int yPosition)
+    public SawmillFuelSlot(IItemHandler inventory, int index, int xPosition, int yPosition)
     {
         super(inventory, index, xPosition, yPosition);
     }

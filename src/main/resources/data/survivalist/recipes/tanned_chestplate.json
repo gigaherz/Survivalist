@@ -6,7 +6,7 @@
     "ttt"
   ],
   "key": {
-    "t": { "type":"forge:ore_dict", "ore": "materialTannedLeather" }
+    "t": { "tag": "survivalist:tanned_leather" }
   },
   "result": {
     "item": "survivalist:tanned_chestplate"

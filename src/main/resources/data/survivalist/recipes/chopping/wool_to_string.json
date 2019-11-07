@@ -1,0 +1,8 @@
+{
+  "type": "survivalist:chopping",
+  "ingredient": {
+    "tag": "minecraft:wool"
+  },
+  "result": "minecraft:string",
+  "max_output": 4
+}

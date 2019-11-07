@@ -133,7 +133,7 @@ public class ItemBreakingTracker
 
         void registerScrapoingConversions()
         {
-            if (ConfigManager.enableToolScraping)
+            if (ConfigManager.SERVER.enableToolScraping.get())
             {
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_SHOVEL), new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Items.STICK)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.WOODEN_HOE), new ItemStack(Blocks.OAK_PLANKS), new ItemStack(Items.STICK)));
@@ -166,7 +166,7 @@ public class ItemBreakingTracker
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.DIAMOND_SWORD), new ItemStack(Items.DIAMOND), new ItemStack(Items.STICK)));
             }
 
-            if (ConfigManager.enableArmorScraping)
+            if (ConfigManager.SERVER.enableArmorScraping.get())
             {
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_BOOTS), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_HELMET), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
@@ -230,7 +230,7 @@ public class ItemBreakingTracker
             {
                 Survivalist.logger.debug("Item broke (" + stack + ") and the player got " + ret + " in return!");
 
-                Survivalist.channel.sendTo(new MessageScraping(stack, ret), ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+                Survivalist.channel.sendTo(new ScrapingMessage(stack, ret), ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 
                 ItemEntity entityitem = new ItemEntity(player.world, player.posX, player.posY + 0.5, player.posZ, ret);
                 //entityitem.motionX = 0;
@@ -243,10 +243,14 @@ public class ItemBreakingTracker
         @SubscribeEvent
         public void onPlayerDestroyItem(PlayerDestroyItemEvent ev)
         {
+            if (!ConfigManager.SERVER.enableScraping.get())
+                return;
             if (ev.getEntityPlayer().world.isRemote)
                 return;
 
             ItemStack stack = ev.getOriginal();
+            if (stack == null)
+                return;
 
             Item item = stack.getItem();
 
@@ -259,6 +263,8 @@ public class ItemBreakingTracker
         @SubscribeEvent
         public void onLivingHurt(LivingHurtEvent ev)
         {
+            if (!ConfigManager.SERVER.enableScraping.get())
+                return;
             if (ev.getEntity().world.isRemote)
                 return;
 
@@ -273,6 +279,8 @@ public class ItemBreakingTracker
         @SubscribeEvent
         public void entityJoinWorld(EntityJoinWorldEvent ev)
         {
+            if (!ConfigManager.SERVER.enableScraping.get())
+                return;
             if (ev.getEntity().world.isRemote)
                 return;
 
@@ -299,6 +307,8 @@ public class ItemBreakingTracker
         @SubscribeEvent
         public void attachCapabilities(AttachCapabilitiesEvent<Entity> e)
         {
+            if (!ConfigManager.SERVER.enableScraping.get())
+                return;
             final Entity entity = e.getObject();
 
             if (!(entity instanceof ServerPlayerEntity))
