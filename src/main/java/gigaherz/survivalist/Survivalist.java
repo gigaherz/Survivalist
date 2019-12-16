@@ -73,7 +73,7 @@ public class Survivalist
     @ObjectHolder(MODID + ":scraping")
     public static ScrapingEnchantment scraping;
 
-    public static final String CHANNEL = MODID;
+    public static final String CHANNEL = "main";
     private static final String PROTOCOL_VERSION = "1.0";
     public static SimpleChannel channel = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(MODID, CHANNEL))
@@ -162,9 +162,8 @@ public class Survivalist
         }
 
         @Override
-        public int getDamageReductionAmount(EquipmentSlotType slotIn)
-        {
-            return 0;
+        public int getDamageReductionAmount(EquipmentSlotType slotIn) {
+            return this.armors[slotIn.getIndex()];
         }
 
         @Override

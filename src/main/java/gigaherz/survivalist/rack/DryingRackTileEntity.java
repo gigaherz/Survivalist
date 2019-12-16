@@ -90,21 +90,27 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket()
-    {
-        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
-    }
-
-    @Override
     public CompoundNBT getUpdateTag()
     {
         return this.write(new CompoundNBT());
     }
 
     @Override
+    public void handleUpdateTag(CompoundNBT tag)
+    {
+        read(tag);
+    }
+
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket()
+    {
+        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
+    }
+
+    @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet)
     {
-        read(packet.getNbtCompound());
+        handleUpdateTag(packet.getNbtCompound());
 
         BlockState state = world.getBlockState(pos);
         world.notifyBlockUpdate(pos, state, state, 3);

@@ -35,7 +35,7 @@ public class SlimeMerger
     {
         if (!ConfigManager.SERVER.mergeSlimes.get())
             return;
-        
+
         Entity entity = event.getEntity();
 
         if (!(entity instanceof SlimeEntity))

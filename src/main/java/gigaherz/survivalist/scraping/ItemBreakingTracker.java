@@ -24,6 +24,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -32,6 +33,7 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.Nullable;
@@ -232,11 +234,7 @@ public class ItemBreakingTracker
 
                 Survivalist.channel.sendTo(new ScrapingMessage(stack, ret), ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 
-                ItemEntity entityitem = new ItemEntity(player.world, player.posX, player.posY + 0.5, player.posZ, ret);
-                //entityitem.motionX = 0;
-                //entityitem.motionZ = 0;
-
-                player.world.addEntity(entityitem);
+                ItemHandlerHelper.giveItemToPlayer(player, ret);
             }
         }
 
@@ -245,11 +243,11 @@ public class ItemBreakingTracker
         {
             if (!ConfigManager.SERVER.enableScraping.get())
                 return;
-            if (ev.getEntityPlayer().world.isRemote)
+            if (ev.getPlayer().world.isRemote)
                 return;
 
             ItemStack stack = ev.getOriginal();
-            if (stack == null)
+            if (stack.isEmpty())
                 return;
 
             Item item = stack.getItem();
