@@ -1,6 +1,6 @@
 
 modLoader="javafml"
-loaderVersion="[28,)"
+loaderVersion="[29,)"
 #updateJSONURL="http://myurl.me/"
 issueTrackerURL="https://github.com/gigaherz/Survivalist/issues"
 displayURL="https://github.com/gigaherz/Survivalist"
@@ -19,12 +19,12 @@ The toolkit for the rustic adventurer
 [[dependencies.survivalist]]
    modId="forge"
    mandatory=true
-   versionRange="[28.0.45,)"
+   versionRange="[29.0,)"
    ordering="NONE"
    side="BOTH"
 [[dependencies.survivalist]]
    modId="minecraft"
    mandatory=true
-   versionRange="[1.14.4,1.15)"
+   versionRange="[1.15,1.16)"
    ordering="NONE"
    side="BOTH"

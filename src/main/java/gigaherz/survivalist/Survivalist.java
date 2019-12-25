@@ -20,9 +20,12 @@ import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -30,6 +33,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -38,6 +42,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.ToolType;
@@ -444,6 +449,24 @@ public class Survivalist
         CraftingHelper.register(ConfigurationCondition.Serializer.INSTANCE);
         CraftingHelper.register(ConfigToggledIngredientSerializer.NAME, ConfigToggledIngredientSerializer.INSTANCE);
 
+        DryingRecipe.DRYING = Registry.register(Registry.RECIPE_TYPE, DryingRecipe.RECIPE_TYPE_ID, new IRecipeType<DryingRecipe>()
+        {
+            @Override
+            public String toString()
+            {
+                return DryingRecipe.RECIPE_TYPE_ID.toString();
+            }
+        });
+
+        ChoppingRecipe.CHOPPING = Registry.register(Registry.RECIPE_TYPE, ChoppingRecipe.RECIPE_TYPE_ID, new IRecipeType<ChoppingRecipe>()
+        {
+            @Override
+            public String toString()
+            {
+                return ChoppingRecipe.RECIPE_TYPE_ID.toString();
+            }
+        });
+
         event.getRegistry().registerAll(
                 new DryingRecipe.Serializer().setRegistryName("drying"),
                 new ChoppingRecipe.Serializer().setRegistryName("chopping")
@@ -541,8 +564,11 @@ public class Survivalist
     {
         ScreenManager.registerFactory(DryingRackContainer.TYPE, DryingRackScreen::new);
         ScreenManager.registerFactory(SawmillContainer.TYPE, SawmillScreen::new);
-        OBJLoader.INSTANCE.addDomain(MODID);
-        ModelLoaderRegistry.registerLoader(new DryingRackBakedModel.ModelLoader());
+
+        ModelLoaderRegistry.registerLoader(location("rack"), DryingRackBakedModel.ModelLoader.INSTANCE);
+
+        RenderTypeLookup.setRenderLayer(Blocks.RACK, (layer) ->
+                layer == RenderType.func_228639_c_() || layer == RenderType.func_228643_e_());
     }
 
     private static <R extends T, T extends IForgeRegistryEntry<T>> R withName(R obj, ResourceLocation name)

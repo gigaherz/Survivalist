@@ -103,31 +103,31 @@ public class SlimeMerger
             {
                 Collections.sort(list, this.sorter);
 
-                double x = slime.posX;
-                double y = slime.posY;
-                double z = slime.posZ;
+                double x = slime.func_226277_ct_();
+                double y = slime.func_226278_cu_();
+                double z = slime.func_226281_cx_();
 
                 int size = slime.getSlimeSize() + 1;
                 for (int i = 0; i < 8 * size; i++)
                 {
                     float angle = rand.nextFloat();
                     float speed = size * (1 + rand.nextFloat() * 0.5f);
-                    slime.world.addParticle(ParticleTypes.ITEM_SLIME, slime.posX, slime.posY, slime.posZ,
+                    slime.world.addParticle(ParticleTypes.ITEM_SLIME, slime.func_226277_ct_(), slime.func_226278_cu_(), slime.func_226281_cx_(),
                             speed * Math.cos(angle), 1, speed * Math.sin(angle));
                 }
 
                 for (int i = 0; i < 3; i++)
                 {
                     SlimeEntity target = list.get(i);
-                    x += target.posX;
-                    y += target.posY;
-                    z += target.posZ;
+                    x += target.func_226277_ct_();
+                    y += target.func_226278_cu_();
+                    z += target.func_226281_cx_();
                     target.remove();
                     for (int j = 0; j < 8 * size; j++)
                     {
                         float angle = rand.nextFloat();
                         float speed = size * (1 + rand.nextFloat() * 0.5f);
-                        slime.world.addParticle(ParticleTypes.ITEM_SLIME, target.posX, target.posY, target.posZ,
+                        slime.world.addParticle(ParticleTypes.ITEM_SLIME, target.func_226277_ct_(), target.func_226278_cu_(), target.func_226281_cx_(),
                                 speed * Math.cos(angle), 1, speed * Math.sin(angle));
                     }
                 }

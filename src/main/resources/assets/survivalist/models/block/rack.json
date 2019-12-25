@@ -1,0 +1,5 @@
+{
+  "parent": "block/block",
+  "loader": "forge:obj",
+  "model": "survivalist:models/block/rack.obj"
+}

@@ -1,6 +1,6 @@
 package gigaherz.survivalist.sawmill.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +27,7 @@ public class SawmillScreen extends ContainerScreen<SawmillContainer>
     protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY)
     {
         minecraft.getTextureManager().bindTexture(GUI_TEXTURE_LOCATION);
-        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
         this.blit(x, y, 0, 0, xSize, ySize);

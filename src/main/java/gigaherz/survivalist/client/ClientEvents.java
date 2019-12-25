@@ -9,6 +9,7 @@ import gigaherz.survivalist.rocks.RockEntity;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -27,12 +28,11 @@ public class ClientEvents
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event)
     {
-        OBJLoader.INSTANCE.addDomain(Survivalist.MODID);
-        RenderingRegistry.registerEntityRenderingHandler(RockEntity.class,
+        RenderingRegistry.registerEntityRenderingHandler(RockEntity.TYPE,
                 manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer()));
 
-        ClientRegistry.bindTileEntitySpecialRenderer(DryingRackTileEntity.class, new DryingRackRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(ChoppingBlockTileEntity.class, new ChoppingBlockRenderer());
+        ClientRegistry.bindTileEntityRenderer(DryingRackTileEntity.TYPE, new DryingRackRenderer(TileEntityRendererDispatcher.instance));
+        ClientRegistry.bindTileEntityRenderer(ChoppingBlockTileEntity.TYPE, new ChoppingBlockRenderer(TileEntityRendererDispatcher.instance));
     }
 
     /*@SubscribeEvent

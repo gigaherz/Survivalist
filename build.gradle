@@ -31,9 +31,9 @@ compileJava {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190913-1.14.3'
+    mappings channel: 'snapshot', version: '20191222-1.14.3'
 
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('dummy/accesstransformer.cfg')
 
     runs {
         client {
@@ -61,10 +61,10 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.90'
+    minecraft 'net.minecraftforge:forge:1.15.1-30.0.15'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")
+    //compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
+    //runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")
 
     //deobfCompile 'CraftTweaker2:CraftTweaker2-API:4.1.11.500'
     //deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.16.535'

@@ -255,7 +255,7 @@ public class ItemBreakingTracker
             if (!(item instanceof TieredItem))
                 return;
 
-            onItemBroken(ev.getEntityPlayer(), stack);
+            onItemBroken(ev.getPlayer(), stack);
         }
 
         @SubscribeEvent

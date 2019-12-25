@@ -1,31 +1,8 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "survivalist:custom/rack_with_items",
-    "textures": {
-      "particle": "minecraft:block/oak_planks"
-    },
-    "custom": {
-      "base_model": "survivalist:block/rack.obj",
-      "transform_3": { "translation":  [0.85,0.3,0.624], "scale":  0.7},
-      "transform_2": { "translation":  [0.85,0.3,0.812], "scale":  0.7},
-      "transform_1": { "translation":  [0.85,0.3,1.000], "scale":  0.7},
-      "transform_0": { "translation":  [0.85,0.3,1.188], "scale":  0.7}
-    }
-  },
   "variants": {
-    "facing": {
-      "east": {
-        "y": 90
-      },
-      "west": {
-        "y": 270
-      },
-      "north": {
-      },
-      "south": {
-        "y": 180
-      }
-    }
+    "facing=east": { "model": "survivalist:block/rack_with_items", "y": 90 },
+    "facing=west": { "model": "survivalist:block/rack_with_items", "y": 270 },
+    "facing=north": { "model": "survivalist:block/rack_with_items", "y": 0 },
+    "facing=south": { "model": "survivalist:block/rack_with_items", "y": 180 }
   }
 }

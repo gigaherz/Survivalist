@@ -3,6 +3,7 @@ package gigaherz.survivalist.torchfire;
 import gigaherz.survivalist.ConfigManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -24,7 +25,8 @@ public class TorchFireEventHandling
 
         if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().world.isRemote)
         {
-            ItemStack stack = ev.getEntityPlayer().getHeldItem(Hand.MAIN_HAND);
+            PlayerEntity player = ev.getPlayer();
+            ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
             if (stack.getCount() > 0 && stack.getItem() instanceof BlockItem)
             {
                 BlockItem b = (BlockItem) stack.getItem();
@@ -37,7 +39,7 @@ public class TorchFireEventHandling
                         stack.grow(-1);
                         if (stack.getCount() <= 0)
                         {
-                            ev.getEntityPlayer().inventory.setInventorySlotContents(ev.getEntityPlayer().inventory.currentItem, ItemStack.EMPTY);
+                            player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
                         }
                     }
                 }

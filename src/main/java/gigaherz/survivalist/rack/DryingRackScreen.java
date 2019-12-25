@@ -1,6 +1,6 @@
 package gigaherz.survivalist.rack;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.api.DryingRecipe;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -37,7 +37,7 @@ public class DryingRackScreen extends ContainerScreen<DryingRackContainer>
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
-        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;

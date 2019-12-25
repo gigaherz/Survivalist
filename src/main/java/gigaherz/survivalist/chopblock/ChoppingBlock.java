@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -60,19 +61,20 @@ public class ChoppingBlock extends Block
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult p_220051_6_)
+    public ActionResultType func_225533_a_(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
     {
-        ItemStack heldItem = playerIn.getHeldItem(hand);
+        ItemStack heldItem = player.getHeldItem(hand);
 
         if (worldIn.isRemote)
         {
-            return (heldItem.getCount() <= 0) || ChoppingRecipe.getRecipe(worldIn, heldItem).isPresent();
+            return (heldItem.getCount() <= 0) || ChoppingRecipe.getRecipe(worldIn, heldItem).isPresent() ?
+                    ActionResultType.SUCCESS : ActionResultType.PASS;
         }
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (!(tileEntity instanceof ChoppingBlockTileEntity) || playerIn.isSneaking())
-            return false;
+        if (!(tileEntity instanceof ChoppingBlockTileEntity) || player.func_225608_bj_())
+            return ActionResultType.PASS;
 
         ChoppingBlockTileEntity chopper = (ChoppingBlockTileEntity) tileEntity;
 
@@ -81,38 +83,39 @@ public class ChoppingBlock extends Block
             ItemStack extracted = chopper.getSlotInventory().extractItem(0, 1, false);
             if (extracted.getCount() > 0)
             {
-                ItemHandlerHelper.giveItemToPlayer(playerIn, extracted);
-                return true;
+                ItemHandlerHelper.giveItemToPlayer(player, extracted);
+                return ActionResultType.SUCCESS;
             }
 
-            return false;
+            return ActionResultType.PASS;
         }
 
         if (ChoppingRecipe.getRecipe(worldIn, heldItem)
                 .isPresent())
         {
             ItemStack remaining = chopper.getSlotInventory().insertItem(0, heldItem, false);
-            if (!playerIn.isCreative())
+            if (!player.isCreative())
             {
                 if (remaining.getCount() > 0)
                 {
-                    playerIn.setHeldItem(hand, remaining);
+                    player.setHeldItem(hand, remaining);
                 }
                 else
                 {
-                    playerIn.setHeldItem(hand, ItemStack.EMPTY);
+                    player.setHeldItem(hand, ItemStack.EMPTY);
                 }
             }
-            return remaining.getCount() < heldItem.getCount();
+            return remaining.getCount() < heldItem.getCount() ?
+                    ActionResultType.SUCCESS : ActionResultType.PASS;
         }
 
-        return false;
+        return ActionResultType.PASS;
     }
 
     @SubscribeEvent
     public static void interactEvent(PlayerInteractEvent.LeftClickBlock event)
     {
-        PlayerEntity player = event.getEntityPlayer();
+        PlayerEntity player = event.getPlayer();
         World world = player.world;
         BlockPos pos = event.getPos();
         BlockState state = world.getBlockState(pos);

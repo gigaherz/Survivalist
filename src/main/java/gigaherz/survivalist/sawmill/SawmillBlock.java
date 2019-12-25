@@ -18,7 +18,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
@@ -44,12 +43,6 @@ public class SawmillBlock extends Block
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
     {
         builder.add(FACING, POWERED);
-    }
-
-    @Override
-    public int getLightValue(BlockState state, IEnviromentBlockReader world, BlockPos pos)
-    {
-        return state.get(POWERED) ? 15 : 0;
     }
 
     @Deprecated
@@ -100,18 +93,18 @@ public class SawmillBlock extends Block
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType func_225533_a_(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
     {
         if (worldIn.isRemote)
-            return true;
+            return ActionResultType.SUCCESS;
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (!(tileEntity instanceof INamedContainerProvider))
-            return false;
+            return ActionResultType.FAIL;
 
         NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileEntity);
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override
