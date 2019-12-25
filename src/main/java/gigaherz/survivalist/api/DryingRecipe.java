@@ -27,7 +27,7 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
     public static IRecipeSerializer<?> SERIALIZER = null;
 
     public static final ResourceLocation RECIPE_TYPE_ID = Survivalist.location("drying");
-    public static final IRecipeType<DryingRecipe> DRYING = Registry.register(Registry.RECIPE_TYPE, RECIPE_TYPE_ID, new IRecipeType<DryingRecipe>()
+    public static IRecipeType<DryingRecipe> DRYING = Registry.register(Registry.RECIPE_TYPE, RECIPE_TYPE_ID, new IRecipeType<DryingRecipe>()
     {
         @Override
         public String toString()

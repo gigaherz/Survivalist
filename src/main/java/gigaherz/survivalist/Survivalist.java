@@ -30,6 +30,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -38,6 +39,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.ToolType;
@@ -443,6 +445,24 @@ public class Survivalist
     {
         CraftingHelper.register(ConfigurationCondition.Serializer.INSTANCE);
         CraftingHelper.register(ConfigToggledIngredientSerializer.NAME, ConfigToggledIngredientSerializer.INSTANCE);
+
+        DryingRecipe.DRYING = Registry.register(Registry.RECIPE_TYPE, DryingRecipe.RECIPE_TYPE_ID, new IRecipeType<DryingRecipe>()
+        {
+            @Override
+            public String toString()
+            {
+                return DryingRecipe.RECIPE_TYPE_ID.toString();
+            }
+        });
+
+        ChoppingRecipe.CHOPPING = Registry.register(Registry.RECIPE_TYPE, ChoppingRecipe.RECIPE_TYPE_ID, new IRecipeType<ChoppingRecipe>()
+        {
+            @Override
+            public String toString()
+            {
+                return ChoppingRecipe.RECIPE_TYPE_ID.toString();
+            }
+        });
 
         event.getRegistry().registerAll(
                 new DryingRecipe.Serializer().setRegistryName("drying"),
