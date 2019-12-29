@@ -1,0 +1,24 @@
+{
+    "item.survivalist.chainmail": "Ризница",
+    "item.survivalist.iron_nugget": "Железен Къшей",
+    "item.survivalist.rock": "Скала",
+    "item.survivalist.andesite_rock": "Скала от Андезит",
+    "item.survivalist.diorite_rock": "Скала от Диорит",
+    "item.survivalist.granite_rock": "Скала от Гранит",
+    "item.survivalist.iron_rock": "Скала от Желязна Руда",
+    "item.survivalist.gold_rock": "Скала от Златна Руда",
+    "item.survivalist.tanned_leather": "Загоряла Кожа",
+    "item.survivalist.jerky": "Суха Пастарма",
+    "item.survivalist.dough": "Хлебно Тесто",
+    "item.survivalist.round_bread": "Кръгъл хляб",
+
+    "item.survivalist.tanned_helmet": "Загоряли Кожена Шапка",
+    "item.survivalist.tanned_chestplate": "Загоряли Кожена Туника",
+    "item.survivalist.tanned_leggings": "Загоряли Кожени Панталони",
+    "item.survivalist.tanned_boots": "Загоряли Кожени Ботуши",
+
+    "enchantment.survivalist.scraping": "Речиклиране",
+
+    "block.survivalist.rack": "Изсъхващ Багажник",
+    "text.survivalist.rack.title": "Изсъхващ Багажник"
+}

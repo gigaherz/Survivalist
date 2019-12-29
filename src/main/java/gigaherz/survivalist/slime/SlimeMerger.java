@@ -62,7 +62,7 @@ public class SlimeMerger
 
         static
         {
-            setSlimeSizeMethod = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", void.class, int.class, boolean.class);
+            setSlimeSizeMethod = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
         }
 
         private final SlimeEntity slime;

@@ -1,5 +1,8 @@
 {
   "parent": "block/block",
   "loader": "forge:obj",
-  "model": "survivalist:models/block/rack.obj"
+  "model": "survivalist:models/block/rack.obj",
+  "textures": {
+    "particle": "block/oak_planks"
+  }
 }

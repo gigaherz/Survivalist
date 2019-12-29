@@ -6,21 +6,24 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.TransformationMatrix;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.QuadTransformer;
+import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 import org.apache.commons.lang3.tuple.Pair;
@@ -68,12 +71,12 @@ public class DryingRackBakedModel implements IBakedModel
     {
         List<BakedQuad> quads = Lists.newArrayList();
 
-        //BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
-        //if (renderLayer == BlockRenderLayer.SOLID)
+        RenderType renderLayer = MinecraftForgeClient.getRenderLayer();
+        if (renderLayer == RenderType.func_228639_c_())
         {
             quads.addAll(rackBakedModel.getQuads(state, side, rand));
         }
-        //else if (renderLayer == BlockRenderLayer.CUTOUT && side == null && extraData != null)
+        else if (renderLayer == RenderType.func_228643_e_() && side == null)
         {
             ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
             World world = Minecraft.getInstance().world;
@@ -86,34 +89,48 @@ public class DryingRackBakedModel implements IBakedModel
                 if (stack.isEmpty())
                     continue;
 
-                IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
                 MatrixStack matrixStack = new MatrixStack();
+                matrixStack.func_227860_a_();
+
+                TransformationMatrix ct = itemTransforms[i];
+                matrixStack.func_227866_c_().func_227870_a_().func_226595_a_(ct.func_227988_c_());
+                matrixStack.func_227866_c_().func_227872_b_().func_226118_b_(ct.getNormalMatrix());
+
+                IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
+
+                if (stack.getItem() == Items.TRIDENT)
+                {
+                    model = Minecraft.getInstance().getItemRenderer().getItemModelMesher().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
+                }
+
                 model = model.handlePerspective(ItemCameraTransforms.TransformType.FIXED, matrixStack);
 
-                @SuppressWarnings("unchecked")
-                Map<Pair<IBakedModel,TransformationMatrix>, List<BakedQuad>> cache = caches.get(i);
-
-                Matrix4f positionTransform = matrixStack.func_227866_c_().func_227870_a_();
-                TransformationMatrix transformMatrix = new TransformationMatrix(positionTransform);
-
-                Pair<IBakedModel, TransformationMatrix> pair = Pair.of(model, transformMatrix);
-                List<BakedQuad> cachedQuads = cache.get(pair);
-                if (cachedQuads == null)
+                if (!model.isBuiltInRenderer())
                 {
-                    TransformationMatrix matrix2 = transformMatrix.compose(itemTransforms[i]);
+                    @SuppressWarnings("unchecked")
+                    Map<Pair<IBakedModel, TransformationMatrix>, List<BakedQuad>> cache = caches.get(i);
 
-                    cachedQuads = Lists.newArrayList();
-                    for (Direction face : faces)
+                    Matrix4f positionTransform = matrixStack.func_227866_c_().func_227870_a_();
+                    TransformationMatrix transformMatrix = new TransformationMatrix(positionTransform);
+
+                    Pair<IBakedModel, TransformationMatrix> pair = Pair.of(model, transformMatrix);
+                    List<BakedQuad> cachedQuads = cache.get(pair);
+                    if (cachedQuads == null)
                     {
-                        List<BakedQuad> inQuads = model.getQuads(null, face, rand);
-                        List<BakedQuad> outQuads = new QuadTransformer(DefaultVertexFormats.BLOCK, matrix2).processMany(inQuads);
 
-                        cachedQuads.addAll(outQuads);
+                        cachedQuads = Lists.newArrayList();
+                        for (Direction face : faces)
+                        {
+                            List<BakedQuad> inQuads = model.getQuads(null, face, rand);
+                            List<BakedQuad> outQuads = new QuadTransformer(DefaultVertexFormats.BLOCK, transformMatrix).processMany(inQuads);
+
+                            cachedQuads.addAll(outQuads);
+                        }
+
+                        cache.put(pair, cachedQuads);
                     }
-
-                    cache.put(pair, cachedQuads);
+                    quads.addAll(cachedQuads);
                 }
-                quads.addAll(cachedQuads);
             }
         }
 
@@ -187,14 +204,17 @@ public class DryingRackBakedModel implements IBakedModel
         {
             TextureAtlasSprite particleSprite = spriteGetter.apply(owner.resolveTexture("particle"));
 
+            TransformationMatrix[] transformations = Arrays.copyOf(this.transformations, 4);
+
             IBakedModel rackBakedModel = null;
             if (baseModel != null)
             {
-                rackBakedModel = baseModel.func_225613_a_(bakery, spriteGetter, sprite, modelLocation);
-
                 TransformationMatrix baseTransform = sprite.func_225615_b_();
+                rackBakedModel = baseModel.func_225613_a_(bakery, spriteGetter, new SimpleModelTransform(baseTransform), modelLocation);
+
                 if (!baseTransform.isIdentity())
                 {
+                    baseTransform = baseTransform.blockCenterToCorner();
                     transformations[0] = baseTransform.compose(transformations[0]);
                     transformations[1] = baseTransform.compose(transformations[1]);
                     transformations[2] = baseTransform.compose(transformations[2]);

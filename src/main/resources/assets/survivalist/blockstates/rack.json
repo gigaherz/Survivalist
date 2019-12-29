@@ -1,8 +1,9 @@
 {
+  "__comment": "FIXME: use rack_with_items once fixed",
   "variants": {
-    "facing=east": { "model": "survivalist:block/rack_with_items", "y": 90 },
-    "facing=west": { "model": "survivalist:block/rack_with_items", "y": 270 },
-    "facing=north": { "model": "survivalist:block/rack_with_items", "y": 0 },
-    "facing=south": { "model": "survivalist:block/rack_with_items", "y": 180 }
+    "facing=east": { "model": "survivalist:block/rack", "y": 90 },
+    "facing=west": { "model": "survivalist:block/rack", "y": 270 },
+    "facing=north": { "model": "survivalist:block/rack", "y": 0 },
+    "facing=south": { "model": "survivalist:block/rack", "y": 180 }
   }
 }

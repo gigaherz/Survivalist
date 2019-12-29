@@ -61,7 +61,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.1-30.0.15'
+    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.1-30.0.17-temp'
 
     //compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
     //runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")

@@ -31,8 +31,8 @@ public class ClientEvents
         RenderingRegistry.registerEntityRenderingHandler(RockEntity.TYPE,
                 manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer()));
 
-        ClientRegistry.bindTileEntityRenderer(DryingRackTileEntity.TYPE, new DryingRackRenderer(TileEntityRendererDispatcher.instance));
-        ClientRegistry.bindTileEntityRenderer(ChoppingBlockTileEntity.TYPE, new ChoppingBlockRenderer(TileEntityRendererDispatcher.instance));
+        ClientRegistry.bindTileEntityRenderer(DryingRackTileEntity.TYPE, DryingRackRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ChoppingBlockTileEntity.TYPE, ChoppingBlockRenderer::new);
     }
 
     /*@SubscribeEvent

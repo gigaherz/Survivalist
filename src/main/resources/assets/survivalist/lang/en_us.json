@@ -1,0 +1,72 @@
+{
+    "item.survivalist.chainmail": "Chainmail",
+    "item.survivalist.iron_nugget": "Iron Nugget",
+    "item.survivalist.copper_nugget": "Copper Nugget",
+    "item.survivalist.tin_nugget": "Tin Nugget",
+    "item.survivalist.lead_nugget": "Lead Nugget",
+    "item.survivalist.silver_nugget": "Silver Nugget",
+    "item.survivalist.aluminum_nugget": "Aluminum Nugget",
+    "item.survivalist.rock": "Rock",
+    "item.survivalist.andesite_rock": "Andesite Rock",
+    "item.survivalist.diorite_rock": "Diorite Rock",
+    "item.survivalist.granite_rock": "Granite Rock",
+    "item.survivalist.iron_rock": "Iron Ore Rock",
+    "item.survivalist.gold_rock": "Gold Ore Rock",
+    "item.survivalist.copper_rock": "Copper Ore Rock",
+    "item.survivalist.tin_rock": "Tin Ore Rock",
+    "item.survivalist.lead_rock": "Lead Ore Rock",
+    "item.survivalist.silver_rock": "Silver Ore Rock",
+    "item.survivalist.aluminum_rock": "Aluminum Ore Rock",
+    "item.survivalist.tanned_leather": "Tanned Leather",
+    "item.survivalist.jerky": "Dry Jerky",
+    "item.survivalist.dough": "Bread Dough",
+    "item.survivalist.round_bread": "Round Bread",
+    "item.survivalist.hatchet": "Crude Hatchet",
+    "item.survivalist.pick": "Crude Pick",
+    "item.survivalist.spade": "Crude Spade",
+    "item.survivalist.plant_fibres": "Plant Fibers",
+
+    "item.survivalist.tanned_helmet": "Tanned Leather Cap",
+    "item.survivalist.tanned_chestplate": "Tanned Leather Jacket",
+    "item.survivalist.tanned_leggings": "Tanned Leather Pants",
+    "item.survivalist.tanned_boots": "Tanned Leather Boots",
+
+    "enchantment.survivalist.scraping": "Scrapping",
+    "text.survivalist.scraping.message1": "Your %s broke but you got %dx%s in return!\"",
+    "tooltip.survivalist.scraping.disabled": "- The scrapping feature is disabled, this enchantment will do nothing.",
+
+    "block.survivalist.rack": "Drying Rack",
+    "text.survivalist.rack.inventory": "Drying Rack",
+
+    "block.survivalist.chopping_block": "Chopping Block",
+
+    "block.survivalist.pristine_oak_chopping_block": "Oak Chopping Block",
+    "block.survivalist.used_oak_chopping_block": "Used Oak Chopping Block",
+    "block.survivalist.weathered_oak_chopping_block": "Weathered Oak Chopping Block",
+
+    "block.survivalist.pristine_birch_chopping_block": "Birch Chopping Block",
+    "block.survivalist.used_birch_chopping_block": "Used Birch Chopping Block",
+    "block.survivalist.weathered_birch_chopping_block": "Weathered Birch Chopping Block",
+
+    "block.survivalist.pristine_spruce_chopping_block": "Spruce Chopping Block",
+    "block.survivalist.used_spruce_chopping_block": "Used Spruce Chopping Block",
+    "block.survivalist.weathered_spruce_chopping_block": "Weathered Spruce Chopping Block",
+
+    "block.survivalist.pristine_jungle_chopping_block": "Jungle Chopping Block",
+    "block.survivalist.used_jungle_chopping_block": "Used Jungle Chopping Block",
+    "block.survivalist.weathered_jungle_chopping_block": "Weathered Jungle Chopping Block",
+
+    "block.survivalist.pristine_big_oak_chopping_block": "Dark Oak Chopping Block",
+    "block.survivalist.used_big_oak_chopping_block": "Used Dark Oak Chopping Block",
+    "block.survivalist.weathered_big_oak_chopping_block": "Weathered Dark Oak Chopping Block",
+
+    "block.survivalist.pristine_acacia_chopping_block": "Acacia Chopping Block",
+    "block.survivalist.used_acacia_chopping_block": "Used Acacia Chopping Block",
+    "block.survivalist.weathered_acacia_chopping_block": "Weathered Acacia Chopping Block",
+
+    "block.survivalist.sawmill": "Sawmill",
+    "text.survivalist.sawmill": "Sawmill",
+
+    "text.survivalist.jei.category.chopping": "Chopping Block",
+    "text.survivalist.jei.category.drying": "Drying Rack"
+}

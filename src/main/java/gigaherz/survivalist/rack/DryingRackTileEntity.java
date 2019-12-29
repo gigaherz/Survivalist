@@ -114,6 +114,7 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
 
         BlockState state = world.getBlockState(pos);
         world.notifyBlockUpdate(pos, state, state, 3);
+        this.requestModelDataUpdate();
     }
 
     @Override

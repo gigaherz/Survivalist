@@ -248,8 +248,6 @@ public class Survivalist
     public static final Food food_dough = new Food.Builder().hunger(4).saturation(1).meat().build();
     public static final Food food_bread = new Food.Builder().hunger(8).saturation(3).meat().build();
 
-    //public static SimpleNetworkWrapper channel;
-
     public Survivalist()
     {
         instance = this;
