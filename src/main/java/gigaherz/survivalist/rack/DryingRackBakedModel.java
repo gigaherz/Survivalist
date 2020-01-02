@@ -90,11 +90,11 @@ public class DryingRackBakedModel implements IBakedModel
                     continue;
 
                 MatrixStack matrixStack = new MatrixStack();
-                matrixStack.func_227860_a_();
+                matrixStack.func_227860_a_(); // pushMatrix
 
                 TransformationMatrix ct = itemTransforms[i];
-                matrixStack.func_227866_c_().func_227870_a_().func_226595_a_(ct.func_227988_c_());
-                matrixStack.func_227866_c_().func_227872_b_().func_226118_b_(ct.getNormalMatrix());
+                matrixStack.func_227866_c_().func_227870_a_().func_226595_a_(ct.func_227988_c_()); // current().getPositionMatrix().multiply
+                matrixStack.func_227866_c_().func_227872_b_().func_226118_b_(ct.getNormalMatrix()); // current().getNormalMatrix().multiply
 
                 IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
 
@@ -110,7 +110,7 @@ public class DryingRackBakedModel implements IBakedModel
                     @SuppressWarnings("unchecked")
                     Map<Pair<IBakedModel, TransformationMatrix>, List<BakedQuad>> cache = caches.get(i);
 
-                    Matrix4f positionTransform = matrixStack.func_227866_c_().func_227870_a_();
+                    Matrix4f positionTransform = matrixStack.func_227866_c_().func_227870_a_(); // current() // getPositionMatrix
                     TransformationMatrix transformMatrix = new TransformationMatrix(positionTransform);
 
                     Pair<IBakedModel, TransformationMatrix> pair = Pair.of(model, transformMatrix);
@@ -210,7 +210,7 @@ public class DryingRackBakedModel implements IBakedModel
             if (baseModel != null)
             {
                 TransformationMatrix baseTransform = sprite.func_225615_b_();
-                rackBakedModel = baseModel.func_225613_a_(bakery, spriteGetter, new SimpleModelTransform(baseTransform), modelLocation);
+                rackBakedModel = baseModel.func_225613_a_(bakery, spriteGetter, new SimpleModelTransform(baseTransform), modelLocation); // bake
 
                 if (!baseTransform.isIdentity())
                 {

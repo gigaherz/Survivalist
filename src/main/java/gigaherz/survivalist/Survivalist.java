@@ -447,24 +447,6 @@ public class Survivalist
         CraftingHelper.register(ConfigurationCondition.Serializer.INSTANCE);
         CraftingHelper.register(ConfigToggledIngredientSerializer.NAME, ConfigToggledIngredientSerializer.INSTANCE);
 
-        DryingRecipe.DRYING = Registry.register(Registry.RECIPE_TYPE, DryingRecipe.RECIPE_TYPE_ID, new IRecipeType<DryingRecipe>()
-        {
-            @Override
-            public String toString()
-            {
-                return DryingRecipe.RECIPE_TYPE_ID.toString();
-            }
-        });
-
-        ChoppingRecipe.CHOPPING = Registry.register(Registry.RECIPE_TYPE, ChoppingRecipe.RECIPE_TYPE_ID, new IRecipeType<ChoppingRecipe>()
-        {
-            @Override
-            public String toString()
-            {
-                return ChoppingRecipe.RECIPE_TYPE_ID.toString();
-            }
-        });
-
         event.getRegistry().registerAll(
                 new DryingRecipe.Serializer().setRegistryName("drying"),
                 new ChoppingRecipe.Serializer().setRegistryName("chopping")

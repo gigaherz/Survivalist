@@ -32,47 +32,46 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
             return;
 
         te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent((inv) -> {
-            matrixStack.func_227860_a_();
+            matrixStack.func_227860_a_(); // pushMatrix
 
             float angle = -state.get(DryingRackBlock.FACING).getHorizontalAngle();
 
-            matrixStack.func_227861_a_(0.5, 0.5, 0.5);
-            matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(angle));
-            matrixStack.func_227861_a_(-0.5, -0.5, -0.5);
+            matrixStack.func_227861_a_(0.5, 0.5, 0.5);    // translate
+            matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(angle));        // rotate
+            matrixStack.func_227861_a_(-0.5, -0.5, -0.5); // translate
             //matrixStack.func_227863_a_(Vector3f.field_229183_f_.func_229187_a_(180));
 
             Minecraft mc = Minecraft.getInstance();
 
             ItemRenderer itemRenderer = mc.getItemRenderer();
-            World world = mc.world;
             for (int i = 0; i < 4; i++)
             {
                 ItemStack stack = inv.getStackInSlot(i);
                 if (stack.getCount() > 0)
                 {
-                    matrixStack.func_227860_a_();
+                    matrixStack.func_227860_a_(); // pushMatrix
 
                     float zz = (i - 1.5f) * 0.1875f;
 
-                    matrixStack.func_227861_a_(0, 0, zz);
+                    matrixStack.func_227861_a_(0, 0, zz); // translate
 
-                    matrixStack.func_227862_a_(0.7f, 0.7f, 0.7f);
+                    matrixStack.func_227862_a_(0.7f, 0.7f, 0.7f); // scale
 
-                    matrixStack.func_227861_a_(0.715, 0.93, 0.635);
-                    matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(180));
+                    matrixStack.func_227861_a_(0.715, 0.93, 0.635); // translate
+                    matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(180)); // rotate
 
                     IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity)null);
                     // FIXME: Fix baked model.
                     //if (ibakedmodel.isBuiltInRenderer())
                     {
-                        itemRenderer.func_229111_a_(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel);
+                        itemRenderer.func_229111_a_(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel); // renderItem
                     }
 
-                    matrixStack.func_227865_b_();
+                    matrixStack.func_227865_b_(); // popMatrix
                 }
             }
 
-            matrixStack.func_227865_b_();
+            matrixStack.func_227865_b_(); // popMatrix
         });
     }
 }
