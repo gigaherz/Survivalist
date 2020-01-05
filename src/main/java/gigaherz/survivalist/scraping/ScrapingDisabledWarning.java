@@ -1,8 +1,7 @@
 package gigaherz.survivalist.scraping;
 
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
-import net.minecraft.client.resources.I18n;
+import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -14,13 +13,13 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Survivalist.MODID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = SurvivalistMod.MODID)
 public class ScrapingDisabledWarning
 {
     @SubscribeEvent
     public static void addInformation(ItemTooltipEvent ev)
     {
-        if (!ConfigManager.SERVER.enableScraping.get() && EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping, ev.getItemStack()) > 0)
+        if (!ConfigManager.SERVER.enableScraping.get() && EnchantmentHelper.getEnchantmentLevel(SurvivalistMod.SCRAPING.get(), ev.getItemStack()) > 0)
         {
             List<ITextComponent> list = ev.getToolTip();
             /*int lastScraping = -1;

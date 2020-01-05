@@ -1,7 +1,7 @@
 package gigaherz.survivalist.chopblock;
 
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -28,7 +28,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = Survivalist.MODID)
+@Mod.EventBusSubscriber(modid = SurvivalistMod.MODID)
 public class ChoppingBlock extends Block
 {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);

@@ -1,4 +1,4 @@
 {
   "parent": "item/generated",
-  "textures": { "layer0": "survivalist:item/granite_rock" }
+  "textures": { "layer0": "survivalist:item/iron_ore_rock" }
 }

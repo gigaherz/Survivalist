@@ -47,6 +47,12 @@ minecraft {
             environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
         }
 
+        dcevmClient {
+            parent runs.client
+
+            jvmArg '-XXaltjvm=dcevm'
+        }
+
         server {
             workingDirectory project.file('run')
 
@@ -57,11 +63,24 @@ minecraft {
 
             environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
         }
+
+        data {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', ''
+            property 'forge.logging.console.level', 'debug'
+
+            ideaModule "${project.name}.main"
+
+            args '--mod', 'survivalist', '--all', '--output', file('src/generated/resources/')
+
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+        }
     }
 }
 
 dependencies {
-    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.1-30.0.18'
+    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.1-30.0.24'
 
     //compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
     //runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")

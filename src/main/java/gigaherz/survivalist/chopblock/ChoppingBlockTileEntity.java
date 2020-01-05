@@ -1,5 +1,6 @@
 package gigaherz.survivalist.chopblock;
 
+import gigaherz.survivalist.SurvivalistTileEntityTypes;
 import gigaherz.survivalist.api.ChoppingContext;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import net.minecraft.block.Block;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -30,8 +32,7 @@ import java.util.Random;
 
 public class ChoppingBlockTileEntity extends TileEntity
 {
-    @ObjectHolder("survivalist:chopping_block")
-    public static TileEntityType<ChoppingBlockTileEntity> TYPE;
+    public static final RegistryObject<TileEntityType<ChoppingBlockTileEntity>> TYPE = SurvivalistTileEntityTypes.CHOPPING_BLOCK_TILE_ENTITY_TYPE;
 
     private static final Random RANDOM = new Random();
 
@@ -71,7 +72,7 @@ public class ChoppingBlockTileEntity extends TileEntity
 
     public ChoppingBlockTileEntity()
     {
-        super(TYPE);
+        super(TYPE.get());
     }
 
     @Override

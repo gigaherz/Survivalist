@@ -2,7 +2,8 @@ package gigaherz.survivalist.misc;
 
 import com.google.common.collect.ImmutableList;
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistItems;
+import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -44,14 +45,14 @@ public class FibersEventHandling
         List<ItemStack> drops = ev.getDrops();
         if (drops instanceof ImmutableList)
         {
-            Survivalist.logger.warn("WARNING: Some mod is returning an ImmutableList from HarvestBlocks, replacing drops will NOT be possible.");
+            SurvivalistMod.logger.warn("WARNING: Some mod is returning an ImmutableList from HarvestBlocks, replacing drops will NOT be possible.");
             return;
         }
 
         try
         {
             if (rnd.nextFloat() < 0.12f)
-                drops.add(new ItemStack(Survivalist.Items.PLANT_FIBRES));
+                drops.add(new ItemStack(SurvivalistItems.PLANT_FIBRES.get()));
         }
         catch (UnsupportedOperationException ex)
         {

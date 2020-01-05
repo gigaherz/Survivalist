@@ -7,11 +7,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 
-import java.util.function.BooleanSupplier;
-
 public class ConfigurationCondition implements ICondition
 {
-    public static final ResourceLocation NAME = Survivalist.location("configuration");
+    public static final ResourceLocation NAME = SurvivalistMod.location("configuration");
 
     private final String categoryName;
     private final String keyName;

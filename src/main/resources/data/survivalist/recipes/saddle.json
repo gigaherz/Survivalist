@@ -4,7 +4,7 @@
     {
       "conditions": [
         {
-          "type": "survivalist:config_property",
+          "type": "survivalist:configuration",
           "category": "drying_rack",
           "key": "EnableSaddleCrafting"
         }
@@ -17,7 +17,7 @@
           "i i"
         ],
         "key": {
-          "t": { "tags": "survivalist:tanned_leather" },
+          "t": { "tag": "survivalist:tanned_leather" },
           "s": { "item": "minecraft:string" },
           "i": { "item": "minecraft:iron_ingot" }
         },

@@ -1,8 +1,7 @@
 package gigaherz.survivalist.rack;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -14,7 +13,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
@@ -25,10 +23,10 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
     }
 
     @Override
-    public void func_225616_a_(DryingRackTileEntity te, float p_225616_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
+    public void func_225616_a_(DryingRackTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
-        if (state.getBlock() != Survivalist.Blocks.RACK)
+        if (state.getBlock() != SurvivalistBlocks.RACK.get())
             return;
 
         te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent((inv) -> {

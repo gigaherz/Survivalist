@@ -1,13 +1,10 @@
 package gigaherz.survivalist.scraping;
 
-import gigaherz.survivalist.Survivalist;
 import gigaherz.survivalist.client.ClientEvents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class ScrapingMessage

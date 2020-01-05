@@ -2,7 +2,8 @@ package gigaherz.survivalist.api;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistBlocks;
+import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -13,12 +14,10 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
@@ -26,7 +25,7 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
     @ObjectHolder("survivalist:drying")
     public static IRecipeSerializer<?> SERIALIZER = null;
 
-    public static final ResourceLocation RECIPE_TYPE_ID = Survivalist.location("drying");
+    public static final ResourceLocation RECIPE_TYPE_ID = SurvivalistMod.location("drying");
     public static IRecipeType<DryingRecipe> DRYING = Registry.register(Registry.RECIPE_TYPE, RECIPE_TYPE_ID, new IRecipeType<DryingRecipe>()
     {
         @Override
@@ -127,7 +126,7 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(Survivalist.Blocks.RACK);
+        return new ItemStack(SurvivalistBlocks.RACK.get());
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DryingRecipe>

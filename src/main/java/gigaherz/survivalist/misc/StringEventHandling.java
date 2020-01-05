@@ -2,7 +2,7 @@ package gigaherz.survivalist.misc;
 
 import com.google.common.collect.ImmutableList;
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.SheepEntity;
@@ -37,7 +37,7 @@ public class StringEventHandling
         Collection<ItemEntity> drops = ev.getDrops();
         if (drops instanceof ImmutableList)
         {
-            Survivalist.logger.warn("WARNING: Some mod is returning an ImmutableList, replacing drops will NOT be possible.");
+            SurvivalistMod.logger.warn("WARNING: Some mod is returning an ImmutableList, replacing drops will NOT be possible.");
             return;
         }
 

@@ -1,6 +1,5 @@
 package gigaherz.survivalist.chaining;
 
-import gigaherz.survivalist.Survivalist;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;

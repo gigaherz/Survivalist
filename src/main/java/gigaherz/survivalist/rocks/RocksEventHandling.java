@@ -3,7 +3,8 @@ package gigaherz.survivalist.rocks;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistItems;
+import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -54,7 +55,7 @@ public class RocksEventHandling
         List<ItemStack> drops = ev.getDrops();
         if (drops instanceof ImmutableList)
         {
-            Survivalist.logger.warn("WARNING: Some mod is returning an ImmutableList from HarvestBlocks, replacing drops will NOT be possible.");
+            SurvivalistMod.logger.warn("WARNING: Some mod is returning an ImmutableList from HarvestBlocks, replacing drops will NOT be possible.");
             return;
         }
 
@@ -72,65 +73,65 @@ public class RocksEventHandling
             {
                 if (drop.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.STONE_ROCK, 4));
+                    newDrops.add(new ItemStack(SurvivalistItems.STONE_ROCK.get(), 4));
                     anyChanged = true;
                 }
                 else if (drop.getItem() == Item.getItemFromBlock(Blocks.STONE))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.STONE_ROCK, 4));
+                    newDrops.add(new ItemStack(SurvivalistItems.STONE_ROCK.get(), 4));
                     anyChanged = true;
                 }
                 else if (drop.getItem() == Item.getItemFromBlock(Blocks.ANDESITE))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.ANDESITE_ROCK, 4));
+                    newDrops.add(new ItemStack(SurvivalistItems.ANDESITE_ROCK.get(), 4));
                     anyChanged = true;
                 }
                 else if (drop.getItem() == Item.getItemFromBlock(Blocks.DIORITE))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.DIORITE_ROCK, 4));
+                    newDrops.add(new ItemStack(SurvivalistItems.DIORITE_ROCK.get(), 4));
                     anyChanged = true;
                 }
                 else if (drop.getItem() == Item.getItemFromBlock(Blocks.GRANITE))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.GRANITE_ROCK, 4));
+                    newDrops.add(new ItemStack(SurvivalistItems.GRANITE_ROCK.get(), 4));
                     anyChanged = true;
                 }
             }
             else if (ConfigManager.SERVER.replaceIronOreDrops.get() && TAG_IRON_ORE.contains(drop.getItem()))
             {
-                newDrops.add(new ItemStack(Survivalist.Items.IRON_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
+                newDrops.add(new ItemStack(SurvivalistItems.IRON_ORE_ROCK.get(), applyFortune(getAmountNormal(), fortune)));
                 anyChanged = true;
             }
             else if (ConfigManager.SERVER.replaceGoldOreDrops.get() && TAG_GOLD_ORE.contains(drop.getItem()))
             {
-                newDrops.add(new ItemStack(Survivalist.Items.GOLD_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
+                newDrops.add(new ItemStack(SurvivalistItems.GOLD_ORE_ROCK.get(), applyFortune(getAmountNormal(), fortune)));
                 anyChanged = true;
             }
             else if (ConfigManager.SERVER.replaceModOreDrops.get())
             {
                 if (TAG_COPPER_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.COPPER_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.COPPER_ORE_ROCK.get(), applyFortune(getAmountNormal(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_TIN_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.TIN_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.TIN_ORE_ROCK.get(), applyFortune(getAmountNormal(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_LEAD_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.LEAD_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.LEAD_ORE_ROCK.get(), applyFortune(getAmountNormal(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_SILVER_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.SILVER_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.SILVER_ORE_ROCK.get(), applyFortune(getAmountNormal(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_ALUMINUM_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.ALUMINUM_ORE_ROCK, applyFortune(getAmountNormal(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.ALUMINUM_ORE_ROCK.get(), applyFortune(getAmountNormal(), fortune)));
                     anyChanged = true;
                 }
                 else
@@ -142,37 +143,37 @@ public class RocksEventHandling
             {
                 if (TAG_POOR_IRON_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.IRON_ORE_ROCK, applyFortune(getAmountPoor(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.IRON_ORE_ROCK.get(), applyFortune(getAmountPoor(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_POOR_GOLD_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.GOLD_ORE_ROCK, applyFortune(getAmountPoor(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.GOLD_ORE_ROCK.get(), applyFortune(getAmountPoor(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_POOR_COPPER_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.COPPER_ORE_ROCK, applyFortune(getAmountPoor(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.COPPER_ORE_ROCK.get(), applyFortune(getAmountPoor(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_POOR_TIN_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.TIN_ORE_ROCK, applyFortune(getAmountPoor(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.TIN_ORE_ROCK.get(), applyFortune(getAmountPoor(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_POOR_LEAD_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.LEAD_ORE_ROCK, applyFortune(getAmountPoor(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.LEAD_ORE_ROCK.get(), applyFortune(getAmountPoor(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_POOR_SILVER_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.SILVER_ORE_ROCK, applyFortune(getAmountPoor(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.SILVER_ORE_ROCK.get(), applyFortune(getAmountPoor(), fortune)));
                     anyChanged = true;
                 }
                 else if (TAG_POOR_ALUMINUM_ORE.contains(drop.getItem()))
                 {
-                    newDrops.add(new ItemStack(Survivalist.Items.ALUMINUM_ORE_ROCK, applyFortune(getAmountPoor(), fortune)));
+                    newDrops.add(new ItemStack(SurvivalistItems.ALUMINUM_ORE_ROCK.get(), applyFortune(getAmountPoor(), fortune)));
                     anyChanged = true;
                 }
                 else

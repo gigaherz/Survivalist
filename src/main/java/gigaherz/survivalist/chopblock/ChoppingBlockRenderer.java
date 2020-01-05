@@ -25,7 +25,7 @@ public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileE
     }
 
     @Override
-    public void func_225616_a_(ChoppingBlockTileEntity te, float p_225616_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
+    public void func_225616_a_(ChoppingBlockTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
         if (!(state.getBlock() instanceof ChoppingBlock))

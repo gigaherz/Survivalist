@@ -1,5 +1,6 @@
 package gigaherz.survivalist.sawmill;
 
+import gigaherz.survivalist.SurvivalistTileEntityTypes;
 import gigaherz.survivalist.api.ChoppingContext;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.sawmill.gui.SawmillContainer;
@@ -27,6 +28,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
@@ -38,8 +40,7 @@ import java.util.Random;
 
 public class SawmillTileEntity extends TileEntity implements ITickableTileEntity, IIntArray, INamedContainerProvider
 {
-    @ObjectHolder("survivalist:sawmill")
-    public static TileEntityType<SawmillTileEntity> TYPE;
+    public static RegistryObject<TileEntityType<SawmillTileEntity>> TYPE = SurvivalistTileEntityTypes.SAWMILL_RACK_TILE_ENTITY_TYPE;
 
     @CapabilityInject(IItemHandler.class)
     public static Capability<IItemHandler> ITEMS_CAP;
@@ -92,7 +93,7 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
 
     public SawmillTileEntity()
     {
-        super(TYPE);
+        super(TYPE.get());
     }
 
     public boolean isBurning()

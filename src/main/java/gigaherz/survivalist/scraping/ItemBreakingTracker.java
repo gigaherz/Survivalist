@@ -2,12 +2,12 @@ package gigaherz.survivalist.scraping;
 
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistItems;
+import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
@@ -24,7 +24,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -44,7 +43,7 @@ import java.util.Random;
 
 public class ItemBreakingTracker
 {
-    public static final ResourceLocation PROP_KEY = Survivalist.location("item_breaking_tracker");
+    public static final ResourceLocation PROP_KEY = SurvivalistMod.location("item_breaking_tracker");
 
     PlayerEntity player;
     World world;
@@ -175,15 +174,15 @@ public class ItemBreakingTracker
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_CHESTPLATE), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.LEATHER_LEGGINGS), new ItemStack(Items.LEATHER, 2), new ItemStack(Items.LEATHER)));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.TANNED_BOOTS), new ItemStack(Survivalist.Items.TANNED_LEATHER, 2), new ItemStack(Survivalist.Items.TANNED_LEATHER)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.TANNED_HELMET), new ItemStack(Survivalist.Items.TANNED_LEATHER, 2), new ItemStack(Survivalist.Items.TANNED_LEATHER)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.TANNED_CHESTPLATE), new ItemStack(Survivalist.Items.TANNED_LEATHER, 2), new ItemStack(Survivalist.Items.TANNED_LEATHER)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Survivalist.Items.TANNED_LEGGINGS), new ItemStack(Survivalist.Items.TANNED_LEATHER, 2), new ItemStack(Survivalist.Items.TANNED_LEATHER)));
+                scrapingRegistry.add(Triple.of(new ItemStack(SurvivalistItems.TANNED_BOOTS.get()), new ItemStack(SurvivalistItems.TANNED_LEATHER.get(), 2), new ItemStack(SurvivalistItems.TANNED_LEATHER.get())));
+                scrapingRegistry.add(Triple.of(new ItemStack(SurvivalistItems.TANNED_HELMET.get()), new ItemStack(SurvivalistItems.TANNED_LEATHER.get(), 2), new ItemStack(SurvivalistItems.TANNED_LEATHER.get())));
+                scrapingRegistry.add(Triple.of(new ItemStack(SurvivalistItems.TANNED_CHESTPLATE.get()), new ItemStack(SurvivalistItems.TANNED_LEATHER.get(), 2), new ItemStack(SurvivalistItems.TANNED_LEATHER.get())));
+                scrapingRegistry.add(Triple.of(new ItemStack(SurvivalistItems.TANNED_LEGGINGS.get()), new ItemStack(SurvivalistItems.TANNED_LEATHER.get(), 2), new ItemStack(SurvivalistItems.TANNED_LEATHER.get())));
 
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(Survivalist.Items.CHAINMAIL, 2), new ItemStack(Survivalist.Items.CHAINMAIL)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(Survivalist.Items.CHAINMAIL, 2), new ItemStack(Survivalist.Items.CHAINMAIL)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(Survivalist.Items.CHAINMAIL, 2), new ItemStack(Survivalist.Items.CHAINMAIL)));
-                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(Survivalist.Items.CHAINMAIL, 2), new ItemStack(Survivalist.Items.CHAINMAIL)));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_BOOTS), new ItemStack(SurvivalistItems.CHAINMAIL.get(), 2), new ItemStack(SurvivalistItems.CHAINMAIL.get())));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_HELMET), new ItemStack(SurvivalistItems.CHAINMAIL.get(), 2), new ItemStack(SurvivalistItems.CHAINMAIL.get())));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_CHESTPLATE), new ItemStack(SurvivalistItems.CHAINMAIL.get(), 2), new ItemStack(SurvivalistItems.CHAINMAIL.get())));
+                scrapingRegistry.add(Triple.of(new ItemStack(Items.CHAINMAIL_LEGGINGS), new ItemStack(SurvivalistItems.CHAINMAIL.get(), 2), new ItemStack(SurvivalistItems.CHAINMAIL.get())));
 
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_BOOTS), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
                 scrapingRegistry.add(Triple.of(new ItemStack(Items.IRON_HELMET), new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.IRON_INGOT)));
@@ -204,7 +203,7 @@ public class ItemBreakingTracker
 
         private void onItemBroken(PlayerEntity player, ItemStack stack)
         {
-            int scrappingLevel = EnchantmentHelper.getEnchantmentLevel(Survivalist.scraping, stack);
+            int scrappingLevel = EnchantmentHelper.getEnchantmentLevel(SurvivalistMod.SCRAPING.get(), stack);
 
             if (player.getClass().getName().equals("com.rwtema.extrautils2.fakeplayer.XUFakePlayer"))
                 return;
@@ -230,9 +229,9 @@ public class ItemBreakingTracker
 
             if (ret != null)
             {
-                Survivalist.logger.debug("Item broke (" + stack + ") and the player got " + ret + " in return!");
+                SurvivalistMod.logger.debug("Item broke (" + stack + ") and the player got " + ret + " in return!");
 
-                Survivalist.channel.sendTo(new ScrapingMessage(stack, ret), ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+                SurvivalistMod.channel.sendTo(new ScrapingMessage(stack, ret), ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 
                 ItemHandlerHelper.giveItemToPlayer(player, ret);
             }

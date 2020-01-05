@@ -1,5 +1,7 @@
 package gigaherz.survivalist.rocks;
 
+import gigaherz.survivalist.SurvivalistMod;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileItemEntity;
@@ -13,14 +15,14 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class RockEntity extends ProjectileItemEntity implements IEntityAdditionalSpawnData
 {
-    @ObjectHolder("survivalist:thrown_rock")
-    public static EntityType<RockEntity> TYPE;
+    public static final RegistryObject<EntityType<RockEntity>> TYPE = SurvivalistMod.THROWN_ROCK;
 
     private Item item;
 
@@ -29,10 +31,15 @@ public class RockEntity extends ProjectileItemEntity implements IEntityAdditiona
         super(type, world);
     }
 
-    public RockEntity(World worldIn, PlayerEntity playerIn, RockItem itemRock)
+    public RockEntity(World world)
     {
-        super(TYPE, playerIn, worldIn);
-        this.item = itemRock;
+        super(TYPE.get(), world);
+    }
+
+    public RockEntity(World world, PlayerEntity player, RockItem item)
+    {
+        super(TYPE.get(), player, world);
+        this.item = item;
     }
 
     @Override

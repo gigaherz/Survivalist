@@ -10,7 +10,7 @@ import net.minecraftforge.common.crafting.IIngredientSerializer;
 
 public class ConfigToggledIngredientSerializer implements IIngredientSerializer<Ingredient>
 {
-    public static ResourceLocation NAME = Survivalist.location("config_toggled_ingredient");
+    public static ResourceLocation NAME = SurvivalistMod.location("config_toggled_ingredient");
     public static ConfigToggledIngredientSerializer INSTANCE = new ConfigToggledIngredientSerializer();
 
     @Override
