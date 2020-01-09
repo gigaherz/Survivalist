@@ -6,18 +6,14 @@ import gigaherz.survivalist.rocks.Nuggets;
 import gigaherz.survivalist.rocks.Rocks;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.IRequirementsStrategy;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.crafting.ConditionalAdvancement;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
@@ -102,11 +98,7 @@ public class SurvivalistData
                                                     .withParentId(new ResourceLocation("minecraft", "recipes/root"))
                                                     .withRewards(AdvancementRewards.Builder.recipe(SurvivalistMod.location("saddle")))
                                                     .withCriterion("has_leather", hasItem(leatherTag))
-                                                    .withCriterion("has_string", hasItem(Items.STRING))
-                                                    .withCriterion("has_iron", hasItem(Items.IRON_INGOT))
                                                     .withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(SurvivalistMod.location("saddle")))
-                                                    .withRequirementsStrategy((list) ->
-                                                            new String[][] { { "has_leather", "has_the_recipe"}, {"has_string", "has_the_recipe" }, {"has_iron", "has_the_recipe"} })
                                     )
                     )
                     .build(consumer, SurvivalistMod.location("saddle"));

@@ -93,7 +93,7 @@ public class DryingRackBakedModel implements IBakedModel
                 matrixStack.func_227860_a_(); // pushMatrix
 
                 TransformationMatrix ct = itemTransforms[i];
-                matrixStack.func_227866_c_().func_227870_a_().func_226595_a_(ct.func_227988_c_()); // current().getPositionMatrix().multiply
+                matrixStack.func_227866_c_().func_227870_a_().func_226595_a_(ct.func_227988_c_()); // current().getPositionMatrix().multiply(getPositionMatrix)
                 matrixStack.func_227866_c_().func_227872_b_().func_226118_b_(ct.getNormalMatrix()); // current().getNormalMatrix().multiply
 
                 IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
@@ -122,7 +122,7 @@ public class DryingRackBakedModel implements IBakedModel
                         for (Direction face : faces)
                         {
                             List<BakedQuad> inQuads = model.getQuads(null, face, rand);
-                            List<BakedQuad> outQuads = new QuadTransformer(DefaultVertexFormats.BLOCK, transformMatrix).processMany(inQuads);
+                            List<BakedQuad> outQuads = new QuadTransformer(transformMatrix).processMany(inQuads);
 
                             cachedQuads.addAll(outQuads);
                         }

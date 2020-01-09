@@ -1,5 +1,6 @@
 package gigaherz.survivalist.api;
 
+import com.google.common.collect.AbstractIterator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -8,9 +9,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Spliterator;
 import java.util.function.Supplier;
 
-public class ItemHandlerWrapper implements IInventory
+public class ItemHandlerWrapper implements IInventory, Iterable<ItemStack>
 {
     protected final IItemHandlerModifiable inner;
 
@@ -96,5 +99,24 @@ public class ItemHandlerWrapper implements IInventory
     public IItemHandlerModifiable getInner()
     {
         return inner;
+    }
+
+    @Override
+    public Iterator<ItemStack> iterator()
+    {
+        return new AbstractIterator<ItemStack>() {
+            int current = 0;
+
+            @Override
+            protected ItemStack computeNext()
+            {
+                if (current >= getSizeInventory())
+                {
+                    return endOfData();
+                }
+                ItemStack stack = getStackInSlot(current++);
+                return stack;
+            }
+        };
     }
 }

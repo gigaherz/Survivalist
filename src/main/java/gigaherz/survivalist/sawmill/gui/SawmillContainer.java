@@ -1,31 +1,47 @@
 package gigaherz.survivalist.sawmill.gui;
 
+import com.google.common.collect.Lists;
+import gigaherz.survivalist.SurvivalistRecipeBookCategories;
+import gigaherz.survivalist.api.ChoppingContext;
 import gigaherz.survivalist.api.ChoppingRecipe;
+import gigaherz.survivalist.api.ItemHandlerWrapper;
 import gigaherz.survivalist.sawmill.SawmillTileEntity;
+import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class SawmillContainer extends Container
+import java.util.List;
+import java.util.Random;
+
+public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
 {
+    private static final Random RANDOM = new Random();
+
     @ObjectHolder("survivalist:sawmill")
     public static ContainerType<SawmillContainer> TYPE;
 
+    private final ChoppingContext wrappedInventory;
+    private final World world;
     private IIntArray fields;
 
     public SawmillContainer(int windowId, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, new ItemStackHandler(4), new IntArray(4));
+        this(windowId, playerInventory, new ItemStackHandler(3), new IntArray(4));
     }
 
     public SawmillContainer(int windowId, SawmillTileEntity tileEntity, PlayerInventory playerInventory)
@@ -33,11 +49,14 @@ public class SawmillContainer extends Container
         this(windowId, playerInventory, tileEntity.inventory, tileEntity);
     }
 
-    public SawmillContainer(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
+    public SawmillContainer(int windowId, PlayerInventory playerInventory, IItemHandlerModifiable inventory, IIntArray dryTimes)
     {
         super(TYPE, windowId);
 
         fields = dryTimes;
+
+        wrappedInventory = new ChoppingContext(inventory, null, 0, 0, RANDOM);
+        world = playerInventory.player.world;
 
         addSlot(new SlotItemHandler(inventory, 0, 56, 17));
         addSlot(new SawmillFuelSlot(inventory, 1, 56, 53));
@@ -95,6 +114,55 @@ public class SawmillContainer extends Container
         return getRemainingBurnTime() > 0;
     }
 
+    @Override
+    public void func_201771_a(RecipeItemHelper helper) // accountStacks
+    {
+        for(ItemStack itemstack : this.wrappedInventory) {
+            helper.accountStack(itemstack);
+        }
+    }
+
+    @Override
+    public void clear()
+    {
+        this.wrappedInventory.clear();
+    }
+
+    @Override
+    public boolean matches(IRecipe<? super ChoppingContext> recipeIn)
+    {
+        return recipeIn.matches(this.wrappedInventory, this.world);
+    }
+
+    @Override
+    public int getOutputSlot()
+    {
+        return 2;
+    }
+
+    @Override
+    public int getWidth()
+    {
+        return 1;
+    }
+
+    @Override
+    public int getHeight()
+    {
+        return 1;
+    }
+
+    @Override
+    public int getSize()
+    {
+        return 3;
+    }
+
+    @Override
+    public List<RecipeBookCategories> getRecipeBookCategories()
+    {
+        return Lists.newArrayList(SurvivalistRecipeBookCategories.instance().SAWMILL_SEARCH, SurvivalistRecipeBookCategories.instance().SAWMILL);
+    }
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index)

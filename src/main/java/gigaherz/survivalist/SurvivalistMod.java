@@ -167,6 +167,8 @@ public class SurvivalistMod
 
     public void commonSetup(FMLCommonSetupEvent event)
     {
+        SurvivalistRecipeBookCategories.instance();
+
         TorchFireEventHandling.register();
 
         ItemBreakingTracker.register();

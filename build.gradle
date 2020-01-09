@@ -6,11 +6,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.157-1578361339', changing: true
     }
 }
 
 apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle'
 //apply plugin: 'maven-publish'
 
@@ -41,10 +43,6 @@ minecraft {
 
             property 'forge.logging.markers', 'CONFIG'
             property 'forge.logging.console.level', 'debug'
-
-            ideaModule "${project.name}.main"
-
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
         }
 
         dcevmClient {
@@ -58,10 +56,6 @@ minecraft {
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-
-            ideaModule "${project.name}.main"
-
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
         }
 
         data {
@@ -70,17 +64,13 @@ minecraft {
             property 'forge.logging.markers', ''
             property 'forge.logging.console.level', 'debug'
 
-            ideaModule "${project.name}.main"
-
             args '--mod', 'survivalist', '--all', '--output', file('src/generated/resources/')
-
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
         }
     }
 }
 
 dependencies {
-    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.1-30.0.24'
+    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.1-30.0.37-custom-machine-recipebook'
 
     //compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
     //runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")

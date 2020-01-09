@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.SurvivalistMod;
+import gigaherz.survivalist.SurvivalistRecipeBookCategories;
+import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -12,6 +14,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -90,6 +93,12 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
     public int getMaxOutput()
     {
         return maxOutput;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients()
+    {
+        return NonNullList.from(Ingredient.EMPTY, input);
     }
 
     @Override

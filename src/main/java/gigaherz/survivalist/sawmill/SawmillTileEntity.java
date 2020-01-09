@@ -382,7 +382,7 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
     @Override
     public ITextComponent getDisplayName()
     {
-        return new TranslationTextComponent("text.survivalist.container.sawmill");
+        return new TranslationTextComponent("text.survivalist.sawmill");
     }
 
     @Nullable

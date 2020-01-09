@@ -4,9 +4,9 @@
     {
       "conditions": [
         {
-          "type": "survivalist:configuration",
           "category": "drying_rack",
-          "key": "EnableSaddleCrafting"
+          "key": "EnableSaddleCrafting",
+          "type": "survivalist:configuration"
         }
       ],
       "recipe": {
@@ -17,9 +17,15 @@
           "i i"
         ],
         "key": {
-          "t": { "tag": "survivalist:tanned_leather" },
-          "s": { "item": "minecraft:string" },
-          "i": { "item": "minecraft:iron_ingot" }
+          "t": {
+            "tag": "survivalist:tanned_leather"
+          },
+          "s": {
+            "item": "minecraft:string"
+          },
+          "i": {
+            "item": "minecraft:iron_ingot"
+          }
         },
         "result": {
           "item": "minecraft:saddle"
