@@ -1,17 +1,19 @@
 package gigaherz.survivalist.rack;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Streams;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.TransformationMatrix;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.resources.IResourceManager;
@@ -72,11 +74,11 @@ public class DryingRackBakedModel implements IBakedModel
         List<BakedQuad> quads = Lists.newArrayList();
 
         RenderType renderLayer = MinecraftForgeClient.getRenderLayer();
-        if (renderLayer == RenderType.func_228639_c_())
+        if (renderLayer == RenderType.getSolid())
         {
             quads.addAll(rackBakedModel.getQuads(state, side, rand));
         }
-        else if (renderLayer == RenderType.func_228643_e_() && side == null)
+        else if (renderLayer == RenderType.getCutout() && side == null)
         {
             ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
             World world = Minecraft.getInstance().world;
@@ -90,11 +92,11 @@ public class DryingRackBakedModel implements IBakedModel
                     continue;
 
                 MatrixStack matrixStack = new MatrixStack();
-                matrixStack.func_227860_a_(); // pushMatrix
+                matrixStack.push(); // pushMatrix
 
                 TransformationMatrix ct = itemTransforms[i];
-                matrixStack.func_227866_c_().func_227870_a_().func_226595_a_(ct.func_227988_c_()); // current().getPositionMatrix().multiply(getPositionMatrix)
-                matrixStack.func_227866_c_().func_227872_b_().func_226118_b_(ct.getNormalMatrix()); // current().getNormalMatrix().multiply
+                matrixStack.peek().getModel().multiply(ct.getMatrix()); // current().getPositionMatrix().multiply(getPositionMatrix)
+                matrixStack.peek().getNormal().multiply(ct.getNormalMatrix()); // current().getNormalMatrix().multiply
 
                 IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
 
@@ -110,7 +112,7 @@ public class DryingRackBakedModel implements IBakedModel
                     @SuppressWarnings("unchecked")
                     Map<Pair<IBakedModel, TransformationMatrix>, List<BakedQuad>> cache = caches.get(i);
 
-                    Matrix4f positionTransform = matrixStack.func_227866_c_().func_227870_a_(); // current() // getPositionMatrix
+                    Matrix4f positionTransform = matrixStack.peek().getModel(); // current() // getPositionMatrix
                     TransformationMatrix transformMatrix = new TransformationMatrix(positionTransform);
 
                     Pair<IBakedModel, TransformationMatrix> pair = Pair.of(model, transformMatrix);
@@ -193,7 +195,7 @@ public class DryingRackBakedModel implements IBakedModel
             List<Material> list = new ArrayList<>();
             if (baseModel != null)
             {
-                list.addAll(baseModel.func_225614_a_(modelGetter, missingTextureErrors));
+                list.addAll(baseModel.getTextureDependencies(modelGetter, missingTextureErrors));
             }
             return list;
         }
@@ -209,8 +211,8 @@ public class DryingRackBakedModel implements IBakedModel
             IBakedModel rackBakedModel = null;
             if (baseModel != null)
             {
-                TransformationMatrix baseTransform = sprite.func_225615_b_();
-                rackBakedModel = baseModel.func_225613_a_(bakery, spriteGetter, new SimpleModelTransform(baseTransform), modelLocation); // bake
+                TransformationMatrix baseTransform = sprite.getRotation();
+                rackBakedModel = baseModel.bake(bakery, spriteGetter, new SimpleModelTransform(baseTransform), modelLocation); // bake
 
                 if (!baseTransform.isIdentity())
                 {

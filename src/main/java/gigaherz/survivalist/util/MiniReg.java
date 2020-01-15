@@ -238,9 +238,9 @@ public class MiniReg
             return this;
         }
 
-        public MiniEntity<T> func_225435_d()
+        public MiniEntity<T> spawnableFarFromPlayer()
         {
-            builder.func_225435_d();
+            builder.spawnableFarFromPlayer();
             return this;
         }
 

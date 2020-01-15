@@ -161,7 +161,8 @@ public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories()
     {
-        return Lists.newArrayList(SurvivalistRecipeBookCategories.instance().SAWMILL_SEARCH, SurvivalistRecipeBookCategories.instance().SAWMILL);
+        return Lists.newArrayList(RecipeBookCategories.SEARCH);
+        //return Lists.newArrayList(SurvivalistRecipeBookCategories.instance().SAWMILL_SEARCH, SurvivalistRecipeBookCategories.instance().SAWMILL);
     }
 
     @Override

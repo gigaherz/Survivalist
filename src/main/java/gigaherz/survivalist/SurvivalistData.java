@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -75,6 +76,12 @@ public class SurvivalistData
                                 .build(consumer, recipeId);
                     }));
 
+            Tag<Item> dough = makeItemTag(SurvivalistMod.location("dough"));
+            CookingRecipeBuilder
+                    .cookingRecipe(Ingredient.fromTag(dough), SurvivalistItems.ROUND_BREAD.get(), 0.45f, 300, IRecipeSerializer.SMOKING)
+                    .addCriterion("has_dough", hasItem(dough))
+                    .build(consumer, SurvivalistMod.location("cooking/round_bread"));
+
             Tag<Item> leatherTag = makeItemTag("survivalist:tanned_leather");
             ConditionalRecipe.builder()
                     .addCondition(new ConfigurationCondition("drying_rack", "EnableSaddleCrafting"))
@@ -122,6 +129,9 @@ public class SurvivalistData
             Arrays.stream(Nuggets.values())
                     .flatMap(rock -> rock.getTagLocations().stream().map(tag -> Pair.of(rock.getItem().get(), tag)))
                     .forEach((pair) -> this.getBuilder(makeItemTag(pair.getSecond())).add(pair.getFirst()));
+
+            this.getBuilder(makeItemTag(SurvivalistMod.location("dough")))
+                    .add(SurvivalistItems.DOUGH.get());
 
             this.getBuilder(makeItemTag(SurvivalistMod.location("chopping_blocks")))
                     .add(Arrays.stream(ChopblockMaterials.values())

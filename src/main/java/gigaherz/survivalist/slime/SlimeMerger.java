@@ -103,31 +103,31 @@ public class SlimeMerger
             {
                 Collections.sort(list, this.sorter);
 
-                double x = slime.func_226277_ct_();
-                double y = slime.func_226278_cu_();
-                double z = slime.func_226281_cx_();
+                double x = slime.getX();
+                double y = slime.getY();
+                double z = slime.getZ();
 
                 int size = slime.getSlimeSize() + 1;
                 for (int i = 0; i < 8 * size; i++)
                 {
                     float angle = rand.nextFloat();
                     float speed = size * (1 + rand.nextFloat() * 0.5f);
-                    slime.world.addParticle(ParticleTypes.ITEM_SLIME, slime.func_226277_ct_(), slime.func_226278_cu_(), slime.func_226281_cx_(),
+                    slime.world.addParticle(ParticleTypes.ITEM_SLIME, slime.getX(), slime.getY(), slime.getZ(),
                             speed * Math.cos(angle), 1, speed * Math.sin(angle));
                 }
 
                 for (int i = 0; i < 3; i++)
                 {
                     SlimeEntity target = list.get(i);
-                    x += target.func_226277_ct_();
-                    y += target.func_226278_cu_();
-                    z += target.func_226281_cx_();
+                    x += target.getX();
+                    y += target.getY();
+                    z += target.getZ();
                     target.remove();
                     for (int j = 0; j < 8 * size; j++)
                     {
                         float angle = rand.nextFloat();
                         float speed = size * (1 + rand.nextFloat() * 0.5f);
-                        slime.world.addParticle(ParticleTypes.ITEM_SLIME, target.func_226277_ct_(), target.func_226278_cu_(), target.func_226281_cx_(),
+                        slime.world.addParticle(ParticleTypes.ITEM_SLIME, target.getX(), target.getY(), target.getZ(),
                                 speed * Math.cos(angle), 1, speed * Math.sin(angle));
                     }
                 }

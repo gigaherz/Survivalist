@@ -25,7 +25,7 @@ public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileE
     }
 
     @Override
-    public void func_225616_a_(ChoppingBlockTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
+    public void render(ChoppingBlockTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
         if (!(state.getBlock() instanceof ChoppingBlock))
@@ -33,7 +33,7 @@ public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileE
 
         //if (destroyStage < 0)
         {
-            matrixStack.func_227860_a_();
+            matrixStack.push();
 
             ItemRenderer itemRenderer = mc.getItemRenderer();
 
@@ -42,24 +42,24 @@ public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileE
                 ItemStack stack = inv.getStackInSlot(0);
                 if (stack.getCount() > 0)
                 {
-                    matrixStack.func_227860_a_();
+                    matrixStack.push();
 
-                    matrixStack.func_227861_a_(0, -4.5 / 16.0f, 0);
-                    matrixStack.func_227862_a_(2, 2, 2);
+                    matrixStack.translate(0, -4.5 / 16.0f, 0);
+                    matrixStack.scale(2, 2, 2);
 
                     IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity)null);
-                    itemRenderer.func_229111_a_(stack, ItemCameraTransforms.TransformType.GROUND, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel);
+                    itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.GROUND, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel);
                     /*int breakStage = te.getBreakStage();
                     if (breakStage >= 0)
                     {
                         renderItem(stack, ItemCameraTransforms.TransformType.GROUND, breakStage);
                     }*/
 
-                    matrixStack.func_227865_b_();
+                    matrixStack.pop();
                 }
             });
 
-            matrixStack.func_227865_b_();
+            matrixStack.pop();
         }
     }
 }

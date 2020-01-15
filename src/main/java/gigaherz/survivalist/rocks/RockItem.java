@@ -24,7 +24,7 @@ public class RockItem extends Item
             stack.grow(-1);
         }
 
-        worldIn.playSound(null, playerIn.func_226277_ct_(), playerIn.func_226278_cu_(), playerIn.func_226281_cx_(),
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(),
                 SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL,
                 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 

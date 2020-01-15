@@ -1,12 +1,15 @@
 buildscript {
     repositories {
-        mavenLocal()
         maven { url = 'http://files.minecraftforge.net/maven' }
+        maven {
+            url "https://maven.tterrag.com/"
+        }
         jcenter()
         mavenCentral()
+        mavenLocal()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.157-1578361339', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.163-run-configs-rework', changing: true
     }
 }
 
@@ -19,6 +22,9 @@ apply plugin: 'net.minecraftforge.gradle'
 repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        url "https://maven.tterrag.com/"
     }
     mavenLocal()
 }
@@ -33,7 +39,7 @@ compileJava {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20191222-1.14.3'
+    mappings channel: 'snapshot', version: '20200111-mixed-1.15.1'
 
     accessTransformer = file('dummy/accesstransformer.cfg')
 
@@ -45,17 +51,13 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
         }
 
-        dcevmClient {
-            parent runs.client
-
-            jvmArg '-XXaltjvm=dcevm'
-        }
-
         server {
             workingDirectory project.file('run')
 
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+
+            singleInstance(true)
         }
 
         data {
@@ -70,7 +72,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.1-30.0.37-custom-machine-recipebook'
+    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.1-30.0.39'
 
     //compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
     //runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")

@@ -55,7 +55,7 @@ public class RockEntity extends ProjectileItemEntity implements IEntityAdditiona
             Vec3d vec3d = new Vec3d(((double)this.rand.nextFloat() - 0.5D) * 0.1D, ((double)this.rand.nextFloat() - 0.5D) * 0.1D, 0.0D);
             vec3d = vec3d.rotatePitch(-this.rotationPitch * ((float)Math.PI / 180F));
             vec3d = vec3d.rotateYaw(-this.rotationYaw * ((float)Math.PI / 180F));
-            this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, this.getItem()), this.func_226277_ct_(), this.func_226278_cu_(), this.func_226281_cx_(), vec3d.x, vec3d.y + 0.05D, vec3d.z);
+            this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, this.getItem()), this.getX(), this.getY(), this.getZ(), vec3d.x, vec3d.y + 0.05D, vec3d.z);
         }
 
         if (!this.world.isRemote)

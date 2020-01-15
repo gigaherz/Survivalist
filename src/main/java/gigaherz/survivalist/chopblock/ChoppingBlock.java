@@ -60,8 +60,9 @@ public class ChoppingBlock extends Block
         return SHAPE;
     }
 
+    @Deprecated
     @Override
-    public ActionResultType func_225533_a_(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
+    public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
     {
         ItemStack heldItem = player.getHeldItem(hand);
 
@@ -73,7 +74,7 @@ public class ChoppingBlock extends Block
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (!(tileEntity instanceof ChoppingBlockTileEntity) || player.func_225608_bj_())
+        if (!(tileEntity instanceof ChoppingBlockTileEntity) || player.isSneaking())
             return ActionResultType.PASS;
 
         ChoppingBlockTileEntity chopper = (ChoppingBlockTileEntity) tileEntity;

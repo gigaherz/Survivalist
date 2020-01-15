@@ -27,6 +27,8 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -198,17 +200,7 @@ public class SurvivalistMod
         int messageNumber = 0;
         channel.registerMessage(messageNumber++, ScrapingMessage.class, ScrapingMessage::encode, ScrapingMessage::new, ScrapingMessage::handle);
         logger.debug("Final message number: " + messageNumber);
-        /*
-        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.IRON), "nuggetIron");
-        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.GOLD), "nuggetGold");
-        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.COPPER), "nuggetCopper");
-        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.TIN), "nuggetTin");
-        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.LEAD), "nuggetLead");
-        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.SILVER), "nuggetSilver");
-        addSmeltingNugget(Items.rock_ore.getStack(OreMaterial.ALUMINUM), "nuggetAluminum");
 
-        GameRegistry.addSmelting(Items.dough, new ItemStack(Items.round_bread), 0);
-         */
     }
 
     public void clientSetup(FMLClientSetupEvent event)
@@ -218,8 +210,7 @@ public class SurvivalistMod
 
         ModelLoaderRegistry.registerLoader(location("rack"), DryingRackBakedModel.ModelLoader.INSTANCE);
 
-        RenderTypeLookup.setRenderLayer(SurvivalistBlocks.RACK.get(), (layer) ->
-                layer == RenderType.func_228639_c_() || layer == RenderType.func_228643_e_());
+        //RenderTypeLookup.setRenderLayer(SurvivalistBlocks.RACK.get(), (layer) -> layer == RenderType.getSolid() || layer == RenderType.getCutout());
     }
 
     private static <R extends T, T extends IForgeRegistryEntry<T>> R withName(R obj, ResourceLocation name)

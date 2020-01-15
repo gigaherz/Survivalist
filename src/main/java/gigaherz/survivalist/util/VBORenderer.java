@@ -20,7 +20,7 @@ public class VBORenderer implements Closeable
         vertexProducer.accept(BUILDER, fmt);
         BUILDER.reset();
         // 1.14: vbo.bufferData(BUILDER.getByteBuffer());
-        vbo.func_227875_a_(BUILDER);
+        vbo.upload(BUILDER);
         return new VBORenderer(vbo, glMode);
     }
 
@@ -36,7 +36,7 @@ public class VBORenderer implements Closeable
     public void render(Matrix4f matrix)
     {
         // 1.14: vbo.drawArrays(glMode);
-        vbo.func_227874_a_(matrix, glMode);
+        vbo.draw(matrix, glMode);
     }
 
     public void close()

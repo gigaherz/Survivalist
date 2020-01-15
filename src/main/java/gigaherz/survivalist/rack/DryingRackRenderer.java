@@ -23,20 +23,20 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
     }
 
     @Override
-    public void func_225616_a_(DryingRackTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
+    public void render(DryingRackTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
         if (state.getBlock() != SurvivalistBlocks.RACK.get())
             return;
 
-        te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent((inv) -> {
-            matrixStack.func_227860_a_(); // pushMatrix
+        te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((inv) -> {
+            matrixStack.push(); // pushMatrix
 
             float angle = -state.get(DryingRackBlock.FACING).getHorizontalAngle();
 
-            matrixStack.func_227861_a_(0.5, 0.5, 0.5);    // translate
-            matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(angle));        // rotate
-            matrixStack.func_227861_a_(-0.5, -0.5, -0.5); // translate
+            matrixStack.translate(0.5, 0.5, 0.5);    // translate
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));        // rotate
+            matrixStack.translate(-0.5, -0.5, -0.5); // translate
             //matrixStack.func_227863_a_(Vector3f.field_229183_f_.func_229187_a_(180));
 
             Minecraft mc = Minecraft.getInstance();
@@ -47,29 +47,29 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
                 ItemStack stack = inv.getStackInSlot(i);
                 if (stack.getCount() > 0)
                 {
-                    matrixStack.func_227860_a_(); // pushMatrix
+                    matrixStack.push(); // pushMatrix
 
                     float zz = (i - 1.5f) * 0.1875f;
 
-                    matrixStack.func_227861_a_(0, 0, zz); // translate
+                    matrixStack.translate(0, 0, zz); // translate
 
-                    matrixStack.func_227862_a_(0.7f, 0.7f, 0.7f); // scale
+                    matrixStack.scale(0.7f, 0.7f, 0.7f); // scale
 
-                    matrixStack.func_227861_a_(0.715, 0.93, 0.635); // translate
-                    matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(180)); // rotate
+                    matrixStack.translate(0.715, 0.93, 0.635); // translate
+                    matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180)); // rotate
 
                     IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity)null);
                     // FIXME: Fix baked model.
                     //if (ibakedmodel.isBuiltInRenderer())
                     {
-                        itemRenderer.func_229111_a_(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel); // renderItem
+                        itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel); // renderItem
                     }
 
-                    matrixStack.func_227865_b_(); // popMatrix
+                    matrixStack.pop(); // popMatrix
                 }
             }
 
-            matrixStack.func_227865_b_(); // popMatrix
+            matrixStack.pop(); // popMatrix
         });
     }
 }

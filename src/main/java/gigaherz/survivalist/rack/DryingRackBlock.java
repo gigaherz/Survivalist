@@ -155,8 +155,9 @@ public class DryingRackBlock extends Block
         return getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
     }
 
+    @Deprecated
     @Override
-    public ActionResultType func_225533_a_(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
+    public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
     {
         if (worldIn.isRemote)
             return ActionResultType.SUCCESS;
