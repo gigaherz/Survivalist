@@ -1,7 +1,9 @@
 package gigaherz.survivalist;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import gigaherz.survivalist.chopblock.ChopblockMaterials;
+import gigaherz.survivalist.chopblock.ChoppingBlock;
 import gigaherz.survivalist.rocks.Nuggets;
 import gigaherz.survivalist.rocks.Rocks;
 import net.minecraft.advancements.Advancement;
@@ -9,20 +11,28 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.block.Block;
 import net.minecraft.data.*;
+import net.minecraft.data.loot.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.*;
 import net.minecraftforge.common.crafting.ConditionalAdvancement;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SurvivalistData
@@ -42,6 +52,7 @@ public class SurvivalistData
             gen.addProvider(new ItemTags(gen));
             gen.addProvider(new BlockTags(gen));
             gen.addProvider(new Recipes(gen));
+            gen.addProvider(new LootTables(gen));
         }
     }
 
@@ -65,16 +76,68 @@ public class SurvivalistData
         @Override
         protected void registerRecipes(Consumer<IFinishedRecipe> consumer)
         {
-            Arrays.stream(Rocks.values())
-                    .forEach(rock -> rock.getSmeltsInto().ifPresent(result -> {
-                        Tag<Item> tag = makeItemTag(rock.getSmeltingTag());
-                        ResourceLocation itemId = rock.getItem().getId();
-                        ResourceLocation recipeId = new ResourceLocation(itemId.getNamespace(), "smelting/" + itemId.getPath());
-                        CookingRecipeBuilder
-                                .smeltingRecipe(Ingredient.fromTag(tag), result.get(), 0.2f, 50)
+            Arrays.stream(ChopblockMaterials.values())
+                    .forEach(rock -> {
+                        Tag<Item> tag = makeItemTag(rock.getMadeFrom());
+                        RegistryObject<ChoppingBlock> result = rock.getPristine();
+                        ShapelessRecipeBuilder
+                                .shapelessRecipe(result.get())
+                                .addIngredient(tag)
                                 .addCriterion("has_rock", hasItem(tag))
-                                .build(consumer, recipeId);
+                                .build(consumer);
+                    });
+
+            Arrays.stream(Rocks.values())
+                    .forEach(rock -> rock.getCraftsInto().ifPresent(result -> {
+                        RegistryObject<? extends Item> rockItem = rock.getItem();
+                        ResourceLocation itemId = rockItem.getId();
+                        if (rock.isOre())
+                        {
+                            Tag<Item> tag = makeItemTag(rock.getSmeltingTag());
+                            ResourceLocation recipeId = new ResourceLocation(itemId.getNamespace(), "smelting/" + itemId.getPath());
+                            CookingRecipeBuilder
+                                    .smeltingRecipe(Ingredient.fromTag(tag), result.get(), 0.2f, 50)
+                                    .addCriterion("has_rock", hasItem(tag))
+                                    .build(consumer, recipeId);
+                        }
+                        else
+                        {
+                            ResourceLocation recipeId = new ResourceLocation("survivalist", result.get().getRegistryName().getPath() + "_from_rocks");
+                            ShapedRecipeBuilder.shapedRecipe(result.get())
+                                    .patternLine("rrr")
+                                    .patternLine("rcr")
+                                    .patternLine("rrr")
+                                    .key('r', rockItem.get())
+                                    .key('c', new ConfigToggledIngredientSerializer.ConfigToggledIngredient("rocks", "CobbleRequiresClay",
+                                            Ingredient.fromItems(Items.CLAY_BALL), Ingredient.fromItems(rockItem.get())))
+                                    .addCriterion("has_rock", hasItem(result.get()))
+                                    .build(consumer, recipeId);;
+                        }
                     }));
+
+            /*
+            {
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rrr",
+    "rcr",
+    "rrr"
+  ],
+  "key": {
+    "r": { "item": "survivalist:diorite_rock" },
+    "c": {
+      "type": "survivalist:config_toggled_ingredient",
+      "category": "rocks",
+      "key": "CobbleRequiresClay",
+      "then": { "item": "minecraft:clay_ball" },
+      "else": { "item": "survivalist:diorite_rock" }
+    }
+  },
+  "result": {
+    "item": "minecraft:diorite"
+  }
+}
+             */
 
             Tag<Item> dough = makeItemTag(SurvivalistMod.location("dough"));
             CookingRecipeBuilder
@@ -154,6 +217,71 @@ public class SurvivalistData
                     .add(Arrays.stream(ChopblockMaterials.values())
                             .flatMap(block -> Stream.of(block.getPristine(), block.getChipped(), block.getDamaged()).map(Supplier::get))
                             .toArray(Block[]::new));
+        }
+    }
+
+    private static class LootTables extends LootTableProvider implements IDataProvider
+    {
+        public LootTables(DataGenerator gen)
+        {
+            super(gen);
+        }
+
+        private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> tables = ImmutableList.of(
+                Pair.of(BlockTables::new, LootParameterSets.BLOCK)
+                //Pair.of(FishingLootTables::new, LootParameterSets.FISHING),
+                //Pair.of(ChestLootTables::new, LootParameterSets.CHEST),
+                //Pair.of(EntityLootTables::new, LootParameterSets.ENTITY),
+                //Pair.of(GiftLootTables::new, LootParameterSets.GIFT)
+        );
+
+        @Override
+        protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables()
+        {
+            return tables;
+        }
+
+        @Override
+        protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationtracker) {
+            map.forEach((p_218436_2_, p_218436_3_) -> {
+                LootTableManager.check(validationtracker, p_218436_2_, p_218436_3_);
+            });
+        }
+
+        public static class BlockTables extends BlockLootTables
+        {
+            @Override
+            protected void addTables()
+            {
+                this.registerDropSelfLootTable(SurvivalistBlocks.RACK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.SAWMILL.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.BIRCH_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_BIRCH_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_BIRCH_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.SPRUCE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_SPRUCE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_SPRUCE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.JUNGLE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_JUNGLE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_JUNGLE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DARK_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.ACACIA_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_ACACIA_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_ACACIA_CHOPPING_BLOCK.get());
+            }
+
+            @Override
+            protected Iterable<Block> getKnownBlocks()
+            {
+                return ForgeRegistries.BLOCKS.getValues().stream()
+                        .filter(b -> b.getRegistryName().getNamespace().equals(SurvivalistMod.MODID))
+                        .collect(Collectors.toList());
+            }
         }
     }
 }

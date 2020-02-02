@@ -9,6 +9,7 @@
     "i": { "item":"iron_ingot" }
   },
   "result": {
-    "item": "survivalist:chainmail"
+    "item": "survivalist:chainmail",
+    "count": 9
   }
 }

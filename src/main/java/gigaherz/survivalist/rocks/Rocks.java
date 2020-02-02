@@ -16,10 +16,10 @@ import java.util.function.Supplier;
 
 public enum Rocks implements IStringSerializable
 {
-    STONE("stone", false, SurvivalistItems.STONE_ROCK),
-    ANDESITE("andesite", false, SurvivalistItems.ANDESITE_ROCK),
-    DIORITE("diorite", false, SurvivalistItems.DIORITE_ROCK),
-    GRANITE("granite", false, SurvivalistItems.GRANITE_ROCK),
+    STONE("stone", false, SurvivalistItems.STONE_ROCK, () -> Items.COBBLESTONE),
+    ANDESITE("andesite", false, SurvivalistItems.ANDESITE_ROCK, () -> Items.ANDESITE),
+    DIORITE("diorite", false, SurvivalistItems.DIORITE_ROCK, () -> Items.DIORITE),
+    GRANITE("granite", false, SurvivalistItems.GRANITE_ROCK, () -> Items.GRANITE),
 
     IRON("iron", true, SurvivalistItems.IRON_ORE_ROCK, () -> Items.IRON_NUGGET),
     GOLD("gold", true, SurvivalistItems.GOLD_ORE_ROCK, () -> Items.GOLD_NUGGET),
@@ -57,12 +57,17 @@ public enum Rocks implements IStringSerializable
         return name;
     }
 
+    public boolean isOre()
+    {
+        return isOre;
+    }
+
     public RegistryObject<? extends Item> getItem()
     {
         return item;
     }
 
-    public Optional<Supplier<? extends Item>> getSmeltsInto()
+    public Optional<Supplier<? extends Item>> getCraftsInto()
     {
         return Optional.ofNullable(smeltsInto);
     }
@@ -91,4 +96,5 @@ public enum Rocks implements IStringSerializable
     {
         return SurvivalistMod.location("ore_rocks/" + name);
     }
+
 }

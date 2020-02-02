@@ -3,13 +3,13 @@ package gigaherz.survivalist;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.rack.DryingRackTileEntity;
 import gigaherz.survivalist.sawmill.SawmillTileEntity;
-import gigaherz.survivalist.util.MiniReg;
+import gigaherz.survivalist.util.RegSitter;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
 
 public class SurvivalistTileEntityTypes
 {
-    static final MiniReg HELPER = new MiniReg(SurvivalistMod.MODID);
+    static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
 
     public static final RegistryObject<TileEntityType<DryingRackTileEntity>> DRYING_RACK_TILE_ENTITY_TYPE = HELPER.tileEntity("rack");
 

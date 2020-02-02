@@ -1,15 +1,15 @@
 buildscript {
     repositories {
         maven { url = 'http://files.minecraftforge.net/maven' }
-        maven {
-            url "https://maven.tterrag.com/"
-        }
         jcenter()
         mavenCentral()
         mavenLocal()
+        maven {
+            url 'http://dogforce-games.com/maven'
+        }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.163-run-configs-rework', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.165-run-configs-rework', changing: true
     }
 }
 
@@ -31,17 +31,21 @@ repositories {
 
 version = "3.0.0"
 group= "gigaherz.survivalist"
-archivesBaseName = "Survivalist-1.14.4"
+archivesBaseName = "Survivalist-1.15.2"
 
 //sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
 
-minecraft {
-    mappings channel: 'snapshot', version: '20200111-mixed-1.15.1'
+sourceSets {
+    main.resources.srcDirs += 'src/main/generated_resources'
+}
 
-    accessTransformer = file('dummy/accesstransformer.cfg')
+minecraft {
+    mappings channel: 'snapshot', version: '20200131-1.15.1'
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -49,6 +53,12 @@ minecraft {
 
             property 'forge.logging.markers', 'CONFIG'
             property 'forge.logging.console.level', 'debug'
+
+            mods {
+                self {
+                    sources sourceSets.main
+                }
+            }
         }
 
         server {
@@ -58,6 +68,12 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             singleInstance(true)
+
+            mods {
+                self {
+                    sources sourceSets.main
+                }
+            }
         }
 
         data {
@@ -66,16 +82,22 @@ minecraft {
             property 'forge.logging.markers', ''
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'survivalist', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'survivalist', '--all', '--output', file('src/main/generated_resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                self {
+                    sources sourceSets.main
+                }
+            }
         }
     }
 }
 
 dependencies {
-    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.1-30.0.39'
+    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.2-31.0.14'
 
-    //compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
-    //runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")
+    compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
 
     //deobfCompile 'CraftTweaker2:CraftTweaker2-API:4.1.11.500'
     //deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.16.535'

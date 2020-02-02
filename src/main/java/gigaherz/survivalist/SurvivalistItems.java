@@ -1,7 +1,7 @@
 package gigaherz.survivalist;
 
 import gigaherz.survivalist.rocks.RockItem;
-import gigaherz.survivalist.util.MiniReg;
+import gigaherz.survivalist.util.RegSitter;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.RegistryObject;
 
 public class SurvivalistItems
 {
-    static final MiniReg HELPER = new MiniReg(SurvivalistMod.MODID);
+    static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
     
     public static final RegistryObject<Item> TANNED_LEATHER = HELPER.item("tanned_leather", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS))).defer();
     public static final RegistryObject<Item> CHAINMAIL = HELPER.item("chainmail", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS))).defer();

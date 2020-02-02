@@ -146,46 +146,10 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
         return compound;
     }
 
-    public int[] getFields()
-    {
-        return new int[]{remainingBurnTime, totalBurnTime, cookTime, totalCookTime};
-    }
-
-    public void setFields(int[] values)
-    {
-        remainingBurnTime = values[0];
-        totalBurnTime = values[1];
-        cookTime = values[2];
-        totalCookTime = values[3];
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag()
-    {
-        return write(new CompoundNBT());
-    }
-
     @Override
     public void handleUpdateTag(CompoundNBT tag)
     {
-        read(tag);
-    }
-
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket()
-    {
-        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
-    {
-        handleUpdateTag(pkt.getNbtCompound());
-
-        BlockState state = world.getBlockState(pos);
-        world.notifyBlockUpdate(pos, state, state, 3);
-        //world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
+        // Ignore. We have nothing to sync.
     }
 
     public static int getSawmillTime(World world, ItemStack stack)
@@ -196,7 +160,9 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
     @Override
     public void tick()
     {
-        boolean wasBurning = this.isBurning();
+        if (world.isRemote)
+            return;
+
         boolean changes = false;
 
         if (needRefreshRecipe)
@@ -274,12 +240,11 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
             }
         }
 
-        if (wasBurning != this.isBurning())
+        BlockState state = getBlockState();
+        if (state.get(SawmillBlock.POWERED) != this.isBurning())
         {
-            changes = true;
-            BlockState state = world.getBlockState(pos);
-            world.notifyBlockUpdate(pos, state, state, 3);
-            //world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
+            state = state.with(SawmillBlock.POWERED, this.isBurning());
+            world.setBlockState(pos, state);
         }
 
         if (changes)
@@ -326,26 +291,6 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
             return ItemStack.EMPTY;
 
         return result;
-    }
-
-    public int getCookTime()
-    {
-        return cookTime;
-    }
-
-    public int getTotalCookTime()
-    {
-        return totalCookTime;
-    }
-
-    public int getRemainingBurnTime()
-    {
-        return remainingBurnTime;
-    }
-
-    public int getTotalBurnTime()
-    {
-        return totalBurnTime;
     }
 
     @Override

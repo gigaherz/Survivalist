@@ -1,24 +1,22 @@
 package gigaherz.survivalist;
 
 import gigaherz.survivalist.chopblock.ChoppingBlock;
-import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.rack.DryingRackBlock;
 import gigaherz.survivalist.rack.DryingRackTileEntity;
 import gigaherz.survivalist.sawmill.SawmillBlock;
 import gigaherz.survivalist.sawmill.SawmillTileEntity;
-import gigaherz.survivalist.util.MiniReg;
+import gigaherz.survivalist.util.RegSitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 
 public class SurvivalistBlocks
 {
-    static final MiniReg HELPER = new MiniReg(SurvivalistMod.MODID);
+    static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
     
     public static final RegistryObject<DryingRackBlock> RACK = HELPER
             .block("rack", () -> new DryingRackBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f)))
@@ -34,11 +32,11 @@ public class SurvivalistBlocks
 
     public static final RegistryObject<ChoppingBlock> CHIPPED_OAK_CHOPPING_BLOCK = HELPER
             .block("chipped_oak_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.DAMAGED_OAK_CHOPPING_BLOCK))
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> DAMAGED_OAK_CHOPPING_BLOCK = HELPER
             .block("damaged_oak_chopping_block", SurvivalistBlocks::getChoppingBlock)
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> BIRCH_CHOPPING_BLOCK = HELPER
             .block("birch_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.CHIPPED_BIRCH_CHOPPING_BLOCK))
@@ -46,11 +44,11 @@ public class SurvivalistBlocks
 
     public static final RegistryObject<ChoppingBlock> CHIPPED_BIRCH_CHOPPING_BLOCK = HELPER
             .block("chipped_birch_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.DAMAGED_BIRCH_CHOPPING_BLOCK))
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> DAMAGED_BIRCH_CHOPPING_BLOCK = HELPER
             .block("damaged_birch_chopping_block", SurvivalistBlocks::getChoppingBlock)
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> SPRUCE_CHOPPING_BLOCK = HELPER
             .block("spruce_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.CHIPPED_SPRUCE_CHOPPING_BLOCK))
@@ -58,11 +56,11 @@ public class SurvivalistBlocks
 
     public static final RegistryObject<ChoppingBlock> CHIPPED_SPRUCE_CHOPPING_BLOCK = HELPER
             .block("chipped_spruce_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.DAMAGED_SPRUCE_CHOPPING_BLOCK))
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> DAMAGED_SPRUCE_CHOPPING_BLOCK = HELPER
             .block("damaged_spruce_chopping_block", SurvivalistBlocks::getChoppingBlock)
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> JUNGLE_CHOPPING_BLOCK = HELPER
             .block("jungle_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.CHIPPED_JUNGLE_CHOPPING_BLOCK))
@@ -70,11 +68,11 @@ public class SurvivalistBlocks
 
     public static final RegistryObject<ChoppingBlock> CHIPPED_JUNGLE_CHOPPING_BLOCK = HELPER
             .block("chipped_jungle_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.DAMAGED_JUNGLE_CHOPPING_BLOCK))
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> DAMAGED_JUNGLE_CHOPPING_BLOCK = HELPER
             .block("damaged_jungle_chopping_block", SurvivalistBlocks::getChoppingBlock)
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> DARK_OAK_CHOPPING_BLOCK = HELPER
             .block("dark_oak_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK))
@@ -82,11 +80,11 @@ public class SurvivalistBlocks
 
     public static final RegistryObject<ChoppingBlock> CHIPPED_DARK_OAK_CHOPPING_BLOCK = HELPER
             .block("chipped_dark_oak_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK))
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> DAMAGED_DARK_OAK_CHOPPING_BLOCK = HELPER
             .block("damaged_dark_oak_chopping_block", SurvivalistBlocks::getChoppingBlock)
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> ACACIA_CHOPPING_BLOCK = HELPER
             .block("acacia_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.CHIPPED_ACACIA_CHOPPING_BLOCK))
@@ -94,11 +92,11 @@ public class SurvivalistBlocks
 
     public static final RegistryObject<ChoppingBlock> CHIPPED_ACACIA_CHOPPING_BLOCK = HELPER
             .block("chipped_acacia_chopping_block", () -> getChoppingBlock(SurvivalistBlocks.DAMAGED_ACACIA_CHOPPING_BLOCK))
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     public static final RegistryObject<ChoppingBlock> DAMAGED_ACACIA_CHOPPING_BLOCK = HELPER
             .block("damaged_acacia_chopping_block", SurvivalistBlocks::getChoppingBlock)
-            .withItem().defer();
+            .withItem(new Item.Properties().group(ItemGroup.MISC)).defer();
 
     private static ChoppingBlock getChoppingBlock()
     {

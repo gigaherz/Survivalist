@@ -19,7 +19,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
 {
@@ -55,6 +57,11 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
     public static Optional<DryingRecipe> getRecipe(World world, ItemHandlerWrapper ctx)
     {
         return world.getRecipeManager().getRecipe(DRYING, ctx, world);
+    }
+
+    public static Collection<DryingRecipe> getAllRecipes(World world)
+    {
+        return world.getRecipeManager().getRecipes(DRYING).values().stream().map(r -> (DryingRecipe)r).collect(Collectors.toList());
     }
 
     private final String group;

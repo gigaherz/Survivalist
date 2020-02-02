@@ -26,6 +26,8 @@ import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.QuadTransformer;
 import net.minecraftforge.client.model.SimpleModelTransform;
+import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 import org.apache.commons.lang3.tuple.Pair;
@@ -36,7 +38,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class DryingRackBakedModel implements IBakedModel
+public class DryingRackBakedModel implements IDynamicBakedModel
 {
     private final TextureAtlasSprite particle;
     private final IBakedModel rackBakedModel;
@@ -48,24 +50,20 @@ public class DryingRackBakedModel implements IBakedModel
     );
 
     private final ItemOverrideList overrides;
+    private final boolean isSideLit;
 
     public DryingRackBakedModel(ModelBakery bakery, IUnbakedModel original, Function<ResourceLocation, IUnbakedModel> modelGetter,
                                 Function<Material, TextureAtlasSprite> textureGetter,
-                                TextureAtlasSprite particle, IBakedModel rackBakedModel, TransformationMatrix[] itemTransforms)
+                                TextureAtlasSprite particle, IBakedModel rackBakedModel, TransformationMatrix[] itemTransforms, boolean isSideLit)
     {
         this.particle = particle;
         this.rackBakedModel = rackBakedModel;
         this.itemTransforms = itemTransforms;
+        this.isSideLit = isSideLit;
         this.overrides = new ItemOverrideList(bakery, original, modelGetter, textureGetter, Collections.emptyList());
     }
 
     private static final Direction[] faces = Streams.concat(Arrays.stream(Direction.values()), Stream.of((Direction)null)).toArray(Direction[]::new);
-
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand)
-    {
-        return getQuads(state, side, rand, null);
-    }
 
     @Nonnull
     @Override
@@ -152,6 +150,12 @@ public class DryingRackBakedModel implements IBakedModel
     }
 
     @Override
+    public boolean func_230044_c_()
+    {
+        return isSideLit;
+    }
+
+    @Override
     public boolean isBuiltInRenderer()
     {
         return false;
@@ -224,8 +228,7 @@ public class DryingRackBakedModel implements IBakedModel
                 }
             }
 
-            // Fixme: owner.getOwningModel()
-            return new DryingRackBakedModel(bakery, null, bakery::getUnbakedModel, spriteGetter, particleSprite, rackBakedModel, transformations);
+            return new DryingRackBakedModel(bakery, owner.getOwnerModel(), bakery::getUnbakedModel, spriteGetter, particleSprite, rackBakedModel, transformations, owner.isSideLit());
         }
     }
 

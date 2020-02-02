@@ -139,7 +139,7 @@ public class ChoppingBlockTileEntity extends TileEntity
 
                 boolean completed2 = false;
 
-                breakingProgress += 25 + recipe.getHitCountMultiplier() * 25 * Math.max(0, axeLevel);
+                breakingProgress += recipe.getHitProgress(axeLevel);
                 if (breakingProgress >= 200)
                 {
                     if (!world.isRemote)

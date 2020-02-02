@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smoking",
-  "ingredient": {
-    "tag": "survivalist:dough"
-  },
-  "result": "survivalist:round_bread",
-  "experience": 0.45,
-  "cookingtime": 300
-}

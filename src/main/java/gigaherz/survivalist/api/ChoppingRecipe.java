@@ -22,7 +22,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChoppingRecipe implements IRecipe<ChoppingContext>
 {
@@ -46,6 +48,11 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
     public static Optional<ChoppingRecipe> getRecipe(World world, ItemStack stack)
     {
         return getRecipe(world, new ChoppingContext(new SingletonInventory(stack), null, 0, 0, null));
+    }
+
+    public static Collection<ChoppingRecipe> getAllRecipes(World world)
+    {
+        return world.getRecipeManager().getRecipes(CHOPPING).values().stream().map(r -> (ChoppingRecipe)r).collect(Collectors.toList());
     }
 
     private final ResourceLocation id;
@@ -151,13 +158,9 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
         return CHOPPING;
     }
 
-
-    private ItemStack getResults(ItemStack input, PlayerEntity player, int axeLevel, int fortune, Random random)
+    private ItemStack getResults(ItemStack input, @Nullable PlayerEntity player, int axeLevel, int fortune, Random random)
     {
-        double number = ConfigManager.SERVER.choppingWithEmptyHand.get() * getOutputMultiplier();
-
-        if (axeLevel >= 0)
-            number = Math.max(0, getOutputMultiplier() * ConfigManager.getAxeLevelMultiplier(axeLevel)) * (1 + random.nextFloat() * fortune);
+        double number = getOutputMultiplier(axeLevel) * (1 + random.nextFloat() * fortune);
 
         int whole = (int) Math.floor(number);
         double remainder = number - whole;
@@ -180,6 +183,15 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
         return ItemStack.EMPTY;
     }
 
+    public double getOutputMultiplier(int axeLevel)
+    {
+        double number = ConfigManager.SERVER.choppingWithEmptyHand.get() * getOutputMultiplier();
+
+        if (axeLevel >= 0)
+            number = Math.max(0, getOutputMultiplier() * ConfigManager.getAxeLevelMultiplier(axeLevel));
+        return number;
+    }
+
     private ItemStack getResultsSawmill()
     {
         double number = Math.max(0, getOutputMultiplier() * 4);
@@ -197,6 +209,11 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
         }
 
         return ItemStack.EMPTY;
+    }
+
+    public double getHitProgress(int axeLevel)
+    {
+        return 25 + getHitCountMultiplier() * 25 * Math.max(0, axeLevel);
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ChoppingRecipe>

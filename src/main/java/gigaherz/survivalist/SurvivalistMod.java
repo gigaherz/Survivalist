@@ -1,5 +1,6 @@
 package gigaherz.survivalist;
 
+import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
 import gigaherz.survivalist.misc.FibersEventHandling;
@@ -16,20 +17,19 @@ import gigaherz.survivalist.scraping.ScrapingEnchantment;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
-import gigaherz.survivalist.util.MiniReg;
+import gigaherz.survivalist.util.RegSitter;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.resources.IPackFinder;
+import net.minecraft.resources.ResourcePackInfo;
+import net.minecraft.resources.ResourcePackType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -40,12 +40,30 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.moddiscovery.ModFile;
+import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fml.packs.DelegatableResourcePack;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber
 @Mod(SurvivalistMod.MODID)
@@ -57,7 +75,7 @@ public class SurvivalistMod
 
     public static Logger logger = LogManager.getLogger(MODID);
 
-    static final MiniReg HELPER = new MiniReg(SurvivalistMod.MODID);
+    static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
 
     public static RegistryObject<SoundEvent> SOUND_SHLOP = HELPER.soundEvent("shlop", () -> new SoundEvent(SurvivalistMod.location("mob.slime.merge"))).defer();
 
@@ -99,9 +117,12 @@ public class SurvivalistMod
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::gatherData);
 
+        MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
+
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigManager.SERVER_SPEC);
     }
 
+    // This is its own method because I don't want SurvivalistData loaded all the time, I just need it loaded in the case where the event fires.
     public void gatherData(GatherDataEvent event)
     {
         SurvivalistData.gatherData(event);
@@ -124,47 +145,6 @@ public class SurvivalistMod
                 new DryingRecipe.Serializer().setRegistryName("drying"),
                 new ChoppingRecipe.Serializer().setRegistryName("chopping")
         );
-    }
-
-    private static void registerOredictNames()
-    {
-        /*OreDictionary.registerOre("materialLeather", Items.tanned_leather);
-        OreDictionary.registerOre("materialTannedLeather", Items.tanned_leather);
-        OreDictionary.registerOre("materialHardenedLeather", Items.tanned_leather);
-
-        OreDictionary.registerOre("nuggetIron", Items.nugget.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("nuggetCopper", Items.nugget.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("nuggetTin", Items.nugget.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("nuggetLead", Items.nugget.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("nuggetSilver", Items.nugget.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("nuggetAluminum", Items.nugget.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("nuggetAluminium", Items.nugget.getStack(OreMaterial.ALUMINUM));
-
-        OreDictionary.registerOre("rockOreIron", Items.rock_ore.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("rockOreGold", Items.rock_ore.getStack(OreMaterial.GOLD));
-        OreDictionary.registerOre("rockOreCopper", Items.rock_ore.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("rockOreTin", Items.rock_ore.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("rockOreLead", Items.rock_ore.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("rockOreSilver", Items.rock_ore.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("rockOreAluminum", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("rockOreAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
-
-        OreDictionary.registerOre("oreNuggetIron", Items.rock_ore.getStack(OreMaterial.IRON));
-        OreDictionary.registerOre("oreNuggetGold", Items.rock_ore.getStack(OreMaterial.GOLD));
-        OreDictionary.registerOre("oreNuggetCopper", Items.rock_ore.getStack(OreMaterial.COPPER));
-        OreDictionary.registerOre("oreNuggetTin", Items.rock_ore.getStack(OreMaterial.TIN));
-        OreDictionary.registerOre("oreNuggetLead", Items.rock_ore.getStack(OreMaterial.LEAD));
-        OreDictionary.registerOre("oreNuggetSilver", Items.rock_ore.getStack(OreMaterial.SILVER));
-        OreDictionary.registerOre("oreNuggetAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
-        OreDictionary.registerOre("oreNuggetAluminium", Items.rock_ore.getStack(OreMaterial.ALUMINUM));
-
-        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.NORMAL));
-        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.ANDESITE));
-        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.DIORITE));
-        OreDictionary.registerOre("rock", Items.rock.getStack(RockMaterial.GRANITE));
-        OreDictionary.registerOre("rockAndesite", Items.rock.getStack(RockMaterial.ANDESITE));
-        OreDictionary.registerOre("rockDiorite", Items.rock.getStack(RockMaterial.DIORITE));
-        OreDictionary.registerOre("rockGranite", Items.rock.getStack(RockMaterial.GRANITE));*/
     }
 
     public void commonSetup(FMLCommonSetupEvent event)
@@ -213,6 +193,19 @@ public class SurvivalistMod
         //RenderTypeLookup.setRenderLayer(SurvivalistBlocks.RACK.get(), (layer) -> layer == RenderType.getSolid() || layer == RenderType.getCutout());
     }
 
+    public void serverStarting(FMLServerAboutToStartEvent event)
+    {
+        event.getServer().getResourcePacks().addPackFinder(new IPackFinder()
+        {
+            @Override
+            public <T extends ResourcePackInfo> void addPackInfosToMap(Map<String, T> map, ResourcePackInfo.IFactory<T> infoFactory)
+            {
+                map.computeIfAbsent("survivalist_vanilla_replacements", (id) ->
+                        ResourcePackInfo.createResourcePack(id, false, SurvivalistVanillaReplacements::new, infoFactory, ResourcePackInfo.Priority.TOP));
+            }
+        });
+    }
+
     private static <R extends T, T extends IForgeRegistryEntry<T>> R withName(R obj, ResourceLocation name)
     {
         obj.setRegistryName(name);
@@ -227,5 +220,115 @@ public class SurvivalistMod
     public static ResourceLocation location(String path)
     {
         return new ResourceLocation(MODID, path);
+    }
+
+
+    private class SurvivalistVanillaReplacements extends DelegatableResourcePack
+    {
+        private final ModFile modFile;
+        private ResourcePackInfo packInfo;
+
+        public SurvivalistVanillaReplacements()
+        {
+            super(new File("dummy"));
+            this.modFile = ((ModFileInfo)ModLoadingContext.get().getActiveContainer().getModInfo().getOwningFile()).getFile();
+        }
+
+        public ModFile getModFile() {
+            return this.modFile;
+        }
+
+        @Override
+        public String getName()
+        {
+            return modFile.getFileName();
+        }
+
+        @Override
+        public InputStream getInputStream(String name) throws IOException
+        {
+            final Path path = modFile.getLocator().findPath(modFile, name);
+            return Files.newInputStream(path, StandardOpenOption.READ);
+        }
+
+        @Override
+        public boolean resourceExists(String name)
+        {
+            return Files.exists(modFile.getLocator().findPath(modFile, name));
+        }
+
+        @Override
+        public Collection<ResourceLocation> findResources(ResourcePackType type, String resourceNamespace, String pathIn, int maxDepth, Predicate<String> filter)
+        {
+            try
+            {
+                Path root = modFile.getLocator().findPath(modFile, "vanilla_replacements", type.getDirectoryName()).toAbsolutePath();
+                Path inputPath = root.getFileSystem().getPath(pathIn);
+
+                return Files.walk(root).
+                        map(path -> root.relativize(path.toAbsolutePath())).
+                        filter(path -> path.getNameCount() > 1 && path.getNameCount() - 1 <= maxDepth). // Make sure the depth is within bounds, ignoring domain
+                        filter(path -> !path.toString().endsWith(".mcmeta")). // Ignore .mcmeta files
+                        filter(path -> path.subpath(1, path.getNameCount()).startsWith(inputPath)). // Make sure the target path is inside this one (again ignoring domain)
+                        filter(path -> filter.test(path.getFileName().toString())). // Test the file name against the predicate
+                        // Finally we need to form the RL, so use the first name as the domain, and the rest as the path
+                        // It is VERY IMPORTANT that we do not rely on Path.toString as this is inconsistent between operating systems
+                        // Join the path names ourselves to force forward slashes
+                                map(path -> new ResourceLocation(path.getName(0).toString(), Joiner.on('/').join(path.subpath(1,Math.min(maxDepth, path.getNameCount()))))).
+                                collect(Collectors.toList());
+            }
+            catch (IOException e)
+            {
+                return Collections.emptyList();
+            }
+        }
+
+        @Override
+        public Set<String> getResourceNamespaces(ResourcePackType type)
+        {
+            try {
+                Path root = modFile.getLocator().findPath(modFile, type.getDirectoryName()).toAbsolutePath();
+                return Files.walk(root,1)
+                        .map(path -> root.relativize(path.toAbsolutePath()))
+                        .filter(path -> path.getNameCount() > 0) // skip the root entry
+                        .map(p->p.toString().replaceAll("/$","")) // remove the trailing slash, if present
+                        .filter(s -> !s.isEmpty()) //filter empty strings, otherwise empty strings default to minecraft in ResourceLocations
+                        .collect(Collectors.toSet());
+            }
+            catch (IOException e)
+            {
+                return Collections.emptySet();
+            }
+        }
+
+        public InputStream getResourceStream(ResourcePackType type, ResourceLocation location) throws IOException {
+            if (location.getPath().startsWith("lang/")) {
+                return super.getResourceStream(ResourcePackType.CLIENT_RESOURCES, location);
+            } else {
+                return super.getResourceStream(type, location);
+            }
+        }
+
+        public boolean resourceExists(ResourcePackType type, ResourceLocation location) {
+            if (location.getPath().startsWith("lang/")) {
+                return super.resourceExists(ResourcePackType.CLIENT_RESOURCES, location);
+            } else {
+                return super.resourceExists(type, location);
+            }
+        }
+
+        @Override
+        public void close() throws IOException
+        {
+
+        }
+
+        <T extends ResourcePackInfo> void setPackInfo(final T packInfo) {
+            this.packInfo = packInfo;
+        }
+
+        <T extends ResourcePackInfo> T getPackInfo() {
+            return (T)this.packInfo;
+        }
     }
 }

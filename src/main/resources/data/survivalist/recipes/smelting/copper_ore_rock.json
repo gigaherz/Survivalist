@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "tag": "survivalist:ore_rocks/copper"
-  },
-  "result": "survivalist:copper_nugget",
-  "experience": 0.2,
-  "cookingtime": 50
-}

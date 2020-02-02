@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    { "item" : "minecraft:jungle_log" }
-  ],
-  "result": {
-    "item": "survivalist:jungle_chopping_block"
-  }
-}

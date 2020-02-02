@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "tag": "survivalist:ore_rocks/aluminum"
-  },
-  "result": "survivalist:aluminum_nugget",
-  "experience": 0.2,
-  "cookingtime": 50
-}
