@@ -93,7 +93,7 @@ public class SawmillBlock extends Block
     }
 
     @Override
-    public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
     {
         if (worldIn.isRemote)
             return ActionResultType.SUCCESS;

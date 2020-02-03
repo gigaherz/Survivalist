@@ -94,15 +94,17 @@ public class SurvivalistData
                         if (rock.isOre())
                         {
                             Tag<Item> tag = makeItemTag(rock.getSmeltingTag());
-                            ResourceLocation recipeId = new ResourceLocation(itemId.getNamespace(), "smelting/" + itemId.getPath());
                             CookingRecipeBuilder
                                     .smeltingRecipe(Ingredient.fromTag(tag), result.get(), 0.2f, 50)
                                     .addCriterion("has_rock", hasItem(tag))
-                                    .build(consumer, recipeId);
+                                    .build(consumer, new ResourceLocation(itemId.getNamespace(), "smelting/" + itemId.getPath()));
+                            CookingRecipeBuilder
+                                    .blastingRecipe(Ingredient.fromTag(tag), result.get(), 0.2f, 25)
+                                    .addCriterion("has_rock", hasItem(tag))
+                                    .build(consumer, new ResourceLocation(itemId.getNamespace(), "smelting/" + itemId.getPath() + "_from_blasting"));
                         }
                         else
                         {
-                            ResourceLocation recipeId = new ResourceLocation("survivalist", result.get().getRegistryName().getPath() + "_from_rocks");
                             ShapedRecipeBuilder.shapedRecipe(result.get())
                                     .patternLine("rrr")
                                     .patternLine("rcr")
@@ -111,39 +113,20 @@ public class SurvivalistData
                                     .key('c', new ConfigToggledIngredientSerializer.ConfigToggledIngredient("rocks", "CobbleRequiresClay",
                                             Ingredient.fromItems(Items.CLAY_BALL), Ingredient.fromItems(rockItem.get())))
                                     .addCriterion("has_rock", hasItem(result.get()))
-                                    .build(consumer, recipeId);;
+                                    .build(consumer, new ResourceLocation("survivalist", result.get().getRegistryName().getPath() + "_from_rocks"));;
                         }
                     }));
 
-            /*
-            {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "rrr",
-    "rcr",
-    "rrr"
-  ],
-  "key": {
-    "r": { "item": "survivalist:diorite_rock" },
-    "c": {
-      "type": "survivalist:config_toggled_ingredient",
-      "category": "rocks",
-      "key": "CobbleRequiresClay",
-      "then": { "item": "minecraft:clay_ball" },
-      "else": { "item": "survivalist:diorite_rock" }
-    }
-  },
-  "result": {
-    "item": "minecraft:diorite"
-  }
-}
-             */
-
             Tag<Item> dough = makeItemTag(SurvivalistMod.location("dough"));
             CookingRecipeBuilder
-                    .cookingRecipe(Ingredient.fromTag(dough), SurvivalistItems.ROUND_BREAD.get(), 0.45f, 300, IRecipeSerializer.SMOKING)
+                    .smeltingRecipe(Ingredient.fromTag(dough), SurvivalistItems.ROUND_BREAD.get(), 0.45f, 300)
                     .addCriterion("has_dough", hasItem(dough))
                     .build(consumer, SurvivalistMod.location("cooking/round_bread"));
+            CookingRecipeBuilder
+                    .cookingRecipe(Ingredient.fromTag(dough), SurvivalistItems.ROUND_BREAD.get(), 0.45f, 150, IRecipeSerializer.SMOKING)
+                    .addCriterion("has_dough", hasItem(dough))
+                    .build(consumer, SurvivalistMod.location("cooking/round_bread_from_smoking"));
+            // no, no roundbread-making in a campfire
 
             Tag<Item> leatherTag = makeItemTag("survivalist:tanned_leather");
             ConditionalRecipe.builder()
@@ -244,7 +227,7 @@ public class SurvivalistData
         @Override
         protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationtracker) {
             map.forEach((p_218436_2_, p_218436_3_) -> {
-                LootTableManager.check(validationtracker, p_218436_2_, p_218436_3_);
+                LootTableManager.func_227508_a_(validationtracker, p_218436_2_, p_218436_3_);
             });
         }
 

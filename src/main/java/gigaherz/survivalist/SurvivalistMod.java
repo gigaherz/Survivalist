@@ -1,6 +1,7 @@
 package gigaherz.survivalist;
 
 import com.google.common.base.Joiner;
+import com.google.common.io.LittleEndianDataInputStream;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
 import gigaherz.survivalist.misc.FibersEventHandling;
@@ -17,12 +18,17 @@ import gigaherz.survivalist.scraping.ScrapingEnchantment;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
+import gigaherz.survivalist.util.ReaderNBTLE;
 import gigaherz.survivalist.util.RegSitter;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.IPackFinder;
 import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackType;
@@ -33,6 +39,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -49,19 +56,15 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.fml.packs.DelegatableResourcePack;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.apache.commons.io.input.SwappedDataInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -201,7 +204,7 @@ public class SurvivalistMod
             public <T extends ResourcePackInfo> void addPackInfosToMap(Map<String, T> map, ResourcePackInfo.IFactory<T> infoFactory)
             {
                 map.computeIfAbsent("survivalist_vanilla_replacements", (id) ->
-                        ResourcePackInfo.createResourcePack(id, false, SurvivalistVanillaReplacements::new, infoFactory, ResourcePackInfo.Priority.TOP));
+                        ResourcePackInfo.createResourcePack(id, false, () -> new SurvivalistVanillaReplacements(id), infoFactory, ResourcePackInfo.Priority.TOP));
             }
         });
     }
@@ -223,49 +226,46 @@ public class SurvivalistMod
     }
 
 
-    private class SurvivalistVanillaReplacements extends DelegatableResourcePack
+    private static class SurvivalistVanillaReplacements extends DelegatableResourcePack
     {
+        private final String id;
         private final ModFile modFile;
-        private ResourcePackInfo packInfo;
 
-        public SurvivalistVanillaReplacements()
+        public SurvivalistVanillaReplacements(String id)
         {
-            super(new File("dummy"));
-            this.modFile = ((ModFileInfo)ModLoadingContext.get().getActiveContainer().getModInfo().getOwningFile()).getFile();
-        }
-
-        public ModFile getModFile() {
-            return this.modFile;
+            super(new File(id));
+            this.id = id;
+            this.modFile = ModList.get().getModFileById(MODID).getFile();
         }
 
         @Override
         public String getName()
         {
-            return modFile.getFileName();
+            return id;
         }
 
         @Override
         public InputStream getInputStream(String name) throws IOException
         {
-            final Path path = modFile.getLocator().findPath(modFile, name);
+            final Path path = modFile.getLocator().findPath(modFile, "vanilla_replacements", name);
             return Files.newInputStream(path, StandardOpenOption.READ);
         }
 
         @Override
         public boolean resourceExists(String name)
         {
-            return Files.exists(modFile.getLocator().findPath(modFile, name));
+            return Files.exists(modFile.getLocator().findPath(modFile, "vanilla_replacements", name));
         }
 
         @Override
-        public Collection<ResourceLocation> findResources(ResourcePackType type, String resourceNamespace, String pathIn, int maxDepth, Predicate<String> filter)
+        public Collection<ResourceLocation> getAllResourceLocations(ResourcePackType type, String namespaceIn, String pathIn, int maxDepth, Predicate<String> filter)
         {
             try
             {
                 Path root = modFile.getLocator().findPath(modFile, "vanilla_replacements", type.getDirectoryName()).toAbsolutePath();
                 Path inputPath = root.getFileSystem().getPath(pathIn);
 
-                return Files.walk(root).
+                List<ResourceLocation> resourceLocationList = Files.walk(root).
                         map(path -> root.relativize(path.toAbsolutePath())).
                         filter(path -> path.getNameCount() > 1 && path.getNameCount() - 1 <= maxDepth). // Make sure the depth is within bounds, ignoring domain
                         filter(path -> !path.toString().endsWith(".mcmeta")). // Ignore .mcmeta files
@@ -274,8 +274,9 @@ public class SurvivalistMod
                         // Finally we need to form the RL, so use the first name as the domain, and the rest as the path
                         // It is VERY IMPORTANT that we do not rely on Path.toString as this is inconsistent between operating systems
                         // Join the path names ourselves to force forward slashes
-                                map(path -> new ResourceLocation(path.getName(0).toString(), Joiner.on('/').join(path.subpath(1,Math.min(maxDepth, path.getNameCount()))))).
+                                map(path -> new ResourceLocation(path.getName(0).toString(), Joiner.on('/').join(path.subpath(1, Math.min(maxDepth, path.getNameCount()))))).
                                 collect(Collectors.toList());
+                return resourceLocationList;
             }
             catch (IOException e)
             {
@@ -287,7 +288,7 @@ public class SurvivalistMod
         public Set<String> getResourceNamespaces(ResourcePackType type)
         {
             try {
-                Path root = modFile.getLocator().findPath(modFile, type.getDirectoryName()).toAbsolutePath();
+                Path root = modFile.getLocator().findPath(modFile, "vanilla_replacements", type.getDirectoryName()).toAbsolutePath();
                 return Files.walk(root,1)
                         .map(path -> root.relativize(path.toAbsolutePath()))
                         .filter(path -> path.getNameCount() > 0) // skip the root entry
@@ -318,17 +319,9 @@ public class SurvivalistMod
         }
 
         @Override
-        public void close() throws IOException
+        public void close()
         {
 
-        }
-
-        <T extends ResourcePackInfo> void setPackInfo(final T packInfo) {
-            this.packInfo = packInfo;
-        }
-
-        <T extends ResourcePackInfo> T getPackInfo() {
-            return (T)this.packInfo;
         }
     }
 }

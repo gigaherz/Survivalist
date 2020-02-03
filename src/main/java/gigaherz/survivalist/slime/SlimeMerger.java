@@ -103,31 +103,31 @@ public class SlimeMerger
             {
                 Collections.sort(list, this.sorter);
 
-                double x = slime.getX();
-                double y = slime.getY();
-                double z = slime.getZ();
+                double x = slime.getPosX();
+                double y = slime.getPosY();
+                double z = slime.getPosZ();
 
                 int size = slime.getSlimeSize() + 1;
                 for (int i = 0; i < 8 * size; i++)
                 {
                     float angle = rand.nextFloat();
                     float speed = size * (1 + rand.nextFloat() * 0.5f);
-                    slime.world.addParticle(ParticleTypes.ITEM_SLIME, slime.getX(), slime.getY(), slime.getZ(),
+                    slime.world.addParticle(ParticleTypes.ITEM_SLIME, slime.getPosX(), slime.getPosY(), slime.getPosZ(),
                             speed * Math.cos(angle), 1, speed * Math.sin(angle));
                 }
 
                 for (int i = 0; i < 3; i++)
                 {
                     SlimeEntity target = list.get(i);
-                    x += target.getX();
-                    y += target.getY();
-                    z += target.getZ();
+                    x += target.getPosX();
+                    y += target.getPosY();
+                    z += target.getPosZ();
                     target.remove();
                     for (int j = 0; j < 8 * size; j++)
                     {
                         float angle = rand.nextFloat();
                         float speed = size * (1 + rand.nextFloat() * 0.5f);
-                        slime.world.addParticle(ParticleTypes.ITEM_SLIME, target.getX(), target.getY(), target.getZ(),
+                        slime.world.addParticle(ParticleTypes.ITEM_SLIME, target.getPosX(), target.getPosY(), target.getPosZ(),
                                 speed * Math.cos(angle), 1, speed * Math.sin(angle));
                     }
                 }

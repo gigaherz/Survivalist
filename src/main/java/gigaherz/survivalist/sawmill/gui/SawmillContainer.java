@@ -115,7 +115,7 @@ public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
     }
 
     @Override
-    public void func_201771_a(RecipeItemHelper helper) // accountStacks
+    public void fillStackedContents(RecipeItemHelper helper)
     {
         for(ItemStack itemstack : this.wrappedInventory) {
             helper.accountStack(itemstack);

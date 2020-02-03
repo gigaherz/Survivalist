@@ -42,6 +42,6 @@ public class StringEventHandling
         }
 
         if (rnd.nextFloat() < 0.25f)
-            drops.add(new ItemEntity(entity.getEntityWorld(), entity.getX(), entity.getY(), entity.getZ(), new ItemStack(Items.STRING)));
+            drops.add(new ItemEntity(entity.getEntityWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), new ItemStack(Items.STRING)));
     }
 }

@@ -72,11 +72,11 @@ public class DryingRackBakedModel implements IDynamicBakedModel
         List<BakedQuad> quads = Lists.newArrayList();
 
         RenderType renderLayer = MinecraftForgeClient.getRenderLayer();
-        if (renderLayer == RenderType.getSolid())
+        if (renderLayer == RenderType.solid())
         {
             quads.addAll(rackBakedModel.getQuads(state, side, rand));
         }
-        else if (renderLayer == RenderType.getCutout() && side == null)
+        else if (renderLayer == RenderType.cutout() && side == null)
         {
             ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
             World world = Minecraft.getInstance().world;
@@ -93,8 +93,8 @@ public class DryingRackBakedModel implements IDynamicBakedModel
                 matrixStack.push(); // pushMatrix
 
                 TransformationMatrix ct = itemTransforms[i];
-                matrixStack.peek().getModel().multiply(ct.getMatrix()); // current().getPositionMatrix().multiply(getPositionMatrix)
-                matrixStack.peek().getNormal().multiply(ct.getNormalMatrix()); // current().getNormalMatrix().multiply
+                matrixStack.getLast().getPositionMatrix().multiply(ct.getMatrix()); // current().getPositionMatrix().multiply(getPositionMatrix)
+                matrixStack.getLast().getNormalMatrix().mul(ct.getNormalMatrix()); // current().getNormalMatrix().multiply
 
                 IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
 
@@ -110,7 +110,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
                     @SuppressWarnings("unchecked")
                     Map<Pair<IBakedModel, TransformationMatrix>, List<BakedQuad>> cache = caches.get(i);
 
-                    Matrix4f positionTransform = matrixStack.peek().getModel(); // current() // getPositionMatrix
+                    Matrix4f positionTransform = matrixStack.getLast().getPositionMatrix(); // current() // getPositionMatrix
                     TransformationMatrix transformMatrix = new TransformationMatrix(positionTransform);
 
                     Pair<IBakedModel, TransformationMatrix> pair = Pair.of(model, transformMatrix);
@@ -199,7 +199,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
             List<Material> list = new ArrayList<>();
             if (baseModel != null)
             {
-                list.addAll(baseModel.getTextureDependencies(modelGetter, missingTextureErrors));
+                list.addAll(baseModel.getTextures(modelGetter, missingTextureErrors));
             }
             return list;
         }
@@ -216,7 +216,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
             if (baseModel != null)
             {
                 TransformationMatrix baseTransform = sprite.getRotation();
-                rackBakedModel = baseModel.bake(bakery, spriteGetter, new SimpleModelTransform(baseTransform), modelLocation); // bake
+                rackBakedModel = baseModel.bakeModel(bakery, spriteGetter, new SimpleModelTransform(baseTransform), modelLocation); // bake
 
                 if (!baseTransform.isIdentity())
                 {

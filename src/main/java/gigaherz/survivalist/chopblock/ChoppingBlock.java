@@ -62,7 +62,7 @@ public class ChoppingBlock extends Block
 
     @Deprecated
     @Override
-    public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
     {
         ItemStack heldItem = player.getHeldItem(hand);
 
@@ -74,7 +74,7 @@ public class ChoppingBlock extends Block
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (!(tileEntity instanceof ChoppingBlockTileEntity) || player.isSneaking())
+        if (!(tileEntity instanceof ChoppingBlockTileEntity) || player.isShiftKeyDown())
             return ActionResultType.PASS;
 
         ChoppingBlockTileEntity chopper = (ChoppingBlockTileEntity) tileEntity;

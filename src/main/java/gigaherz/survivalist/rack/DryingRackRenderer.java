@@ -35,7 +35,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
             float angle = -state.get(DryingRackBlock.FACING).getHorizontalAngle();
 
             matrixStack.translate(0.5, 0.5, 0.5);    // translate
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));        // rotate
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(angle));        // rotate
             matrixStack.translate(-0.5, -0.5, -0.5); // translate
             //matrixStack.func_227863_a_(Vector3f.field_229183_f_.func_229187_a_(180));
 
@@ -56,7 +56,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
                     matrixStack.scale(0.7f, 0.7f, 0.7f); // scale
 
                     matrixStack.translate(0.715, 0.93, 0.635); // translate
-                    matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180)); // rotate
+                    matrixStack.rotate(Vector3f.YP.rotationDegrees(180)); // rotate
 
                     IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity)null);
                     // FIXME: Fix baked model.

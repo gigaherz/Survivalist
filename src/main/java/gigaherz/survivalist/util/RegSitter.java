@@ -240,7 +240,7 @@ public class RegSitter
 
         public MiniEntity<T> spawnableFarFromPlayer()
         {
-            builder.spawnableFarFromPlayer();
+            builder.func_225435_d();
             return this;
         }
 
