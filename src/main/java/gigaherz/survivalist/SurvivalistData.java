@@ -8,6 +8,7 @@ import gigaherz.survivalist.rocks.Nuggets;
 import gigaherz.survivalist.rocks.Rocks;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.IRequirementsStrategy;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.block.Block;
 import net.minecraft.data.*;
@@ -129,6 +130,7 @@ public class SurvivalistData
             // no, no roundbread-making in a campfire
 
             Tag<Item> leatherTag = makeItemTag("survivalist:tanned_leather");
+            ResourceLocation saddleRecipeId = SurvivalistMod.location("saddle");
             ConditionalRecipe.builder()
                     .addCondition(new ConfigurationCondition("drying_rack", "EnableSaddleCrafting"))
                     .addRecipe(
@@ -149,12 +151,13 @@ public class SurvivalistData
                                     .addAdvancement(
                                             Advancement.Builder.builder()
                                                     .withParentId(new ResourceLocation("minecraft", "recipes/root"))
-                                                    .withRewards(AdvancementRewards.Builder.recipe(SurvivalistMod.location("saddle")))
+                                                    .withRewards(AdvancementRewards.Builder.recipe(saddleRecipeId))
+                                                    .withRequirementsStrategy(IRequirementsStrategy.OR)
                                                     .withCriterion("has_leather", hasItem(leatherTag))
-                                                    .withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(SurvivalistMod.location("saddle")))
+                                                    .withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(saddleRecipeId))
                                     )
                     )
-                    .build(consumer, SurvivalistMod.location("saddle"));
+                    .build(consumer, saddleRecipeId);
         }
     }
 

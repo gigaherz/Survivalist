@@ -43,6 +43,7 @@ public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileE
                 if (stack.getCount() > 0)
                 {
                     matrixStack.push();
+                    matrixStack.translate(0.5, 0.5, 0.5);
 
                     matrixStack.translate(0, -4.5 / 16.0f, 0);
                     matrixStack.scale(2, 2, 2);

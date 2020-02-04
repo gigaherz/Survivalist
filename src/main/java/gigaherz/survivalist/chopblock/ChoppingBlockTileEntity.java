@@ -22,6 +22,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -126,12 +127,12 @@ public class ChoppingBlockTileEntity extends TileEntity
         handleUpdateTag(pkt.getNbtCompound());
     }
 
-    public boolean chop(PlayerEntity playerIn, int axeLevel, int fortune)
+    public boolean chop(PlayerEntity player, int axeLevel, int fortune)
     {
         boolean completed = false;
         if (slotInventory.getStackInSlot(0).getCount() > 0)
         {
-            ChoppingContext ctx = new ChoppingContext(slotInventory, playerIn, axeLevel, fortune, RANDOM);
+            ChoppingContext ctx = new ChoppingContext(slotInventory, player, axeLevel, fortune, RANDOM);
 
             Optional<ChoppingRecipe> foundRecipe = ChoppingRecipe.getRecipe(world, ctx);
 
@@ -148,13 +149,13 @@ public class ChoppingBlockTileEntity extends TileEntity
 
                         if (out.getCount() > 0)
                         {
-                            //ItemHandlerHelper.giveItemToPlayer(playerIn, out);
-                            spawnItemStack(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, out);
+                            //ItemHandlerHelper.giveItemToPlayer(player, out);
+                            ItemHandlerHelper.giveItemToPlayer(player, out);
                         }
 
                         completed2 = true;
                     }
-                    world.playSound(playerIn, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                    world.playSound(player, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
                     slotInventory.setStackInSlot(0, ItemStack.EMPTY);
                     breakingProgress = 0;
                 }

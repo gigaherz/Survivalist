@@ -1,7 +1,7 @@
 {
   "type": "survivalist:chopping",
   "ingredient": {
-    "item": "minecraft:acacia_log"
+    "tag": "minecraft:acacia_logs"
   },
   "result": "minecraft:acacia_planks"
 }

@@ -231,7 +231,7 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
             ItemStack itemstack = new ItemStack(Optional.ofNullable(ForgeRegistries.ITEMS.getValue(resourcelocation)).orElseThrow(() -> new IllegalStateException("Item: " + s1 + " does not exist")));
             double outputMultiplier   = JSONUtils.getFloat(json, "output_multiplier", 1.0f);
             double hitCountMultiplier = JSONUtils.getFloat(json, "hit_count_multiplier", 1.0f);
-            int maxOutput             = JSONUtils.getInt(json, "max_output", 1);
+            int maxOutput             = JSONUtils.getInt(json, "max_output", 0);
             int sawingTime            = JSONUtils.getInt(json, "sawing_time", 200);
             return new ChoppingRecipe(recipeId, group, ingredient, itemstack, outputMultiplier, hitCountMultiplier, maxOutput, sawingTime);
         }

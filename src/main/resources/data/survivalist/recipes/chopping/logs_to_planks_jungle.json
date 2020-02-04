@@ -1,7 +1,7 @@
 {
   "type": "survivalist:chopping",
   "ingredient": {
-    "item": "minecraft:jungle_log"
+    "tag": "minecraft:jungle_logs"
   },
   "result": "minecraft:jungle_planks"
 }

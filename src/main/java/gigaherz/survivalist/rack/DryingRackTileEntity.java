@@ -4,6 +4,7 @@ import gigaherz.survivalist.SurvivalistTileEntityTypes;
 import gigaherz.survivalist.api.ItemHandlerWrapper;
 import gigaherz.survivalist.api.DryingRecipe;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
+import gigaherz.survivalist.misc.IntArrayWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -17,6 +18,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
@@ -46,7 +48,8 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
 
     private final ModelDataMap data = new ModelDataMap.Builder().withProperty(CONTAINED_ITEMS_DATA).build();
 
-    public int[] dryTimeRemaining = new int[4];
+    private int[] dryTimeRemaining = new int[4];
+    public final IIntArray dryTimeArray = new IntArrayWrapper(dryTimeRemaining);
 
     public final ItemStackHandler items = new ItemStackHandler(4)
     {

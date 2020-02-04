@@ -49,8 +49,7 @@ public class ConfigManager
         public final ForgeConfigSpec.BooleanValue enableTorchFire;
         public final ForgeConfigSpec.BooleanValue enableBread;
         public final ForgeConfigSpec.BooleanValue removeVanillaBread;
-        public final ForgeConfigSpec.BooleanValue importPlanksRecipes;
-        public final ForgeConfigSpec.BooleanValue removePlanksRecipes;
+        public final ForgeConfigSpec.BooleanValue disablePlanksRecipes;
         public final ForgeConfigSpec.DoubleValue choppingDegradeChance;
         public final ForgeConfigSpec.DoubleValue choppingExhaustion;
         public final ForgeConfigSpec.DoubleValue choppingWithEmptyHand;
@@ -98,8 +97,7 @@ public class ConfigManager
             builder.pop();
 
             builder.comment("Settings for the chopping block").push("chopping");
-            importPlanksRecipes = builder.define("ImportPlanksRecipes", true);
-            removePlanksRecipes = builder.define("RemovePlanksRecipes", true);
+            disablePlanksRecipes = builder.define("DisablePlanksRecipes", true);
             choppingDegradeChance = builder
                     .comment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.")
                     .defineInRange("DegradeChance", 0.06, 0, Double.MAX_VALUE);
