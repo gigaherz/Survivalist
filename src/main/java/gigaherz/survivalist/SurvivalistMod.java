@@ -1,7 +1,6 @@
 package gigaherz.survivalist;
 
 import com.google.common.base.Joiner;
-import com.google.common.io.LittleEndianDataInputStream;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
 import gigaherz.survivalist.misc.FibersEventHandling;
@@ -10,7 +9,6 @@ import gigaherz.survivalist.rack.DryingRackBakedModel;
 import gigaherz.survivalist.rack.DryingRackContainer;
 import gigaherz.survivalist.rack.DryingRackScreen;
 import gigaherz.survivalist.rocks.RockEntity;
-import gigaherz.survivalist.rocks.RocksEventHandling;
 import gigaherz.survivalist.sawmill.gui.SawmillContainer;
 import gigaherz.survivalist.sawmill.gui.SawmillScreen;
 import gigaherz.survivalist.scraping.ItemBreakingTracker;
@@ -18,17 +16,12 @@ import gigaherz.survivalist.scraping.ScrapingEnchantment;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
-import gigaherz.survivalist.util.ReaderNBTLE;
 import gigaherz.survivalist.util.RegSitter;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.nbt.*;
 import net.minecraft.resources.IPackFinder;
 import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackType;
@@ -48,19 +41,18 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.moddiscovery.ModFile;
-import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.fml.packs.DelegatableResourcePack;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-import org.apache.commons.io.input.SwappedDataInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -158,7 +150,8 @@ public class SurvivalistMod
 
         ItemBreakingTracker.register();
 
-        RocksEventHandling.register();
+        // TODO: Fixme: convert to loot tables as needed
+        //RocksEventHandling.register();
 
         FibersEventHandling.register();
 

@@ -5,6 +5,7 @@ import gigaherz.survivalist.SurvivalistItems;
 import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.tileentity.*;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
@@ -79,6 +80,7 @@ public enum Rocks implements IStringSerializable
             return Lists.newArrayList(
                     new ResourceLocation("forge", "small_ores/" + name),
                     new ResourceLocation("forge", "weak_ores/" + name),
+                    new ResourceLocation("forge", "poor_ores/" + name),
                     new ResourceLocation("forge", "ore_rocks/" + name),
                     SurvivalistMod.location("ore_rocks/" + name)
             );

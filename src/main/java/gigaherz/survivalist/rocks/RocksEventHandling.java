@@ -1,5 +1,5 @@
 package gigaherz.survivalist.rocks;
-
+/*
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.ConfigManager;
@@ -20,21 +20,21 @@ import java.util.Random;
 
 public class RocksEventHandling
 {
-    public static final Tag<Item> TAG_IRON_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/iron"));
-    public static final Tag<Item> TAG_GOLD_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/gold"));
-    public static final Tag<Item> TAG_COPPER_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/copper"));
-    public static final Tag<Item> TAG_TIN_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/tin"));
-    public static final Tag<Item> TAG_LEAD_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/lead"));
-    public static final Tag<Item> TAG_SILVER_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/silver"));
-    public static final Tag<Item> TAG_ALUMINUM_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/aluminum"));
+    public static final Tag<Item> TAG_IRON_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ores/iron"));
+    public static final Tag<Item> TAG_GOLD_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ores/gold"));
+    public static final Tag<Item> TAG_COPPER_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ores/copper"));
+    public static final Tag<Item> TAG_TIN_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ores/tin"));
+    public static final Tag<Item> TAG_LEAD_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ores/lead"));
+    public static final Tag<Item> TAG_SILVER_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ores/silver"));
+    public static final Tag<Item> TAG_ALUMINUM_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ores/aluminum"));
 
-    public static final Tag<Item> TAG_POOR_IRON_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/poor_iron"));
-    public static final Tag<Item> TAG_POOR_GOLD_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/poor_gold"));
-    public static final Tag<Item> TAG_POOR_COPPER_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/poor_copper"));
-    public static final Tag<Item> TAG_POOR_TIN_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/poor_tin"));
-    public static final Tag<Item> TAG_POOR_LEAD_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/poor_lead"));
-    public static final Tag<Item> TAG_POOR_SILVER_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/poor_silver"));
-    public static final Tag<Item> TAG_POOR_ALUMINUM_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/ore/poor_aluminum"));
+    public static final Tag<Item> TAG_POOR_IRON_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/poor_ores/iron"));
+    public static final Tag<Item> TAG_POOR_GOLD_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/poor_ores/gold"));
+    public static final Tag<Item> TAG_POOR_COPPER_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/poor_ores/copper"));
+    public static final Tag<Item> TAG_POOR_TIN_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/poor_ores/tin"));
+    public static final Tag<Item> TAG_POOR_LEAD_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/poor_ores/lead"));
+    public static final Tag<Item> TAG_POOR_SILVER_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/poor_ores/silver"));
+    public static final Tag<Item> TAG_POOR_ALUMINUM_ORE = new ItemTags.Wrapper(new ResourceLocation("forge", "items/poor_ores/aluminum"));
 
     private final Random rnd = new Random();
 
@@ -71,27 +71,27 @@ public class RocksEventHandling
 
             if (ConfigManager.SERVER.replaceStoneDrops.get())
             {
-                if (drop.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE))
+                if (drop.getItem() == Blocks.COBBLESTONE.asItem())
                 {
                     newDrops.add(new ItemStack(SurvivalistItems.STONE_ROCK.get(), 4));
                     anyChanged = true;
                 }
-                else if (drop.getItem() == Item.getItemFromBlock(Blocks.STONE))
+                else if (drop.getItem() == Blocks.STONE.asItem())
                 {
                     newDrops.add(new ItemStack(SurvivalistItems.STONE_ROCK.get(), 4));
                     anyChanged = true;
                 }
-                else if (drop.getItem() == Item.getItemFromBlock(Blocks.ANDESITE))
+                else if (drop.getItem() == Blocks.ANDESITE.asItem())
                 {
                     newDrops.add(new ItemStack(SurvivalistItems.ANDESITE_ROCK.get(), 4));
                     anyChanged = true;
                 }
-                else if (drop.getItem() == Item.getItemFromBlock(Blocks.DIORITE))
+                else if (drop.getItem() == Blocks.DIORITE.asItem())
                 {
                     newDrops.add(new ItemStack(SurvivalistItems.DIORITE_ROCK.get(), 4));
                     anyChanged = true;
                 }
-                else if (drop.getItem() == Item.getItemFromBlock(Blocks.GRANITE))
+                else if (drop.getItem() == Blocks.GRANITE.asItem())
                 {
                     newDrops.add(new ItemStack(SurvivalistItems.GRANITE_ROCK.get(), 4));
                     anyChanged = true;
@@ -216,3 +216,4 @@ public class RocksEventHandling
         return amount * (i + 1);
     }
 }
+*/
