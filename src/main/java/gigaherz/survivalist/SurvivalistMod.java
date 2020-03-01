@@ -3,7 +3,6 @@ package gigaherz.survivalist;
 import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
-import gigaherz.survivalist.misc.FibersEventHandling;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
 import gigaherz.survivalist.rack.DryingRackContainer;
@@ -151,9 +150,7 @@ public class SurvivalistMod
         ItemBreakingTracker.register();
 
         // TODO: Fixme: convert to loot tables as needed
-        //RocksEventHandling.register();
-
-        FibersEventHandling.register();
+        //FibersEventHandling.register();
 
         StringEventHandling.register();
 

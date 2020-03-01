@@ -40,11 +40,11 @@ public class SurvivalistItems
     public static final RegistryObject<AxeItem> HATCHET = HELPER.<AxeItem>item("hatchet", () -> new AxeItem(SurvivalistItems.TOOL_FLINT, 8.0F, -3.1F, new Item.Properties().group(ItemGroup.TOOLS)){}).defer();
     public static final RegistryObject<PickaxeItem> PICK = HELPER.<PickaxeItem>item("pick", () -> new PickaxeItem(SurvivalistItems.TOOL_FLINT, 4, -2.6F, new Item.Properties().group(ItemGroup.TOOLS)){}).defer();
     public static final RegistryObject<ShovelItem> SPADE = HELPER.item("spade", () -> new ShovelItem(SurvivalistItems.TOOL_FLINT, 3, -2.1F, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<ArmorItem> PLANT_FIBRES = HELPER.item("tanned_helmet", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<ArmorItem> TANNED_HELMET = HELPER.item("tanned_chestplate", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<ArmorItem> TANNED_CHESTPLATE = HELPER.item("tanned_leggings", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<ArmorItem> TANNED_LEGGINGS = HELPER.item("tanned_boots", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<Item> TANNED_BOOTS = HELPER.item("plant_fibres", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS))).defer();
+    public static final RegistryObject<ArmorItem> TANNED_HELMET = HELPER.item("tanned_helmet", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.TOOLS))).defer();
+    public static final RegistryObject<ArmorItem> TANNED_CHESTPLATE = HELPER.item("tanned_chestplate", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.TOOLS))).defer();
+    public static final RegistryObject<ArmorItem> TANNED_LEGGINGS = HELPER.item("tanned_leggings", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.TOOLS))).defer();
+    public static final RegistryObject<ArmorItem> TANNED_BOOTS = HELPER.item("tanned_boots", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.TOOLS))).defer();
+    public static final RegistryObject<Item> PLANT_FIBRES = HELPER.item("plant_fibres", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS))).defer();
 
     public static final IArmorMaterial TANNED_LEATHER_MATERIAL = new IArmorMaterial()
     {

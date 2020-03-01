@@ -1,5 +1,5 @@
 package gigaherz.survivalist.misc;
-
+/*
 import com.google.common.collect.ImmutableList;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.SurvivalistItems;
@@ -58,7 +58,7 @@ public class FibersEventHandling
         {
             if (!(drops instanceof NonNullList))
                 throw ex;
-/*
+
             // Workaround for getDrops using a fixed-length NonNullList
             if (nonNullListDelegate == null)
             {
@@ -74,11 +74,11 @@ public class FibersEventHandling
             {
                 throw ex;
             }
- */
+
         }
     }
 
-    /*@ObjectHolder("biomesoplenty:plant_0")
+    @ObjectHolder("biomesoplenty:plant_0")
     public static Block bopPlant0 = null;
 
     @ObjectHolder("biomesoplenty:plant_1")
@@ -94,13 +94,13 @@ public class FibersEventHandling
     public static Block bopVineWillow = null;
 
     @ObjectHolder("biomesoplenty:flower_vine")
-    public static Block bopVineFlowering = null;*/
+    public static Block bopVineFlowering = null;
 
     public static Tag<Block> FIBRE_SOURCES = new BlockTags.Wrapper(new ResourceLocation("survivalist:fibre_sources"));
 
     private boolean isFibreSource(BlockState state)
     {
-        /*Block block = state.getBlock();
+        Block block = state.getBlock();
 
         // vanilla grass
         if (block == Blocks.TALL_GRASS || block == Blocks.GRASS)
@@ -113,8 +113,9 @@ public class FibersEventHandling
             return true;
         // BOP vines
         if (block == bopVineIvy || block == bopVineWillow || block == bopVineFlowering)
-            return true;*/
+            return true;
 
         return state.isIn(FIBRE_SOURCES);
     }
 }
+*/
