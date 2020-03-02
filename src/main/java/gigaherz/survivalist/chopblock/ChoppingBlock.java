@@ -1,7 +1,7 @@
 package gigaherz.survivalist.chopblock;
 
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -27,7 +28,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = Survivalist.MODID)
+@Mod.EventBusSubscriber(modid = SurvivalistMod.MODID)
 public class ChoppingBlock extends Block
 {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
@@ -59,10 +60,11 @@ public class ChoppingBlock extends Block
         return SHAPE;
     }
 
+    @Deprecated
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult p_220051_6_)
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
     {
-        ItemStack heldItem = playerIn.getHeldItem(hand);
+        ItemStack heldItem = player.getHeldItem(hand);
 
         if (worldIn.isRemote)
         {
@@ -71,7 +73,7 @@ public class ChoppingBlock extends Block
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (!(tileEntity instanceof ChoppingBlockTileEntity) || playerIn.isSneaking())
+        if (!(tileEntity instanceof ChoppingBlockTileEntity) || player.isSneaking())
             return false;
 
         ChoppingBlockTileEntity chopper = (ChoppingBlockTileEntity) tileEntity;
@@ -81,7 +83,7 @@ public class ChoppingBlock extends Block
             ItemStack extracted = chopper.getSlotInventory().extractItem(0, 1, false);
             if (extracted.getCount() > 0)
             {
-                ItemHandlerHelper.giveItemToPlayer(playerIn, extracted);
+                ItemHandlerHelper.giveItemToPlayer(player, extracted);
                 return true;
             }
 
@@ -92,27 +94,27 @@ public class ChoppingBlock extends Block
                 .isPresent())
         {
             ItemStack remaining = chopper.getSlotInventory().insertItem(0, heldItem, false);
-            if (!playerIn.isCreative())
+            if (!player.isCreative())
             {
                 if (remaining.getCount() > 0)
                 {
-                    playerIn.setHeldItem(hand, remaining);
+                    player.setHeldItem(hand, remaining);
                 }
                 else
                 {
-                    playerIn.setHeldItem(hand, ItemStack.EMPTY);
+                    player.setHeldItem(hand, ItemStack.EMPTY);
                 }
             }
             return remaining.getCount() < heldItem.getCount();
         }
 
-        return false;
+        return true;
     }
 
     @SubscribeEvent
     public static void interactEvent(PlayerInteractEvent.LeftClickBlock event)
     {
-        PlayerEntity player = event.getEntityPlayer();
+        PlayerEntity player = event.getPlayer();
         World world = player.world;
         BlockPos pos = event.getPos();
         BlockState state = world.getBlockState(pos);

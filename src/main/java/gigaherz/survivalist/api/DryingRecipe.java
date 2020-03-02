@@ -2,7 +2,8 @@ package gigaherz.survivalist.api;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistBlocks;
+import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -10,23 +11,24 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
 {
     @ObjectHolder("survivalist:drying")
     public static IRecipeSerializer<?> SERIALIZER = null;
 
-    public static final ResourceLocation RECIPE_TYPE_ID = Survivalist.location("drying");
+    public static final ResourceLocation RECIPE_TYPE_ID = SurvivalistMod.location("drying");
     public static IRecipeType<DryingRecipe> DRYING = Registry.register(Registry.RECIPE_TYPE, RECIPE_TYPE_ID, new IRecipeType<DryingRecipe>()
     {
         @Override
@@ -55,6 +57,11 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
     public static Optional<DryingRecipe> getRecipe(World world, ItemHandlerWrapper ctx)
     {
         return world.getRecipeManager().getRecipe(DRYING, ctx, world);
+    }
+
+    public static Collection<DryingRecipe> getAllRecipes(World world)
+    {
+        return world.getRecipeManager().getRecipes(DRYING).values().stream().map(r -> (DryingRecipe)r).collect(Collectors.toList());
     }
 
     private final String group;
@@ -87,6 +94,12 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
     public boolean canFit(int width, int height)
     {
         return true;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients()
+    {
+        return NonNullList.from(Ingredient.EMPTY, input);
     }
 
     @Override
@@ -127,7 +140,7 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(Survivalist.Blocks.RACK);
+        return new ItemStack(SurvivalistBlocks.RACK.get());
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DryingRecipe>

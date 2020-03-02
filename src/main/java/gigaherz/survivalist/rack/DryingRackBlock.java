@@ -12,7 +12,7 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -148,18 +148,6 @@ public class DryingRackBlock extends Block
         builder.add(FACING);
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer()
-    {
-        return BlockRenderLayer.SOLID;
-    }
-
-    @Override
-    public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer)
-    {
-        return layer == BlockRenderLayer.SOLID || layer == BlockRenderLayer.CUTOUT;
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context)
@@ -169,7 +157,7 @@ public class DryingRackBlock extends Block
 
     @Deprecated
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockRayTraceResult)
     {
         if (worldIn.isRemote)
             return true;

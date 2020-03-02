@@ -1,12 +1,11 @@
 package gigaherz.survivalist.api;
 
-import com.google.common.collect.Sets;
-import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistMod;
+import gigaherz.survivalist.SurvivalistRecipeBookCategories;
+import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -14,8 +13,8 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -23,14 +22,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ChoppingRecipe implements IRecipe<ChoppingContext>
 {
     @ObjectHolder("survivalist:chopping")
     public static IRecipeSerializer<?> SERIALIZER = null;
 
-    public static final ResourceLocation RECIPE_TYPE_ID = Survivalist.location("chopping");
+    public static final ResourceLocation RECIPE_TYPE_ID = SurvivalistMod.location("chopping");
     public static IRecipeType<ChoppingRecipe> CHOPPING = Registry.register(Registry.RECIPE_TYPE, RECIPE_TYPE_ID, new IRecipeType<ChoppingRecipe>()
     {
         @Override
@@ -47,6 +48,11 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
     public static Optional<ChoppingRecipe> getRecipe(World world, ItemStack stack)
     {
         return getRecipe(world, new ChoppingContext(new SingletonInventory(stack), null, 0, 0, null));
+    }
+
+    public static Collection<ChoppingRecipe> getAllRecipes(World world)
+    {
+        return world.getRecipeManager().getRecipes(CHOPPING).values().stream().map(r -> (ChoppingRecipe)r).collect(Collectors.toList());
     }
 
     private final ResourceLocation id;
@@ -94,6 +100,12 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
     public int getMaxOutput()
     {
         return maxOutput;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients()
+    {
+        return NonNullList.from(Ingredient.EMPTY, input);
     }
 
     @Override
@@ -146,13 +158,9 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
         return CHOPPING;
     }
 
-
-    private ItemStack getResults(ItemStack input, PlayerEntity player, int axeLevel, int fortune, Random random)
+    private ItemStack getResults(ItemStack input, @Nullable PlayerEntity player, int axeLevel, int fortune, Random random)
     {
-        double number = ConfigManager.SERVER.choppingWithEmptyHand.get() * getOutputMultiplier();
-
-        if (axeLevel >= 0)
-            number = Math.max(0, getOutputMultiplier() * ConfigManager.getAxeLevelMultiplier(axeLevel)) * (1 + random.nextFloat() * fortune);
+        double number = getOutputMultiplier(axeLevel) * (1 + random.nextFloat() * fortune);
 
         int whole = (int) Math.floor(number);
         double remainder = number - whole;
@@ -175,6 +183,15 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
         return ItemStack.EMPTY;
     }
 
+    public double getOutputMultiplier(int axeLevel)
+    {
+        double number = ConfigManager.SERVER.choppingWithEmptyHand.get() * getOutputMultiplier();
+
+        if (axeLevel >= 0)
+            number = Math.max(0, getOutputMultiplier() * ConfigManager.getAxeLevelMultiplier(axeLevel));
+        return number;
+    }
+
     private ItemStack getResultsSawmill()
     {
         double number = Math.max(0, getOutputMultiplier() * 4);
@@ -194,6 +211,11 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
         return ItemStack.EMPTY;
     }
 
+    public double getHitProgress(int axeLevel)
+    {
+        return 25 + getHitCountMultiplier() * 25 * Math.max(0, axeLevel);
+    }
+
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ChoppingRecipe>
     {
         @Override
@@ -209,7 +231,7 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
             ItemStack itemstack = new ItemStack(Optional.ofNullable(ForgeRegistries.ITEMS.getValue(resourcelocation)).orElseThrow(() -> new IllegalStateException("Item: " + s1 + " does not exist")));
             double outputMultiplier   = JSONUtils.getFloat(json, "output_multiplier", 1.0f);
             double hitCountMultiplier = JSONUtils.getFloat(json, "hit_count_multiplier", 1.0f);
-            int maxOutput             = JSONUtils.getInt(json, "max_output", 1);
+            int maxOutput             = JSONUtils.getInt(json, "max_output", 0);
             int sawingTime            = JSONUtils.getInt(json, "sawing_time", 200);
             return new ChoppingRecipe(recipeId, group, ingredient, itemstack, outputMultiplier, hitCountMultiplier, maxOutput, sawingTime);
         }

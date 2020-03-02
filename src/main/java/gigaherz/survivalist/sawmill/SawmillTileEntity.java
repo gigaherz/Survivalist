@@ -1,5 +1,6 @@
 package gigaherz.survivalist.sawmill;
 
+import gigaherz.survivalist.SurvivalistTileEntityTypes;
 import gigaherz.survivalist.api.ChoppingContext;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.sawmill.gui.SawmillContainer;
@@ -27,6 +28,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
@@ -38,8 +40,7 @@ import java.util.Random;
 
 public class SawmillTileEntity extends TileEntity implements ITickableTileEntity, IIntArray, INamedContainerProvider
 {
-    @ObjectHolder("survivalist:sawmill")
-    public static TileEntityType<SawmillTileEntity> TYPE;
+    public static RegistryObject<TileEntityType<SawmillTileEntity>> TYPE = SurvivalistTileEntityTypes.SAWMILL_RACK_TILE_ENTITY_TYPE;
 
     @CapabilityInject(IItemHandler.class)
     public static Capability<IItemHandler> ITEMS_CAP;
@@ -92,7 +93,7 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
 
     public SawmillTileEntity()
     {
-        super(TYPE);
+        super(TYPE.get());
     }
 
     public boolean isBurning()
@@ -145,46 +146,10 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
         return compound;
     }
 
-    public int[] getFields()
-    {
-        return new int[]{remainingBurnTime, totalBurnTime, cookTime, totalCookTime};
-    }
-
-    public void setFields(int[] values)
-    {
-        remainingBurnTime = values[0];
-        totalBurnTime = values[1];
-        cookTime = values[2];
-        totalCookTime = values[3];
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag()
-    {
-        return write(new CompoundNBT());
-    }
-
     @Override
     public void handleUpdateTag(CompoundNBT tag)
     {
-        read(tag);
-    }
-
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket()
-    {
-        return new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
-    {
-        handleUpdateTag(pkt.getNbtCompound());
-
-        BlockState state = world.getBlockState(pos);
-        world.notifyBlockUpdate(pos, state, state, 3);
-        //world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
+        // Ignore. We have nothing to sync.
     }
 
     public static int getSawmillTime(World world, ItemStack stack)
@@ -195,7 +160,9 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
     @Override
     public void tick()
     {
-        boolean wasBurning = this.isBurning();
+        if (world.isRemote)
+            return;
+
         boolean changes = false;
 
         if (needRefreshRecipe)
@@ -273,12 +240,11 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
             }
         }
 
-        if (wasBurning != this.isBurning())
+        BlockState state = getBlockState();
+        if (state.get(SawmillBlock.POWERED) != this.isBurning())
         {
-            changes = true;
-            BlockState state = world.getBlockState(pos);
-            world.notifyBlockUpdate(pos, state, state, 3);
-            //world.checkLightFor(EnumSkyBlock.BLOCK, getPos());
+            state = state.with(SawmillBlock.POWERED, this.isBurning());
+            world.setBlockState(pos, state);
         }
 
         if (changes)
@@ -327,26 +293,6 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
         return result;
     }
 
-    public int getCookTime()
-    {
-        return cookTime;
-    }
-
-    public int getTotalCookTime()
-    {
-        return totalCookTime;
-    }
-
-    public int getRemainingBurnTime()
-    {
-        return remainingBurnTime;
-    }
-
-    public int getTotalBurnTime()
-    {
-        return totalBurnTime;
-    }
-
     @Override
     public int get(int index)
     {
@@ -381,7 +327,7 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
     @Override
     public ITextComponent getDisplayName()
     {
-        return new TranslationTextComponent("text.survivalist.container.sawmill");
+        return new TranslationTextComponent("text.survivalist.sawmill");
     }
 
     @Nullable

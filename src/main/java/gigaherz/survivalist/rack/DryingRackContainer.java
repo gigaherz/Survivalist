@@ -28,10 +28,10 @@ public class DryingRackContainer extends Container
 
     public DryingRackContainer(int windowId, DryingRackTileEntity dryingRackTileEntity, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, dryingRackTileEntity.items, new IntArrayWrapper(dryingRackTileEntity.dryTimeRemaining));
+        this(windowId, playerInventory, dryingRackTileEntity.items, dryingRackTileEntity.dryTimeArray);
     }
 
-    public DryingRackContainer(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
+    private DryingRackContainer(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
     {
         super(TYPE, windowId);
 

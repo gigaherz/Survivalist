@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    { "item" : "minecraft:oak_log" }
-  ],
-  "result": {
-    "item": "survivalist:oak_chopping_block"
-  }
-}

@@ -19,7 +19,7 @@ The toolkit for the rustic adventurer
 [[dependencies.survivalist]]
    modId="forge"
    mandatory=true
-   versionRange="[28.0.45,)"
+   versionRange="[28.2.3,)"
    ordering="NONE"
    side="BOTH"
 [[dependencies.survivalist]]

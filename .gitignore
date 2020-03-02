@@ -20,3 +20,7 @@ build
 # other
 eclipse
 run
+
+#datagen
+/src/generated
+/src/main/generated_resources

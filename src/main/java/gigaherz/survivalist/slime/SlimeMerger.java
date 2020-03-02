@@ -1,7 +1,7 @@
 package gigaherz.survivalist.slime;
 
 import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.ReportedException;
 import net.minecraft.entity.Entity;
@@ -62,7 +62,7 @@ public class SlimeMerger
 
         static
         {
-            setSlimeSizeMethod = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", void.class, int.class, boolean.class);
+            setSlimeSizeMethod = ObfuscationReflectionHelper.findMethod(SlimeEntity.class, "func_70799_a", int.class, boolean.class);
         }
 
         private final SlimeEntity slime;
@@ -147,7 +147,7 @@ public class SlimeMerger
                     throw new ReportedException(new CrashReport("Could not call method '" + setSlimeSizeMethod.getName() + "'", e));
                 }
 
-                slime.playSound(Survivalist.SOUND_SHLOP, 1, 0.8f + rand.nextFloat() * 0.4f);
+                slime.playSound(SurvivalistMod.SOUND_SHLOP.get(), 1, 0.8f + rand.nextFloat() * 0.4f);
             }
 
             super.startExecuting();

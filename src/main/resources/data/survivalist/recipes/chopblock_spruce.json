@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    { "item" : "minecraft:spruce_log" }
-  ],
-  "result": {
-    "item": "survivalist:spruce_chopping_block"
-  }
-}

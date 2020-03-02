@@ -1,35 +1,40 @@
 package gigaherz.survivalist.integration;
-/*
-import gigaherz.survivalist.Survivalist;
-import gigaherz.survivalist.api.Choppable;
-import gigaherz.survivalist.api.Dryable;
-import gigaherz.survivalist.integration.chopping.ChoppingCategory;
-import gigaherz.survivalist.integration.chopping.ChoppingRecipeWrapper;
-import gigaherz.survivalist.integration.drying.DryingCategory;
-import gigaherz.survivalist.integration.drying.DryingRecipeWrapper;
-import mezz.jei.api.IJeiRuntime;
+
+import gigaherz.survivalist.SurvivalistBlocks;
+import gigaherz.survivalist.SurvivalistMod;
+import gigaherz.survivalist.api.ChoppingRecipe;
+import gigaherz.survivalist.api.DryingRecipe;
+import gigaherz.survivalist.chopblock.ChopblockMaterials;
 import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.ISubtypeRegistry;
-import mezz.jei.api.ingredients.IModIngredientRegistration;
-import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
+import java.util.stream.Stream;
 
-@mezz.jei.api.JEIPlugin
+
+@JeiPlugin
 public class JEIPlugin implements IModPlugin
 {
-    @Override
-    public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry)
-    {
+    private static final ResourceLocation ID = SurvivalistMod.location("jei_plugin");
 
+    @Override
+    public ResourceLocation getPluginUid()
+    {
+        return ID;
     }
 
     @Override
-    public void registerIngredients(IModIngredientRegistration registry)
-    {
-
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        Stream.of(ChopblockMaterials.values()).forEach(v ->{
+            registration.addRecipeCatalyst(new ItemStack(v.getPristine().get()), ChoppingCategory.UID);
+        });
+        registration.addRecipeCatalyst(new ItemStack(SurvivalistBlocks.SAWMILL.get()), ChoppingCategory.UID);
+        registration.addRecipeCatalyst(new ItemStack(SurvivalistBlocks.RACK.get()), DryingCategory.UID);
     }
 
     @Override
@@ -40,35 +45,9 @@ public class JEIPlugin implements IModPlugin
     }
 
     @Override
-    public void register(@Nonnull IModRegistry registry)
+    public void registerRecipes(IRecipeRegistration registration)
     {
-        registry.handleRecipes(Dryable.DryingRecipe.class, DryingRecipeWrapper::wrap, DryingCategory.UID);
-        registry.addRecipes(Dryable.RECIPES, DryingCategory.UID);
-        if (Survivalist.rack != null)
-        {
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.rack), DryingCategory.UID);
-        }
-
-        registry.handleRecipes(Choppable.ChoppingRecipe.class, ChoppingRecipeWrapper::wrap, ChoppingCategory.UID);
-        registry.addRecipes(Choppable.RECIPES, ChoppingCategory.UID);
-        if (Survivalist.chopping_block != null)
-        {
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 0), ChoppingCategory.UID);
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 4), ChoppingCategory.UID);
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 8), ChoppingCategory.UID);
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block, 1, 12), ChoppingCategory.UID);
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block2, 1, 0), ChoppingCategory.UID);
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.chopping_block2, 1, 4), ChoppingCategory.UID);
-        }
-        if (Survivalist.sawmill != null)
-        {
-            registry.addRecipeCatalyst(new ItemStack(Survivalist.sawmill), ChoppingCategory.UID);
-        }
-    }
-
-    @Override
-    public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime)
-    {
+        registration.addRecipes(DryingRecipe.getAllRecipes(Minecraft.getInstance().world), DryingCategory.UID);
+        registration.addRecipes(ChoppingRecipe.getAllRecipes(Minecraft.getInstance().world), ChoppingCategory.UID);
     }
 }
-*/

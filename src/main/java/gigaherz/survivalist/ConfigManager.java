@@ -1,21 +1,13 @@
 package gigaherz.survivalist;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.InMemoryFormat;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.primitives.Ints;
 import it.unimi.dsi.fastutil.ints.Int2DoubleArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -57,8 +49,7 @@ public class ConfigManager
         public final ForgeConfigSpec.BooleanValue enableTorchFire;
         public final ForgeConfigSpec.BooleanValue enableBread;
         public final ForgeConfigSpec.BooleanValue removeVanillaBread;
-        public final ForgeConfigSpec.BooleanValue importPlanksRecipes;
-        public final ForgeConfigSpec.BooleanValue removePlanksRecipes;
+        public final ForgeConfigSpec.BooleanValue disablePlanksRecipes;
         public final ForgeConfigSpec.DoubleValue choppingDegradeChance;
         public final ForgeConfigSpec.DoubleValue choppingExhaustion;
         public final ForgeConfigSpec.DoubleValue choppingWithEmptyHand;
@@ -106,8 +97,7 @@ public class ConfigManager
             builder.pop();
 
             builder.comment("Settings for the chopping block").push("chopping");
-            importPlanksRecipes = builder.define("ImportPlanksRecipes", true);
-            removePlanksRecipes = builder.define("RemovePlanksRecipes", true);
+            disablePlanksRecipes = builder.define("DisablePlanksRecipes", true);
             choppingDegradeChance = builder
                     .comment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.")
                     .defineInRange("DegradeChance", 0.06, 0, Double.MAX_VALUE);
@@ -168,7 +158,7 @@ public class ConfigManager
         return value.get();
     }
 
-    @Mod.EventBusSubscriber(modid=Survivalist.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid= SurvivalistMod.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class Events
     {
         private static final Pattern AXE_LEVEL_ENTRY_PATTERN = Pattern.compile("^AxeLevel(?<level>[0-9]+)$");

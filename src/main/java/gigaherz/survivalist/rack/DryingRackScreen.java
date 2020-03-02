@@ -1,7 +1,7 @@
 package gigaherz.survivalist.rack;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.DryingRecipe;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class DryingRackScreen extends ContainerScreen<DryingRackContainer>
 {
-    protected ResourceLocation guiTextureLocation = Survivalist.location("textures/gui/rack.png");
+    protected ResourceLocation guiTextureLocation = SurvivalistMod.location("textures/gui/rack.png");
 
     public DryingRackScreen(DryingRackContainer container, PlayerInventory inventory, ITextComponent title)
     {

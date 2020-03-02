@@ -1,7 +1,7 @@
 package gigaherz.survivalist.rack;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import gigaherz.survivalist.Survivalist;
+import gigaherz.survivalist.SurvivalistBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -19,7 +19,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
     public void render(DryingRackTileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
-        if (state.getBlock() != Survivalist.Blocks.RACK)
+        if (state.getBlock() != SurvivalistBlocks.RACK.get())
             return;
 
         te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent((inv) -> {
@@ -56,7 +56,8 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
 
                     IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
                     model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.FIXED, false);
-                    if (model.isBuiltInRenderer())
+                    // Always run, for now. Item models can be dynamic.
+                    //if (model.isBuiltInRenderer())
                     {
                         renderItem.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
                     }

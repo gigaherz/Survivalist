@@ -137,15 +137,18 @@ public class SawmillBlock extends Block
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntity te = worldIn.getTileEntity(pos);
-
-        if (te instanceof SawmillTileEntity)
+        if (state.getBlock() != newState.getBlock())
         {
-            dropInventoryItems(worldIn, pos, ((SawmillTileEntity) te).getInventory());
-            worldIn.updateComparatorOutputLevel(pos, this);
-        }
+            TileEntity te = worldIn.getTileEntity(pos);
 
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+            if (te instanceof SawmillTileEntity)
+            {
+                dropInventoryItems(worldIn, pos, ((SawmillTileEntity) te).getInventory());
+                worldIn.updateComparatorOutputLevel(pos, this);
+            }
+
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
     }
 
     private static void dropInventoryItems(World worldIn, BlockPos pos, IItemHandler inventory)

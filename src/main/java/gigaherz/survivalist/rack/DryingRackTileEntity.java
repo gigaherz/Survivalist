@@ -1,7 +1,10 @@
 package gigaherz.survivalist.rack;
 
+import gigaherz.survivalist.SurvivalistTileEntityTypes;
 import gigaherz.survivalist.api.ItemHandlerWrapper;
 import gigaherz.survivalist.api.DryingRecipe;
+import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
+import gigaherz.survivalist.misc.IntArrayWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,6 +18,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
@@ -24,6 +28,7 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -37,14 +42,14 @@ import java.util.Optional;
 
 public class DryingRackTileEntity extends TileEntity implements ITickableTileEntity, INamedContainerProvider
 {
-    @ObjectHolder("survivalist:rack")
-    public static TileEntityType<DryingRackTileEntity> TYPE = null;
+    public static final RegistryObject<TileEntityType<DryingRackTileEntity>> TYPE = SurvivalistTileEntityTypes.DRYING_RACK_TILE_ENTITY_TYPE;
 
     public static final ModelProperty<DryingRackItemsStateData> CONTAINED_ITEMS_DATA = new ModelProperty<>();
 
     private final ModelDataMap data = new ModelDataMap.Builder().withProperty(CONTAINED_ITEMS_DATA).build();
 
-    public int[] dryTimeRemaining = new int[4];
+    private int[] dryTimeRemaining = new int[4];
+    public final IIntArray dryTimeArray = new IntArrayWrapper(dryTimeRemaining);
 
     public final ItemStackHandler items = new ItemStackHandler(4)
     {
@@ -78,7 +83,7 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
 
     public DryingRackTileEntity()
     {
-        super(TYPE);
+        super(TYPE.get());
     }
 
     @Nonnull
@@ -114,6 +119,7 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
 
         BlockState state = world.getBlockState(pos);
         world.notifyBlockUpdate(pos, state, state, 3);
+        this.requestModelDataUpdate();
     }
 
     @Override
