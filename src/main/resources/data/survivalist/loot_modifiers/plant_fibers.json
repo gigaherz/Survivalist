@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "condition": "survivalist:block_tag",
+      "tag": "survivalist:fibre_sources"
+    },
+    {
+      "condition": "minecraft:match_tool",
+      "predicate": {
+        "enchantments": [
+          {
+            "enchantment": "minecraft:silk_touch",
+            "levels": {
+              "max": 0
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

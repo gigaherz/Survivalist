@@ -53,7 +53,6 @@ public class ConfigManager
         public final ForgeConfigSpec.DoubleValue choppingDegradeChance;
         public final ForgeConfigSpec.DoubleValue choppingExhaustion;
         public final ForgeConfigSpec.DoubleValue choppingWithEmptyHand;
-        public final ForgeConfigSpec.BooleanValue dropFibersFromGrass;
         public final ForgeConfigSpec.BooleanValue dropStringFromSheep;
         public final ForgeConfigSpec.BooleanValue enableStringCrafting;
         public final ForgeConfigSpec.BooleanValue mergeSlimes;
@@ -106,7 +105,6 @@ public class ConfigManager
             builder.pop();
 
             builder.comment("Settings for the fibre collection").push("fibres");
-            dropFibersFromGrass = builder.define("DropFibresFromGrass", true);
             dropStringFromSheep = builder.define("DropStringFromSheep", true);
             enableStringCrafting = builder.define("EnableStringCrafting", true);
             builder.pop();
