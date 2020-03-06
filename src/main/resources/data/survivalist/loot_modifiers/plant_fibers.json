@@ -5,17 +5,21 @@
       "tag": "survivalist:fibre_sources"
     },
     {
-      "condition": "minecraft:match_tool",
-      "predicate": {
-        "enchantments": [
-          {
-            "enchantment": "minecraft:silk_touch",
-            "levels": {
-              "max": 0
+      "condition": "minecraft:inverted",
+      "term": {
+        "condition": "minecraft:match_tool",
+        "predicate": {
+          "enchantments": [
+            {
+              "enchantment": "minecraft:silk_touch",
+              "levels": {
+                "min": 1
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     }
-  ]
+  ],
+  "add_loot": "survivalist:blocks/fibers_additions"
 }

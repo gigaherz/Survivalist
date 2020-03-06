@@ -23,7 +23,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
     }
 
     @Override
-    public void render(DryingRackTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
+    public void render(DryingRackTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
         if (state.getBlock() != SurvivalistBlocks.RACK.get())
@@ -59,11 +59,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
                     matrixStack.rotate(Vector3f.YP.rotationDegrees(180)); // rotate
 
                     IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity)null);
-                    // FIXME: Fix baked model.
-                    //if (ibakedmodel.isBuiltInRenderer())
-                    {
-                        itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel); // renderItem
-                    }
+                    itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, combinedLightIn, combinedOverlayIn, ibakedmodel); // renderItem
 
                     matrixStack.pop(); // popMatrix
                 }
