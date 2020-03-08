@@ -18,7 +18,7 @@ public class VBORenderer implements Closeable
         VertexBuffer vbo = new VertexBuffer(fmt);
         BUILDER.begin(glMode, fmt);
         vertexProducer.accept(BUILDER, fmt);
-        BUILDER.reset();
+        BUILDER.finishDrawing();
         // 1.14: vbo.bufferData(BUILDER.getByteBuffer());
         vbo.upload(BUILDER);
         return new VBORenderer(vbo, glMode);
