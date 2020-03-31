@@ -37,7 +37,7 @@ public class StringEventHandling
         Collection<ItemEntity> drops = ev.getDrops();
         if (drops instanceof ImmutableList)
         {
-            SurvivalistMod.logger.warn("WARNING: Some mod is returning an ImmutableList, replacing drops will NOT be possible.");
+            SurvivalistMod.LOGGER.warn("WARNING: Some mod is returning an ImmutableList, replacing drops will NOT be possible.");
             return;
         }
 

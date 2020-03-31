@@ -1,7 +1,7 @@
 package gigaherz.survivalist.util;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
@@ -28,45 +28,69 @@ public class MultiVBORenderer implements Closeable
             return builder;
         }));
 
-        Map<RenderType, VertexBuffer> buffers = Maps.transformEntries(builders, (rt, builder) -> {
+        ImmutableMap.Builder<RenderType, BufferBuilder.State> sortCaches = ImmutableMap.builder();
+        ImmutableMap.Builder<RenderType, VertexBuffer> buffers = ImmutableMap.builder();
+
+        builders.forEach((rt, builder) -> {
             Objects.requireNonNull(rt);
             Objects.requireNonNull(builder);
 
             builder.finishDrawing();
 
+            sortCaches.put(rt, builder.getVertexState());
+
             VertexFormat fmt = rt.getVertexFormat();
             VertexBuffer vbo = new VertexBuffer(fmt);
 
-            // 1.14: vbo.bufferData(BUILDER.getByteBuffer());
             vbo.upload(builder);
 
-            return vbo;
+            buffers.put(rt, vbo);
         });
-        return new MultiVBORenderer(buffers);
+        return new MultiVBORenderer(buffers.build(), sortCaches.build());
     }
 
-    private final Map<RenderType, VertexBuffer> buffers;
+    private final ImmutableMap<RenderType, VertexBuffer> buffers;
+    private final ImmutableMap<RenderType, BufferBuilder.State> sortCaches;
 
-    public MultiVBORenderer(Map<RenderType, VertexBuffer> buffers)
+    protected MultiVBORenderer(ImmutableMap<RenderType, VertexBuffer> buffers, ImmutableMap<RenderType, BufferBuilder.State> sortCaches)
     {
         this.buffers = buffers;
+        this.sortCaches = sortCaches;
+    }
+
+    public void sort(float x, float y, float z)
+    {
+        for (Map.Entry<RenderType, BufferBuilder.State> kv : sortCaches.entrySet()) {
+            RenderType rt = kv.getKey();
+            BufferBuilder.State state = kv.getValue();
+            BufferBuilder builder = new BufferBuilder(BUFFER_SIZE);
+            builder.setVertexState(state);
+            builder.sortVertexData(x,y,z);
+
+            VertexBuffer vbo = buffers.get(rt);
+            vbo.upload(builder);
+        }
     }
 
     public void render(Matrix4f matrix)
     {
-        // 1.14: vbo.drawArrays(glMode);
         buffers.entrySet().forEach(kv ->  {
             RenderType rt = kv.getKey();
             VertexBuffer vbo = kv.getValue();
+            VertexFormat fmt = rt.getVertexFormat();
+
             rt.enable();
+            vbo.bindBuffer();
+            fmt.setupBufferState(0L);
             vbo.draw(matrix, rt.getGlMode());
+            VertexBuffer.unbindBuffer();
+            fmt.clearBufferState();
             rt.disable();
         });
     }
 
     public void close()
     {
-        //1.14: vbo.deleteGlBuffers();
         buffers.values().forEach(VertexBuffer::close);
     }
 }

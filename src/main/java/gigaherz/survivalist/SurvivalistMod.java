@@ -23,6 +23,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.resources.IPackFinder;
@@ -58,7 +59,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -74,7 +74,16 @@ public class SurvivalistMod
 
     public static SurvivalistMod instance;
 
-    public static Logger logger = LogManager.getLogger(MODID);
+    public static Logger LOGGER = LogManager.getLogger(MODID);
+
+    public static final ItemGroup SURVIVALIST_ITEMS = new ItemGroup("survivalist_items")
+    {
+        @Override
+        public ItemStack createIcon()
+        {
+            return new ItemStack(SurvivalistItems.PICK.get());
+        }
+    };
 
     static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
 
@@ -147,9 +156,6 @@ public class SurvivalistMod
                 new DryingRecipe.Serializer().setRegistryName("drying"),
                 new ChoppingRecipe.Serializer().setRegistryName("chopping")
         );
-
-        ClientWorld w;
-
     }
 
     private void lootModifiers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
@@ -186,11 +192,11 @@ public class SurvivalistMod
             }
         }*/
 
-        logger.info("Registering network channel...");
+        LOGGER.info("Registering network channel...");
 
         int messageNumber = 0;
         channel.registerMessage(messageNumber++, ScrapingMessage.class, ScrapingMessage::encode, ScrapingMessage::new, ScrapingMessage::handle);
-        logger.debug("Final message number: " + messageNumber);
+        LOGGER.debug("Final message number: " + messageNumber);
 
     }
 
