@@ -16,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.stream.Stream;
 
-
 @JeiPlugin
 public class JEIPlugin implements IModPlugin
 {

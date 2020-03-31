@@ -1,5 +1,5 @@
 package gigaherz.survivalist.misc;
-
+/*
 import com.google.common.collect.ImmutableList;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.SurvivalistMod;
@@ -45,3 +45,4 @@ public class StringEventHandling
             drops.add(new ItemEntity(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, new ItemStack(Items.STRING)));
     }
 }
+*/

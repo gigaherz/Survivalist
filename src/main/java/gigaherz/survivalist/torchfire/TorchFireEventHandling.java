@@ -34,7 +34,7 @@ public class TorchFireEventHandling
                 if (bl == Blocks.TORCH)
                 {
                     ev.getTarget().setFire(2);
-                    if (rnd.nextFloat() > 0.25)
+                    if (!ev.getPlayer().isCreative() && rnd.nextFloat() > 0.25)
                     {
                         stack.grow(-1);
                         if (stack.getCount() <= 0)

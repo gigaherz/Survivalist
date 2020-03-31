@@ -183,8 +183,8 @@ public class DryingRackBlock extends Block
                 dropInventoryItems(worldIn, pos, ((DryingRackTileEntity) tileentity).inventory());
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     private static void dropInventoryItems(World worldIn, BlockPos pos, IItemHandler inventory)

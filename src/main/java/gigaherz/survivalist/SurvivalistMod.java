@@ -3,7 +3,6 @@ package gigaherz.survivalist;
 import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
-import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
 import gigaherz.survivalist.rack.DryingRackContainer;
 import gigaherz.survivalist.rack.DryingRackScreen;
@@ -20,6 +19,8 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.resources.IPackFinder;
 import net.minecraft.resources.ResourcePackInfo;
@@ -68,7 +69,16 @@ public class SurvivalistMod
 
     public static SurvivalistMod instance;
 
-    public static Logger logger = LogManager.getLogger(MODID);
+    public static Logger LOGGER = LogManager.getLogger(MODID);
+
+    public static final ItemGroup SURVIVALIST_ITEMS = new ItemGroup("survivalist_items")
+    {
+        @Override
+        public ItemStack createIcon()
+        {
+            return new ItemStack(SurvivalistItems.PICK.get());
+        }
+    };
 
     static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
 
@@ -151,9 +161,7 @@ public class SurvivalistMod
         ItemBreakingTracker.register();
 
         // TODO: Fixme: convert to loot tables as needed
-        //FibersEventHandling.register();
-
-        StringEventHandling.register();
+        //StringEventHandling.register();
 
         SlimeMerger.register();
 
@@ -169,11 +177,11 @@ public class SurvivalistMod
             }
         }*/
 
-        logger.info("Registering network channel...");
+        LOGGER.info("Registering network channel...");
 
         int messageNumber = 0;
         channel.registerMessage(messageNumber++, ScrapingMessage.class, ScrapingMessage::encode, ScrapingMessage::new, ScrapingMessage::handle);
-        logger.debug("Final message number: " + messageNumber);
+        LOGGER.debug("Final message number: " + messageNumber);
 
     }
 

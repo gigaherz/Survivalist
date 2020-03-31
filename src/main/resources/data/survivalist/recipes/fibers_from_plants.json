@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "survivalist:fibre_sources"
+    }
+  ],
+  "result": {
+    "item": "survivalist:plant_fibres"
+  }
+}

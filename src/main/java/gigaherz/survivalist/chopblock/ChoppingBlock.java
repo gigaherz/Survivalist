@@ -3,13 +3,17 @@ package gigaherz.survivalist.chopblock;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.ChoppingRecipe;
+import gigaherz.survivalist.rack.DryingRackTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ItemParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +22,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -143,7 +148,8 @@ public class ChoppingBlock extends Block
         ItemStack heldItem = playerIn.getHeldItem(Hand.MAIN_HAND);
 
         int harvestLevel = heldItem.getItem().getHarvestLevel(heldItem, ToolType.AXE, playerIn, null);
-        if (chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem)))
+        ActionResult<ItemStack> result = chopper.chop(playerIn, harvestLevel, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem));
+        if (result.getType() == ActionResultType.SUCCESS)
         {
             if (worldIn.rand.nextFloat() < ConfigManager.SERVER.choppingDegradeChance.get())
             {
@@ -160,25 +166,31 @@ public class ChoppingBlock extends Block
                 });
             }
         }
+        if (result.getType() != ActionResultType.PASS)
+        {
+            ((ServerWorld)worldIn).spawnParticle(new ItemParticleData(ParticleTypes.ITEM, result.getResult()),
+                    pos.getX()+0.5, pos.getY()+0.6, pos.getZ()+0.5, 8,
+                    0, 0.1, 0, 0.02);
+        }
 
         return true;
     }
 
-    /*@Override
-    public void breakBlock(World worldIn, BlockPos pos, BlockState state)
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-
-        if (tileentity instanceof TileChopping)
+        if (newState.getBlock() != state.getBlock())
         {
-            dropInventoryItems(worldIn, pos, ((TileChopping) tileentity).getSlotInventory());
-            worldIn.updateComparatorOutputLevel(pos, this);
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+
+            if (tileentity instanceof ChoppingBlockTileEntity)
+            {
+                dropInventoryItems(worldIn, pos, ((ChoppingBlockTileEntity) tileentity).getSlotInventory());
+                worldIn.updateComparatorOutputLevel(pos, this);
+            }
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
-
-        super.breakBlock(worldIn, pos, state);
     }
-
-     */
 
     public static void dropInventoryItems(World worldIn, BlockPos pos, IItemHandler inventory)
     {
@@ -188,7 +200,7 @@ public class ChoppingBlock extends Block
 
             if (itemstack.getCount() > 0)
             {
-                InventoryHelper.spawnItemStack(worldIn, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), itemstack);
+                InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), itemstack);
             }
         }
     }

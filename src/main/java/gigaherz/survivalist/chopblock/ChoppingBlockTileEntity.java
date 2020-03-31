@@ -12,9 +12,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -127,10 +125,11 @@ public class ChoppingBlockTileEntity extends TileEntity
         handleUpdateTag(pkt.getNbtCompound());
     }
 
-    public boolean chop(PlayerEntity player, int axeLevel, int fortune)
+    public ActionResult<ItemStack> chop(PlayerEntity player, int axeLevel, int fortune)
     {
-        boolean completed = false;
-        if (slotInventory.getStackInSlot(0).getCount() > 0)
+        ActionResultType completed = ActionResultType.PASS;
+        ItemStack containedItem = slotInventory.getStackInSlot(0).copy();
+        if (containedItem.getCount() > 0)
         {
             ChoppingContext ctx = new ChoppingContext(slotInventory, player, axeLevel, fortune, RANDOM);
 
@@ -138,7 +137,7 @@ public class ChoppingBlockTileEntity extends TileEntity
 
             completed = foundRecipe.map(recipe -> {
 
-                boolean completed2 = false;
+                ActionResultType completed2 = ActionResultType.PASS;
 
                 breakingProgress += recipe.getHitProgress(axeLevel);
                 if (breakingProgress >= 200)
@@ -151,9 +150,13 @@ public class ChoppingBlockTileEntity extends TileEntity
                         {
                             //ItemHandlerHelper.giveItemToPlayer(player, out);
                             ItemHandlerHelper.giveItemToPlayer(player, out);
-                        }
 
-                        completed2 = true;
+                            completed2 = ActionResultType.SUCCESS;
+                        }
+                        else
+                        {
+                            completed2 = ActionResultType.FAIL;
+                        }
                     }
                     world.playSound(player, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
                     slotInventory.setStackInSlot(0, ItemStack.EMPTY);
@@ -164,9 +167,9 @@ public class ChoppingBlockTileEntity extends TileEntity
                 world.notifyBlockUpdate(pos, state, state, 3);
 
                 return completed2;
-            }).orElse(false);
+            }).orElse(ActionResultType.PASS);
         }
-        return completed;
+        return new ActionResult<>(completed, containedItem);
     }
 
     public static void spawnItemStack(World worldIn, double x, double y, double z, ItemStack stack)

@@ -15,36 +15,36 @@ import net.minecraftforge.fml.RegistryObject;
 public class SurvivalistItems
 {
     static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
-    
-    public static final RegistryObject<Item> TANNED_LEATHER = HELPER.item("tanned_leather", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS))).defer();
-    public static final RegistryObject<Item> CHAINMAIL = HELPER.item("chainmail", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS))).defer();
-    public static final RegistryObject<Item> JERKY = HELPER.item("jerky", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS).food(SurvivalistFoods.JERKY))).defer();
-    public static final RegistryObject<Item> DOUGH = HELPER.item("dough", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS).food(SurvivalistFoods.DOUGH))).defer();
-    public static final RegistryObject<Item> ROUND_BREAD = HELPER.item("round_bread", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS).food(SurvivalistFoods.BREAD))).defer();
-    public static final RegistryObject<Item> COPPER_NUGGET = HELPER.item("copper_nugget", () -> new Item(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<Item> TIN_NUGGET = HELPER.item("tin_nugget", () -> new Item(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<Item> LEAD_NUGGET = HELPER.item("lead_nugget", () -> new Item(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<Item> SILVER_NUGGET = HELPER.item("silver_nugget", () -> new Item(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<Item> ALUMINUM_NUGGET = HELPER.item("aluminum_nugget", () -> new Item(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> STONE_ROCK = HELPER.item("stone_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> ANDESITE_ROCK = HELPER.item("andesite_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> DIORITE_ROCK = HELPER.item("diorite_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> GRANITE_ROCK = HELPER.item("granite_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> IRON_ORE_ROCK = HELPER.item("iron_ore_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> GOLD_ORE_ROCK = HELPER.item("gold_ore_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> COPPER_ORE_ROCK = HELPER.item("copper_ore_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> TIN_ORE_ROCK = HELPER.item("tin_ore_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> LEAD_ORE_ROCK = HELPER.item("lead_ore_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> SILVER_ORE_ROCK = HELPER.item("silver_ore_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<RockItem> ALUMINUM_ORE_ROCK = HELPER.item("aluminum_ore_rock", () -> new RockItem(new Item.Properties().group(ItemGroup.MISC))).defer();
-    public static final RegistryObject<AxeItem> HATCHET = HELPER.<AxeItem>item("hatchet", () -> new AxeItem(SurvivalistItems.TOOL_FLINT, 8.0F, -3.1F, new Item.Properties().group(ItemGroup.TOOLS)){}).defer();
-    public static final RegistryObject<PickaxeItem> PICK = HELPER.<PickaxeItem>item("pick", () -> new PickaxeItem(SurvivalistItems.TOOL_FLINT, 4, -2.6F, new Item.Properties().group(ItemGroup.TOOLS)){}).defer();
-    public static final RegistryObject<ShovelItem> SPADE = HELPER.item("spade", () -> new ShovelItem(SurvivalistItems.TOOL_FLINT, 3, -2.1F, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<ArmorItem> TANNED_HELMET = HELPER.item("tanned_helmet", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.HEAD, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<ArmorItem> TANNED_CHESTPLATE = HELPER.item("tanned_chestplate", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.CHEST, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<ArmorItem> TANNED_LEGGINGS = HELPER.item("tanned_leggings", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.LEGS, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<ArmorItem> TANNED_BOOTS = HELPER.item("tanned_boots", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.FEET, new Item.Properties().group(ItemGroup.TOOLS))).defer();
-    public static final RegistryObject<Item> PLANT_FIBRES = HELPER.item("plant_fibres", () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS))).defer();
+
+    public static final RegistryObject<Item> TANNED_LEATHER = HELPER.item("tanned_leather", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<Item> CHAINMAIL = HELPER.item("chainmail", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<Item> JERKY = HELPER.item("jerky", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS).food(SurvivalistFoods.JERKY))).defer();
+    public static final RegistryObject<Item> DOUGH = HELPER.item("dough", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS).food(SurvivalistFoods.DOUGH))).defer();
+    public static final RegistryObject<Item> ROUND_BREAD = HELPER.item("round_bread", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS).food(SurvivalistFoods.BREAD))).defer();
+    public static final RegistryObject<Item> COPPER_NUGGET = HELPER.item("copper_nugget", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<Item> TIN_NUGGET = HELPER.item("tin_nugget", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<Item> LEAD_NUGGET = HELPER.item("lead_nugget", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<Item> SILVER_NUGGET = HELPER.item("silver_nugget", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<Item> ALUMINUM_NUGGET = HELPER.item("aluminum_nugget", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> STONE_ROCK = HELPER.item("stone_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> ANDESITE_ROCK = HELPER.item("andesite_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> DIORITE_ROCK = HELPER.item("diorite_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> GRANITE_ROCK = HELPER.item("granite_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> IRON_ORE_ROCK = HELPER.item("iron_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> GOLD_ORE_ROCK = HELPER.item("gold_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> COPPER_ORE_ROCK = HELPER.item("copper_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> TIN_ORE_ROCK = HELPER.item("tin_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> LEAD_ORE_ROCK = HELPER.item("lead_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> SILVER_ORE_ROCK = HELPER.item("silver_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<RockItem> ALUMINUM_ORE_ROCK = HELPER.item("aluminum_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<AxeItem> HATCHET = HELPER.<AxeItem>item("hatchet", () -> new AxeItem(SurvivalistItems.TOOL_FLINT, 6.0F, -3.1F, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS)){}).defer();
+    public static final RegistryObject<PickaxeItem> PICK = HELPER.<PickaxeItem>item("pick", () -> new PickaxeItem(SurvivalistItems.TOOL_FLINT, 1, -2.8F, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS)){}).defer();
+    public static final RegistryObject<ShovelItem> SPADE = HELPER.item("spade", () -> new ShovelItem(SurvivalistItems.TOOL_FLINT, 1.5F, -3.0F, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<ArmorItem> TANNED_HELMET = HELPER.item("tanned_helmet", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.HEAD, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<ArmorItem> TANNED_CHESTPLATE = HELPER.item("tanned_chestplate", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.CHEST, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<ArmorItem> TANNED_LEGGINGS = HELPER.item("tanned_leggings", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.LEGS, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<ArmorItem> TANNED_BOOTS = HELPER.item("tanned_boots", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.FEET, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
+    public static final RegistryObject<Item> PLANT_FIBRES = HELPER.item("plant_fibres", () -> new Item(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
 
     public static final IArmorMaterial TANNED_LEATHER_MATERIAL = new IArmorMaterial()
     {
@@ -84,7 +84,7 @@ public class SurvivalistItems
         @Override
         public String getName()
         {
-            return "tanned_leather";
+            return "survivalist:tanned_leather";
         }
 
         @Override

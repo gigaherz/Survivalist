@@ -29,7 +29,7 @@ repositories {
     mavenLocal()
 }
 
-version = "3.0.1"
+version = "3.0.2"
 group= "gigaherz.survivalist"
 archivesBaseName = "Survivalist-1.14.4"
 

@@ -46,12 +46,6 @@ public class SawmillBlock extends Block
         builder.add(FACING, POWERED);
     }
 
-    @Override
-    public int getLightValue(BlockState state, IEnviromentBlockReader world, BlockPos pos)
-    {
-        return state.get(POWERED) ? 15 : 0;
-    }
-
     @Deprecated
     @Override
     public int getLightValue(BlockState state)

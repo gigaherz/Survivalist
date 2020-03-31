@@ -3,7 +3,6 @@ package gigaherz.survivalist.rack;
 import gigaherz.survivalist.SurvivalistTileEntityTypes;
 import gigaherz.survivalist.api.ItemHandlerWrapper;
 import gigaherz.survivalist.api.DryingRecipe;
-import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.misc.IntArrayWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,7 +32,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
-import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -94,16 +92,26 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
         return data;
     }
 
+    private CompoundNBT serializeSyncData()
+    {
+        return this.write(new CompoundNBT());
+    }
+
+    private void deserializeSyncData(CompoundNBT tag)
+    {
+        read(tag);
+    }
+
     @Override
     public CompoundNBT getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return serializeSyncData();
     }
 
     @Override
     public void handleUpdateTag(CompoundNBT tag)
     {
-        read(tag);
+        deserializeSyncData(tag);
     }
 
     @Override
@@ -117,9 +125,9 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     {
         handleUpdateTag(packet.getNbtCompound());
 
-        BlockState state = world.getBlockState(pos);
+        /*BlockState state = world.getBlockState(pos);
         world.notifyBlockUpdate(pos, state, state, 3);
-        this.requestModelDataUpdate();
+        this.requestModelDataUpdate();*/
     }
 
     @Override

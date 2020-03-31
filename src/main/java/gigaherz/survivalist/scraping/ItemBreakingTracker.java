@@ -229,7 +229,7 @@ public class ItemBreakingTracker
 
             if (ret != null)
             {
-                SurvivalistMod.logger.debug("Item broke (" + stack + ") and the player got " + ret + " in return!");
+                SurvivalistMod.LOGGER.debug("Item broke (" + stack + ") and the player got " + ret + " in return!");
 
                 SurvivalistMod.channel.sendTo(new ScrapingMessage(stack, ret), ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
 
