@@ -1,6 +1,5 @@
 package gigaherz.survivalist.rack;
 
-import gigaherz.survivalist.misc.IntArrayWrapper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;

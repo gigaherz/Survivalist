@@ -1,17 +1,15 @@
 package gigaherz.survivalist;
 
-import gigaherz.survivalist.api.ChoppingRecipe;
-import net.minecraft.client.util.RecipeBookCategories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.util.NonNullLazy;
 
 public class SurvivalistRecipeBookCategories
 {
     private static final NonNullLazy<SurvivalistRecipeBookCategories> INSTANCE = NonNullLazy.of(SurvivalistRecipeBookCategories::new);
 
-    public static SurvivalistRecipeBookCategories instance () { return INSTANCE.get(); }
+    public static SurvivalistRecipeBookCategories instance()
+    {
+        return INSTANCE.get();
+    }
 
     /*
     public final RecipeBookCategories SAWMILL_SEARCH = RecipeBookCategories.create("SAWMILL_SEARCH", false, new ItemStack(Items.COMPASS));

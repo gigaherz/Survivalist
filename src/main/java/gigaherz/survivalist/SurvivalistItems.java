@@ -37,8 +37,12 @@ public class SurvivalistItems
     public static final RegistryObject<RockItem> LEAD_ORE_ROCK = HELPER.item("lead_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
     public static final RegistryObject<RockItem> SILVER_ORE_ROCK = HELPER.item("silver_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
     public static final RegistryObject<RockItem> ALUMINUM_ORE_ROCK = HELPER.item("aluminum_ore_rock", () -> new RockItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
-    public static final RegistryObject<AxeItem> HATCHET = HELPER.<AxeItem>item("hatchet", () -> new AxeItem(SurvivalistItems.TOOL_FLINT, 6.0F, -3.1F, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS)){}).defer();
-    public static final RegistryObject<PickaxeItem> PICK = HELPER.<PickaxeItem>item("pick", () -> new PickaxeItem(SurvivalistItems.TOOL_FLINT, 1, -2.8F, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS)){}).defer();
+    public static final RegistryObject<AxeItem> HATCHET = HELPER.<AxeItem>item("hatchet", () -> new AxeItem(SurvivalistItems.TOOL_FLINT, 6.0F, -3.1F, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))
+    {
+    }).defer();
+    public static final RegistryObject<PickaxeItem> PICK = HELPER.<PickaxeItem>item("pick", () -> new PickaxeItem(SurvivalistItems.TOOL_FLINT, 1, -2.8F, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))
+    {
+    }).defer();
     public static final RegistryObject<ShovelItem> SPADE = HELPER.item("spade", () -> new ShovelItem(SurvivalistItems.TOOL_FLINT, 1.5F, -3.0F, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
     public static final RegistryObject<ArmorItem> TANNED_HELMET = HELPER.item("tanned_helmet", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.HEAD, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
     public static final RegistryObject<ArmorItem> TANNED_CHESTPLATE = HELPER.item("tanned_chestplate", () -> new ArmorItem(SurvivalistItems.TANNED_LEATHER_MATERIAL, EquipmentSlotType.CHEST, new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS))).defer();
@@ -59,7 +63,8 @@ public class SurvivalistItems
         }
 
         @Override
-        public int getDamageReductionAmount(EquipmentSlotType slotIn) {
+        public int getDamageReductionAmount(EquipmentSlotType slotIn)
+        {
             return this.armors[slotIn.getIndex()];
         }
 
@@ -135,5 +140,4 @@ public class SurvivalistItems
             return flint_tag_ingredient;
         }
     };
-
 }

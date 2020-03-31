@@ -61,7 +61,8 @@ public class DummyRecipe implements ICraftingRecipe
         return null;
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DummyRecipe>
+    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>>
+            implements IRecipeSerializer<DummyRecipe>
     {
         @Override
         public DummyRecipe read(ResourceLocation recipeId, JsonObject json)

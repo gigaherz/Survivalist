@@ -1,15 +1,12 @@
 package gigaherz.survivalist.sawmill.gui;
 
 import com.google.common.collect.Lists;
-import gigaherz.survivalist.SurvivalistRecipeBookCategories;
 import gigaherz.survivalist.api.ChoppingContext;
 import gigaherz.survivalist.api.ChoppingRecipe;
-import gigaherz.survivalist.api.ItemHandlerWrapper;
 import gigaherz.survivalist.sawmill.SawmillTileEntity;
 import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
@@ -117,7 +114,8 @@ public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
     @Override
     public void fillStackedContents(RecipeItemHelper helper)
     {
-        for(ItemStack itemstack : this.wrappedInventory) {
+        for (ItemStack itemstack : this.wrappedInventory)
+        {
             helper.accountStack(itemstack);
         }
     }

@@ -4,8 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.SurvivalistMod;
-import gigaherz.survivalist.SurvivalistRecipeBookCategories;
-import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -23,7 +21,9 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class ChoppingRecipe implements IRecipe<ChoppingContext>
@@ -45,6 +45,7 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
     {
         return world.getRecipeManager().getRecipe(CHOPPING, ctx, world);
     }
+
     public static Optional<ChoppingRecipe> getRecipe(World world, ItemStack stack)
     {
         return getRecipe(world, new ChoppingContext(new SingletonInventory(stack), null, 0, 0, null));
@@ -52,14 +53,14 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
 
     public static Collection<ChoppingRecipe> getAllRecipes(World world)
     {
-        return world.getRecipeManager().getRecipes(CHOPPING).values().stream().map(r -> (ChoppingRecipe)r).collect(Collectors.toList());
+        return world.getRecipeManager().getRecipes(CHOPPING).values().stream().map(r -> (ChoppingRecipe) r).collect(Collectors.toList());
     }
 
     private final ResourceLocation id;
     private final String group;
     private final Ingredient input;
     private final ItemStack output;
-    private final double outputMultiplier ;
+    private final double outputMultiplier;
     private final double hitCountMultiplier;
     private final int maxOutput;
     private final int sawingTime;
@@ -216,7 +217,8 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
         return 25 + getHitCountMultiplier() * 25 * Math.max(0, axeLevel);
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ChoppingRecipe>
+    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
+            implements IRecipeSerializer<ChoppingRecipe>
     {
         @Override
         public ChoppingRecipe read(ResourceLocation recipeId, JsonObject json)
@@ -229,10 +231,10 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
             String s1 = JSONUtils.getString(json, "result");
             ResourceLocation resourcelocation = new ResourceLocation(s1);
             ItemStack itemstack = new ItemStack(Optional.ofNullable(ForgeRegistries.ITEMS.getValue(resourcelocation)).orElseThrow(() -> new IllegalStateException("Item: " + s1 + " does not exist")));
-            double outputMultiplier   = JSONUtils.getFloat(json, "output_multiplier", 1.0f);
+            double outputMultiplier = JSONUtils.getFloat(json, "output_multiplier", 1.0f);
             double hitCountMultiplier = JSONUtils.getFloat(json, "hit_count_multiplier", 1.0f);
-            int maxOutput             = JSONUtils.getInt(json, "max_output", 0);
-            int sawingTime            = JSONUtils.getInt(json, "sawing_time", 200);
+            int maxOutput = JSONUtils.getInt(json, "max_output", 0);
+            int sawingTime = JSONUtils.getInt(json, "sawing_time", 200);
             return new ChoppingRecipe(recipeId, group, ingredient, itemstack, outputMultiplier, hitCountMultiplier, maxOutput, sawingTime);
         }
 
@@ -243,10 +245,10 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
             String group = buffer.readString(32767);
             Ingredient ingredient = Ingredient.read(buffer);
             ItemStack itemstack = buffer.readItemStack();
-            double outputMultiplier   = buffer.readDouble();
+            double outputMultiplier = buffer.readDouble();
             double hitCountMultiplier = buffer.readDouble();
-            int maxOutput             = buffer.readVarInt();
-            int sawingTime            = buffer.readVarInt();
+            int maxOutput = buffer.readVarInt();
+            int sawingTime = buffer.readVarInt();
             return new ChoppingRecipe(recipeId, group, ingredient, itemstack, outputMultiplier, hitCountMultiplier, maxOutput, sawingTime);
         }
 

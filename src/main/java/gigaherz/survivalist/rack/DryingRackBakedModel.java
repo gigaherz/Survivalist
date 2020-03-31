@@ -26,7 +26,6 @@ import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.IModelLoader;
 import net.minecraftforge.client.model.QuadTransformer;
 import net.minecraftforge.client.model.SimpleModelTransform;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
@@ -45,7 +44,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
 
     private final TransformationMatrix[] itemTransforms;
 
-    private final List<Map<Pair<IBakedModel,TransformationMatrix>, List<BakedQuad>>> caches = Lists.newArrayList(
+    private final List<Map<Pair<IBakedModel, TransformationMatrix>, List<BakedQuad>>> caches = Lists.newArrayList(
             Maps.newHashMap(), Maps.newHashMap(), Maps.newHashMap(), Maps.newHashMap()
     );
 
@@ -63,7 +62,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
         this.overrides = new ItemOverrideList(bakery, original, modelGetter, textureGetter, Collections.emptyList());
     }
 
-    private static final Direction[] faces = Streams.concat(Arrays.stream(Direction.values()), Stream.of((Direction)null)).toArray(Direction[]::new);
+    private static final Direction[] faces = Streams.concat(Arrays.stream(Direction.values()), Stream.of((Direction) null)).toArray(Direction[]::new);
 
     @Nonnull
     @Override
@@ -83,7 +82,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
 
             DryingRackItemsStateData items = extraData.getData(DryingRackTileEntity.CONTAINED_ITEMS_DATA);
 
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 ItemStack stack = items.stacks[i];
                 if (stack.isEmpty())
@@ -236,7 +235,9 @@ public class DryingRackBakedModel implements IDynamicBakedModel
     {
         public static final ModelLoader INSTANCE = new ModelLoader();
 
-        protected ModelLoader() {}
+        protected ModelLoader()
+        {
+        }
 
         @Override
         public void onResourceManagerReload(IResourceManager resourceManager)
@@ -250,10 +251,10 @@ public class DryingRackBakedModel implements IDynamicBakedModel
             BlockModel baseModel = null;
             if (modelContents.has("base_model"))
             {
-                baseModel = deserializationContext.deserialize(JSONUtils.getJsonObject(modelContents,"base_model"), BlockModel.class);
+                baseModel = deserializationContext.deserialize(JSONUtils.getJsonObject(modelContents, "base_model"), BlockModel.class);
             }
             TransformationMatrix[] transformations = new TransformationMatrix[4];
-            for(int i=0;i<4;i++)
+            for (int i = 0; i < 4; i++)
             {
                 String key = "transform_" + i;
                 if (modelContents.has(key))

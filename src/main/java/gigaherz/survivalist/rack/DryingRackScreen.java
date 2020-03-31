@@ -46,7 +46,6 @@ public class DryingRackScreen extends ContainerScreen<DryingRackContainer>
         this.blit(x, y, 0, 0, xSize, ySize);
 
 
-
         for (int s = 0; s < container.dryTimeRemainingArray.size(); s++)
         {
             int mt = DryingRecipe.getDryingTime(minecraft.world, container.getSlot(s).getStack());

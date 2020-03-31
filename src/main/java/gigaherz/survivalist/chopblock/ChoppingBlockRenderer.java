@@ -48,7 +48,7 @@ public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileE
                     matrixStack.translate(0, -4.5 / 16.0f, 0);
                     matrixStack.scale(2, 2, 2);
 
-                    IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity)null);
+                    IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity) null);
                     itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.GROUND, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel);
                     /*int breakStage = te.getBreakStage();
                     if (breakStage >= 0)

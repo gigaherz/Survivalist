@@ -27,7 +27,7 @@ public class StringEventHandling
     @SubscribeEvent
     public void entityDrops(LivingDropsEvent ev)
     {
-        if (ConfigManager.SERVER.dropStringFromSheep.get())
+        if (!ConfigManager.SERVER.dropStringFromSheep.get())
             return;
 
         Entity entity = ev.getEntity();

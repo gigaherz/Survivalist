@@ -1,8 +1,8 @@
 package gigaherz.survivalist.rack;
 
 import gigaherz.survivalist.SurvivalistTileEntityTypes;
-import gigaherz.survivalist.api.ItemHandlerWrapper;
 import gigaherz.survivalist.api.DryingRecipe;
+import gigaherz.survivalist.api.ItemHandlerWrapper;
 import gigaherz.survivalist.misc.IntArrayWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,10 +73,10 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
 
     private final NonNullList<ItemStack> oldItems = NonNullList.withSize(4, ItemStack.EMPTY);
     private final ItemHandlerWrapper[] dryingSlots = {
-            new ItemHandlerWrapper(new RangedWrapper(items, 0, 1), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 1, 2), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 2, 3), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 3, 4), () -> new Vec3d(this.pos).add(0.5,0.5,0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 0, 1), () -> new Vec3d(this.pos).add(0.5, 0.5, 0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 1, 2), () -> new Vec3d(this.pos).add(0.5, 0.5, 0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 2, 3), () -> new Vec3d(this.pos).add(0.5, 0.5, 0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 3, 4), () -> new Vec3d(this.pos).add(0.5, 0.5, 0.5), 64),
     };
 
     public DryingRackTileEntity()
@@ -146,7 +146,8 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
                     Optional<DryingRecipe> recipe = DryingRecipe.getRecipe(world, dryingSlots[i]);
                     if (recipe.isPresent())
                     {
-                        if (--dryTimeRemaining[i] <= 0) {
+                        if (--dryTimeRemaining[i] <= 0)
+                        {
                             ItemStack result = recipe.get().getCraftingResult(dryingSlots[i]);
                             items.setStackInSlot(i, result);
                         }
@@ -205,7 +206,7 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
 
     public ItemStack[] getItems()
     {
-        return new ItemStack[] {
+        return new ItemStack[]{
                 items.getStackInSlot(0),
                 items.getStackInSlot(1),
                 items.getStackInSlot(2),

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.*;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,8 +100,8 @@ public class ConfigManager
             choppingDegradeChance = builder
                     .comment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.")
                     .defineInRange("DegradeChance", 0.06, 0, Double.MAX_VALUE);
-            choppingExhaustion = builder.defineInRange("Exhaustion", 0.0025,0, Double.MAX_VALUE);
-            choppingWithEmptyHand = builder.defineInRange("EmptyHandFactor", 0.4,0, Double.MAX_VALUE);
+            choppingExhaustion = builder.defineInRange("Exhaustion", 0.0025, 0, Double.MAX_VALUE);
+            choppingWithEmptyHand = builder.defineInRange("EmptyHandFactor", 0.4, 0, Double.MAX_VALUE);
             builder.pop();
 
             builder.comment("Settings for the fibre collection").push("fibres");
@@ -156,7 +156,7 @@ public class ConfigManager
         return value.get();
     }
 
-    @Mod.EventBusSubscriber(modid= SurvivalistMod.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = SurvivalistMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class Events
     {
         private static final Pattern AXE_LEVEL_ENTRY_PATTERN = Pattern.compile("^AxeLevel(?<level>[0-9]+)$");
@@ -170,14 +170,14 @@ public class ConfigManager
 
             Config axeLevels = SERVER.axeLevels.get();
 
-            for(Config.Entry e : axeLevels.entrySet())
+            for (Config.Entry e : axeLevels.entrySet())
             {
                 Matcher m = AXE_LEVEL_ENTRY_PATTERN.matcher(e.getKey());
                 if (m.matches())
                 {
                     String numberPart = m.group("level");
                     int levelNumber = Integer.parseInt(numberPart);
-                    axeLevelMap.put(levelNumber, e.getIntOrElse(1+levelNumber));
+                    axeLevelMap.put(levelNumber, e.getIntOrElse(1 + levelNumber));
                 }
             }
         }

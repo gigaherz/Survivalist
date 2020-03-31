@@ -1,8 +1,6 @@
 package gigaherz.survivalist.chopblock;
 
 import gigaherz.survivalist.SurvivalistBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;

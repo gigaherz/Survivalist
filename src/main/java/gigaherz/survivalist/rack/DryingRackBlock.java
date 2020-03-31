@@ -33,6 +33,7 @@ public class DryingRackBlock extends Block
 
     private final VoxelShape shape1;
     private final VoxelShape shape2;
+
     {
         {
             VoxelShape bar1 = Block.makeCuboidShape(1, 14, 3, 15, 15, 4);
@@ -126,7 +127,7 @@ public class DryingRackBlock extends Block
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        return (state.get(FACING).getHorizontalIndex()%2) == 0? shape1:shape2;
+        return (state.get(FACING).getHorizontalIndex() % 2) == 0 ? shape1 : shape2;
     }
 
     @Override
@@ -166,7 +167,7 @@ public class DryingRackBlock extends Block
         if (!(tileEntity instanceof INamedContainerProvider))
             return ActionResultType.FAIL;
 
-        NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileEntity);
+        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity);
 
         return ActionResultType.SUCCESS;
     }
@@ -183,8 +184,8 @@ public class DryingRackBlock extends Block
                 dropInventoryItems(worldIn, pos, ((DryingRackTileEntity) tileentity).inventory());
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     private static void dropInventoryItems(World worldIn, BlockPos pos, IItemHandler inventory)

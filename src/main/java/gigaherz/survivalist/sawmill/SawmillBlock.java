@@ -102,7 +102,7 @@ public class SawmillBlock extends Block
         if (!(tileEntity instanceof INamedContainerProvider))
             return ActionResultType.FAIL;
 
-        NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileEntity);
+        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity);
 
         return ActionResultType.SUCCESS;
     }

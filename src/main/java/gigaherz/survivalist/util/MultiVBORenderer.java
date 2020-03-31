@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 public class MultiVBORenderer implements Closeable
 {
-    private static final int BUFFER_SIZE = 2*1024*1024;
+    private static final int BUFFER_SIZE = 2 * 1024 * 1024;
 
     public static MultiVBORenderer of(Consumer<IRenderTypeBuffer> vertexProducer)
     {
@@ -60,12 +60,13 @@ public class MultiVBORenderer implements Closeable
 
     public void sort(float x, float y, float z)
     {
-        for (Map.Entry<RenderType, BufferBuilder.State> kv : sortCaches.entrySet()) {
+        for (Map.Entry<RenderType, BufferBuilder.State> kv : sortCaches.entrySet())
+        {
             RenderType rt = kv.getKey();
             BufferBuilder.State state = kv.getValue();
             BufferBuilder builder = new BufferBuilder(BUFFER_SIZE);
             builder.setVertexState(state);
-            builder.sortVertexData(x,y,z);
+            builder.sortVertexData(x, y, z);
 
             VertexBuffer vbo = buffers.get(rt);
             vbo.upload(builder);
@@ -74,7 +75,7 @@ public class MultiVBORenderer implements Closeable
 
     public void render(Matrix4f matrix)
     {
-        buffers.entrySet().forEach(kv ->  {
+        buffers.entrySet().forEach(kv -> {
             RenderType rt = kv.getKey();
             VertexBuffer vbo = kv.getValue();
             VertexFormat fmt = rt.getVertexFormat();

@@ -58,7 +58,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
                     matrixStack.translate(0.715, 0.93, 0.635); // translate
                     matrixStack.rotate(Vector3f.YP.rotationDegrees(180)); // rotate
 
-                    IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity)null);
+                    IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity) null);
                     itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, combinedLightIn, combinedOverlayIn, ibakedmodel); // renderItem
 
                     matrixStack.pop(); // popMatrix

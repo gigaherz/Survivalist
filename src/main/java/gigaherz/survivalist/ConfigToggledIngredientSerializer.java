@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
 public class ConfigToggledIngredientSerializer implements IIngredientSerializer<Ingredient>
@@ -63,7 +62,7 @@ public class ConfigToggledIngredientSerializer implements IIngredientSerializer<
             this.then = then;
             this.other = other;
         }
-        
+
         protected boolean getConfigValue()
         {
             return ConfigManager.getConfigBoolean(categoryName, keyName);
@@ -94,6 +93,7 @@ public class ConfigToggledIngredientSerializer implements IIngredientSerializer<
         }
 
         private static Method invalidateMethod = ObfuscationReflectionHelper.findMethod(Ingredient.class, "invalidate");
+
         @Override
         protected void invalidate()
         {

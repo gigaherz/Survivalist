@@ -1,8 +1,6 @@
 package gigaherz.survivalist.fibers;
 
 import com.google.gson.JsonObject;
-import gigaherz.survivalist.ConfigManager;
-import gigaherz.survivalist.SurvivalistItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +13,6 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class AddFibersModifier implements IGlobalLootModifier
 {

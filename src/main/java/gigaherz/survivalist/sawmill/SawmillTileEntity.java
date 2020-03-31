@@ -12,8 +12,6 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -32,7 +30,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RangedWrapper;
-import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +42,8 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
     @CapabilityInject(IItemHandler.class)
     public static Capability<IItemHandler> ITEMS_CAP;
 
-    public final ItemStackHandler inventory = new ItemStackHandler(3){
+    public final ItemStackHandler inventory = new ItemStackHandler(3)
+    {
         @Override
         protected void onContentsChanged(int slot)
         {
@@ -296,12 +294,16 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
     @Override
     public int get(int index)
     {
-        switch(index)
+        switch (index)
         {
-            case 0: return remainingBurnTime;
-            case 1: return totalBurnTime;
-            case 2: return cookTime;
-            case 3: return totalCookTime;
+            case 0:
+                return remainingBurnTime;
+            case 1:
+                return totalBurnTime;
+            case 2:
+                return cookTime;
+            case 3:
+                return totalCookTime;
         }
         return 0;
     }
@@ -309,12 +311,16 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
     @Override
     public void set(int index, int value)
     {
-        switch(index)
+        switch (index)
         {
-            case 0: remainingBurnTime=value;
-            case 1: totalBurnTime=value;
-            case 2: cookTime=value;
-            case 3: totalCookTime=value;
+            case 0:
+                remainingBurnTime = value;
+            case 1:
+                totalBurnTime = value;
+            case 2:
+                cookTime = value;
+            case 3:
+                totalCookTime = value;
         }
     }
 

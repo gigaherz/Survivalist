@@ -3,7 +3,9 @@ package gigaherz.survivalist.chopblock;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.ChoppingRecipe;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.player.PlayerEntity;
@@ -125,9 +127,9 @@ public class ChoppingBlock extends Block
         BlockPos pos = event.getPos();
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-        if(block instanceof ChoppingBlock)
+        if (block instanceof ChoppingBlock)
         {
-            if (((ChoppingBlock)block).interceptClick(world, pos, state, player))
+            if (((ChoppingBlock) block).interceptClick(world, pos, state, player))
                 event.setCanceled(true);
         }
     }
@@ -169,29 +171,29 @@ public class ChoppingBlock extends Block
         }
         if (result.getType() != ActionResultType.PASS)
         {
-            ((ServerWorld)worldIn).spawnParticle(new ItemParticleData(ParticleTypes.ITEM, result.getResult()),
-                    pos.getX()+0.5, pos.getY()+0.6, pos.getZ()+0.5, 8,
+            ((ServerWorld) worldIn).spawnParticle(new ItemParticleData(ParticleTypes.ITEM, result.getResult()),
+                    pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5, 8,
                     0, 0.1, 0, 0.02);
         }
 
         return true;
     }
 
-    /*@Override
-    public void breakBlock(World worldIn, BlockPos pos, BlockState state)
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-
-        if (tileentity instanceof TileChopping)
+        if (newState.getBlock() != state.getBlock())
         {
-            dropInventoryItems(worldIn, pos, ((TileChopping) tileentity).getSlotInventory());
-            worldIn.updateComparatorOutputLevel(pos, this);
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+
+            if (tileentity instanceof ChoppingBlockTileEntity)
+            {
+                dropInventoryItems(worldIn, pos, ((ChoppingBlockTileEntity) tileentity).getSlotInventory());
+                worldIn.updateComparatorOutputLevel(pos, this);
+            }
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
-
-        super.breakBlock(worldIn, pos, state);
     }
-
-     */
 
     public static void dropInventoryItems(World worldIn, BlockPos pos, IItemHandler inventory)
     {
