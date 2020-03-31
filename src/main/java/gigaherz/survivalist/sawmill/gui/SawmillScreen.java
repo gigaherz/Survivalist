@@ -42,7 +42,7 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
             this.recipeBookGui.initSearchBar(this.widthTooNarrow);
             this.recipeBookGui.toggleVisibility();
             this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
-            ((ImageButton)button).setPosition(this.guiLeft + 20, this.height / 2 - 49);
+            ((ImageButton) button).setPosition(this.guiLeft + 20, this.height / 2 - 49);
         })));
     }
 
@@ -92,7 +92,7 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     protected void drawGuiContainerForegroundLayer(int x, int y)
     {
         font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 4210752);
-        font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float)(this.ySize - 96 + 2), 4210752);
+        font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 96 + 2), 4210752);
     }
 
     private int getCookProgressScaled(int pixels)

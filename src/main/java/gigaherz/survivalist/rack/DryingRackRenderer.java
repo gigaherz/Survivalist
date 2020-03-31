@@ -48,7 +48,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
 
                     GlStateManager.translated(0, 0, zz);
 
-                    GlStateManager.scalef(1.5f,1.5f,1.5f);
+                    GlStateManager.scalef(1.5f, 1.5f, 1.5f);
 
                     GlStateManager.color4f(1f, 1f, 1f, 1f);
 

@@ -10,7 +10,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.TieredItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.CombatTracker;
@@ -127,7 +130,9 @@ public class ItemBreakingTracker
                 {
 
                 }
-            }, () -> { throw new RuntimeException("Creating default instances is not supported for this capability."); });
+            }, () -> {
+                throw new RuntimeException("Creating default instances is not supported for this capability.");
+            });
 
             registerScrapoingConversions();
         }

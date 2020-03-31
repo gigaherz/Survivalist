@@ -28,8 +28,9 @@ public class JEIPlugin implements IModPlugin
     }
 
     @Override
-    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        Stream.of(ChopblockMaterials.values()).forEach(v ->{
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration)
+    {
+        Stream.of(ChopblockMaterials.values()).forEach(v -> {
             registration.addRecipeCatalyst(new ItemStack(v.getPristine().get()), ChoppingCategory.UID);
         });
         registration.addRecipeCatalyst(new ItemStack(SurvivalistBlocks.SAWMILL.get()), ChoppingCategory.UID);

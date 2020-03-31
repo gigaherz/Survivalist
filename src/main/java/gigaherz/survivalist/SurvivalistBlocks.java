@@ -17,7 +17,7 @@ import net.minecraftforge.fml.RegistryObject;
 public class SurvivalistBlocks
 {
     static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
-    
+
     public static final RegistryObject<DryingRackBlock> RACK = HELPER
             .block("rack", () -> new DryingRackBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f)))
             .withItem(new Item.Properties().group(ItemGroup.MISC)).withTileEntity(DryingRackTileEntity::new).defer();

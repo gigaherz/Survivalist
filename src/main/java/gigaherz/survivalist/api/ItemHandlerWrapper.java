@@ -4,13 +4,11 @@ import com.google.common.collect.AbstractIterator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
-import java.util.Spliterator;
 import java.util.function.Supplier;
 
 public class ItemHandlerWrapper implements IInventory, Iterable<ItemStack>
@@ -42,7 +40,7 @@ public class ItemHandlerWrapper implements IInventory, Iterable<ItemStack>
     @Override
     public boolean isEmpty()
     {
-        for(int i=0;i<inner.getSlots();i++)
+        for (int i = 0; i < inner.getSlots(); i++)
         {
             if (inner.getStackInSlot(i).getCount() > 0)
                 return false;
@@ -90,7 +88,7 @@ public class ItemHandlerWrapper implements IInventory, Iterable<ItemStack>
     @Override
     public void clear()
     {
-        for(int i=0;i<inner.getSlots();i++)
+        for (int i = 0; i < inner.getSlots(); i++)
         {
             inner.setStackInSlot(i, ItemStack.EMPTY);
         }
@@ -104,7 +102,8 @@ public class ItemHandlerWrapper implements IInventory, Iterable<ItemStack>
     @Override
     public Iterator<ItemStack> iterator()
     {
-        return new AbstractIterator<ItemStack>() {
+        return new AbstractIterator<ItemStack>()
+        {
             int current = 0;
 
             @Override

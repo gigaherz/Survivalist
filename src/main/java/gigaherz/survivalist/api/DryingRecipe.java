@@ -61,7 +61,7 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
 
     public static Collection<DryingRecipe> getAllRecipes(World world)
     {
-        return world.getRecipeManager().getRecipes(DRYING).values().stream().map(r -> (DryingRecipe)r).collect(Collectors.toList());
+        return world.getRecipeManager().getRecipes(DRYING).values().stream().map(r -> (DryingRecipe) r).collect(Collectors.toList());
     }
 
     private final String group;
@@ -139,11 +139,13 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
     }
 
     @Override
-    public ItemStack getIcon() {
+    public ItemStack getIcon()
+    {
         return new ItemStack(SurvivalistBlocks.RACK.get());
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DryingRecipe>
+    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
+            implements IRecipeSerializer<DryingRecipe>
     {
         @Override
         public DryingRecipe read(ResourceLocation recipeId, JsonObject json)

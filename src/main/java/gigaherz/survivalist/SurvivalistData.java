@@ -12,7 +12,7 @@ import net.minecraft.advancements.IRequirementsStrategy;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.block.Block;
 import net.minecraft.data.*;
-import net.minecraft.data.loot.*;
+import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -114,7 +114,8 @@ public class SurvivalistData
                                     .key('c', new ConfigToggledIngredientSerializer.ConfigToggledIngredient("rocks", "CobbleRequiresClay",
                                             Ingredient.fromItems(Items.CLAY_BALL), Ingredient.fromItems(rockItem.get())))
                                     .addCriterion("has_rock", hasItem(result.get()))
-                                    .build(consumer, new ResourceLocation("survivalist", result.get().getRegistryName().getPath() + "_from_rocks"));;
+                                    .build(consumer, new ResourceLocation("survivalist", result.get().getRegistryName().getPath() + "_from_rocks"));
+                            ;
                         }
                     }));
 
@@ -228,7 +229,8 @@ public class SurvivalistData
         }
 
         @Override
-        protected void validate(Map<ResourceLocation, LootTable> map, ValidationResults validationresults) {
+        protected void validate(Map<ResourceLocation, LootTable> map, ValidationResults validationresults)
+        {
             map.forEach((p_218436_2_, p_218436_3_) -> {
                 LootTableManager.func_215302_a(validationresults, p_218436_2_, p_218436_3_, map::get);
             });

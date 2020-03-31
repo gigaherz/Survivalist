@@ -6,7 +6,6 @@ import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.item.Item;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.RegistryObject;
 
 import java.util.List;
 import java.util.function.Supplier;

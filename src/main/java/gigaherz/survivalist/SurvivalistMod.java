@@ -3,6 +3,7 @@ package gigaherz.survivalist;
 import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
+import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
 import gigaherz.survivalist.rack.DryingRackContainer;
 import gigaherz.survivalist.rack.DryingRackScreen;
@@ -27,7 +28,6 @@ import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.ModelLoaderRegistry2;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -92,7 +92,7 @@ public class SurvivalistMod
             .setTrackingRange(80)
             .setUpdateInterval(3)
             .setShouldReceiveVelocityUpdates(true)
-            .setCustomClientFactory((packet,world) -> new RockEntity(world))
+            .setCustomClientFactory((packet, world) -> new RockEntity(world))
             .defer();
 
     public static final String CHANNEL = "main";
@@ -155,14 +155,9 @@ public class SurvivalistMod
     public void commonSetup(FMLCommonSetupEvent event)
     {
         SurvivalistRecipeBookCategories.instance();
-
         TorchFireEventHandling.register();
-
         ItemBreakingTracker.register();
-
-        // TODO: Fixme: convert to loot tables as needed
-        //StringEventHandling.register();
-
+        StringEventHandling.register();
         SlimeMerger.register();
 
         /*if (Loader.isModLoaded("crafttweaker"))
@@ -182,7 +177,6 @@ public class SurvivalistMod
         int messageNumber = 0;
         channel.registerMessage(messageNumber++, ScrapingMessage.class, ScrapingMessage::encode, ScrapingMessage::new, ScrapingMessage::handle);
         LOGGER.debug("Final message number: " + messageNumber);
-
     }
 
     public void clientSetup(FMLClientSetupEvent event)
@@ -286,12 +280,13 @@ public class SurvivalistMod
         @Override
         public Set<String> getResourceNamespaces(ResourcePackType type)
         {
-            try {
+            try
+            {
                 Path root = modFile.getLocator().findPath(modFile, "vanilla_replacements", type.getDirectoryName()).toAbsolutePath();
-                return Files.walk(root,1)
+                return Files.walk(root, 1)
                         .map(path -> root.relativize(path.toAbsolutePath()))
                         .filter(path -> path.getNameCount() > 0) // skip the root entry
-                        .map(p->p.toString().replaceAll("/$","")) // remove the trailing slash, if present
+                        .map(p -> p.toString().replaceAll("/$", "")) // remove the trailing slash, if present
                         .filter(s -> !s.isEmpty()) //filter empty strings, otherwise empty strings default to minecraft in ResourceLocations
                         .collect(Collectors.toSet());
             }
@@ -301,18 +296,26 @@ public class SurvivalistMod
             }
         }
 
-        public InputStream getResourceStream(ResourcePackType type, ResourceLocation location) throws IOException {
-            if (location.getPath().startsWith("lang/")) {
+        public InputStream getResourceStream(ResourcePackType type, ResourceLocation location) throws IOException
+        {
+            if (location.getPath().startsWith("lang/"))
+            {
                 return super.getResourceStream(ResourcePackType.CLIENT_RESOURCES, location);
-            } else {
+            }
+            else
+            {
                 return super.getResourceStream(type, location);
             }
         }
 
-        public boolean resourceExists(ResourcePackType type, ResourceLocation location) {
-            if (location.getPath().startsWith("lang/")) {
+        public boolean resourceExists(ResourcePackType type, ResourceLocation location)
+        {
+            if (location.getPath().startsWith("lang/"))
+            {
                 return super.resourceExists(ResourcePackType.CLIENT_RESOURCES, location);
-            } else {
+            }
+            else
+            {
                 return super.resourceExists(type, location);
             }
         }

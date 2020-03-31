@@ -12,7 +12,6 @@ import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -33,6 +32,7 @@ public class DryingRackBlock extends Block
 
     private final VoxelShape shape1;
     private final VoxelShape shape2;
+
     {
         {
             VoxelShape bar1 = Block.makeCuboidShape(1, 14, 3, 15, 15, 4);
@@ -126,7 +126,7 @@ public class DryingRackBlock extends Block
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        return (state.get(FACING).getHorizontalIndex()%2) == 0? shape1:shape2;
+        return (state.get(FACING).getHorizontalIndex() % 2) == 0 ? shape1 : shape2;
     }
 
     @Override
@@ -166,7 +166,7 @@ public class DryingRackBlock extends Block
         if (!(tileEntity instanceof INamedContainerProvider))
             return false;
 
-        NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileEntity);
+        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity);
 
         return true;
     }

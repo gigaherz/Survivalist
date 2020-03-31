@@ -1,5 +1,5 @@
 package gigaherz.survivalist.misc;
-/*
+
 import com.google.common.collect.ImmutableList;
 import gigaherz.survivalist.ConfigManager;
 import gigaherz.survivalist.SurvivalistMod;
@@ -27,7 +27,7 @@ public class StringEventHandling
     @SubscribeEvent
     public void entityDrops(LivingDropsEvent ev)
     {
-        if (ConfigManager.SERVER.dropStringFromSheep.get())
+        if (!ConfigManager.SERVER.dropStringFromSheep.get())
             return;
 
         Entity entity = ev.getEntity();
@@ -37,7 +37,7 @@ public class StringEventHandling
         Collection<ItemEntity> drops = ev.getDrops();
         if (drops instanceof ImmutableList)
         {
-            SurvivalistMod.logger.warn("WARNING: Some mod is returning an ImmutableList, replacing drops will NOT be possible.");
+            SurvivalistMod.LOGGER.warn("WARNING: Some mod is returning an ImmutableList, replacing drops will NOT be possible.");
             return;
         }
 
@@ -45,4 +45,3 @@ public class StringEventHandling
             drops.add(new ItemEntity(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, new ItemStack(Items.STRING)));
     }
 }
-*/

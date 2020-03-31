@@ -46,14 +46,14 @@ public class RockEntity extends ProjectileItemEntity implements IEntityAdditiona
     {
         if (result instanceof EntityRayTraceResult)
         {
-            ((EntityRayTraceResult)result).getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 1);
+            ((EntityRayTraceResult) result).getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 1);
         }
 
         for (int j = 0; j < 8; ++j)
         {
-            Vec3d vec3d = new Vec3d(((double)this.rand.nextFloat() - 0.5D) * 0.1D, ((double)this.rand.nextFloat() - 0.5D) * 0.1D, 0.0D);
-            vec3d = vec3d.rotatePitch(-this.rotationPitch * ((float)Math.PI / 180F));
-            vec3d = vec3d.rotateYaw(-this.rotationYaw * ((float)Math.PI / 180F));
+            Vec3d vec3d = new Vec3d(((double) this.rand.nextFloat() - 0.5D) * 0.1D, ((double) this.rand.nextFloat() - 0.5D) * 0.1D, 0.0D);
+            vec3d = vec3d.rotatePitch(-this.rotationPitch * ((float) Math.PI / 180F));
+            vec3d = vec3d.rotateYaw(-this.rotationYaw * ((float) Math.PI / 180F));
             this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, this.getItem()), this.posX, this.posY, this.posZ, vec3d.x, vec3d.y + 0.05D, vec3d.z);
         }
 

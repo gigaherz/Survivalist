@@ -143,7 +143,7 @@ public class RegSitter
 
         public <E extends TileEntity> MiniBlock<T> withTileEntity(Supplier<E> factory)
         {
-            return withTileEntity((block) -> new TileEntityType<>(factory, ImmutableSet.of(block.get()),null));
+            return withTileEntity((block) -> new TileEntityType<>(factory, ImmutableSet.of(block.get()), null));
         }
 
         public <E extends TileEntity> MiniBlock<T> withTileEntity(Supplier<E> factory, Function<Supplier<T>, Collection<Supplier<? extends Block>>> validBlocks)
@@ -200,7 +200,7 @@ public class RegSitter
         private MiniEntity(NonNullSupplier<? extends DeferredRegister<? super EntityType<T>>> deferred, String name, EntityType.IFactory<T> factory, EntityClassification classification)
         {
             super(deferred, name, null);
-            this.builder = EntityType.Builder.create(factory,classification);
+            this.builder = EntityType.Builder.create(factory, classification);
         }
 
         @Override

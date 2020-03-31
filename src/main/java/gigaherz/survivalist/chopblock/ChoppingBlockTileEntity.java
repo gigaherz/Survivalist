@@ -22,7 +22,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -187,7 +186,7 @@ public class ChoppingBlockTileEntity extends TileEntity
             copy.setCount(i);
             stack.grow(-i);
 
-            Block.spawnAsEntity(worldIn, new BlockPos(x,y,z), stack);
+            Block.spawnAsEntity(worldIn, new BlockPos(x, y, z), stack);
         }
     }
 

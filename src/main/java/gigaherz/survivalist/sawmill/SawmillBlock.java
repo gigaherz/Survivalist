@@ -18,7 +18,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IEnviromentBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
@@ -103,7 +102,7 @@ public class SawmillBlock extends Block
         if (!(tileEntity instanceof INamedContainerProvider))
             return false;
 
-        NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)tileEntity);
+        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity);
 
         return true;
     }

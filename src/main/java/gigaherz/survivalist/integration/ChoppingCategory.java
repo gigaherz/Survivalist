@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import gigaherz.survivalist.SurvivalistBlocks;
 import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.ChoppingRecipe;
-import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -18,7 +17,6 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ToolType;
@@ -123,11 +121,10 @@ public class ChoppingCategory implements IRecipeCategory<ChoppingRecipe>
         double outputMultiplier = recipe.getOutputMultiplier(axeLevel);
         String text = String.format("x%1.1f", outputMultiplier);
         int width = mc.fontRenderer.getStringWidth(text);
-        mc.fontRenderer.drawStringWithShadow(text, (112-2) - width, 40, 0xFFFFFFFF);
+        mc.fontRenderer.drawStringWithShadow(text, (112 - 2) - width, 40, 0xFFFFFFFF);
 
         int clickMultiplier = MathHelper.ceil(200 / recipe.getHitProgress(axeLevel));
         itemRenderer.renderItemAndEffectIntoGUI(stack, 36, 30);
         mc.fontRenderer.drawStringWithShadow(String.format("x%d", clickMultiplier), 50, 40, 0xFFFFFFFF);
-
     }
 }

@@ -1,8 +1,8 @@
 package gigaherz.survivalist.client;
 
 import gigaherz.survivalist.SurvivalistMod;
-import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.chopblock.ChoppingBlockRenderer;
+import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.rack.DryingRackRenderer;
 import gigaherz.survivalist.rack.DryingRackTileEntity;
 import gigaherz.survivalist.rocks.RockEntity;
