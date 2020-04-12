@@ -238,29 +238,30 @@ public class SurvivalistData
 
         public static class BlockTables extends BlockLootTables
         {
+            @SuppressWarnings("ConstantConditions")
             @Override
             protected void addTables()
             {
-                this.func_218492_c(SurvivalistBlocks.RACK.get());
-                this.func_218492_c(SurvivalistBlocks.SAWMILL.get());
-                this.func_218492_c(SurvivalistBlocks.OAK_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.CHIPPED_OAK_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.DAMAGED_OAK_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.BIRCH_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.CHIPPED_BIRCH_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.DAMAGED_BIRCH_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.SPRUCE_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.CHIPPED_SPRUCE_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.DAMAGED_SPRUCE_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.JUNGLE_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.CHIPPED_JUNGLE_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.DAMAGED_JUNGLE_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.DARK_OAK_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.ACACIA_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.CHIPPED_ACACIA_CHOPPING_BLOCK.get());
-                this.func_218492_c(SurvivalistBlocks.DAMAGED_ACACIA_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.RACK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.SAWMILL.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.BIRCH_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_BIRCH_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_BIRCH_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.SPRUCE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_SPRUCE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_SPRUCE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.JUNGLE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_JUNGLE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_JUNGLE_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DARK_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_DARK_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_DARK_OAK_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.ACACIA_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.CHIPPED_ACACIA_CHOPPING_BLOCK.get());
+                this.registerDropSelfLootTable(SurvivalistBlocks.DAMAGED_ACACIA_CHOPPING_BLOCK.get());
             }
 
             @Override

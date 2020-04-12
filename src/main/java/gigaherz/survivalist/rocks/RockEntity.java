@@ -82,7 +82,7 @@ public class RockEntity extends ProjectileItemEntity implements IEntityAdditiona
     }
 
     @Override
-    protected Item func_213885_i()
+    protected Item getDefaultItem()
     {
         return item;
     }
@@ -91,6 +91,6 @@ public class RockEntity extends ProjectileItemEntity implements IEntityAdditiona
     public ItemStack getItem()
     {
         ItemStack itemstack = this.func_213882_k();
-        return itemstack.isEmpty() ? new ItemStack(this.func_213885_i()) : itemstack;
+        return itemstack.isEmpty() ? new ItemStack(this.getDefaultItem()) : itemstack;
     }
 }

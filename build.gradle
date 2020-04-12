@@ -4,12 +4,9 @@ buildscript {
         jcenter()
         mavenCentral()
         mavenLocal()
-        maven {
-            url 'http://dogforce-games.com/maven'
-        }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.164+pull-657', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.169', changing: true
     }
 }
 
@@ -43,7 +40,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190913-1.14.3'
+    mappings channel: 'stable', version: '56-1.14.3'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -94,7 +91,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.2.3'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.2.4'
 
     compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")

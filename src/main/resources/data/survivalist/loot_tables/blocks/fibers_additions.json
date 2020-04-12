@@ -2,24 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "vanilla_shearing",
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:vine"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:match_tool",
-          "predicate": {
-            "item": "minecraft:shears"
-          }
-        }
-      ]
-    },
-    {
       "name": "survivalist_fibers",
       "rolls": 1,
       "entries": [
@@ -58,4 +40,4 @@
       ]
     }
   ]
-}
+}b

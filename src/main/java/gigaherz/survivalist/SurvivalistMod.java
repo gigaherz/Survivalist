@@ -3,6 +3,8 @@ package gigaherz.survivalist;
 import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
+import gigaherz.survivalist.fibers.AddFibersModifier;
+import gigaherz.survivalist.misc.BlockTagCondition;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
 import gigaherz.survivalist.rack.DryingRackContainer;
@@ -28,9 +30,11 @@ import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraftforge.client.model.ModelLoaderRegistry2;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -118,6 +122,7 @@ public class SurvivalistMod
 
         modEventBus.addGenericListener(ContainerType.class, this::registerContainers);
         modEventBus.addGenericListener(IRecipeSerializer.class, this::registerRecipeSerializers);
+        modEventBus.addGenericListener(GlobalLootModifierSerializer.class, this::lootModifiers);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::gatherData);
@@ -149,6 +154,14 @@ public class SurvivalistMod
         event.getRegistry().registerAll(
                 new DryingRecipe.Serializer().setRegistryName("drying"),
                 new ChoppingRecipe.Serializer().setRegistryName("chopping")
+        );
+    }
+
+    private void lootModifiers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event)
+    {
+        LootConditionManager.registerCondition(new BlockTagCondition.Serializer());
+        event.getRegistry().register(
+                new AddFibersModifier.Serializer().setRegistryName(location("plant_fibers"))
         );
     }
 
