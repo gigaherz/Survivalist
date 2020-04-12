@@ -71,11 +71,11 @@ public class DryingRackBakedModel implements IDynamicBakedModel
         List<BakedQuad> quads = Lists.newArrayList();
 
         RenderType renderLayer = MinecraftForgeClient.getRenderLayer();
-        if (renderLayer == RenderType.solid())
+        if (renderLayer == RenderType.getSolid())
         {
             quads.addAll(rackBakedModel.getQuads(state, side, rand));
         }
-        else if (renderLayer == RenderType.cutout() && side == null)
+        else if (renderLayer == RenderType.getCutout() && side == null)
         {
             ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
             World world = Minecraft.getInstance().world;
@@ -92,8 +92,8 @@ public class DryingRackBakedModel implements IDynamicBakedModel
                 matrixStack.push(); // pushMatrix
 
                 TransformationMatrix ct = itemTransforms[i];
-                matrixStack.getLast().getPositionMatrix().multiply(ct.getMatrix()); // current().getPositionMatrix().multiply(getPositionMatrix)
-                matrixStack.getLast().getNormalMatrix().mul(ct.getNormalMatrix()); // current().getNormalMatrix().multiply
+                matrixStack.getLast().getMatrix().mul(ct.getMatrix()); // current().getPositionMatrix().multiply(getPositionMatrix)
+                matrixStack.getLast().getNormal().mul(ct.getNormalMatrix()); // current().getNormalMatrix().multiply
 
                 IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
 
@@ -109,7 +109,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
                     @SuppressWarnings("unchecked")
                     Map<Pair<IBakedModel, TransformationMatrix>, List<BakedQuad>> cache = caches.get(i);
 
-                    Matrix4f positionTransform = matrixStack.getLast().getPositionMatrix(); // current() // getPositionMatrix
+                    Matrix4f positionTransform = matrixStack.getLast().getMatrix(); // current() // getPositionMatrix
                     TransformationMatrix transformMatrix = new TransformationMatrix(positionTransform);
 
                     Pair<IBakedModel, TransformationMatrix> pair = Pair.of(model, transformMatrix);

@@ -24,7 +24,7 @@ public class MultiVBORenderer implements Closeable
 
         vertexProducer.accept(rt -> builders.computeIfAbsent(rt, (_rt) -> {
             BufferBuilder builder = new BufferBuilder(BUFFER_SIZE);
-            builder.begin(_rt.getGlMode(), _rt.getVertexFormat());
+            builder.begin(_rt.getDrawMode(), _rt.getVertexFormat());
             return builder;
         }));
 
@@ -80,13 +80,13 @@ public class MultiVBORenderer implements Closeable
             VertexBuffer vbo = kv.getValue();
             VertexFormat fmt = rt.getVertexFormat();
 
-            rt.enable();
+            rt.setupRenderState();
             vbo.bindBuffer();
             fmt.setupBufferState(0L);
-            vbo.draw(matrix, rt.getGlMode());
+            vbo.draw(matrix, rt.getDrawMode());
             VertexBuffer.unbindBuffer();
             fmt.clearBufferState();
-            rt.disable();
+            rt.clearRenderState();
         });
     }
 
