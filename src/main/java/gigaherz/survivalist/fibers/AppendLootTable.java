@@ -8,21 +8,18 @@ import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraft.world.storage.loot.conditions.ILootCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
+import net.minecraftforge.common.loot.LootModifier;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.List;
 
-public class AddFibersModifier implements IGlobalLootModifier
+public class AppendLootTable extends LootModifier
 {
-    private final ILootCondition[] lootConditions;
-
     private final ResourceLocation lootTable;
 
-    public AddFibersModifier(ILootCondition[] lootConditions, ResourceLocation lootTable)
+    public AppendLootTable(ILootCondition[] lootConditions, ResourceLocation lootTable)
     {
-        this.lootConditions = lootConditions;
+        super(lootConditions);
         this.lootTable = lootTable;
     }
 
@@ -30,12 +27,9 @@ public class AddFibersModifier implements IGlobalLootModifier
 
     @Nonnull
     @Override
-    public List<ItemStack> apply(List<ItemStack> generatedLoot, LootContext context)
+    public List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context)
     {
         if (reentryPrevention)
-            return generatedLoot;
-
-        if (!Arrays.stream(lootConditions).allMatch(c -> c.test(context)))
             return generatedLoot;
 
         reentryPrevention = true;
@@ -47,13 +41,13 @@ public class AddFibersModifier implements IGlobalLootModifier
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<AddFibersModifier>
+    public static class Serializer extends GlobalLootModifierSerializer<AppendLootTable>
     {
         @Override
-        public AddFibersModifier read(ResourceLocation location, JsonObject object, ILootCondition[] ailootcondition)
+        public AppendLootTable read(ResourceLocation location, JsonObject object, ILootCondition[] ailootcondition)
         {
             ResourceLocation lootTable = new ResourceLocation(JSONUtils.getString(object, "add_loot"));
-            return new AddFibersModifier(ailootcondition, lootTable);
+            return new AppendLootTable(ailootcondition, lootTable);
         }
     }
 }

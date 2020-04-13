@@ -3,7 +3,7 @@ package gigaherz.survivalist;
 import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
-import gigaherz.survivalist.fibers.AddFibersModifier;
+import gigaherz.survivalist.fibers.AppendLootTable;
 import gigaherz.survivalist.misc.BlockTagCondition;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
@@ -161,7 +161,7 @@ public class SurvivalistMod
     {
         LootConditionManager.registerCondition(new BlockTagCondition.Serializer());
         event.getRegistry().register(
-                new AddFibersModifier.Serializer().setRegistryName(location("plant_fibers"))
+                new AppendLootTable.Serializer().setRegistryName(location("append_loot"))
         );
     }
 
