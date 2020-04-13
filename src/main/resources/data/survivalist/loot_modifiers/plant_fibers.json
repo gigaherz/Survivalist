@@ -1,4 +1,5 @@
 {
+  "type": "survivalist:append_loot",
   "conditions": [
     {
       "condition": "survivalist:block_tag",

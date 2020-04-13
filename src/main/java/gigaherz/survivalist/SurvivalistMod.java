@@ -1,13 +1,9 @@
 package gigaherz.survivalist;
 
 import com.google.common.base.Joiner;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.sun.xml.internal.ws.util.StreamUtils;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
-import gigaherz.survivalist.fibers.AddFibersModifier;
+import gigaherz.survivalist.fibers.AppendLootTable;
 import gigaherz.survivalist.misc.BlockTagCondition;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
@@ -51,18 +47,15 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.loading.moddiscovery.ModFile;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.fml.packs.DelegatableResourcePack;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -166,7 +159,7 @@ public class SurvivalistMod
     {
         LootConditionManager.registerCondition(new BlockTagCondition.Serializer());
         event.getRegistry().register(
-                new AddFibersModifier.Serializer().setRegistryName(location("plant_fibers"))
+                new AppendLootTable.Serializer().setRegistryName(location("append_loot"))
         );
     }
 
