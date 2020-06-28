@@ -27,7 +27,7 @@ public class DryingRackContainer extends Container
 
     public DryingRackContainer(int windowId, DryingRackTileEntity dryingRackTileEntity, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, dryingRackTileEntity.items, dryingRackTileEntity.dryTimeArray);
+        this(windowId, playerInventory, dryingRackTileEntity.inventory(), dryingRackTileEntity.progress());
     }
 
     private DryingRackContainer(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)

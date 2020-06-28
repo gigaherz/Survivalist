@@ -80,7 +80,7 @@ public class ChoppingBlock extends Block
 
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-        if (!(tileEntity instanceof ChoppingBlockTileEntity) || player.isShiftKeyDown())
+        if (!(tileEntity instanceof ChoppingBlockTileEntity) || player.isSneaking())
             return ActionResultType.PASS;
 
         ChoppingBlockTileEntity chopper = (ChoppingBlockTileEntity) tileEntity;

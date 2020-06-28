@@ -36,84 +36,26 @@ public class DryingRackBlock extends Block
 
     {
         {
-            VoxelShape bar1 = Block.makeCuboidShape(1, 14, 3, 15, 15, 4);
-            VoxelShape bar2 = Block.makeCuboidShape(1, 14, 6, 15, 15, 7);
-            VoxelShape bar3 = Block.makeCuboidShape(1, 14, 9, 15, 15, 10);
-            VoxelShape bar4 = Block.makeCuboidShape(1, 14, 12, 15, 15, 13);
-            VoxelShape end1 = Block.makeCuboidShape(0, 13, 1, 1, 16, 15);
-            VoxelShape end2 = Block.makeCuboidShape(15, 13, 1, 16, 16, 15);
+            VoxelShape top1 = Block.makeCuboidShape(0, 13, 0, 16, 16, 16);
 
-            VoxelShape side1_1_1 = Block.makeCuboidShape(0, 0, 1, 3, 3, 2);
-            VoxelShape side1_1_2 = Block.makeCuboidShape(1, 1, 1, 4, 4, 2);
-            VoxelShape side1_1 = VoxelShapes.or(side1_1_1, side1_1_2);
-            VoxelShape side1_2_1 = Block.makeCuboidShape(13, 0, 0, 16, 3, 1);
-            VoxelShape side1_2_2 = Block.makeCuboidShape(12, 1, 0, 15, 4, 1);
-            VoxelShape side1_2 = VoxelShapes.or(side1_2_1, side1_2_2);
-            VoxelShape side2_1_1 = Block.makeCuboidShape(0, 0, 15, 3, 3, 16);
-            VoxelShape side2_1_2 = Block.makeCuboidShape(1, 1, 15, 4, 4, 16);
-            VoxelShape side2_1 = VoxelShapes.or(side2_1_1, side2_1_2);
-            VoxelShape side2_2_1 = Block.makeCuboidShape(13, 0, 14, 16, 3, 15);
-            VoxelShape side2_2_2 = Block.makeCuboidShape(12, 1, 14, 15, 4, 15);
-            VoxelShape side2_2 = VoxelShapes.or(side2_2_1, side2_2_2);
-            for (int i = 2; i <= 13; i++)
-            {
-                VoxelShape side1_1_3 = Block.makeCuboidShape(i, i, 1, i + 3, i + 3, 2);
-                side1_1 = VoxelShapes.or(side1_1, side1_1_3);
-                VoxelShape side1_2_3 = Block.makeCuboidShape(13 - i, i, 0, 13 - i + 3, i + 3, 1);
-                side1_2 = VoxelShapes.or(side1_2, side1_2_3);
-                VoxelShape side2_1_3 = Block.makeCuboidShape(i, i, 15, i + 3, i + 3, 16);
-                side2_1 = VoxelShapes.or(side2_1, side2_1_3);
-                VoxelShape side2_2_3 = Block.makeCuboidShape(13 - i, i, 14, 13 - i + 3, i + 3, 15);
-                side2_2 = VoxelShapes.or(side2_2, side2_2_3);
-            }
-            VoxelShape side1 = VoxelShapes.or(side1_1, side1_2);
-            VoxelShape side2 = VoxelShapes.or(side2_1, side2_2);
+            VoxelShape side1 = Block.makeCuboidShape(0, 0, 0, 16, 16, 2);
+            VoxelShape side2 = Block.makeCuboidShape(0, 0, 14, 16, 16, 16);
 
             shape1 = VoxelShapes.or(
-                    bar1, bar2, bar3, bar4,
-                    end1, end2,
+                    top1,
                     side1, side2
             );
         }
 
         {
-            VoxelShape bar1b = Block.makeCuboidShape(3, 14, 1, 4, 15, 15);
-            VoxelShape bar2b = Block.makeCuboidShape(6, 14, 1, 7, 15, 15);
-            VoxelShape bar3b = Block.makeCuboidShape(9, 14, 1, 10, 15, 15);
-            VoxelShape bar4b = Block.makeCuboidShape(12, 14, 1, 13, 15, 15);
-            VoxelShape end1b = Block.makeCuboidShape(1, 13, 0, 15, 16, 1);
-            VoxelShape end2b = Block.makeCuboidShape(1, 13, 15, 15, 16, 16);
+            VoxelShape top1 = Block.makeCuboidShape(0, 13, 0, 16, 16, 16);
 
-            VoxelShape side1b_1_1 = Block.makeCuboidShape(0, 0, 0, 1, 3, 3);
-            VoxelShape side1b_1_2 = Block.makeCuboidShape(0, 1, 1, 1, 4, 4);
-            VoxelShape side1b_1 = VoxelShapes.or(side1b_1_1, side1b_1_2);
-            VoxelShape side1b_2_1 = Block.makeCuboidShape(1, 0, 13, 2, 3, 16);
-            VoxelShape side1b_2_2 = Block.makeCuboidShape(1, 1, 12, 2, 4, 15);
-            VoxelShape side1b_2 = VoxelShapes.or(side1b_2_1, side1b_2_2);
-            VoxelShape side2b_1_1 = Block.makeCuboidShape(14, 0, 0, 15, 3, 3);
-            VoxelShape side2b_1_2 = Block.makeCuboidShape(14, 1, 1, 15, 4, 4);
-            VoxelShape side2b_1 = VoxelShapes.or(side2b_1_1, side2b_1_2);
-            VoxelShape side2b_2_1 = Block.makeCuboidShape(15, 0, 13, 16, 3, 16);
-            VoxelShape side2b_2_2 = Block.makeCuboidShape(15, 1, 12, 16, 4, 15);
-            VoxelShape side2b_2 = VoxelShapes.or(side2b_2_1, side2b_2_2);
-            for (int i = 2; i <= 13; i++)
-            {
-                VoxelShape side1b_1_3 = Block.makeCuboidShape(0, i, i, 1, i + 3, i + 3);
-                side1b_1 = VoxelShapes.or(side1b_1, side1b_1_3);
-                VoxelShape side1b_2_3 = Block.makeCuboidShape(1, i, 13 - i, 2, i + 3, 13 - i + 3);
-                side1b_2 = VoxelShapes.or(side1b_2, side1b_2_3);
-                VoxelShape side2b_1_3 = Block.makeCuboidShape(14, i, i, 15, i + 3, i + 3);
-                side2b_1 = VoxelShapes.or(side2b_1, side2b_1_3);
-                VoxelShape side2b_2_3 = Block.makeCuboidShape(15, i, 13 - i, 16, i + 3, 13 - i + 3);
-                side2b_2 = VoxelShapes.or(side2b_2, side2b_2_3);
-            }
-            VoxelShape side1b = VoxelShapes.or(side1b_1, side1b_2);
-            VoxelShape side2b = VoxelShapes.or(side2b_1, side2b_2);
+            VoxelShape side1 = Block.makeCuboidShape(0, 0, 0, 2, 16, 16);
+            VoxelShape side2 = Block.makeCuboidShape(14, 0, 0, 16, 16, 16);
 
             shape2 = VoxelShapes.or(
-                    bar1b, bar2b, bar3b, bar4b,
-                    end1b, end2b,
-                    side1b, side2b
+                    top1,
+                    side1, side2
             );
         }
     }

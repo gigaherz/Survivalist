@@ -6,7 +6,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.169', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
@@ -24,6 +24,9 @@ repositories {
         url "https://maven.tterrag.com/"
     }
     mavenLocal()
+    flatDir {
+        dirs project.file("deps")
+    }
 }
 
 version = "3.1.0"
@@ -40,7 +43,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200409-1.15.1'
+    mappings channel: 'snapshot', version: '20200517-1.15.1'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -91,10 +94,10 @@ minecraft {
 }
 
 dependencies {
-    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.2-31.1.44'
+    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.2-31.2.0'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
+    compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
 
     //deobfCompile 'CraftTweaker2:CraftTweaker2-API:4.1.11.500'
     //deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.16.535'

@@ -47,9 +47,9 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     private final ModelDataMap data = new ModelDataMap.Builder().withProperty(CONTAINED_ITEMS_DATA).build();
 
     private int[] dryTimeRemaining = new int[4];
-    public final IIntArray dryTimeArray = new IntArrayWrapper(dryTimeRemaining);
+    private final IIntArray dryTimeArray = new IntArrayWrapper(dryTimeRemaining);
 
-    public final ItemStackHandler items = new ItemStackHandler(4)
+    private final ItemStackHandler items = new ItemStackHandler(4)
     {
         @Override
         protected int getStackLimit(int slot, ItemStack stack)
@@ -63,13 +63,13 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
             super.onContentsChanged(slot);
             DryingRackTileEntity.this.markDirty();
 
-            BlockState state = world.getBlockState(pos);
+            BlockState state = DryingRackTileEntity.this.getBlockState();
             world.notifyBlockUpdate(pos, state, state, 3);
 
             requestModelDataUpdate();
         }
     };
-    public final LazyOptional<IItemHandler> itemsProvider = LazyOptional.of(() -> items);
+    private final LazyOptional<IItemHandler> itemsProvider = LazyOptional.of(() -> items);
 
     private final NonNullList<ItemStack> oldItems = NonNullList.withSize(4, ItemStack.EMPTY);
     private final ItemHandlerWrapper[] dryingSlots = {
@@ -92,26 +92,18 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
         return data;
     }
 
-    private CompoundNBT serializeSyncData()
-    {
-        return this.write(new CompoundNBT());
-    }
-
-    private void deserializeSyncData(CompoundNBT tag)
-    {
-        read(tag);
-    }
-
     @Override
     public CompoundNBT getUpdateTag()
     {
-        return serializeSyncData();
+        CompoundNBT compound = super.getUpdateTag();
+        compound.put("Items", items.serializeNBT());
+        return compound;
     }
 
     @Override
     public void handleUpdateTag(CompoundNBT tag)
     {
-        deserializeSyncData(tag);
+        items.deserializeNBT(tag.getCompound("Items"));
     }
 
     @Override
@@ -124,10 +116,6 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet)
     {
         handleUpdateTag(packet.getNbtCompound());
-
-        /*BlockState state = world.getBlockState(pos);
-        world.notifyBlockUpdate(pos, state, state, 3);
-        this.requestModelDataUpdate();*/
     }
 
     @Override
@@ -194,14 +182,17 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     {
         super.read(compound);
         items.deserializeNBT(compound.getCompound("Items"));
-        int[] remaining = compound.getIntArray("RemainingTime");
-
-        dryTimeRemaining = Arrays.copyOf(remaining, 4);
+        dryTimeRemaining = Arrays.copyOf(compound.getIntArray("RemainingTime"), 4);
     }
 
     public IItemHandler inventory()
     {
         return items;
+    }
+
+    public IIntArray progress()
+    {
+        return dryTimeArray;
     }
 
     public ItemStack[] getItems()
