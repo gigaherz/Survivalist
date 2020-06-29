@@ -27,7 +27,7 @@ public class DryingRackContainer extends Container
 
     public DryingRackContainer(int windowId, DryingRackTileEntity dryingRackTileEntity, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, dryingRackTileEntity.items, dryingRackTileEntity.dryTimeArray);
+        this(windowId, playerInventory, dryingRackTileEntity.inventory(), dryingRackTileEntity.progress());
     }
 
     private DryingRackContainer(int windowId, PlayerInventory playerInventory, IItemHandler inventory, IIntArray dryTimes)
@@ -41,12 +41,12 @@ public class DryingRackContainer extends Container
         addSlot(new SlotItemHandler(inventory, 2, 98, 34));
         addSlot(new SlotItemHandler(inventory, 3, 134, 34));
 
-        bindPlayerInventory(playerInventory);
+        bindPlayerInventory(playerInventory, 84);
 
         this.trackIntArray(dryTimeRemainingArray);
     }
 
-    protected void bindPlayerInventory(PlayerInventory playerInventory)
+    protected void bindPlayerInventory(PlayerInventory playerInventory, int yOffset)
     {
         for (int y = 0; y < 3; y++)
         {
@@ -54,13 +54,13 @@ public class DryingRackContainer extends Container
             {
                 addSlot(new Slot(playerInventory,
                         x + y * 9 + 9,
-                        8 + x * 18, 84 + y * 18));
+                        8 + x * 18, yOffset + y * 18));
             }
         }
 
         for (int x = 0; x < 9; x++)
         {
-            addSlot(new Slot(playerInventory, x, 8 + x * 18, 142));
+            addSlot(new Slot(playerInventory, x, 8 + x * 18, yOffset + 58));
         }
     }
 

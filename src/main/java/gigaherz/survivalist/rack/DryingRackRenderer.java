@@ -56,11 +56,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
 
                     IBakedModel model = renderItem.getItemModelWithOverrides(stack, world, null);
                     model = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(model, ItemCameraTransforms.TransformType.FIXED, false);
-                    // Always run, for now. Item models can be dynamic.
-                    //if (model.isBuiltInRenderer())
-                    {
-                        renderItem.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
-                    }
+                    renderItem.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
 
                     GlStateManager.popMatrix();
                 }

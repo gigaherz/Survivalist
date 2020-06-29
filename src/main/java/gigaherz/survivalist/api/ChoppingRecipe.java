@@ -37,7 +37,7 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
         return world.getRecipeManager().getRecipe(CHOPPING, ctx, world);
     }
 
-    public static Optional<ChoppingRecipe> getRecipe(World world, ItemStack stack)º
+    public static Optional<ChoppingRecipe> getRecipe(World world, ItemStack stack)
     {
         return getRecipe(world, new ChoppingContext(new SingletonInventory(stack), null, 0, 0, null));
     }

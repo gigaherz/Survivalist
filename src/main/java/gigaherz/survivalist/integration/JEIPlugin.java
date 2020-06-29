@@ -11,9 +11,11 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @JeiPlugin
@@ -47,7 +49,8 @@ public class JEIPlugin implements IModPlugin
     @Override
     public void registerRecipes(IRecipeRegistration registration)
     {
-        registration.addRecipes(DryingRecipe.getAllRecipes(Minecraft.getInstance().world), DryingCategory.UID);
-        registration.addRecipes(ChoppingRecipe.getAllRecipes(Minecraft.getInstance().world), ChoppingCategory.UID);
+        ClientWorld world = Objects.requireNonNull(Minecraft.getInstance().world);
+        registration.addRecipes(DryingRecipe.getAllRecipes(world), DryingCategory.UID);
+        registration.addRecipes(ChoppingRecipe.getAllRecipes(world), ChoppingCategory.UID);
     }
 }

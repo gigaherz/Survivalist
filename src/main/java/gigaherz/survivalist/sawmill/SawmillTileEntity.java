@@ -105,7 +105,6 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing)
     {
         if (capability == ITEMS_CAP)
