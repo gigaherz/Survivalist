@@ -60,7 +60,7 @@ public class DryingRackContainer extends Container
 
         for (int x = 0; x < 9; x++)
         {
-            addSlot(new Slot(playerInventory, x, 8 + x * 18, yOffset+ 58));
+            addSlot(new Slot(playerInventory, x, 8 + x * 18, yOffset + 58));
         }
     }
 

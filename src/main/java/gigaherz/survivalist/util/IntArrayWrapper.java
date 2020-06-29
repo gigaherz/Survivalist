@@ -1,4 +1,4 @@
-package gigaherz.survivalist.misc;
+package gigaherz.survivalist.util;
 
 import net.minecraft.util.IIntArray;
 

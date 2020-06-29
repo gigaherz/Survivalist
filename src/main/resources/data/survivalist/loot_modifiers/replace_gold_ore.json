@@ -3,7 +3,7 @@
   "conditions": [
     {
       "condition": "survivalist:match_block",
-      "block": "minecraft:andesite"
+      "block": "minecraft:gold_ore"
     },
     {
       "condition": "minecraft:inverted",
@@ -25,10 +25,10 @@
   "replacements": [
     {
       "from": {
-        "item": "minecraft:andesite"
+        "item": "minecraft:gold_ore"
       },
       "to": {
-        "item": "survivalist:andesite_rock",
+        "item": "survivalist:gold_ore_rock",
         "quantity": {
           "min": 1,
           "max": 8

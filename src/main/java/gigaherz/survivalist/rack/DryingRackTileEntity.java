@@ -3,7 +3,7 @@ package gigaherz.survivalist.rack;
 import gigaherz.survivalist.SurvivalistTileEntityTypes;
 import gigaherz.survivalist.api.DryingRecipe;
 import gigaherz.survivalist.api.ItemHandlerWrapper;
-import gigaherz.survivalist.misc.IntArrayWrapper;
+import gigaherz.survivalist.util.IntArrayWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

@@ -15,7 +15,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.stream.Stream;
 

@@ -31,15 +31,7 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
     @ObjectHolder("survivalist:chopping")
     public static IRecipeSerializer<?> SERIALIZER = null;
 
-    public static final ResourceLocation RECIPE_TYPE_ID = SurvivalistMod.location("chopping");
-    public static IRecipeType<ChoppingRecipe> CHOPPING = Registry.register(Registry.RECIPE_TYPE, RECIPE_TYPE_ID, new IRecipeType<ChoppingRecipe>()
-    {
-        @Override
-        public String toString()
-        {
-            return RECIPE_TYPE_ID.toString();
-        }
-    });
+    public static IRecipeType<ChoppingRecipe> CHOPPING = IRecipeType.register(SurvivalistMod.location("chopping").toString());
 
     public static Optional<ChoppingRecipe> getRecipe(World world, ChoppingContext ctx)
     {

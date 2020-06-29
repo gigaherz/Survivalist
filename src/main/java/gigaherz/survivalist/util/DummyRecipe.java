@@ -1,4 +1,4 @@
-package gigaherz.survivalist.misc;
+package gigaherz.survivalist.util;
 
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.CraftingInventory;
