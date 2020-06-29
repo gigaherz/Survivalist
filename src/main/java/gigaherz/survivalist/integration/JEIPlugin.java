@@ -1,5 +1,5 @@
 package gigaherz.survivalist.integration;
-
+/*
 import gigaherz.survivalist.SurvivalistBlocks;
 import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.ChoppingRecipe;
@@ -54,4 +54,4 @@ public class JEIPlugin implements IModPlugin
         registration.addRecipes(DryingRecipe.getAllRecipes(world), DryingCategory.UID);
         registration.addRecipes(ChoppingRecipe.getAllRecipes(world), ChoppingCategory.UID);
     }
-}
+}*/

@@ -9,6 +9,7 @@ import gigaherz.survivalist.rocks.RockEntity;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -47,7 +48,7 @@ public class ClientEvents
                     new TranslationTextComponent("text." + SurvivalistMod.MODID + ".scraping.message1",
                             makeClickable(message.stack.getTextComponent()),
                             new StringTextComponent("" + message.ret.getCount()),
-                            makeClickable(message.ret.getTextComponent())));
+                            makeClickable(message.ret.getTextComponent())), Util.field_240973_b_);
         });
     }
 

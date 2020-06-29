@@ -34,7 +34,7 @@ public class ScrapingDisabledWarning
             {
                 list.add(lastScraping + 1, "" + TextFormatting.DARK_GRAY + TextFormatting.ITALIC + I18n.format("tooltip.survivalist.scraping.disabled"));
             }*/
-            list.add(new TranslationTextComponent("tooltip.survivalist.scraping.disabled").applyTextStyle(TextFormatting.DARK_GRAY).applyTextStyle(TextFormatting.ITALIC));
+            list.add(new TranslationTextComponent("tooltip.survivalist.scraping.disabled").func_240701_a_(TextFormatting.DARK_GRAY, TextFormatting.ITALIC));
         }
     }
 }

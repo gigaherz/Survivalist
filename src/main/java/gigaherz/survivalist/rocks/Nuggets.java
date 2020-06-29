@@ -28,7 +28,7 @@ public enum Nuggets implements IStringSerializable
     }
 
     @Override
-    public String getName()
+    public String func_176610_l()
     {
         return name;
     }

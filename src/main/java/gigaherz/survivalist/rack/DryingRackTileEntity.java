@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
@@ -73,10 +73,10 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
 
     private final NonNullList<ItemStack> oldItems = NonNullList.withSize(4, ItemStack.EMPTY);
     private final ItemHandlerWrapper[] dryingSlots = {
-            new ItemHandlerWrapper(new RangedWrapper(items, 0, 1), () -> new Vec3d(this.pos).add(0.5, 0.5, 0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 1, 2), () -> new Vec3d(this.pos).add(0.5, 0.5, 0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 2, 3), () -> new Vec3d(this.pos).add(0.5, 0.5, 0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 3, 4), () -> new Vec3d(this.pos).add(0.5, 0.5, 0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 0, 1), () -> Vector3d.func_237489_a_(this.pos).add(0.5, 0.5, 0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 1, 2), () -> Vector3d.func_237489_a_(this.pos).add(0.5, 0.5, 0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 2, 3), () -> Vector3d.func_237489_a_(this.pos).add(0.5, 0.5, 0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 3, 4), () -> Vector3d.func_237489_a_(this.pos).add(0.5, 0.5, 0.5), 64),
     };
 
     public DryingRackTileEntity()
@@ -101,7 +101,7 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT tag)
+    public void handleUpdateTag(BlockState state, CompoundNBT tag)
     {
         items.deserializeNBT(tag.getCompound("Items"));
     }
@@ -115,7 +115,7 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet)
     {
-        handleUpdateTag(packet.getNbtCompound());
+        handleUpdateTag(getBlockState(), packet.getNbtCompound());
     }
 
     @Override
@@ -178,9 +178,9 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     }
 
     @Override
-    public void read(CompoundNBT compound)
+    public void func_230337_a_(BlockState state, CompoundNBT compound)
     {
-        super.read(compound);
+        super.func_230337_a_(state, compound);
         items.deserializeNBT(compound.getCompound("Items"));
         dryTimeRemaining = Arrays.copyOf(compound.getIntArray("RemainingTime"), 4);
     }

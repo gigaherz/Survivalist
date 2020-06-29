@@ -1,5 +1,5 @@
 package gigaherz.survivalist.integration;
-
+/*
 import com.google.common.collect.Lists;
 import gigaherz.survivalist.SurvivalistBlocks;
 import gigaherz.survivalist.SurvivalistMod;
@@ -128,3 +128,4 @@ public class ChoppingCategory implements IRecipeCategory<ChoppingRecipe>
         mc.fontRenderer.drawStringWithShadow(String.format("x%d", clickMultiplier), 50, 40, 0xFFFFFFFF);
     }
 }
+*/

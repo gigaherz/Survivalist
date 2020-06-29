@@ -50,7 +50,7 @@ public class RegSitter
 
     private <T extends IForgeRegistryEntry<T>> DeferredRegister<T> createDeferred(IForgeRegistry<T> registry)
     {
-        DeferredRegister<T> deferred = new DeferredRegister<>(registry, RegSitter.this.modId);
+        DeferredRegister<T> deferred = DeferredRegister.create(registry, RegSitter.this.modId);
         registerList.add(deferred);
         return deferred;
     }

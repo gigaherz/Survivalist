@@ -3,22 +3,25 @@ package gigaherz.survivalist.misc;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.loot.ILootSerializer;
+import net.minecraft.loot.LootConditionType;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.conditions.ILootCondition;
 
 public class BlockTagCondition implements ILootCondition
 {
-    final Tag<Block> blockTag;
+    public static LootConditionType BLOCK_TAG_CONDITION;
 
-    public BlockTagCondition(Tag<Block> blockTag)
+    final ITag.INamedTag<Block> blockTag;
+
+    public BlockTagCondition(ITag.INamedTag<Block> blockTag)
     {
         this.blockTag = blockTag;
     }
@@ -29,27 +32,28 @@ public class BlockTagCondition implements ILootCondition
         BlockState state = lootContext.get(LootParameters.BLOCK_STATE);
         if (state == null)
             return false;
-        return blockTag.contains(state.getBlock());
+        return blockTag.func_230235_a_(state.getBlock());
     }
 
-    public static class Serializer extends ILootCondition.AbstractSerializer<BlockTagCondition>
+    @Override
+    public LootConditionType func_230419_b_()
     {
-        public Serializer()
+        return BLOCK_TAG_CONDITION;
+    }
+
+    public static class Serializer implements ILootSerializer<BlockTagCondition>
+    {
+        @Override
+        public void func_230424_a_(JsonObject json, BlockTagCondition value, JsonSerializationContext context)
         {
-            super(SurvivalistMod.location("block_tag"), BlockTagCondition.class);
+            json.addProperty("tag", value.blockTag.func_230234_a_().toString());
         }
 
         @Override
-        public void serialize(JsonObject json, BlockTagCondition value, JsonSerializationContext context)
-        {
-            json.addProperty("tag", value.blockTag.getId().toString());
-        }
-
-        @Override
-        public BlockTagCondition deserialize(JsonObject json, JsonDeserializationContext context)
+        public BlockTagCondition func_230423_a_(JsonObject json, JsonDeserializationContext context)
         {
             ResourceLocation tagName = new ResourceLocation(JSONUtils.getString(json, "tag"));
-            return new BlockTagCondition(new BlockTags.Wrapper(tagName));
+            return new BlockTagCondition(BlockTags.makeWrapperTag(tagName.toString()));
         }
     }
 }

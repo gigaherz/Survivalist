@@ -17,9 +17,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.*;
+import net.minecraft.loot.*;
 import net.minecraftforge.common.crafting.ConditionalAdvancement;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
@@ -50,21 +50,23 @@ public class SurvivalistData
         }
         if (event.includeServer())
         {
-            gen.addProvider(new ItemTags(gen));
-            gen.addProvider(new BlockTags(gen));
+
+            BlockTags blockTags = new BlockTags(gen);
+            gen.addProvider(blockTags);
+            gen.addProvider(new ItemTags(gen, blockTags));
             gen.addProvider(new Recipes(gen));
             gen.addProvider(new LootTables(gen));
         }
     }
 
-    public static Tag<Item> makeItemTag(String id)
+    public static ITag.INamedTag<Item> makeItemTag(String id)
     {
         return makeItemTag(new ResourceLocation(id));
     }
 
-    public static Tag<Item> makeItemTag(ResourceLocation id)
+    public static ITag.INamedTag<Item> makeItemTag(ResourceLocation id)
     {
-        return new net.minecraft.tags.ItemTags.Wrapper(id);
+        return net.minecraft.tags.ItemTags.makeWrapperTag(id.toString());
     }
 
     private static class Recipes extends RecipeProvider implements IDataProvider, IConditionBuilder
@@ -79,7 +81,7 @@ public class SurvivalistData
         {
             Arrays.stream(ChopblockMaterials.values())
                     .forEach(rock -> {
-                        Tag<Item> tag = makeItemTag(rock.getMadeFrom());
+                        ITag<Item> tag = makeItemTag(rock.getMadeFrom());
                         RegistryObject<ChoppingBlock> result = rock.getPristine();
                         ShapelessRecipeBuilder
                                 .shapelessRecipe(result.get())
@@ -94,7 +96,7 @@ public class SurvivalistData
                         ResourceLocation itemId = rockItem.getId();
                         if (rock.isOre())
                         {
-                            Tag<Item> tag = makeItemTag(rock.getSmeltingTag());
+                            ITag<Item> tag = makeItemTag(rock.getSmeltingTag());
                             CookingRecipeBuilder
                                     .smeltingRecipe(Ingredient.fromTag(tag), result.get(), 0.2f, 50)
                                     .addCriterion("has_rock", hasItem(tag))
@@ -119,7 +121,7 @@ public class SurvivalistData
                         }
                     }));
 
-            Tag<Item> dough = makeItemTag(SurvivalistMod.location("dough"));
+            ITag<Item> dough = makeItemTag(SurvivalistMod.location("dough"));
             CookingRecipeBuilder
                     .smeltingRecipe(Ingredient.fromTag(dough), SurvivalistItems.ROUND_BREAD.get(), 0.45f, 300)
                     .addCriterion("has_dough", hasItem(dough))
@@ -130,7 +132,7 @@ public class SurvivalistData
                     .build(consumer, SurvivalistMod.location("cooking/round_bread_from_smoking"));
             // no, no roundbread-making in a campfire
 
-            Tag<Item> leatherTag = makeItemTag("survivalist:tanned_leather");
+            ITag<Item> leatherTag = makeItemTag("survivalist:tanned_leather");
             ResourceLocation saddleRecipeId = SurvivalistMod.location("saddle");
             ConditionalRecipe.builder()
                     .addCondition(new ConfigurationCondition("drying_rack", "EnableSaddleCrafting"))
@@ -155,7 +157,7 @@ public class SurvivalistData
                                                     .withRewards(AdvancementRewards.Builder.recipe(saddleRecipeId))
                                                     .withRequirementsStrategy(IRequirementsStrategy.OR)
                                                     .withCriterion("has_leather", hasItem(leatherTag))
-                                                    .withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(saddleRecipeId))
+                                                    .withCriterion("has_the_recipe", RecipeUnlockedTrigger.func_235675_a_(saddleRecipeId))
                                     )
                     )
                     .build(consumer, saddleRecipeId);
@@ -164,9 +166,9 @@ public class SurvivalistData
 
     private static class ItemTags extends ItemTagsProvider implements IDataProvider
     {
-        public ItemTags(DataGenerator gen)
+        public ItemTags(DataGenerator gen, BlockTags blockTags)
         {
-            super(gen);
+            super(gen, blockTags);
         }
 
         @Override
@@ -174,17 +176,17 @@ public class SurvivalistData
         {
             Arrays.stream(Rocks.values())
                     .flatMap(rock -> rock.getTagLocations().stream().map(tag -> Pair.of(rock.getItem().get(), tag)))
-                    .forEach((pair) -> this.getBuilder(makeItemTag(pair.getSecond())).add(pair.getFirst()));
+                    .forEach((pair) -> this.func_240522_a_(makeItemTag(pair.getSecond())).func_240534_a_(pair.getFirst()));
 
             Arrays.stream(Nuggets.values())
                     .flatMap(rock -> rock.getTagLocations().stream().map(tag -> Pair.of(rock.getItem().get(), tag)))
-                    .forEach((pair) -> this.getBuilder(makeItemTag(pair.getSecond())).add(pair.getFirst()));
+                    .forEach((pair) -> this.func_240522_a_(makeItemTag(pair.getSecond())).func_240534_a_(pair.getFirst()));
 
-            this.getBuilder(makeItemTag(SurvivalistMod.location("dough")))
-                    .add(SurvivalistItems.DOUGH.get());
+            this.func_240522_a_(makeItemTag(SurvivalistMod.location("dough")))
+                    .func_240534_a_(SurvivalistItems.DOUGH.get());
 
-            this.getBuilder(makeItemTag(SurvivalistMod.location("chopping_blocks")))
-                    .add(Arrays.stream(ChopblockMaterials.values())
+            this.func_240522_a_(makeItemTag(SurvivalistMod.location("chopping_blocks")))
+                    .func_240534_a_(Arrays.stream(ChopblockMaterials.values())
                             .flatMap(block -> Stream.of(block.getPristine(), block.getChipped(), block.getDamaged()).map(reg -> reg.get().asItem()))
                             .toArray(Item[]::new));
         }
@@ -200,8 +202,8 @@ public class SurvivalistData
         @Override
         protected void registerTags()
         {
-            this.getBuilder(new net.minecraft.tags.BlockTags.Wrapper(SurvivalistMod.location("chopping_blocks")))
-                    .add(Arrays.stream(ChopblockMaterials.values())
+            this.func_240522_a_(net.minecraft.tags.BlockTags.makeWrapperTag(SurvivalistMod.location("chopping_blocks").toString()))
+                    .func_240534_a_(Arrays.stream(ChopblockMaterials.values())
                             .flatMap(block -> Stream.of(block.getPristine(), block.getChipped(), block.getDamaged()).map(Supplier::get))
                             .toArray(Block[]::new));
         }

@@ -18,7 +18,6 @@ import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import gigaherz.survivalist.util.RegSitter;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -27,11 +26,13 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.resources.IPackFinder;
+import net.minecraft.resources.IPackNameDecorator;
 import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.world.storage.loot.conditions.LootConditionManager;
+import net.minecraft.loot.conditions.LootConditionManager;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -52,21 +53,18 @@ import net.minecraftforge.fml.loading.moddiscovery.ModFile;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.fml.packs.DelegatableResourcePack;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
 
 @Mod.EventBusSubscriber
 @Mod(SurvivalistMod.MODID)
@@ -162,7 +160,7 @@ public class SurvivalistMod
 
     private void lootModifiers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event)
     {
-        LootConditionManager.registerCondition(new BlockTagCondition.Serializer());
+        BlockTagCondition.BLOCK_TAG_CONDITION = LootConditionManager.func_237475_a_("survivalist:block_tag", new BlockTagCondition.Serializer());
         event.getRegistry().register(
                 new AppendLootTable.Serializer().setRegistryName(location("append_loot"))
         );
@@ -210,10 +208,10 @@ public class SurvivalistMod
         event.getServer().getResourcePacks().addPackFinder(new IPackFinder()
         {
             @Override
-            public <T extends ResourcePackInfo> void addPackInfosToMap(Map<String, T> map, ResourcePackInfo.IFactory<T> infoFactory)
+            public <T extends ResourcePackInfo> void func_230230_a_(Consumer<T> consumer, ResourcePackInfo.IFactory<T> infoFactory)
             {
-                map.computeIfAbsent("survivalist_vanilla_replacements", (id) ->
-                        ResourcePackInfo.createResourcePack(id, false, () -> new SurvivalistVanillaReplacements(id), infoFactory, ResourcePackInfo.Priority.TOP));
+                String id = "survivalist_vanilla_replacements";
+                consumer.accept(ResourcePackInfo.createResourcePack(id, false, () -> new SurvivalistVanillaReplacements(id), infoFactory, ResourcePackInfo.Priority.TOP, t -> t));
             }
         });
     }

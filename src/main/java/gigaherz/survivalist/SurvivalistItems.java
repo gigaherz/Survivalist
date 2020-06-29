@@ -5,11 +5,13 @@ import gigaherz.survivalist.util.RegSitter;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.fml.RegistryObject;
 
 public class SurvivalistItems
@@ -53,8 +55,8 @@ public class SurvivalistItems
     public static final IArmorMaterial TANNED_LEATHER_MATERIAL = new IArmorMaterial()
     {
         private final int[] armors = new int[]{1, 2, 3, 1};
-        private final Tag<Item> leather_tag = new ItemTags.Wrapper(new ResourceLocation("survivalist:items/tanned_leather"));
-        private final Ingredient leather_tag_ingredient = Ingredient.fromTag(leather_tag);
+        private final ITag.INamedTag<Item> leather_tag = ItemTags.makeWrapperTag(new ResourceLocation("survivalist:items/tanned_leather").toString());
+        private final NonNullLazy<Ingredient> leather_tag_ingredient = NonNullLazy.of(() -> Ingredient.fromTag(leather_tag));
 
         @Override
         public int getDurability(EquipmentSlotType slotIn)
@@ -83,7 +85,7 @@ public class SurvivalistItems
         @Override
         public Ingredient getRepairMaterial()
         {
-            return leather_tag_ingredient;
+            return leather_tag_ingredient.get();
         }
 
         @Override
@@ -97,12 +99,18 @@ public class SurvivalistItems
         {
             return 1;
         }
+
+        @Override
+        public float func_230304_f_()
+        {
+            return 0;
+        }
     };
 
     public static final IItemTier TOOL_FLINT = new IItemTier()
     {
-        private final Tag<Item> flint_tag = new ItemTags.Wrapper(new ResourceLocation("forge:items/flint"));
-        private final Ingredient flint_tag_ingredient = Ingredient.fromTag(flint_tag);
+        private final ITag<Item> flint_tag = ItemTags.makeWrapperTag(new ResourceLocation("forge:items/flint").toString());
+        private final NonNullLazy<Ingredient> flint_tag_ingredient = NonNullLazy.of(() -> Ingredient.fromTag(flint_tag));
 
         @Override
         public int getMaxUses()
@@ -137,7 +145,7 @@ public class SurvivalistItems
         @Override
         public Ingredient getRepairMaterial()
         {
-            return flint_tag_ingredient;
+            return flint_tag_ingredient.get();
         }
     };
 }

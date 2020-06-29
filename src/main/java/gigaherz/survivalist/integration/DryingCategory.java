@@ -1,5 +1,5 @@
 package gigaherz.survivalist.integration;
-
+/*
 import gigaherz.survivalist.SurvivalistBlocks;
 import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.DryingRecipe;
@@ -95,3 +95,4 @@ public class DryingCategory implements IRecipeCategory<DryingRecipe>
         arrow.draw(30, 4);
     }
 }
+*/

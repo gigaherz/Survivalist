@@ -83,9 +83,9 @@ public class ChoppingBlockTileEntity extends TileEntity
     }
 
     @Override
-    public void read(CompoundNBT compound)
+    public void func_230337_a_(BlockState state, CompoundNBT compound)
     {
-        super.read(compound);
+        super.func_230337_a_(state, compound);
         CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(slotInventory, null, compound.get("Inventory"));
     }
 
@@ -106,7 +106,7 @@ public class ChoppingBlockTileEntity extends TileEntity
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT tag)
+    public void handleUpdateTag(BlockState state, CompoundNBT tag)
     {
         slotInventory.setStackInSlot(0, ItemStack.read(tag.getCompound("Item")));
     }
@@ -121,7 +121,7 @@ public class ChoppingBlockTileEntity extends TileEntity
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
-        handleUpdateTag(pkt.getNbtCompound());
+        handleUpdateTag(getBlockState(), pkt.getNbtCompound());
     }
 
     public ActionResult<ItemStack> chop(PlayerEntity player, int axeLevel, int fortune)

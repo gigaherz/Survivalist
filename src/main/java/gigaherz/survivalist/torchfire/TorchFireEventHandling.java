@@ -23,7 +23,7 @@ public class TorchFireEventHandling
         if (!ConfigManager.SERVER.enableTorchFire.get())
             return;
 
-        if (!ev.getTarget().isImmuneToFire() && !ev.getTarget().world.isRemote)
+        if (!ev.getTarget().func_230279_az_() && !ev.getTarget().world.isRemote)
         {
             PlayerEntity player = ev.getPlayer();
             ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);

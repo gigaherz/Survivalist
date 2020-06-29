@@ -4,7 +4,7 @@ import com.google.common.collect.AbstractIterator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -16,7 +16,7 @@ public class ItemHandlerWrapper implements IInventory, Iterable<ItemStack>
     protected final IItemHandlerModifiable inner;
 
     @Nullable
-    protected final Supplier<Vec3d> location;
+    protected final Supplier<Vector3d> location;
     protected final int distance;
 
     public ItemHandlerWrapper(IItemHandlerModifiable inner)
@@ -24,7 +24,7 @@ public class ItemHandlerWrapper implements IInventory, Iterable<ItemStack>
         this(inner, null, 0);
     }
 
-    public ItemHandlerWrapper(IItemHandlerModifiable inner, @Nullable Supplier<Vec3d> location, int distance)
+    public ItemHandlerWrapper(IItemHandlerModifiable inner, @Nullable Supplier<Vector3d> location, int distance)
     {
         this.inner = inner;
         this.distance = distance;

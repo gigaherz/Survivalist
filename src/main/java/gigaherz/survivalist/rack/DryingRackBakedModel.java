@@ -9,9 +9,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.TransformationMatrix;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
@@ -20,6 +18,8 @@ import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModelConfiguration;
@@ -52,7 +52,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
     private final boolean isSideLit;
 
     public DryingRackBakedModel(ModelBakery bakery, IUnbakedModel original, Function<ResourceLocation, IUnbakedModel> modelGetter,
-                                Function<Material, TextureAtlasSprite> textureGetter,
+                                Function<RenderMaterial, TextureAtlasSprite> textureGetter,
                                 TextureAtlasSprite particle, IBakedModel rackBakedModel, TransformationMatrix[] itemTransforms, boolean isSideLit)
     {
         this.particle = particle;
@@ -193,9 +193,9 @@ public class DryingRackBakedModel implements IDynamicBakedModel
 
 
         @Override
-        public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<com.mojang.datafixers.util.Pair<String, String>> missingTextureErrors)
+        public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<com.mojang.datafixers.util.Pair<String, String>> missingTextureErrors)
         {
-            List<Material> list = new ArrayList<>();
+            List<RenderMaterial> list = new ArrayList<>();
             if (baseModel != null)
             {
                 list.addAll(baseModel.getTextures(modelGetter, missingTextureErrors));
@@ -205,7 +205,7 @@ public class DryingRackBakedModel implements IDynamicBakedModel
 
 
         @Override
-        public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, IModelTransform sprite, ItemOverrideList overrides, ResourceLocation modelLocation)
+        public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform sprite, ItemOverrideList overrides, ResourceLocation modelLocation)
         {
             TextureAtlasSprite particleSprite = spriteGetter.apply(owner.resolveTexture("particle"));
 

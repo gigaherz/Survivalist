@@ -1,18 +1,14 @@
 buildscript {
     repositories {
-        maven { url = 'http://files.minecraftforge.net/maven' }
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
-        mavenLocal()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
 apply plugin: 'net.minecraftforge.gradle'
 //apply plugin: 'maven-publish'
 
@@ -31,19 +27,20 @@ repositories {
 
 version = "3.1.0"
 group= "gigaherz.survivalist"
-archivesBaseName = "Survivalist-1.15.2"
+archivesBaseName = "Survivalist-UNKNOWN"
 
-//sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+project.afterEvaluate {
+    archivesBaseName = "Survivalist-${project.MC_VERSION}"
 }
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 sourceSets {
     main.resources.srcDirs += 'src/main/generated_resources'
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200517-1.15.1'
+    mappings channel: 'snapshot', version: '20200514-1.16'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -51,12 +48,12 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            property 'forge.logging.markers', 'CONFIG'
+            property 'forge.logging.markers', ''
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                self {
-                    sources sourceSets.main
+                thismod {
+                    source sourceSets.main
                 }
             }
         }
@@ -64,14 +61,12 @@ minecraft {
         server {
             workingDirectory project.file('run')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', ''
             property 'forge.logging.console.level', 'debug'
 
-            singleInstance(true)
-
             mods {
-                self {
-                    sources sourceSets.main
+                thismod {
+                    source sourceSets.main
                 }
             }
         }
@@ -82,11 +77,11 @@ minecraft {
             property 'forge.logging.markers', ''
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'survivalist', '--all', '--output', file('src/main/generated_resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'hudcompass', '--all', '--output', file('src/main/generated_resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                self {
-                    sources sourceSets.main
+                thismod {
+                    source sourceSets.main
                 }
             }
         }
@@ -94,28 +89,16 @@ minecraft {
 }
 
 dependencies {
-    minecraft group: 'net.minecraftforge', name: 'forge', version: '1.15.2-31.2.0'
+    minecraft 'net.minecraftforge:forge:1.16.1-32.0.23'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
+    //compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4:api")
+    //runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
 
     //deobfCompile 'CraftTweaker2:CraftTweaker2-API:4.1.11.500'
     //deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.16.535'
 
     //compile fileTree(dir: 'libs', include: '*.jar')
 }
-
-/*
-jar {
-    into('/') {
-        from configurations.embed
-    }
-
-    manifest {
-        attributes("ContainedDeps": configurations.embed.collect { it.getName() }.join(' '))
-    }
-}
-*/
 
 jar {
     manifest {
