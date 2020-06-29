@@ -42,24 +42,29 @@ public class TileRack extends TileEntity implements ITickable
     };
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-        return new SPacketUpdateTileEntity(pos, 0, tag);
-    }
-
-    @Override
     public NBTTagCompound getUpdateTag()
     {
         return this.writeToNBT(new NBTTagCompound());
     }
 
     @Override
+    public void handleUpdateTag(NBTTagCompound tag)
+    {
+        this.readFromNBT(tag);
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+        NBTTagCompound tag = getUpdateTag();
+        return new SPacketUpdateTileEntity(pos, 0, tag);
+    }
+
+    @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
     {
         super.onDataPacket(net, packet);
-        readFromNBT(packet.getNbtCompound());
+        handleUpdateTag(packet.getNbtCompound());
 
         IBlockState state = world.getBlockState(pos);
         world.notifyBlockUpdate(pos, state, state, 3);

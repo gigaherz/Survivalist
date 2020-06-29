@@ -20,6 +20,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -35,7 +38,6 @@ import java.util.Map;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = Survivalist.MODID)
 public class ClientEvents
 {
-    // ----------------------------------------------------------- Item/Block Models
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event)
     {
