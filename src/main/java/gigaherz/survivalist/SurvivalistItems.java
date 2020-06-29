@@ -55,7 +55,7 @@ public class SurvivalistItems
     public static final IArmorMaterial TANNED_LEATHER_MATERIAL = new IArmorMaterial()
     {
         private final int[] armors = new int[]{1, 2, 3, 1};
-        private final ITag.INamedTag<Item> leather_tag = ItemTags.makeWrapperTag(new ResourceLocation("survivalist:items/tanned_leather").toString());
+        private final ITag.INamedTag<Item> leather_tag = ItemTags.makeWrapperTag(new ResourceLocation("survivalist:tanned_leather").toString());
         private final NonNullLazy<Ingredient> leather_tag_ingredient = NonNullLazy.of(() -> Ingredient.fromTag(leather_tag));
 
         @Override
@@ -109,8 +109,7 @@ public class SurvivalistItems
 
     public static final IItemTier TOOL_FLINT = new IItemTier()
     {
-        private final ITag<Item> flint_tag = ItemTags.makeWrapperTag(new ResourceLocation("forge:items/flint").toString());
-        private final NonNullLazy<Ingredient> flint_tag_ingredient = NonNullLazy.of(() -> Ingredient.fromTag(flint_tag));
+        private final NonNullLazy<Ingredient> flint_tag_ingredient = NonNullLazy.of(() -> Ingredient.fromItems(Items.FLINT));
 
         @Override
         public int getMaxUses()

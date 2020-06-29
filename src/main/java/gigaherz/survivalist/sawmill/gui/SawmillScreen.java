@@ -22,7 +22,7 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
 {
     public static final ResourceLocation GUI_TEXTURE_LOCATION = new ResourceLocation("minecraft:textures/gui/container/furnace.png");
     private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
-    public final AbstractRecipeBookGui recipeGui = new AbstractRecipeBookGui()
+    public final AbstractRecipeBookGui recipeBookGui = new AbstractRecipeBookGui()
     {
         @Override
         protected boolean func_212962_b()
@@ -58,7 +58,7 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
             return AbstractFurnaceTileEntity.getBurnTimes().keySet();
         }
     };
-    private boolean widthTooNarrowIn;
+    private boolean widthTooNarrow;
 
     public SawmillScreen(SawmillContainer container, PlayerInventory playerInventory, ITextComponent title)
     {
@@ -70,13 +70,15 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     {
         super.func_231160_c_();
 
-        this.widthTooNarrowIn = this.field_230708_k_ < 379;
-        this.recipeGui.init(this.field_230708_k_, this.field_230709_l_, this.field_230706_i_, this.widthTooNarrowIn, this.container);
-        this.guiLeft = this.recipeGui.updateScreenPosition(this.widthTooNarrowIn, this.field_230708_k_, this.xSize);
+        this.widthTooNarrow = this.field_230708_k_ < 379;
+        this.recipeBookGui.init(this.field_230708_k_, this.field_230709_l_, this.field_230706_i_, this.widthTooNarrow, this.container);
+        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.field_230708_k_, this.xSize);
+        this.field_230705_e_.add(this.recipeBookGui);
+        this.setFocusedDefault(this.recipeBookGui);
         this.func_230480_a_(new ImageButton(this.guiLeft + 20, this.field_230709_l_ / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
-            this.recipeGui.initSearchBar(this.widthTooNarrowIn);
-            this.recipeGui.toggleVisibility();
-            this.guiLeft = this.recipeGui.updateScreenPosition(this.widthTooNarrowIn, this.field_230708_k_, this.xSize);
+            this.recipeBookGui.initSearchBar(this.widthTooNarrow);
+            this.recipeBookGui.toggleVisibility();
+            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.field_230708_k_, this.xSize);
             ((ImageButton) button).setPosition(this.guiLeft + 20, this.field_230709_l_ / 2 - 49);
         }));
         this.field_238742_p_ = (this.xSize - this.field_230712_o_.func_238414_a_(this.field_230704_d_)) / 2;
@@ -86,27 +88,27 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     public void func_231023_e_()
     {
         super.func_231023_e_();
-        this.recipeGui.tick();
+        this.recipeBookGui.tick();
     }
 
     @Override
     public void func_230430_a_(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         this.func_230446_a_(matrixStack);
-        if (this.recipeGui.isVisible() && this.widthTooNarrowIn)
+        if (this.recipeBookGui.isVisible() && this.widthTooNarrow)
         {
             this.func_230450_a_(matrixStack, partialTicks, mouseX, mouseY);
-            this.recipeGui.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
+            this.recipeBookGui.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
         }
         else
         {
-            this.recipeGui.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
+            this.recipeBookGui.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
             super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
-            this.recipeGui.func_230477_a_(matrixStack, this.guiLeft, this.guiTop, true, partialTicks);
+            this.recipeBookGui.func_230477_a_(matrixStack, this.guiLeft, this.guiTop, true, partialTicks);
         }
 
         this.func_230459_a_(matrixStack, mouseX, mouseY);
-        this.recipeGui.func_238924_c_(matrixStack, this.guiLeft, this.guiTop, mouseX, mouseY);
+        this.recipeBookGui.func_238924_c_(matrixStack, this.guiLeft, this.guiTop, mouseX, mouseY);
     }
 
     @Override
@@ -128,6 +130,59 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
         this.func_238474_b_(matrixStack, x + 79, y + 34, 176, 14, l + 1, 16);
     }
 
+    @Override
+    protected boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+        return (!this.widthTooNarrow || !this.recipeBookGui.isVisible()) && super.isPointInRegion(x, y, width, height, mouseX, mouseY);
+    }
+
+    @Override
+    public boolean func_231044_a_(double p_231044_1_, double p_231044_3_, int p_231044_5_)
+    {
+        if (this.recipeBookGui.func_231044_a_(p_231044_1_, p_231044_3_, p_231044_5_))
+        {
+            this.func_231035_a_(this.recipeBookGui);
+            return true;
+        }
+        else
+        {
+            return this.widthTooNarrow &&
+                    (this.recipeBookGui.isVisible() || super.func_231044_a_(p_231044_1_, p_231044_3_, p_231044_5_));
+        }
+    }
+
+    @Override
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton)
+    {
+        boolean flag = mouseX < (double) guiLeftIn || mouseY < (double) guiTopIn || mouseX >= (double) (guiLeftIn + this.xSize) || mouseY >= (double) (guiTopIn + this.ySize);
+        return this.recipeBookGui.func_195604_a(mouseX, mouseY, this.guiLeft, this.guiTop, this.xSize, this.ySize, mouseButton) && flag;
+    }
+
+    @Override
+    protected void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type)
+    {
+        super.handleMouseClick(slotIn, slotId, mouseButton, type);
+        this.recipeBookGui.slotClicked(slotIn);
+    }
+
+    @Override
+    public void recipesUpdated()
+    {
+        this.recipeBookGui.recipesUpdated();
+    }
+
+    @Override
+    public void func_231164_f_()
+    {
+        this.recipeBookGui.removed();
+        super.func_231164_f_();
+    }
+
+    @Override
+    public RecipeBookGui getRecipeGui()
+    {
+        return this.recipeBookGui;
+    }
+
     private int getCookProgressScaled(int pixels)
     {
         int total = container.getTotalCookTime();
@@ -146,65 +201,5 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
         }
 
         return pixels * container.getRemainingBurnTime() / total;
-    }
-
-    @Override
-    public boolean func_231044_a_(double p_231044_1_, double p_231044_3_, int p_231044_5_)
-    {
-        if (this.recipeGui.func_231044_a_(p_231044_1_, p_231044_3_, p_231044_5_))
-        {
-            return true;
-        }
-        else
-        {
-            return this.widthTooNarrowIn &&
-                    (this.recipeGui.isVisible() || super.func_231044_a_(p_231044_1_, p_231044_3_, p_231044_5_));
-        }
-    }
-
-    @Override
-    protected void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type)
-    {
-        super.handleMouseClick(slotIn, slotId, mouseButton, type);
-        this.recipeGui.slotClicked(slotIn);
-    }
-
-    @Override
-    public boolean func_231046_a_(int p_231046_1_, int p_231046_2_, int p_231046_3_)
-    {
-        return !this.recipeGui.func_231046_a_(p_231046_1_, p_231046_2_, p_231046_3_)
-                && super.func_231046_a_(p_231046_1_, p_231046_2_, p_231046_3_);
-    }
-
-    @Override
-    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton)
-    {
-        boolean flag = mouseX < (double) guiLeftIn || mouseY < (double) guiTopIn || mouseX >= (double) (guiLeftIn + this.xSize) || mouseY >= (double) (guiTopIn + this.ySize);
-        return this.recipeGui.func_195604_a(mouseX, mouseY, this.guiLeft, this.guiTop, this.xSize, this.ySize, mouseButton) && flag;
-    }
-
-    @Override
-    public boolean func_231042_a_(char charTyped, int keyCode)
-    {
-        return this.recipeGui.func_231042_a_(charTyped, keyCode) ? true : super.func_231042_a_(charTyped, keyCode);
-    }
-
-    @Override
-    public void recipesUpdated()
-    {
-        this.recipeGui.recipesUpdated();
-    }
-
-    @Override
-    public RecipeBookGui getRecipeGui()
-    {
-        return this.recipeGui;
-    }
-
-    @Override
-    public void func_231164_f_()
-    {
-        this.recipeGui.removed();
-        super.func_231164_f_();
     }
 }
