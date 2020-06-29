@@ -14,7 +14,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -31,22 +30,14 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
     @ObjectHolder("survivalist:chopping")
     public static IRecipeSerializer<?> SERIALIZER = null;
 
-    public static final ResourceLocation RECIPE_TYPE_ID = SurvivalistMod.location("chopping");
-    public static IRecipeType<ChoppingRecipe> CHOPPING = Registry.register(Registry.RECIPE_TYPE, RECIPE_TYPE_ID, new IRecipeType<ChoppingRecipe>()
-    {
-        @Override
-        public String toString()
-        {
-            return RECIPE_TYPE_ID.toString();
-        }
-    });
+    public static IRecipeType<ChoppingRecipe> CHOPPING = IRecipeType.register(SurvivalistMod.location("chopping").toString());
 
     public static Optional<ChoppingRecipe> getRecipe(World world, ChoppingContext ctx)
     {
         return world.getRecipeManager().getRecipe(CHOPPING, ctx, world);
     }
 
-    public static Optional<ChoppingRecipe> getRecipe(World world, ItemStack stack)
+    public static Optional<ChoppingRecipe> getRecipe(World world, ItemStack stack)º
     {
         return getRecipe(world, new ChoppingContext(new SingletonInventory(stack), null, 0, 0, null));
     }

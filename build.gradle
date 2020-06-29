@@ -6,7 +6,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.169', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
@@ -93,8 +93,8 @@ minecraft {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.14.4-28.2.4'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.25")
+    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.27:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.27")
 
     //deobfCompile 'CraftTweaker2:CraftTweaker2-API:4.1.11.500'
     //deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.16.535'

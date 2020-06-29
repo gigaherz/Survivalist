@@ -30,6 +30,8 @@
     "item.survivalist.tanned_leggings": "Tanned Leather Pants",
     "item.survivalist.tanned_boots": "Tanned Leather Boots",
 
+    "itemGroup.survivalist_items": "Survivalist",
+
     "enchantment.survivalist.scraping": "Scrapping",
     "text.survivalist.scraping.message1": "Your %s broke but you got %dx%s in return!\"",
     "tooltip.survivalist.scraping.disabled": "- The scrapping feature is disabled, this enchantment will do nothing.",
