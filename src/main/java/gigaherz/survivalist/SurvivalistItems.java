@@ -53,7 +53,7 @@ public class SurvivalistItems
     public static final IArmorMaterial TANNED_LEATHER_MATERIAL = new IArmorMaterial()
     {
         private final int[] armors = new int[]{1, 2, 3, 1};
-        private final Tag<Item> leather_tag = new ItemTags.Wrapper(new ResourceLocation("survivalist:items/tanned_leather"));
+        private final Tag<Item> leather_tag = new ItemTags.Wrapper(new ResourceLocation("survivalist:tanned_leather"));
         private final Ingredient leather_tag_ingredient = Ingredient.fromTag(leather_tag);
 
         @Override
@@ -101,8 +101,7 @@ public class SurvivalistItems
 
     public static final IItemTier TOOL_FLINT = new IItemTier()
     {
-        private final Tag<Item> flint_tag = new ItemTags.Wrapper(new ResourceLocation("forge:items/flint"));
-        private final Ingredient flint_tag_ingredient = Ingredient.fromTag(flint_tag);
+        private final Ingredient flint_tag_ingredient = Ingredient.fromItems(Items.FLINT);
 
         @Override
         public int getMaxUses()
