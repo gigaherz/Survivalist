@@ -3,8 +3,8 @@ package gigaherz.survivalist;
 import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
-import gigaherz.survivalist.fibers.AppendLootTable;
-import gigaherz.survivalist.misc.BlockTagCondition;
+import gigaherz.survivalist.util.AppendLootTable;
+import gigaherz.survivalist.util.MatchBlockCondition;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
 import gigaherz.survivalist.rack.DryingRackContainer;
@@ -18,6 +18,7 @@ import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import gigaherz.survivalist.util.RegSitter;
+import gigaherz.survivalist.util.ReplaceDrops;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -128,8 +129,6 @@ public class SurvivalistMod
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::gatherData);
 
-        MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
-
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigManager.SERVER_SPEC);
     }
 
@@ -161,9 +160,9 @@ public class SurvivalistMod
     private void lootModifiers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event)
     {
         BlockTagCondition.BLOCK_TAG_CONDITION = LootConditionManager.func_237475_a_("survivalist:block_tag", new BlockTagCondition.Serializer());
-        event.getRegistry().register(
-                new AppendLootTable.Serializer().setRegistryName(location("append_loot"))
-        );
+        event.getRegistry().registerAll(
+                new AppendLootTable.Serializer().setRegistryName(location("append_loot")),
+                new ReplaceDrops.Serializer().setRegistryName(location("replace_drops"))        );
     }
 
     public void commonSetup(FMLCommonSetupEvent event)
@@ -203,19 +202,6 @@ public class SurvivalistMod
         //RenderTypeLookup.setRenderLayer(SurvivalistBlocks.RACK.get(), (layer) -> layer == RenderType.getSolid() || layer == RenderType.getCutout());
     }
 
-    public void serverStarting(FMLServerAboutToStartEvent event)
-    {
-        event.getServer().getResourcePacks().addPackFinder(new IPackFinder()
-        {
-            @Override
-            public <T extends ResourcePackInfo> void func_230230_a_(Consumer<T> consumer, ResourcePackInfo.IFactory<T> infoFactory)
-            {
-                String id = "survivalist_vanilla_replacements";
-                consumer.accept(ResourcePackInfo.createResourcePack(id, false, () -> new SurvivalistVanillaReplacements(id), infoFactory, ResourcePackInfo.Priority.TOP, t -> t));
-            }
-        });
-    }
-
     private static <R extends T, T extends IForgeRegistryEntry<T>> R withName(R obj, ResourceLocation name)
     {
         obj.setRegistryName(name);
@@ -230,114 +216,5 @@ public class SurvivalistMod
     public static ResourceLocation location(String path)
     {
         return new ResourceLocation(MODID, path);
-    }
-
-
-    private static class SurvivalistVanillaReplacements extends DelegatableResourcePack
-    {
-        private final String id;
-        private final ModFile modFile;
-
-        public SurvivalistVanillaReplacements(String id)
-        {
-            super(new File(id));
-            this.id = id;
-            this.modFile = ModList.get().getModFileById(MODID).getFile();
-        }
-
-        @Override
-        public String getName()
-        {
-            return id;
-        }
-
-        @Override
-        public InputStream getInputStream(String name) throws IOException
-        {
-            final Path path = modFile.getLocator().findPath(modFile, "vanilla_replacements", name);
-            return Files.newInputStream(path, StandardOpenOption.READ);
-        }
-
-        @Override
-        public boolean resourceExists(String name)
-        {
-            return Files.exists(modFile.getLocator().findPath(modFile, "vanilla_replacements", name));
-        }
-
-        @Override
-        public Collection<ResourceLocation> getAllResourceLocations(ResourcePackType type, String namespaceIn, String pathIn, int maxDepth, Predicate<String> filter)
-        {
-            try
-            {
-                Path root = modFile.getLocator().findPath(modFile, "vanilla_replacements", type.getDirectoryName()).toAbsolutePath();
-                Path inputPath = root.getFileSystem().getPath(pathIn);
-
-                List<ResourceLocation> resourceLocationList = Files.walk(root).
-                        map(path -> root.relativize(path.toAbsolutePath())).
-                        filter(path -> path.getNameCount() > 1 && path.getNameCount() - 1 <= maxDepth). // Make sure the depth is within bounds, ignoring domain
-                        filter(path -> !path.toString().endsWith(".mcmeta")). // Ignore .mcmeta files
-                        filter(path -> path.subpath(1, path.getNameCount()).startsWith(inputPath)). // Make sure the target path is inside this one (again ignoring domain)
-                        filter(path -> filter.test(path.getFileName().toString())). // Test the file name against the predicate
-                        // Finally we need to form the RL, so use the first name as the domain, and the rest as the path
-                        // It is VERY IMPORTANT that we do not rely on Path.toString as this is inconsistent between operating systems
-                        // Join the path names ourselves to force forward slashes
-                                map(path -> new ResourceLocation(path.getName(0).toString(), Joiner.on('/').join(path.subpath(1, Math.min(maxDepth, path.getNameCount()))))).
-                                collect(Collectors.toList());
-                return resourceLocationList;
-            }
-            catch (IOException e)
-            {
-                return Collections.emptyList();
-            }
-        }
-
-        @Override
-        public Set<String> getResourceNamespaces(ResourcePackType type)
-        {
-            try
-            {
-                Path root = modFile.getLocator().findPath(modFile, "vanilla_replacements", type.getDirectoryName()).toAbsolutePath();
-                return Files.walk(root, 1)
-                        .map(path -> root.relativize(path.toAbsolutePath()))
-                        .filter(path -> path.getNameCount() > 0) // skip the root entry
-                        .map(p -> p.toString().replaceAll("/$", "")) // remove the trailing slash, if present
-                        .filter(s -> !s.isEmpty()) //filter empty strings, otherwise empty strings default to minecraft in ResourceLocations
-                        .collect(Collectors.toSet());
-            }
-            catch (IOException e)
-            {
-                return Collections.emptySet();
-            }
-        }
-
-        public InputStream getResourceStream(ResourcePackType type, ResourceLocation location) throws IOException
-        {
-            if (location.getPath().startsWith("lang/"))
-            {
-                return super.getResourceStream(ResourcePackType.CLIENT_RESOURCES, location);
-            }
-            else
-            {
-                return super.getResourceStream(type, location);
-            }
-        }
-
-        public boolean resourceExists(ResourcePackType type, ResourceLocation location)
-        {
-            if (location.getPath().startsWith("lang/"))
-            {
-                return super.resourceExists(ResourcePackType.CLIENT_RESOURCES, location);
-            }
-            else
-            {
-                return super.resourceExists(type, location);
-            }
-        }
-
-        @Override
-        public void close()
-        {
-
-        }
     }
 }

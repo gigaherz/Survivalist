@@ -28,15 +28,7 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
     @ObjectHolder("survivalist:drying")
     public static IRecipeSerializer<?> SERIALIZER = null;
 
-    public static final ResourceLocation RECIPE_TYPE_ID = SurvivalistMod.location("drying");
-    public static IRecipeType<DryingRecipe> DRYING = Registry.register(Registry.RECIPE_TYPE, RECIPE_TYPE_ID, new IRecipeType<DryingRecipe>()
-    {
-        @Override
-        public String toString()
-        {
-            return RECIPE_TYPE_ID.toString();
-        }
-    });
+    public static IRecipeType<DryingRecipe> DRYING = IRecipeType.register(SurvivalistMod.location("drying").toString());
 
     public static int getDryingTime(World world, ItemHandlerWrapper ctx)
     {

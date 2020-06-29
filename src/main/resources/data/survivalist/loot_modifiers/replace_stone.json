@@ -3,7 +3,7 @@
   "conditions": [
     {
       "condition": "survivalist:match_block",
-      "block": "minecraft:andesite"
+      "blocks": [ "minecraft:stone", "minecraft:cobblestone" ]
     },
     {
       "condition": "minecraft:inverted",
@@ -25,10 +25,22 @@
   "replacements": [
     {
       "from": {
-        "item": "minecraft:andesite"
+        "item": "minecraft:stone"
       },
       "to": {
-        "item": "survivalist:andesite_rock",
+        "item": "survivalist:stone_rock",
+        "quantity": {
+          "min": 1,
+          "max": 8
+        }
+      }
+    },
+    {
+      "from": {
+        "item": "minecraft:cobblestone"
+      },
+      "to": {
+        "item": "survivalist:stone_rock",
         "quantity": {
           "min": 1,
           "max": 8

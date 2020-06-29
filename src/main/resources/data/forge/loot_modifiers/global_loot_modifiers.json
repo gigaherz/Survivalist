@@ -1,6 +1,12 @@
 {
   "replace": false,
   "entries": [
-      "survivalist:plant_fibers"
+    "survivalist:add_plant_fibers",
+    "survivalist:replace_stone",
+    "survivalist:replace_andesite",
+    "survivalist:replace_diorite",
+    "survivalist:replace_granite",
+    "survivalist:replace_gold_ore",
+    "survivalist:replace_iron_ore"
   ]
 }
