@@ -20,9 +20,9 @@ public class DryingRackScreen extends ContainerScreen<DryingRackContainer>
     }
 
     @Override
-    public void func_230430_a_(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.func_230446_a_(matrixStack);
-        super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(matrixStack);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.func_230459_a_(matrixStack, mouseX, mouseY);
     }
 
@@ -31,16 +31,16 @@ public class DryingRackScreen extends ContainerScreen<DryingRackContainer>
     {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-        int x = (field_230708_k_ - xSize) / 2;
-        int y = (field_230709_l_ - ySize) / 2;
+        int x = (width - xSize) / 2;
+        int y = (height - ySize) / 2;
 
-        field_230706_i_.textureManager.bindTexture(guiTextureLocation);
-        this.func_238474_b_(matrixStack, x, y, 0, 0, xSize, ySize);
+        minecraft.textureManager.bindTexture(guiTextureLocation);
+        this.blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
 
         for (int s = 0; s < container.dryTimeRemainingArray.size(); s++)
         {
-            int mt = DryingRecipe.getDryingTime(field_230706_i_.world, container.getSlot(s).getStack());
+            int mt = DryingRecipe.getDryingTime(minecraft.world, container.getSlot(s).getStack());
             int ct = container.dryTimeRemainingArray.get(s);
 
             if (ct > 0 && mt > 0)
@@ -49,7 +49,7 @@ public class DryingRackScreen extends ContainerScreen<DryingRackContainer>
                 int ny = (int) Math.ceil(ct * 20.0 / mt);
                 int sy = 20 - ny;
 
-                this.func_238474_b_(matrixStack, sx, y + 32 + sy, 176, sy, 9, ny);
+                this.blit(matrixStack, sx, y + 32 + sy, 176, sy, 9, ny);
             }
         }
     }

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rrr",
+    "rcr",
+    "rrr"
+  ],
+  "key": {
+    "r": {
+      "item": "survivalist:stone_rock"
+    },
+    "c": {
+      "type": "survivalist:config_toggled_ingredient",
+      "category": "rocks",
+      "key": "CobbleRequiresClay",
+      "then": {
+        "item": "minecraft:clay_ball"
+      },
+      "else": {
+        "item": "survivalist:stone_rock"
+      }
+    }
+  },
+  "result": {
+    "item": "minecraft:cobblestone"
+  }
+}

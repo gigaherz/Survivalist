@@ -5,16 +5,17 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import gigaherz.survivalist.SurvivalistMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.loot.ILootSerializer;
+import net.minecraft.loot.LootConditionType;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -23,12 +24,14 @@ import java.util.List;
 
 public class MatchBlockCondition implements ILootCondition
 {
+    public static LootConditionType BLOCK_TAG_CONDITION;
+
     @Nullable
     final List<Block> blockList;
     @Nullable
-    final Tag<Block> blockTag;
+    final ITag.INamedTag<Block> blockTag;
 
-    public MatchBlockCondition(@Nullable List<Block> blockList, @Nullable Tag<Block> blockTag)
+    public MatchBlockCondition(@Nullable List<Block> blockList, @Nullable ITag.INamedTag<Block> blockTag)
     {
         this.blockList = blockList;
         this.blockTag = blockTag;
@@ -47,26 +50,27 @@ public class MatchBlockCondition implements ILootCondition
         return false;
     }
 
-    public static class Serializer extends ILootCondition.AbstractSerializer<MatchBlockCondition>
+    @Override
+    public LootConditionType func_230419_b_()
     {
-        public Serializer()
+        return BLOCK_TAG_CONDITION;
+    }
+
+    public static class Serializer implements ILootSerializer<MatchBlockCondition>
+    {
+        @Override
+        public void func_230424_a_(JsonObject json, MatchBlockCondition value, JsonSerializationContext context)
         {
-            super(SurvivalistMod.location("match_block"), MatchBlockCondition.class);
+            json.addProperty("tag", value.blockTag.getName().toString());
         }
 
         @Override
-        public void serialize(JsonObject json, MatchBlockCondition value, JsonSerializationContext context)
-        {
-            json.addProperty("tag", value.blockTag.getId().toString());
-        }
-
-        @Override
-        public MatchBlockCondition deserialize(JsonObject json, JsonDeserializationContext context)
+        public MatchBlockCondition func_230423_a_(JsonObject json, JsonDeserializationContext context)
         {
             if (json.has("tag"))
             {
                 ResourceLocation tagName = new ResourceLocation(JSONUtils.getString(json, "tag"));
-                return new MatchBlockCondition(null, new BlockTags.Wrapper(tagName));
+                return new MatchBlockCondition(null, BlockTags.makeWrapperTag(tagName.toString()));
             }
             else if(json.has("blocks"))
             {

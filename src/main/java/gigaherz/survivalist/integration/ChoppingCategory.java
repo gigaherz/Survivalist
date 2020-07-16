@@ -1,6 +1,7 @@
 package gigaherz.survivalist.integration;
-/*
+
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import gigaherz.survivalist.SurvivalistBlocks;
 import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.ChoppingRecipe;
@@ -106,12 +107,12 @@ public class ChoppingCategory implements IRecipeCategory<ChoppingRecipe>
     );
 
     @Override
-    public void draw(ChoppingRecipe recipe, double mouseX, double mouseY)
+    public void draw(ChoppingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY)
     {
         Minecraft mc = Minecraft.getInstance();
         ItemRenderer itemRenderer = mc.getItemRenderer();
 
-        arrow.draw(42, 16);
+        arrow.draw(matrixStack, 42, 16);
 
         float gameTime = mc.world.getGameTime();
         int index = MathHelper.floor(gameTime / 20) % tools.size();
@@ -121,11 +122,10 @@ public class ChoppingCategory implements IRecipeCategory<ChoppingRecipe>
         double outputMultiplier = recipe.getOutputMultiplier(axeLevel);
         String text = String.format("x%1.1f", outputMultiplier);
         int width = mc.fontRenderer.getStringWidth(text);
-        mc.fontRenderer.drawStringWithShadow(text, (112 - 2) - width, 40, 0xFFFFFFFF);
+        mc.fontRenderer.drawStringWithShadow(matrixStack, text, (112 - 2) - width, 40, 0xFFFFFFFF);
 
         int clickMultiplier = MathHelper.ceil(200 / recipe.getHitProgress(axeLevel));
         itemRenderer.renderItemAndEffectIntoGUI(stack, 36, 30);
-        mc.fontRenderer.drawStringWithShadow(String.format("x%d", clickMultiplier), 50, 40, 0xFFFFFFFF);
+        mc.fontRenderer.drawStringWithShadow(matrixStack, String.format("x%d", clickMultiplier), 50, 40, 0xFFFFFFFF);
     }
 }
-*/

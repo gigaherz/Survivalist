@@ -83,9 +83,9 @@ public class ChoppingBlockTileEntity extends TileEntity
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound)
+    public void read(BlockState state, CompoundNBT compound)
     {
-        super.func_230337_a_(state, compound);
+        super.read(state, compound);
         CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(slotInventory, null, compound.get("Inventory"));
     }
 

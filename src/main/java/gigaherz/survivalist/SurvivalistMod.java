@@ -159,10 +159,11 @@ public class SurvivalistMod
 
     private void lootModifiers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event)
     {
-        BlockTagCondition.BLOCK_TAG_CONDITION = LootConditionManager.func_237475_a_("survivalist:block_tag", new BlockTagCondition.Serializer());
+        MatchBlockCondition.BLOCK_TAG_CONDITION = LootConditionManager.register("survivalist:match_block", new MatchBlockCondition.Serializer());
         event.getRegistry().registerAll(
                 new AppendLootTable.Serializer().setRegistryName(location("append_loot")),
-                new ReplaceDrops.Serializer().setRegistryName(location("replace_drops"))        );
+                new ReplaceDrops.Serializer().setRegistryName(location("replace_drops"))
+        );
     }
 
     public void commonSetup(FMLCommonSetupEvent event)

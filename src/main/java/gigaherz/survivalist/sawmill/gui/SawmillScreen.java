@@ -66,44 +66,44 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     }
 
     @Override
-    public void func_231160_c_()
+    public void init()
     {
-        super.func_231160_c_();
+        super.init();
 
-        this.widthTooNarrow = this.field_230708_k_ < 379;
-        this.recipeBookGui.init(this.field_230708_k_, this.field_230709_l_, this.field_230706_i_, this.widthTooNarrow, this.container);
-        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.field_230708_k_, this.xSize);
-        this.field_230705_e_.add(this.recipeBookGui);
+        this.widthTooNarrow = this.width < 379;
+        this.recipeBookGui.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.container);
+        this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
+        this.children.add(this.recipeBookGui);
         this.setFocusedDefault(this.recipeBookGui);
-        this.func_230480_a_(new ImageButton(this.guiLeft + 20, this.field_230709_l_ / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
+        this.addButton(new ImageButton(this.guiLeft + 20, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
             this.recipeBookGui.initSearchBar(this.widthTooNarrow);
             this.recipeBookGui.toggleVisibility();
-            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.field_230708_k_, this.xSize);
-            ((ImageButton) button).setPosition(this.guiLeft + 20, this.field_230709_l_ / 2 - 49);
+            this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
+            ((ImageButton) button).setPosition(this.guiLeft + 20, this.height / 2 - 49);
         }));
-        this.field_238742_p_ = (this.xSize - this.field_230712_o_.func_238414_a_(this.field_230704_d_)) / 2;
+        this.field_238742_p_ = (this.xSize - this.font.func_238414_a_(this.title)) / 2;
     }
 
     @Override
-    public void func_231023_e_()
+    public void tick()
     {
-        super.func_231023_e_();
+        super.tick();
         this.recipeBookGui.tick();
     }
 
     @Override
-    public void func_230430_a_(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
-        this.func_230446_a_(matrixStack);
+        this.renderBackground(matrixStack);
         if (this.recipeBookGui.isVisible() && this.widthTooNarrow)
         {
             this.func_230450_a_(matrixStack, partialTicks, mouseX, mouseY);
-            this.recipeBookGui.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
+            this.recipeBookGui.render(matrixStack, mouseX, mouseY, partialTicks);
         }
         else
         {
-            this.recipeBookGui.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
-            super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
+            this.recipeBookGui.render(matrixStack, mouseX, mouseY, partialTicks);
+            super.render(matrixStack, mouseX, mouseY, partialTicks);
             this.recipeBookGui.func_230477_a_(matrixStack, this.guiLeft, this.guiTop, true, partialTicks);
         }
 
@@ -115,19 +115,19 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY)
     {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.field_230706_i_.getTextureManager().bindTexture(GUI_TEXTURE_LOCATION);
+        this.minecraft.getTextureManager().bindTexture(GUI_TEXTURE_LOCATION);
         int x = this.guiLeft;
         int y = this.guiTop;
-        this.func_238474_b_(matrixStack, x, y, 0, 0, xSize, ySize);
+        this.blit(matrixStack, x, y, 0, 0, xSize, ySize);
 
         if (container.isBurning())
         {
             int k = this.getBurnLeftScaled(13);
-            this.func_238474_b_(matrixStack, x + 56, y + 36 + 12 - k, 176, 12 - k, 14, k + 1);
+            this.blit(matrixStack, x + 56, y + 36 + 12 - k, 176, 12 - k, 14, k + 1);
         }
 
         int l = this.getCookProgressScaled(24);
-        this.func_238474_b_(matrixStack, x + 79, y + 34, 176, 14, l + 1, 16);
+        this.blit(matrixStack, x + 79, y + 34, 176, 14, l + 1, 16);
     }
 
     @Override
@@ -136,17 +136,17 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     }
 
     @Override
-    public boolean func_231044_a_(double p_231044_1_, double p_231044_3_, int p_231044_5_)
+    public boolean mouseClicked(double p_231044_1_, double p_231044_3_, int p_231044_5_)
     {
-        if (this.recipeBookGui.func_231044_a_(p_231044_1_, p_231044_3_, p_231044_5_))
+        if (this.recipeBookGui.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_))
         {
-            this.func_231035_a_(this.recipeBookGui);
+            this.setFocused(this.recipeBookGui);
             return true;
         }
         else
         {
             return this.widthTooNarrow &&
-                    (this.recipeBookGui.isVisible() || super.func_231044_a_(p_231044_1_, p_231044_3_, p_231044_5_));
+                    (this.recipeBookGui.isVisible() || super.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_));
         }
     }
 
@@ -171,10 +171,10 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     }
 
     @Override
-    public void func_231164_f_()
+    public void removed()
     {
         this.recipeBookGui.removed();
-        super.func_231164_f_();
+        super.removed();
     }
 
     @Override

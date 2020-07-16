@@ -176,17 +176,17 @@ public class SurvivalistData
         {
             Arrays.stream(Rocks.values())
                     .flatMap(rock -> rock.getTagLocations().stream().map(tag -> Pair.of(rock.getItem().get(), tag)))
-                    .forEach((pair) -> this.func_240522_a_(makeItemTag(pair.getSecond())).func_240534_a_(pair.getFirst()));
+                    .forEach((pair) -> this.getOrCreateBuilder(makeItemTag(pair.getSecond())).add(pair.getFirst()));
 
             Arrays.stream(Nuggets.values())
                     .flatMap(rock -> rock.getTagLocations().stream().map(tag -> Pair.of(rock.getItem().get(), tag)))
-                    .forEach((pair) -> this.func_240522_a_(makeItemTag(pair.getSecond())).func_240534_a_(pair.getFirst()));
+                    .forEach((pair) -> this.getOrCreateBuilder(makeItemTag(pair.getSecond())).add(pair.getFirst()));
 
-            this.func_240522_a_(makeItemTag(SurvivalistMod.location("dough")))
-                    .func_240534_a_(SurvivalistItems.DOUGH.get());
+            this.getOrCreateBuilder(makeItemTag(SurvivalistMod.location("dough")))
+                    .add(SurvivalistItems.DOUGH.get());
 
-            this.func_240522_a_(makeItemTag(SurvivalistMod.location("chopping_blocks")))
-                    .func_240534_a_(Arrays.stream(ChopblockMaterials.values())
+            this.getOrCreateBuilder(makeItemTag(SurvivalistMod.location("chopping_blocks")))
+                    .add(Arrays.stream(ChopblockMaterials.values())
                             .flatMap(block -> Stream.of(block.getPristine(), block.getChipped(), block.getDamaged()).map(reg -> reg.get().asItem()))
                             .toArray(Item[]::new));
         }
@@ -202,8 +202,8 @@ public class SurvivalistData
         @Override
         protected void registerTags()
         {
-            this.func_240522_a_(net.minecraft.tags.BlockTags.makeWrapperTag(SurvivalistMod.location("chopping_blocks").toString()))
-                    .func_240534_a_(Arrays.stream(ChopblockMaterials.values())
+            this.getOrCreateBuilder(net.minecraft.tags.BlockTags.makeWrapperTag(SurvivalistMod.location("chopping_blocks").toString()))
+                    .add(Arrays.stream(ChopblockMaterials.values())
                             .flatMap(block -> Stream.of(block.getPristine(), block.getChipped(), block.getDamaged()).map(Supplier::get))
                             .toArray(Block[]::new));
         }

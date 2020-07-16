@@ -1,0 +1,45 @@
+{
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "category": "drying_rack",
+          "key": "EnableSaddleCrafting",
+          "type": "survivalist:configuration"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "survivalist:saddle"
+          ]
+        },
+        "criteria": {
+          "has_leather": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "tag": "survivalist:tanned_leather"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "survivalist:saddle"
+            }
+          }
+        },
+        "requirements": [
+          [
+            "has_leather",
+            "has_the_recipe"
+          ]
+        ]
+      }
+    }
+  ]
+}

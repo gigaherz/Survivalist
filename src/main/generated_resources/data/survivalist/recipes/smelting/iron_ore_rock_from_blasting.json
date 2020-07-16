@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "tag": "survivalist:ore_rocks/iron"
+  },
+  "result": "minecraft:iron_nugget",
+  "experience": 0.2,
+  "cookingtime": 25
+}

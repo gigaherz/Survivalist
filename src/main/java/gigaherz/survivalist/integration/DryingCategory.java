@@ -1,5 +1,6 @@
 package gigaherz.survivalist.integration;
-/*
+
+import com.mojang.blaze3d.matrix.MatrixStack;
 import gigaherz.survivalist.SurvivalistBlocks;
 import gigaherz.survivalist.SurvivalistMod;
 import gigaherz.survivalist.api.DryingRecipe;
@@ -90,9 +91,8 @@ public class DryingCategory implements IRecipeCategory<DryingRecipe>
     }
 
     @Override
-    public void draw(DryingRecipe recipe, double mouseX, double mouseY)
+    public void draw(DryingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY)
     {
-        arrow.draw(30, 4);
+        arrow.draw(matrixStack, 30, 4);
     }
 }
-*/

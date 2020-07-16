@@ -48,7 +48,7 @@ public class ClientEvents
                     new TranslationTextComponent("text." + SurvivalistMod.MODID + ".scraping.message1",
                             makeClickable(message.stack.getTextComponent()),
                             new StringTextComponent("" + message.ret.getCount()),
-                            makeClickable(message.ret.getTextComponent())), Util.field_240973_b_);
+                            makeClickable(message.ret.getTextComponent())), Util.DUMMY_UUID);
         });
     }
 

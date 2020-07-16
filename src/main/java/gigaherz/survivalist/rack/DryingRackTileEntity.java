@@ -73,10 +73,10 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
 
     private final NonNullList<ItemStack> oldItems = NonNullList.withSize(4, ItemStack.EMPTY);
     private final ItemHandlerWrapper[] dryingSlots = {
-            new ItemHandlerWrapper(new RangedWrapper(items, 0, 1), () -> Vector3d.func_237489_a_(this.pos).add(0.5, 0.5, 0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 1, 2), () -> Vector3d.func_237489_a_(this.pos).add(0.5, 0.5, 0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 2, 3), () -> Vector3d.func_237489_a_(this.pos).add(0.5, 0.5, 0.5), 64),
-            new ItemHandlerWrapper(new RangedWrapper(items, 3, 4), () -> Vector3d.func_237489_a_(this.pos).add(0.5, 0.5, 0.5), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 0, 1), () -> Vector3d.copyCentered(this.pos), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 1, 2), () -> Vector3d.copyCentered(this.pos), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 2, 3), () -> Vector3d.copyCentered(this.pos), 64),
+            new ItemHandlerWrapper(new RangedWrapper(items, 3, 4), () -> Vector3d.copyCentered(this.pos), 64),
     };
 
     public DryingRackTileEntity()
@@ -178,9 +178,9 @@ public class DryingRackTileEntity extends TileEntity implements ITickableTileEnt
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound)
+    public void read(BlockState state, CompoundNBT compound)
     {
-        super.func_230337_a_(state, compound);
+        super.read(state, compound);
         items.deserializeNBT(compound.getCompound("Items"));
         dryTimeRemaining = Arrays.copyOf(compound.getIntArray("RemainingTime"), 4);
     }
