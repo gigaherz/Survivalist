@@ -34,6 +34,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.loot.conditions.LootConditionManager;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -127,6 +128,7 @@ public class SurvivalistMod
         modEventBus.addGenericListener(GlobalLootModifierSerializer.class, this::lootModifiers);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(this::modelRegistry);
         modEventBus.addListener(this::gatherData);
 
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigManager.SERVER_SPEC);
@@ -193,12 +195,15 @@ public class SurvivalistMod
         LOGGER.debug("Final message number: " + messageNumber);
     }
 
+    public void modelRegistry(ModelRegistryEvent event)
+    {
+        ModelLoaderRegistry.registerLoader(location("rack"), DryingRackBakedModel.ModelLoader.INSTANCE);
+    }
+
     public void clientSetup(FMLClientSetupEvent event)
     {
         ScreenManager.registerFactory(DryingRackContainer.TYPE, DryingRackScreen::new);
         ScreenManager.registerFactory(SawmillContainer.TYPE, SawmillScreen::new);
-
-        ModelLoaderRegistry.registerLoader(location("rack"), DryingRackBakedModel.ModelLoader.INSTANCE);
 
         //RenderTypeLookup.setRenderLayer(SurvivalistBlocks.RACK.get(), (layer) -> layer == RenderType.getSolid() || layer == RenderType.getCutout());
     }

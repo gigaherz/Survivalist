@@ -157,7 +157,7 @@ public class SurvivalistData
                                                     .withRewards(AdvancementRewards.Builder.recipe(saddleRecipeId))
                                                     .withRequirementsStrategy(IRequirementsStrategy.OR)
                                                     .withCriterion("has_leather", hasItem(leatherTag))
-                                                    .withCriterion("has_the_recipe", RecipeUnlockedTrigger.func_235675_a_(saddleRecipeId))
+                                                    .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(saddleRecipeId))
                                     )
                     )
                     .build(consumer, saddleRecipeId);
@@ -174,9 +174,14 @@ public class SurvivalistData
         @Override
         protected void registerTags()
         {
-            Arrays.stream(Rocks.values())
-                    .flatMap(rock -> rock.getTagLocations().stream().map(tag -> Pair.of(rock.getItem().get(), tag)))
-                    .forEach((pair) -> this.getOrCreateBuilder(makeItemTag(pair.getSecond())).add(pair.getFirst()));
+            Arrays.stream(Rocks.values()).forEach(rock -> {
+                rock.getTagLocations().stream().map(tag -> Pair.of(rock.getItem().get(), tag))
+                        .forEach((pair) -> this.getOrCreateBuilder(makeItemTag(pair.getSecond())).add(pair.getFirst()));
+                if (rock.isOre())
+                {
+
+                }
+            });
 
             Arrays.stream(Nuggets.values())
                     .flatMap(rock -> rock.getTagLocations().stream().map(tag -> Pair.of(rock.getItem().get(), tag)))
@@ -189,6 +194,8 @@ public class SurvivalistData
                     .add(Arrays.stream(ChopblockMaterials.values())
                             .flatMap(block -> Stream.of(block.getPristine(), block.getChipped(), block.getDamaged()).map(reg -> reg.get().asItem()))
                             .toArray(Item[]::new));
+
+
         }
     }
 

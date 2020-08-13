@@ -81,7 +81,7 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
             this.guiLeft = this.recipeBookGui.updateScreenPosition(this.widthTooNarrow, this.width, this.xSize);
             ((ImageButton) button).setPosition(this.guiLeft + 20, this.height / 2 - 49);
         }));
-        this.field_238742_p_ = (this.xSize - this.font.func_238414_a_(this.title)) / 2;
+        this.titleX = (this.xSize - this.font.func_238414_a_(this.title)) / 2;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
         this.renderBackground(matrixStack);
         if (this.recipeBookGui.isVisible() && this.widthTooNarrow)
         {
-            this.func_230450_a_(matrixStack, partialTicks, mouseX, mouseY);
+            this.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
             this.recipeBookGui.render(matrixStack, mouseX, mouseY, partialTicks);
         }
         else
@@ -107,12 +107,12 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
             this.recipeBookGui.func_230477_a_(matrixStack, this.guiLeft, this.guiTop, true, partialTicks);
         }
 
-        this.func_230459_a_(matrixStack, mouseX, mouseY);
+        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
         this.recipeBookGui.func_238924_c_(matrixStack, this.guiLeft, this.guiTop, mouseX, mouseY);
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY)
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY)
     {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(GUI_TEXTURE_LOCATION);
@@ -140,7 +140,7 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     {
         if (this.recipeBookGui.mouseClicked(p_231044_1_, p_231044_3_, p_231044_5_))
         {
-            this.setFocused(this.recipeBookGui);
+            this.setListener(this.recipeBookGui);
             return true;
         }
         else
@@ -171,10 +171,10 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     }
 
     @Override
-    public void removed()
+    public void onClose()
     {
         this.recipeBookGui.removed();
-        super.removed();
+        super.onClose();
     }
 
     @Override

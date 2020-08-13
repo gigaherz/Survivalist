@@ -6,6 +6,7 @@ displayURL="https://github.com/gigaherz/Survivalist"
 logoFile="logo.png"
 credits="Thanks for this example mod goes to Java"
 authors="gigaherz"
+license="BSD (3 clause)"
 
 [[mods]]
 modId="survivalist"
@@ -18,7 +19,7 @@ The toolkit for the rustic adventurer
 [[dependencies.survivalist]]
    modId="forge"
    mandatory=true
-   versionRange="[32.0.23,)"
+   versionRange="[32.0.108,)"
    ordering="NONE"
    side="BOTH"
 [[dependencies.survivalist]]

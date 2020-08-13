@@ -28,7 +28,7 @@ repositories {
     }
 }
 
-version = "3.2.0"
+version = "3.2.2"
 group= "gigaherz.survivalist"
 archivesBaseName = "Survivalist-UNKNOWN"
 
@@ -43,7 +43,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200712-1.16.1'
+    mappings channel: 'snapshot', version: '20200813-1.16.1'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -92,7 +92,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.61'
+    minecraft 'net.minecraftforge:forge:1.16.1-32.0.108'
 
     compileOnly fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.1:7.0.0.6")
@@ -104,6 +104,10 @@ dependencies {
 }
 
 jar {
+    from('/') {
+        include 'LICENSE.txt'
+    }
+
     manifest {
         attributes([
                 "Specification-Title": "survivalist",
