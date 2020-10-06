@@ -2,6 +2,16 @@
   "type": "survivalist:replace_drops",
   "conditions": [
     {
+      "condition": "survivalist:configuration",
+      "category": "rocks",
+      "key": "Enable"
+    },
+    {
+      "condition": "survivalist:configuration",
+      "category": "rocks",
+      "key": "ReplaceStoneDrops"
+    },
+    {
       "condition": "survivalist:match_block",
       "blocks": [ "minecraft:stone", "minecraft:cobblestone" ]
     },

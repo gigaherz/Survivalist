@@ -49,5 +49,13 @@ public class AppendLootTable extends LootModifier
             ResourceLocation lootTable = new ResourceLocation(JSONUtils.getString(object, "add_loot"));
             return new AppendLootTable(ailootcondition, lootTable);
         }
+
+        @Override
+        public JsonObject write(AppendLootTable instance)
+        {
+            JsonObject object = new JsonObject();
+            object.addProperty("add_loot", instance.lootTable.toString());
+            return object;
+        }
     }
 }

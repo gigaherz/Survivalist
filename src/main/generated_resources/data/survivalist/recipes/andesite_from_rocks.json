@@ -11,7 +11,7 @@
     },
     "c": {
       "type": "survivalist:config_toggled_ingredient",
-      "category": "rocks",
+      "category": "recipes",
       "key": "CobbleRequiresClay",
       "then": {
         "item": "minecraft:clay_ball"

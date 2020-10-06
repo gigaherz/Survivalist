@@ -2,11 +2,18 @@
   "replace": false,
   "entries": [
     "survivalist:add_plant_fibers",
+    "survivalist:add_rocks_to_gravel",
     "survivalist:replace_stone",
     "survivalist:replace_andesite",
     "survivalist:replace_diorite",
     "survivalist:replace_granite",
+    "survivalist:replace_iron_ore",
     "survivalist:replace_gold_ore",
-    "survivalist:replace_iron_ore"
+    "survivalist:replace_aluminum_ore",
+    "survivalist:replace_lead_ore",
+    "survivalist:replace_copper_ore",
+    "survivalist:replace_silver_ore",
+    "survivalist:replace_tin_ore",
+    "survivalist:add_rocks_to_gravel"
   ]
 }

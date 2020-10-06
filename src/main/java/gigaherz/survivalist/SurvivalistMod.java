@@ -3,8 +3,7 @@ package gigaherz.survivalist;
 import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
-import gigaherz.survivalist.util.AppendLootTable;
-import gigaherz.survivalist.util.MatchBlockCondition;
+import gigaherz.survivalist.util.*;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
 import gigaherz.survivalist.rack.DryingRackContainer;
@@ -17,8 +16,6 @@ import gigaherz.survivalist.scraping.ScrapingEnchantment;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
-import gigaherz.survivalist.util.RegSitter;
-import gigaherz.survivalist.util.ReplaceDrops;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -41,7 +38,6 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -49,24 +45,12 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.moddiscovery.ModFile;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import net.minecraftforge.fml.packs.DelegatableResourcePack;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber
 @Mod(SurvivalistMod.MODID)
@@ -164,17 +148,18 @@ public class SurvivalistMod
         MatchBlockCondition.BLOCK_TAG_CONDITION = LootConditionManager.register("survivalist:match_block", new MatchBlockCondition.Serializer());
         event.getRegistry().registerAll(
                 new AppendLootTable.Serializer().setRegistryName(location("append_loot")),
-                new ReplaceDrops.Serializer().setRegistryName(location("replace_drops"))
+                new ReplaceDrops.Serializer().setRegistryName(location("replace_drops")),
+                new LootContainsWrapper.Serializer().setRegistryName(location("loot_contains"))
         );
     }
 
     public void commonSetup(FMLCommonSetupEvent event)
     {
-        SurvivalistRecipeBookCategories.instance();
         TorchFireEventHandling.register();
         ItemBreakingTracker.register();
         StringEventHandling.register();
         SlimeMerger.register();
+        event.enqueueWork(ConfigurationLootCondition::init);
 
         /*if (Loader.isModLoaded("crafttweaker"))
         {

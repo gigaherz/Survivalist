@@ -70,6 +70,8 @@ public class ConfigManager
             replaceGoldOreDrops = builder.define("ReplaceGoldOreDrops", true);
             replaceModOreDrops = builder.define("ReplaceModOreDrops", true);
             replacePoorOreDrops = builder.define("ReplacePoorOreDrops", true);
+            builder.pop();
+            builder.comment("Settings for recipes").push("recipes");
             cobbleRequiresClay = builder.define("CobbleRequiresClay", true);
             builder.pop();
             builder.comment("Settings for the Scraping feature and enchant").push("scraping");
@@ -117,7 +119,7 @@ public class ConfigManager
 
 
             axeLevels = builder
-                    .comment("If enabled, slimes will have new AI rules to feel attracted to other slimes, and if 4 slimes of the same size are nearby they will merge into a slime of higher size.")
+                    .comment("Specify any items that should be allowed as chopping tools, and their axe-equivalent level.")
                     .define(Arrays.asList("axe_levels"), () -> Config.of(InMemoryFormat.defaultInstance()), x -> true, Config.class);
 
         /*
@@ -153,6 +155,8 @@ public class ConfigManager
     public static boolean getConfigBoolean(String categoryName, String keyName)
     {
         ForgeConfigSpec.BooleanValue value = SERVER_SPEC.getValues().get(Arrays.asList(categoryName, keyName));
+        if (value == null)
+            return false;
         return value.get();
     }
 

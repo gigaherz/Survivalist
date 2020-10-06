@@ -13,16 +13,18 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 
+import net.minecraft.block.AbstractBlock;
+
 public class SurvivalistBlocks
 {
     static final RegSitter HELPER = new RegSitter(SurvivalistMod.MODID);
 
     public static final RegistryObject<DryingRackBlock> RACK = HELPER
-            .block("rack", () -> new DryingRackBlock(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f).notSolid()))
+            .block("rack", () -> new DryingRackBlock(AbstractBlock.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f).notSolid()))
             .withItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS)).withTileEntity(DryingRackTileEntity::new).defer();
 
     public static final RegistryObject<SawmillBlock> SAWMILL = HELPER
-            .block("sawmill", () -> new SawmillBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.STONE)))
+            .block("sawmill", () -> new SawmillBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.STONE)))
             .withItem(new Item.Properties().group(SurvivalistMod.SURVIVALIST_ITEMS)).withTileEntity(SawmillTileEntity::new).defer();
 
     public static final RegistryObject<ChoppingBlock> OAK_CHOPPING_BLOCK = HELPER
@@ -107,8 +109,8 @@ public class SurvivalistBlocks
         return new ChoppingBlock(() -> breaksInto.get().getDefaultState(), defaultChopBlockProperties());
     }
 
-    private static Block.Properties defaultChopBlockProperties()
+    private static AbstractBlock.Properties defaultChopBlockProperties()
     {
-        return Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0);
+        return AbstractBlock.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(5.0f).harvestTool(ToolType.AXE).harvestLevel(0);
     }
 }

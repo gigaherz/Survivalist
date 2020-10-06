@@ -1,0 +1,49 @@
+{
+  "type": "survivalist:replace_drops",
+  "conditions": [
+    {
+      "condition": "survivalist:configuration",
+      "category": "rocks",
+      "key": "Enable"
+    },
+    {
+      "condition": "survivalist:configuration",
+      "category": "rocks",
+      "key": "ReplaceModOreDrops"
+    },
+    {
+      "condition": "survivalist:match_block",
+      "tag": "survivalist:rock_sources/silver"
+    },
+    {
+      "condition": "minecraft:inverted",
+      "term": {
+        "condition": "minecraft:match_tool",
+        "predicate": {
+          "enchantments": [
+            {
+              "enchantment": "minecraft:silk_touch",
+              "levels": {
+                "min": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "replacements": [
+    {
+      "from": {
+        "tag": "survivalist:rock_sources/silver"
+      },
+      "to": {
+        "item": "survivalist:silver_ore_rock",
+        "quantity": {
+          "min": 1,
+          "max": 8
+        }
+      }
+    }
+  ]
+}

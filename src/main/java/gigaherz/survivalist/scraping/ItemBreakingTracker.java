@@ -291,7 +291,7 @@ public class ItemBreakingTracker
                 PlayerEntity player = (PlayerEntity) ev.getEntity();
 
                 CombatTrackerIntercept interceptTracker = new CombatTrackerIntercept(player);
-                ObfuscationReflectionHelper.setPrivateValue(LivingEntity.class, player, interceptTracker, "field_94063_bt");
+                ObfuscationReflectionHelper.setPrivateValue(LivingEntity.class, player, interceptTracker, "combatTracker");
             }
         }
 

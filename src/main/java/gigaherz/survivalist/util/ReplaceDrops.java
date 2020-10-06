@@ -1,6 +1,7 @@
 package gigaherz.survivalist.util;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -97,6 +98,47 @@ public class ReplaceDrops extends LootModifier
             return new ReplaceDrops(conditions, replacements);
         }
 
+        @Override
+        public JsonObject write(ReplaceDrops instance)
+        {
+            JsonObject object = new JsonObject();
+            {
+                JsonArray replacements = new JsonArray();
+                for(Replacement repl : instance.replacements)
+                {
+                    JsonObject replacement = new JsonObject();
+                    replacement.add("input", repl.input.serialize());
+                    JsonArray outputs = new JsonArray();
+                    for(Result r : repl.outputs)
+                    {
+                        JsonObject result = new JsonObject();
+                        result.addProperty("item", r.stack.getItem().getRegistryName().toString());
+                        if (r.stack.getCount() > 1) {
+                            result.addProperty("count", r.stack.getCount());
+                        }
+                        if (r.max > 1 || r.min != r.max)
+                        {
+                            if (r.max > r.min)
+                            {
+                                JsonObject quantity = new JsonObject();
+                                quantity.addProperty("min", r.min);
+                                quantity.addProperty("max", r.max);
+                                result.add("quantity", quantity);
+                            }
+                            else if (r.max == r.min)
+                            {
+                                result.addProperty("quantity", r.max);
+                            }
+                        }
+                    }
+                    replacement.add("results", outputs);
+                    replacements.add(replacement);
+                }
+                object.add("replacements", replacements);
+            }
+            return object;
+        }
+
         private Result parseResult(JsonObject obj)
         {
             int min = 1, max = 1;
@@ -116,7 +158,7 @@ public class ReplaceDrops extends LootModifier
                 }
                 else
                 {
-                    throw new JsonSyntaxException("If 'quantity' isp resent, it must be either an integer or an object");
+                    throw new JsonSyntaxException("If 'quantity' is present, it must be either an integer or an object");
                 }
             }
 

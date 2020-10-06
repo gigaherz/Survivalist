@@ -19,13 +19,13 @@ public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileE
 {
     private final Minecraft mc = Minecraft.getInstance();
 
-    public ChoppingBlockRenderer(TileEntityRendererDispatcher p_i226006_1_)
+    public ChoppingBlockRenderer(TileEntityRendererDispatcher rendererDispatcherIn)
     {
-        super(p_i226006_1_);
+        super(rendererDispatcherIn);
     }
 
     @Override
-    public void render(ChoppingBlockTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_)
+    public void render(ChoppingBlockTileEntity te, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn)
     {
         BlockState state = te.getWorld().getBlockState(te.getPos());
         if (!(state.getBlock() instanceof ChoppingBlock))
@@ -49,7 +49,7 @@ public class ChoppingBlockRenderer extends TileEntityRenderer<ChoppingBlockTileE
                     matrixStack.scale(2, 2, 2);
 
                     IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, te.getWorld(), (LivingEntity) null);
-                    itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.GROUND, true, matrixStack, buffer, p_225616_5_, p_225616_6_, ibakedmodel);
+                    itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.GROUND, true, matrixStack, buffer, combinedLightIn, combinedOverlayIn, ibakedmodel);
                     /*int breakStage = te.getBreakStage();
                     if (breakStage >= 0)
                     {

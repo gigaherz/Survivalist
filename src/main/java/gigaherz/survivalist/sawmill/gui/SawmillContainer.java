@@ -12,6 +12,7 @@ import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.util.IIntArray;
@@ -159,8 +160,14 @@ public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories()
     {
-        return Lists.newArrayList(RecipeBookCategories.SEARCH);
+        return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH); // TODO
         //return Lists.newArrayList(SurvivalistRecipeBookCategories.instance().SAWMILL_SEARCH, SurvivalistRecipeBookCategories.instance().SAWMILL);
+    }
+
+    @Override
+    public RecipeBookCategory func_241850_m()
+    {
+        return RecipeBookCategory.CRAFTING; // TODO
     }
 
     @Override

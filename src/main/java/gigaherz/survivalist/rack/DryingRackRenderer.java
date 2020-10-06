@@ -17,9 +17,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
 {
-    public DryingRackRenderer(TileEntityRendererDispatcher p_i226006_1_)
+    public DryingRackRenderer(TileEntityRendererDispatcher rendererDispatcherIn)
     {
-        super(p_i226006_1_);
+        super(rendererDispatcherIn);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class DryingRackRenderer extends TileEntityRenderer<DryingRackTileEntity>
             matrixStack.translate(0.5, 0.5, 0.5);    // translate
             matrixStack.rotate(Vector3f.YP.rotationDegrees(angle));        // rotate
             matrixStack.translate(-0.5, -0.5, -0.5); // translate
-            //matrixStack.func_227863_a_(Vector3f.field_229183_f_.func_229187_a_(180));
+            //matrixStack.rotate(Vector3f.ZP.rotationDegrees(180));
 
             Minecraft mc = Minecraft.getInstance();
 

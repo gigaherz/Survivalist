@@ -1,0 +1,17 @@
+{
+  "type": "survivalist:loot_contains",
+  "conditions": [
+    {
+      "condition": "survivalist:match_block",
+      "block": "minecraft:gravel"
+    }
+  ],
+  "matching": {
+    "item": "minecraft:flint"
+  },
+  "modifier": {
+    "type": "survivalist:append_loot",
+    "conditions": [],
+    "add_loot": "survivalist:blocks/gravel_additions"
+  }
+}

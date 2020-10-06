@@ -59,18 +59,19 @@ public class MatchBlockCondition implements ILootCondition
     public static class Serializer implements ILootSerializer<MatchBlockCondition>
     {
         @Override
-        public void func_230424_a_(JsonObject json, MatchBlockCondition value, JsonSerializationContext context)
+        public void serialize(JsonObject json, MatchBlockCondition value, JsonSerializationContext context)
         {
-            json.addProperty("tag", value.blockTag.getName().toString());
+            if (value.blockTag != null)
+                json.addProperty("tag", value.blockTag.getName().toString());
         }
 
         @Override
-        public MatchBlockCondition func_230423_a_(JsonObject json, JsonDeserializationContext context)
+        public MatchBlockCondition deserialize(JsonObject json, JsonDeserializationContext context)
         {
             if (json.has("tag"))
             {
                 ResourceLocation tagName = new ResourceLocation(JSONUtils.getString(json, "tag"));
-                return new MatchBlockCondition(null, BlockTags.makeWrapperTag(tagName.toString()));
+                return new MatchBlockCondition(null, BlockTags.createOptional(tagName));
             }
             else if(json.has("blocks"))
             {
