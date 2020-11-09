@@ -65,7 +65,7 @@ public class ConfigToggledIngredientSerializer implements IIngredientSerializer<
 
         protected boolean getConfigValue()
         {
-            return ConfigManager.getConfigBoolean(categoryName, keyName);
+            return ConfigManager.getConfigBoolean("common", categoryName, keyName);
         }
 
         @Override

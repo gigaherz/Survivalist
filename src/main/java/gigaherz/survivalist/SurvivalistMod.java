@@ -23,6 +23,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.resources.IPackFinder;
 import net.minecraft.resources.IPackNameDecorator;
 import net.minecraft.resources.ResourcePackInfo;
@@ -48,6 +49,7 @@ import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -116,6 +118,7 @@ public class SurvivalistMod
         modEventBus.addListener(this::gatherData);
 
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigManager.SERVER_SPEC);
+        modLoadingContext.registerConfig(ModConfig.Type.COMMON, ConfigManager.COMMON_SPEC);
     }
 
     // This is its own method because I don't want SurvivalistData loaded all the time, I just need it loaded in the case where the event fires.

@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -151,7 +152,7 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
 
     public static int getSawmillTime(World world, ItemStack stack)
     {
-        return ChoppingRecipe.getRecipe(world, stack).map(recipe -> recipe.getSawingTime()).orElse(0);
+        return ChoppingRecipe.getRecipe(world, null, stack).map(recipe -> recipe.getSawingTime()).orElse(0);
     }
 
     @Override
@@ -180,7 +181,7 @@ public class SawmillTileEntity extends TileEntity implements ITickableTileEntity
 
             if (this.isBurning() || !fuel.isEmpty())
             {
-                ChoppingContext ctx = new ChoppingContext(inventory, null, 0, 0, RANDOM);
+                ChoppingContext ctx = new ChoppingContext(inventory, null, () -> Vector3d.copyCentered(pos), 0, 0, RANDOM);
                 changes |= ChoppingRecipe.getRecipe(world, ctx).map(choppingRecipe -> {
                     boolean changes2 = false;
                     if (!this.isBurning() && this.canWork(ctx, choppingRecipe))

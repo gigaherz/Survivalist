@@ -47,7 +47,7 @@ public class ConfigurationLootCondition implements ILootCondition
     @Override
     public boolean test(LootContext lootContext)
     {
-        return ConfigManager.getConfigBoolean(categoryName, keyName);
+        return ConfigManager.getConfigBoolean("common", categoryName, keyName);
     }
 
     public static class Serializer implements ILootSerializer<ConfigurationLootCondition>

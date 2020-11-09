@@ -1,21 +1,26 @@
 package gigaherz.survivalist.api;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class ChoppingContext extends ItemHandlerWrapper
 {
-    final PlayerEntity player;
-    final int axeLevel;
-    final int fortune;
-    final Random random;
+    protected final PlayerEntity player;
+    protected final int axeLevel;
+    protected final int fortune;
+    protected final Random random;
 
-    public ChoppingContext(IItemHandlerModifiable inner, @Nullable PlayerEntity player, int axeLevel, int fortune, Random random)
+    public ChoppingContext(IItemHandlerModifiable inner, @Nullable PlayerEntity player, @Nullable Supplier<Vector3d> location, int axeLevel, int fortune, @Nullable Random random)
     {
-        super(inner, player != null ? player::getPositionVec : null, 64);
+        super(inner, location, 64);
         this.player = player;
         this.axeLevel = axeLevel;
         this.fortune = fortune;
@@ -38,6 +43,7 @@ public class ChoppingContext extends ItemHandlerWrapper
         return fortune;
     }
 
+    @Nullable
     public Random getRandom()
     {
         return random;

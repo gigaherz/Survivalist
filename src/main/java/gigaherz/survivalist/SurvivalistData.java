@@ -23,6 +23,8 @@ import net.minecraft.loot.*;
 import net.minecraftforge.common.crafting.ConditionalAdvancement;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -36,7 +38,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-// iIl oO0 [({ })]
+import static gigaherz.survivalist.SurvivalistMod.MODID;
+
 public class SurvivalistData
 {
     public static void gatherData(GatherDataEvent event)
@@ -52,9 +55,9 @@ public class SurvivalistData
         if (event.includeServer())
         {
 
-            BlockTags blockTags = new BlockTags(gen);
+            BlockTags blockTags = new BlockTags(gen, event.getExistingFileHelper());
             gen.addProvider(blockTags);
-            gen.addProvider(new ItemTags(gen, blockTags));
+            gen.addProvider(new ItemTags(gen, blockTags, event.getExistingFileHelper()));
             gen.addProvider(new Recipes(gen));
             gen.addProvider(new LootTables(gen));
         }
@@ -81,14 +84,29 @@ public class SurvivalistData
         protected void registerRecipes(Consumer<IFinishedRecipe> consumer)
         {
             Arrays.stream(ChopblockMaterials.values())
-                    .forEach(rock -> {
-                        ITag<Item> tag = makeItemTag(rock.getMadeFrom());
-                        RegistryObject<ChoppingBlock> result = rock.getPristine();
-                        ShapelessRecipeBuilder
-                                .shapelessRecipe(result.get())
-                                .addIngredient(tag)
-                                .addCriterion("has_rock", hasItem(tag))
-                                .build(consumer);
+                    .forEach(log -> {
+                        ITag<Item> tag = makeItemTag(log.getMadeFrom());
+                        RegistryObject<ChoppingBlock> result = log.getPristine();
+                        ResourceLocation recipeId = result.getId();
+                        ConditionalRecipe.builder()
+                                .addCondition(not(new ConfigurationCondition("chopping", "ReplacePlanksRecipes")))
+                                .addRecipe(
+                                        ShapelessRecipeBuilder
+                                                .shapelessRecipe(result.get())
+                                                .addIngredient(tag)
+                                                .addCriterion("has_log", hasItem(tag))
+                                                ::build
+                                )
+                                .addCondition(new ConfigurationCondition("chopping", "ReplacePlanksRecipes"))
+                                .addRecipe(
+                                        ShapedRecipeBuilder.shapedRecipe(result.get())
+                                                .patternLine("ll")
+                                                .key('l', tag)
+                                                .addCriterion("has_log", hasItem(tag))
+                                                ::build
+                                )
+                                .generateAdvancement()
+                                .build(consumer, recipeId);
                     });
 
             Arrays.stream(Rocks.values())
@@ -145,31 +163,19 @@ public class SurvivalistData
                                     .key('t', leatherTag)
                                     .key('s', Items.STRING)
                                     .key('i', Items.IRON_INGOT)
-                                    .setGroup("")
-                                    .addCriterion("has_leather", hasItem(leatherTag)) // dummy, is only required to pass the validation
+                                    .addCriterion("has_leather", hasItem(leatherTag))
                                     ::build
                     )
-                    .setAdvancement(SurvivalistMod.location("craft_saddle"),
-                            ConditionalAdvancement.builder()
-                                    .addCondition(new ConfigurationCondition("drying_rack", "EnableSaddleCrafting"))
-                                    .addAdvancement(
-                                            Advancement.Builder.builder()
-                                                    .withParentId(new ResourceLocation("minecraft", "recipes/root"))
-                                                    .withRewards(AdvancementRewards.Builder.recipe(saddleRecipeId))
-                                                    .withRequirementsStrategy(IRequirementsStrategy.OR)
-                                                    .withCriterion("has_leather", hasItem(leatherTag))
-                                                    .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(saddleRecipeId))
-                                    )
-                    )
+                    .generateAdvancement()
                     .build(consumer, saddleRecipeId);
         }
     }
 
     private static class ItemTags extends ItemTagsProvider implements IDataProvider
     {
-        public ItemTags(DataGenerator gen, BlockTags blockTags)
+        public ItemTags(DataGenerator gen, BlockTags blockTags, ExistingFileHelper existingFileHelper)
         {
-            super(gen, blockTags);
+            super(gen, blockTags, MODID, existingFileHelper);
         }
 
         @Override
@@ -202,9 +208,9 @@ public class SurvivalistData
 
     private static class BlockTags extends BlockTagsProvider implements IDataProvider
     {
-        public BlockTags(DataGenerator gen)
+        public BlockTags(DataGenerator gen, ExistingFileHelper existingFileHelper)
         {
-            super(gen);
+            super(gen, MODID, existingFileHelper);
         }
 
         @Override
@@ -277,7 +283,7 @@ public class SurvivalistData
             protected Iterable<Block> getKnownBlocks()
             {
                 return ForgeRegistries.BLOCKS.getValues().stream()
-                        .filter(b -> b.getRegistryName().getNamespace().equals(SurvivalistMod.MODID))
+                        .filter(b -> b.getRegistryName().getNamespace().equals(MODID))
                         .collect(Collectors.toList());
             }
         }

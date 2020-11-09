@@ -1,11 +1,51 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
+  "type": "forge:conditional",
+  "recipes": [
     {
-      "tag": "minecraft:spruce_logs"
+      "conditions": [
+        {
+          "category": "chopping",
+          "key": "ReplacePlanksRecipes",
+          "type": "survivalist:configuration"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "tag": "minecraft:spruce_logs"
+          }
+        ],
+        "result": {
+          "item": "survivalist:spruce_chopping_block"
+        }
+      }
+    },
+    {
+      "conditions": [
+        {
+          "value": {
+            "category": "chopping",
+            "key": "ReplacePlanksRecipes",
+            "type": "survivalist:configuration"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "ll"
+        ],
+        "key": {
+          "l": {
+            "tag": "minecraft:spruce_logs"
+          }
+        },
+        "result": {
+          "item": "survivalist:spruce_chopping_block"
+        }
+      }
     }
-  ],
-  "result": {
-    "item": "survivalist:spruce_chopping_block"
-  }
+  ]
 }

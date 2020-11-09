@@ -1,8 +1,11 @@
 package gigaherz.survivalist.sawmill.gui;
 
 import com.google.common.collect.Lists;
+import gigaherz.survivalist.SurvivalistMod;
+import gigaherz.survivalist.SurvivalistRecipeBookCategories;
 import gigaherz.survivalist.api.ChoppingContext;
 import gigaherz.survivalist.api.ChoppingRecipe;
+import gigaherz.survivalist.client.ClientEvents;
 import gigaherz.survivalist.sawmill.SawmillTileEntity;
 import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,12 +20,14 @@ import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -35,26 +40,28 @@ public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
 
     private final ChoppingContext wrappedInventory;
     private final World world;
+    private final BlockPos pos;
     private IIntArray fields;
 
     public SawmillContainer(int windowId, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, new ItemStackHandler(3), new IntArray(4));
+        this(windowId, playerInventory, new ItemStackHandler(3), null, new IntArray(4));
     }
 
     public SawmillContainer(int windowId, SawmillTileEntity tileEntity, PlayerInventory playerInventory)
     {
-        this(windowId, playerInventory, tileEntity.inventory, tileEntity);
+        this(windowId, playerInventory, tileEntity.inventory, tileEntity.getPos(), tileEntity);
     }
 
-    public SawmillContainer(int windowId, PlayerInventory playerInventory, IItemHandlerModifiable inventory, IIntArray dryTimes)
+    public SawmillContainer(int windowId, PlayerInventory playerInventory, IItemHandlerModifiable inventory, @Nullable BlockPos pos, IIntArray dryTimes)
     {
         super(TYPE, windowId);
 
         fields = dryTimes;
 
-        wrappedInventory = new ChoppingContext(inventory, null, 0, 0, RANDOM);
+        wrappedInventory = new ChoppingContext(inventory, null, null, 0, 0, RANDOM);
         world = playerInventory.player.world;
+        this.pos = pos;
 
         addSlot(new SlotItemHandler(inventory, 0, 56, 17));
         addSlot(new SawmillFuelSlot(inventory, 1, 56, 53));
@@ -160,14 +167,13 @@ public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories()
     {
-        return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH); // TODO
-        //return Lists.newArrayList(SurvivalistRecipeBookCategories.instance().SAWMILL_SEARCH, SurvivalistRecipeBookCategories.instance().SAWMILL);
+        return Lists.newArrayList(SurvivalistRecipeBookCategories.instance().SAWMILL_SEARCH, SurvivalistRecipeBookCategories.instance().SAWMILL);
     }
 
     @Override
     public RecipeBookCategory func_241850_m()
     {
-        return RecipeBookCategory.CRAFTING; // TODO
+        return RecipeBookCategory.CRAFTING;
     }
 
     @Override
@@ -192,7 +198,7 @@ public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
             }
             else if (index != 1 && index != 0)
             {
-                if (ChoppingRecipe.getRecipe(playerIn.world, itemstack1)
+                if (ChoppingRecipe.getRecipe(world, pos, itemstack1)
                         .isPresent())
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))

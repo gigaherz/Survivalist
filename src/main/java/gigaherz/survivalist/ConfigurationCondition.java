@@ -29,7 +29,7 @@ public class ConfigurationCondition implements ICondition
     @Override
     public boolean test()
     {
-        return ConfigManager.getConfigBoolean(categoryName, keyName);
+        return ConfigManager.getConfigBoolean("common", categoryName, keyName);
     }
 
     public static class Serializer implements IConditionSerializer<ConfigurationCondition>

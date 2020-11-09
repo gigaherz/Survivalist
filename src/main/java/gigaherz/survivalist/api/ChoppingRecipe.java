@@ -14,6 +14,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -21,6 +23,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
@@ -33,19 +36,19 @@ public class ChoppingRecipe implements IRecipe<ChoppingContext>
 
     public static IRecipeType<ChoppingRecipe> CHOPPING = IRecipeType.register(SurvivalistMod.location("chopping").toString());
 
+    public static Optional<ChoppingRecipe> getRecipe(World world, @Nullable BlockPos pos, ItemStack stack)
+    {
+        return getRecipe(world, new ChoppingContext(new SingletonInventory(stack), null, pos != null ? () -> Vector3d.copyCentered(pos) : null, 0, 0, null));
+    }
+
     public static Optional<ChoppingRecipe> getRecipe(World world, ChoppingContext ctx)
     {
         return world.getRecipeManager().getRecipe(CHOPPING, ctx, world);
     }
 
-    public static Optional<ChoppingRecipe> getRecipe(World world, ItemStack stack)
-    {
-        return getRecipe(world, new ChoppingContext(new SingletonInventory(stack), null, 0, 0, null));
-    }
-
     public static Collection<ChoppingRecipe> getAllRecipes(World world)
     {
-        return world.getRecipeManager().getRecipes(CHOPPING).values().stream().map(r -> (ChoppingRecipe) r).collect(Collectors.toList());
+        return world.getRecipeManager().getRecipesForType(CHOPPING);
     }
 
     private final ResourceLocation id;

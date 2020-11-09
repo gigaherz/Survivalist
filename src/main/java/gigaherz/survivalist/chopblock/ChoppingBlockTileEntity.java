@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -45,7 +46,7 @@ public class ChoppingBlockTileEntity extends TileEntity
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
         {
-            if (!ChoppingRecipe.getRecipe(world, stack)
+            if (!ChoppingRecipe.getRecipe(world, null, stack)
                     .isPresent())
                 return stack;
             return super.insertItem(slot, stack, simulate);
@@ -130,7 +131,7 @@ public class ChoppingBlockTileEntity extends TileEntity
         ItemStack containedItem = slotInventory.getStackInSlot(0).copy();
         if (containedItem.getCount() > 0)
         {
-            ChoppingContext ctx = new ChoppingContext(slotInventory, player, axeLevel, fortune, RANDOM);
+            ChoppingContext ctx = new ChoppingContext(slotInventory, player, () -> Vector3d.copyCentered(pos), axeLevel, fortune, RANDOM);
 
             Optional<ChoppingRecipe> foundRecipe = ChoppingRecipe.getRecipe(world, ctx);
 

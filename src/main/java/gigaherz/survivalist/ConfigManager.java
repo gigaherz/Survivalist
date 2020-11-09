@@ -9,6 +9,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -16,6 +18,8 @@ import java.util.regex.Pattern;
 
 public class ConfigManager
 {
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public static final ServerConfig SERVER;
     public static final ForgeConfigSpec SERVER_SPEC;
 
@@ -28,6 +32,59 @@ public class ConfigManager
 
     public static class ServerConfig
     {
+        public final ForgeConfigSpec.BooleanValue enableScraping;
+        public final ForgeConfigSpec.BooleanValue scrapingIsTreasure;
+        public final ForgeConfigSpec.BooleanValue enableToolScraping;
+        public final ForgeConfigSpec.BooleanValue enableArmorScraping;
+        public final ForgeConfigSpec.BooleanValue enableTorchFire;
+        public final ForgeConfigSpec.DoubleValue choppingDegradeChance;
+        public final ForgeConfigSpec.DoubleValue choppingExhaustion;
+        public final ForgeConfigSpec.DoubleValue choppingWithEmptyHand;
+        public final ForgeConfigSpec.BooleanValue mergeSlimes;
+        public final ForgeConfigSpec.ConfigValue<Config> axeLevels;
+
+        ServerConfig(ForgeConfigSpec.Builder builder)
+        {
+            builder.comment("Settings for the Scraping feature and enchant").push("scraping");
+            enableScraping = builder.define("Enable", false);
+            scrapingIsTreasure = builder.define("IsTreasureEnchantment", false);
+            enableToolScraping = builder.define("EnableToolScraping", true);
+            enableArmorScraping = builder.define("EnableArmorScraping", true);
+            builder.pop();
+            builder.comment("Settings for the torch setting fire to entities").push("torch_fire");
+            enableTorchFire = builder.define("Enable", true);
+            builder.pop();
+            builder.comment("Settings for the chopping block").push("chopping");
+            choppingDegradeChance = builder
+                    .comment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.")
+                    .defineInRange("DegradeChance", 0.06, 0, Double.MAX_VALUE);
+            choppingExhaustion = builder.defineInRange("Exhaustion", 0.0025, 0, Double.MAX_VALUE);
+            choppingWithEmptyHand = builder.defineInRange("EmptyHandFactor", 0.4, 0, Double.MAX_VALUE);
+            builder.pop();
+
+            builder.comment("Settings for slime merging").push("slimes");
+            mergeSlimes = builder
+                    .comment("If enabled, slimes will have new AI rules to feel attracted to other slimes, and if 4 slimes of the same size are nearby they will merge into a slime of higher size.")
+                    .define("Merge", true);
+            builder.pop();
+            axeLevels = builder
+                    .comment("Specify any items that should be allowed as chopping tools, and their axe-equivalent level.")
+                    .define(Arrays.asList("axe_levels"), () -> Config.of(InMemoryFormat.defaultInstance()), x -> true, Config.class);
+        }
+    }
+
+    public static final CommonConfig COMMON;
+    public static final ForgeConfigSpec COMMON_SPEC;
+
+    static
+    {
+        final Pair<CommonConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(CommonConfig::new);
+        COMMON_SPEC = specPair.getRight();
+        COMMON = specPair.getLeft();
+    }
+
+    public static class CommonConfig
+    {
         public final ForgeConfigSpec.BooleanValue removeSticksFromPlanks;
         public final ForgeConfigSpec.BooleanValue enableRocks;
         public final ForgeConfigSpec.BooleanValue replaceStoneDrops;
@@ -36,29 +93,19 @@ public class ConfigManager
         public final ForgeConfigSpec.BooleanValue replaceModOreDrops;
         public final ForgeConfigSpec.BooleanValue replacePoorOreDrops;
         public final ForgeConfigSpec.BooleanValue cobbleRequiresClay;
-        public final ForgeConfigSpec.BooleanValue enableScraping;
-        public final ForgeConfigSpec.BooleanValue scrapingIsTreasure;
-        public final ForgeConfigSpec.BooleanValue enableToolScraping;
-        public final ForgeConfigSpec.BooleanValue enableArmorScraping;
         public final ForgeConfigSpec.BooleanValue enableMeatRotting;
         public final ForgeConfigSpec.BooleanValue enableRottenDrying;
         public final ForgeConfigSpec.BooleanValue enableJerky;
         public final ForgeConfigSpec.BooleanValue enableMeatDrying;
         public final ForgeConfigSpec.BooleanValue enableLeatherTanning;
         public final ForgeConfigSpec.BooleanValue enableSaddleCrafting;
-        public final ForgeConfigSpec.BooleanValue enableTorchFire;
         public final ForgeConfigSpec.BooleanValue enableBread;
         public final ForgeConfigSpec.BooleanValue removeVanillaBread;
-        public final ForgeConfigSpec.BooleanValue disablePlanksRecipes;
-        public final ForgeConfigSpec.DoubleValue choppingDegradeChance;
-        public final ForgeConfigSpec.DoubleValue choppingExhaustion;
-        public final ForgeConfigSpec.DoubleValue choppingWithEmptyHand;
+        public final ForgeConfigSpec.BooleanValue replacePlanksRecipes;
         public final ForgeConfigSpec.BooleanValue dropStringFromSheep;
         public final ForgeConfigSpec.BooleanValue enableStringCrafting;
-        public final ForgeConfigSpec.BooleanValue mergeSlimes;
-        public final ForgeConfigSpec.ConfigValue<Config> axeLevels;
 
-        ServerConfig(ForgeConfigSpec.Builder builder)
+        CommonConfig(ForgeConfigSpec.Builder builder)
         {
             builder.comment("Settings for stick crafting").push("sticks");
             removeSticksFromPlanks = builder.define("RemoveSticksFromPlanksRecipes", true);
@@ -74,12 +121,6 @@ public class ConfigManager
             builder.comment("Settings for recipes").push("recipes");
             cobbleRequiresClay = builder.define("CobbleRequiresClay", true);
             builder.pop();
-            builder.comment("Settings for the Scraping feature and enchant").push("scraping");
-            enableScraping = builder.define("Enable", false);
-            scrapingIsTreasure = builder.define("IsTreasureEnchantment", false);
-            enableToolScraping = builder.define("EnableToolScraping", true);
-            enableArmorScraping = builder.define("EnableArmorScraping", true);
-            builder.pop();
             builder.comment("Settings for the drying rack block").push("drying_rack");
             enableMeatRotting = builder.define("EnableMeatRotting", true);
             enableRottenDrying = builder.define("EnableRottenDrying", true);
@@ -88,9 +129,6 @@ public class ConfigManager
             enableLeatherTanning = builder.define("EnableLeatherTanning", true);
             enableSaddleCrafting = builder.define("EnableSaddleCrafting", true);
             builder.pop();
-            builder.comment("Settings for the torch setting fire to entities").push("torch_fire");
-            enableTorchFire = builder.define("Enable", true);
-            builder.pop();
 
             builder.comment("Settings for the dough/bread replacements").push("bread");
             enableBread = builder.define("Enable", true);
@@ -98,43 +136,16 @@ public class ConfigManager
             builder.pop();
 
             builder.comment("Settings for the chopping block").push("chopping");
-            disablePlanksRecipes = builder.define("DisablePlanksRecipes", true);
-            choppingDegradeChance = builder
-                    .comment("The average number of uses before degrading to the next phase will be 1/DegradeChance. Default is 16.67 average uses.")
-                    .defineInRange("DegradeChance", 0.06, 0, Double.MAX_VALUE);
-            choppingExhaustion = builder.defineInRange("Exhaustion", 0.0025, 0, Double.MAX_VALUE);
-            choppingWithEmptyHand = builder.defineInRange("EmptyHandFactor", 0.4, 0, Double.MAX_VALUE);
+            replacePlanksRecipes = builder
+                    .comment("If enabled, the vanilla planks recipes will be disabled, using the log to craft choppingblock instead.",
+                             "If disabled, the chopping block uses an alternate recipe, instead of using a single log as an input.")
+                    .define("ReplacePlanksRecipes", true);
             builder.pop();
 
             builder.comment("Settings for the fibre collection").push("fibres");
             dropStringFromSheep = builder.define("DropStringFromSheep", true);
             enableStringCrafting = builder.define("EnableStringCrafting", true);
             builder.pop();
-
-            builder.comment("Settings for slime merging").push("slimes");
-            mergeSlimes = builder
-                    .comment("If enabled, slimes will have new AI rules to feel attracted to other slimes, and if 4 slimes of the same size are nearby they will merge into a slime of higher size.")
-                    .define("Merge", true);
-            builder.pop();
-
-
-            axeLevels = builder
-                    .comment("Specify any items that should be allowed as chopping tools, and their axe-equivalent level.")
-                    .define(Arrays.asList("axe_levels"), () -> Config.of(InMemoryFormat.defaultInstance()), x -> true, Config.class);
-
-        /*
-        configuration.addCustomCategoryComment("AxeMultipliers",
-                "Allows customizing the multiplier for each axe level. By default this is 'baseOutput * (1+axeLevel)'.\n" +
-                        "To customize an axeLevel, add a line like 'D:AxeLevel1=2.0' or 'D:AxeLevel5=3.0' without the quotes.\n" +
-                        "Levels that are not defined will continue using their default value."
-        );
-        axeMultipliers = configuration.getCategory("AxeMultipliers");
-
-         */
-        }
-
-        private class AxeMap
-        {
         }
     }
 
@@ -152,11 +163,15 @@ public class ConfigManager
         return value;
     }
 
-    public static boolean getConfigBoolean(String categoryName, String keyName)
+    public static boolean getConfigBoolean(String spec, String... path)
     {
-        ForgeConfigSpec.BooleanValue value = SERVER_SPEC.getValues().get(Arrays.asList(categoryName, keyName));
+        ForgeConfigSpec spec1 = spec.equals("common") ? COMMON_SPEC : SERVER_SPEC;
+        ForgeConfigSpec.BooleanValue value = spec1.getValues().get(Arrays.asList(path));
         if (value == null)
+        {
+            LOGGER.warn("Config path not found: " + String.join("/", path));
             return false;
+        }
         return value.get();
     }
 

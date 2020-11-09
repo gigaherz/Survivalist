@@ -53,7 +53,7 @@ public class DryingRecipe implements IRecipe<ItemHandlerWrapper>
 
     public static Collection<DryingRecipe> getAllRecipes(World world)
     {
-        return world.getRecipeManager().getRecipes(DRYING).values().stream().map(r -> (DryingRecipe) r).collect(Collectors.toList());
+        return world.getRecipeManager().getRecipesForType(DRYING);
     }
 
     private final String group;

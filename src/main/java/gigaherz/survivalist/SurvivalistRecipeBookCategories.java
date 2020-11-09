@@ -1,5 +1,10 @@
 package gigaherz.survivalist;
 
+import gigaherz.survivalist.api.ChoppingRecipe;
+import net.minecraft.client.util.RecipeBookCategories;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraftforge.client.RecipebookCategoryManager;
 import net.minecraftforge.common.util.NonNullLazy;
 
 public class SurvivalistRecipeBookCategories
@@ -11,15 +16,12 @@ public class SurvivalistRecipeBookCategories
         return INSTANCE.get();
     }
 
-    /*
-    public final RecipeBookCategories SAWMILL_SEARCH = RecipeBookCategories.create("SAWMILL_SEARCH", false, new ItemStack(Items.COMPASS));
-    public final RecipeBookCategories SAWMILL = RecipeBookCategories.create("SAWMILL", false, new ItemStack(Items.OAK_PLANKS));
+    public final RecipeBookCategories SAWMILL_SEARCH = RecipeBookCategories.create("SAWMILL_SEARCH",  new ItemStack(Items.COMPASS));
+    public final RecipeBookCategories SAWMILL = RecipeBookCategories.create("SAWMILL", new ItemStack(Items.OAK_PLANKS));
 
     public SurvivalistRecipeBookCategories()
     {
-        ForgeHooksClient.setSearchCategoryForCategory(SAWMILL, SAWMILL_SEARCH);
-
-        ForgeHooksClient.setRecipeCategoryMapper(ChoppingRecipe.CHOPPING, (recipe) -> SAWMILL);
+        RecipebookCategoryManager.setRecipebookCategoriesForSearch(SAWMILL_SEARCH, SAWMILL);
+        RecipebookCategoryManager.setRecipeCategoryMapper(ChoppingRecipe.CHOPPING, (recipe) -> SAWMILL);
     }
-     */
 }

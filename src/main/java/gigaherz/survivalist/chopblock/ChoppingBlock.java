@@ -62,6 +62,7 @@ public class ChoppingBlock extends Block
         return new ChoppingBlockTileEntity();
     }
 
+    @Deprecated
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
@@ -76,7 +77,7 @@ public class ChoppingBlock extends Block
 
         if (worldIn.isRemote)
         {
-            return (heldItem.getCount() <= 0) || ChoppingRecipe.getRecipe(worldIn, heldItem).isPresent() ?
+            return (heldItem.getCount() <= 0) || ChoppingRecipe.getRecipe(worldIn, pos, heldItem).isPresent() ?
                     ActionResultType.SUCCESS : ActionResultType.PASS;
         }
 
@@ -99,7 +100,7 @@ public class ChoppingBlock extends Block
             return ActionResultType.PASS;
         }
 
-        if (ChoppingRecipe.getRecipe(worldIn, heldItem)
+        if (ChoppingRecipe.getRecipe(worldIn, pos, heldItem)
                 .isPresent())
         {
             ItemStack remaining = chopper.getSlotInventory().insertItem(0, heldItem, false);
@@ -181,6 +182,7 @@ public class ChoppingBlock extends Block
         return true;
     }
 
+    @Deprecated
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
     {
