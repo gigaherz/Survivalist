@@ -1,7 +1,6 @@
 package gigaherz.survivalist.client;
 
 import gigaherz.survivalist.SurvivalistMod;
-import gigaherz.survivalist.SurvivalistRecipeBookCategories;
 import gigaherz.survivalist.chopblock.ChoppingBlockRenderer;
 import gigaherz.survivalist.chopblock.ChoppingBlockTileEntity;
 import gigaherz.survivalist.rack.DryingRackRenderer;
@@ -10,7 +9,6 @@ import gigaherz.survivalist.rocks.RockEntity;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
-import net.minecraft.item.crafting.RecipeBookCategory;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -35,7 +33,7 @@ public class ClientEvents
         ClientRegistry.bindTileEntityRenderer(DryingRackTileEntity.TYPE.get(), DryingRackRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ChoppingBlockTileEntity.TYPE.get(), ChoppingBlockRenderer::new);
 
-        SurvivalistRecipeBookCategories.instance();
+        //SurvivalistRecipeBookCategories.instance();
     }
 
     /*@SubscribeEvent

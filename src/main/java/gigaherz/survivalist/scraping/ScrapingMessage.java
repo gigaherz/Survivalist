@@ -14,8 +14,8 @@ public class ScrapingMessage
 
     public ScrapingMessage(ItemStack stack, ItemStack ret)
     {
-        this.stack = stack;
-        this.ret = ret;
+        this.stack = stack.copy();
+        this.ret = ret.copy();
     }
 
     public ScrapingMessage(PacketBuffer buf)

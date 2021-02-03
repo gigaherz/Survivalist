@@ -47,12 +47,15 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 @Mod.EventBusSubscriber
 @Mod(SurvivalistMod.MODID)
@@ -179,7 +182,7 @@ public class SurvivalistMod
         LOGGER.info("Registering network channel...");
 
         int messageNumber = 0;
-        channel.registerMessage(messageNumber++, ScrapingMessage.class, ScrapingMessage::encode, ScrapingMessage::new, ScrapingMessage::handle);
+        channel.registerMessage(messageNumber++, ScrapingMessage.class, ScrapingMessage::encode, ScrapingMessage::new, ScrapingMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         LOGGER.debug("Final message number: " + messageNumber);
     }
 

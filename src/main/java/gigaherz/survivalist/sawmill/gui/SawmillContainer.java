@@ -1,11 +1,8 @@
 package gigaherz.survivalist.sawmill.gui;
 
 import com.google.common.collect.Lists;
-import gigaherz.survivalist.SurvivalistMod;
-import gigaherz.survivalist.SurvivalistRecipeBookCategories;
 import gigaherz.survivalist.api.ChoppingContext;
 import gigaherz.survivalist.api.ChoppingRecipe;
-import gigaherz.survivalist.client.ClientEvents;
 import gigaherz.survivalist.sawmill.SawmillTileEntity;
 import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.entity.player.PlayerEntity;
@@ -167,7 +164,8 @@ public class SawmillContainer extends RecipeBookContainer<ChoppingContext>
     @Override
     public List<RecipeBookCategories> getRecipeBookCategories()
     {
-        return Lists.newArrayList(SurvivalistRecipeBookCategories.instance().SAWMILL_SEARCH, SurvivalistRecipeBookCategories.instance().SAWMILL);
+        return Lists.newArrayList(RecipeBookCategories.CRAFTING_SEARCH);
+        //return Lists.newArrayList(SurvivalistRecipeBookCategories.instance().SAWMILL_SEARCH, SurvivalistRecipeBookCategories.instance().SAWMILL);
     }
 
     @Override

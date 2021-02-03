@@ -1,5 +1,5 @@
 package gigaherz.survivalist;
-
+/*
 import gigaherz.survivalist.api.ChoppingRecipe;
 import net.minecraft.client.util.RecipeBookCategories;
 import net.minecraft.item.ItemStack;
@@ -24,4 +24,4 @@ public class SurvivalistRecipeBookCategories
         RecipebookCategoryManager.setRecipebookCategoriesForSearch(SAWMILL_SEARCH, SAWMILL);
         RecipebookCategoryManager.setRecipeCategoryMapper(ChoppingRecipe.CHOPPING, (recipe) -> SAWMILL);
     }
-}
+}*/

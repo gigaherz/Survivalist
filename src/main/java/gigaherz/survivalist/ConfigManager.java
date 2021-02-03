@@ -13,6 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,7 +92,11 @@ public class ConfigManager
         public final ForgeConfigSpec.BooleanValue replaceStoneDrops;
         public final ForgeConfigSpec.BooleanValue replaceIronOreDrops;
         public final ForgeConfigSpec.BooleanValue replaceGoldOreDrops;
-        public final ForgeConfigSpec.BooleanValue replaceModOreDrops;
+        public final ForgeConfigSpec.BooleanValue replaceCopperOreDrops;
+        public final ForgeConfigSpec.BooleanValue replaceLeadOreDrops;
+        public final ForgeConfigSpec.BooleanValue replaceSilverOreDrops;
+        public final ForgeConfigSpec.BooleanValue replaceAluminumOreDrops;
+        public final ForgeConfigSpec.BooleanValue replaceTinOreDrops;
         public final ForgeConfigSpec.BooleanValue replacePoorOreDrops;
         public final ForgeConfigSpec.BooleanValue cobbleRequiresClay;
         public final ForgeConfigSpec.BooleanValue enableMeatRotting;
@@ -115,7 +121,11 @@ public class ConfigManager
             replaceStoneDrops = builder.define("ReplaceStoneDrops", true);
             replaceIronOreDrops = builder.define("ReplaceIronOreDrops", true);
             replaceGoldOreDrops = builder.define("ReplaceGoldOreDrops", true);
-            replaceModOreDrops = builder.define("ReplaceModOreDrops", true);
+            replaceCopperOreDrops = builder.define("ReplaceCopperOreDrops", true);
+            replaceLeadOreDrops = builder.define("ReplaceLeadOreDrops", true);
+            replaceSilverOreDrops = builder.define("ReplaceSilverOreDrops", true);
+            replaceAluminumOreDrops = builder.define("ReplaceAluminumOreDrops", true);
+            replaceTinOreDrops = builder.define("ReplaceTinOreDrops", true);
             replacePoorOreDrops = builder.define("ReplacePoorOreDrops", true);
             builder.pop();
             builder.comment("Settings for recipes").push("recipes");
@@ -163,13 +173,19 @@ public class ConfigManager
         return value;
     }
 
+    private static final Set<String> warns = new HashSet<>();
     public static boolean getConfigBoolean(String spec, String... path)
     {
         ForgeConfigSpec spec1 = spec.equals("common") ? COMMON_SPEC : SERVER_SPEC;
         ForgeConfigSpec.BooleanValue value = spec1.getValues().get(Arrays.asList(path));
         if (value == null)
         {
-            LOGGER.warn("Config path not found: " + String.join("/", path));
+            String pathJoined = String.join("/", path);
+            if (!warns.contains(pathJoined))
+            {
+                LOGGER.warn("Config path not found: " + pathJoined + ". This message will only show once per path.");
+                warns.add(pathJoined);
+            }
             return false;
         }
         return value.get();
