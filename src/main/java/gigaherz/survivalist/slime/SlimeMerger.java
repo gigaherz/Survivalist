@@ -197,7 +197,7 @@ public class SlimeMerger
             this.slime = mobIn;
             this.targetEntitySelector = (new EntityPredicate())
                     .setSkipAttackChecks()
-                    .setLineOfSiteRequired()
+                    .setIgnoresLineOfSight()
                     .setDistance(this.getTargetDistance())
                     .setCustomPredicate(other -> isValidTarget(slime, other));
         }

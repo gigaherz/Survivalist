@@ -33,5 +33,6 @@ public class ScrapingMessage
     public void handle(Supplier<NetworkEvent.Context> ctx)
     {
         ClientEvents.handleScrapingMessage(this);
+        ctx.get().setPacketHandled(true);
     }
 }

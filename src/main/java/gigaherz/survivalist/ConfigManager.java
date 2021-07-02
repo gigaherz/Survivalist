@@ -70,7 +70,7 @@ public class ConfigManager
                     .define("Merge", true);
             builder.pop();
             axeLevels = builder
-                    .comment("Specify any items that should be allowed as chopping tools, and their axe-equivalent level.")
+                    .comment("Specify the effective strength of each harvest level when used in chopping.")
                     .define(Arrays.asList("axe_levels"), () -> Config.of(InMemoryFormat.defaultInstance()), x -> true, Config.class);
         }
     }

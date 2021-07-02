@@ -46,7 +46,7 @@ public class RockEntity extends ProjectileItemEntity implements IEntityAdditiona
     {
         if (result instanceof EntityRayTraceResult)
         {
-            ((EntityRayTraceResult) result).getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, this.func_234616_v_()), 1);
+            ((EntityRayTraceResult) result).getEntity().attackEntityFrom(DamageSource.causeThrownDamage(this, this.getShooter()), 1);
         }
 
         for (int j = 0; j < 8; ++j)

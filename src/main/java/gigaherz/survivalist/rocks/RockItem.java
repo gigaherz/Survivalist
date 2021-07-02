@@ -33,7 +33,7 @@ public class RockItem extends Item
         if (!worldIn.isRemote)
         {
             RockEntity entity = new RockEntity(worldIn, playerIn, this);
-            entity.func_234612_a_(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+            entity.setDirectionAndMovement(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
             worldIn.addEntity(entity);
         }
 

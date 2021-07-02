@@ -16,6 +16,7 @@ import gigaherz.survivalist.scraping.ScrapingEnchantment;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -56,6 +57,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
 @Mod(SurvivalistMod.MODID)
@@ -122,6 +124,8 @@ public class SurvivalistMod
 
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigManager.SERVER_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, ConfigManager.COMMON_SPEC);
+
+        Minecraft.getInstance().execute();
     }
 
     // This is its own method because I don't want SurvivalistData loaded all the time, I just need it loaded in the case where the event fires.
