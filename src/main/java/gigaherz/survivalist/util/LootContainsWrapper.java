@@ -71,7 +71,9 @@ public class LootContainsWrapper extends LootModifier
                 .registerTypeHierarchyAdapter(ILootFunction.class, LootFunctionManager.func_237450_a_())
                 .registerTypeHierarchyAdapter(ILootCondition.class, LootConditionManager.func_237474_a_())
                 .create();
-        private IGlobalLootModifier deserializeModifier(ResourceLocation location, JsonElement element) {
+
+        private IGlobalLootModifier deserializeModifier(ResourceLocation location, JsonElement element)
+        {
             JsonObject object = element.getAsJsonObject();
             ILootCondition[] lootConditions = GSON_INSTANCE.fromJson(object.get("conditions"), ILootCondition[].class);
 

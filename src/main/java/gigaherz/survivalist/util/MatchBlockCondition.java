@@ -73,17 +73,17 @@ public class MatchBlockCondition implements ILootCondition
                 ResourceLocation tagName = new ResourceLocation(JSONUtils.getString(json, "tag"));
                 return new MatchBlockCondition(null, BlockTags.createOptional(tagName));
             }
-            else if(json.has("blocks"))
+            else if (json.has("blocks"))
             {
                 List<Block> blockNames = Lists.newArrayList();
-                for(JsonElement e : JSONUtils.getJsonArray(json, "blocks"))
+                for (JsonElement e : JSONUtils.getJsonArray(json, "blocks"))
                 {
                     ResourceLocation blockName = new ResourceLocation(e.getAsString());
                     blockNames.add(ForgeRegistries.BLOCKS.getValue(blockName));
                 }
                 return new MatchBlockCondition(blockNames, null);
             }
-            else if(json.has("block"))
+            else if (json.has("block"))
             {
                 ResourceLocation blockName = new ResourceLocation(JSONUtils.getString(json, "block"));
                 return new MatchBlockCondition(Collections.singletonList(ForgeRegistries.BLOCKS.getValue(blockName)), null);

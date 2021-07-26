@@ -30,7 +30,8 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
             return new TranslationTextComponent("gui.recipebook.toggleRecipes.smeltable");
         }
 
-        protected Set<Item> func_212958_h() {
+        protected Set<Item> func_212958_h()
+        {
             return AbstractFurnaceTileEntity.getBurnTimes().keySet();
         }
     };
@@ -105,10 +106,14 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.recipeBookGui.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    {
+        if (this.recipeBookGui.mouseClicked(mouseX, mouseY, button))
+        {
             return true;
-        } else {
+        }
+        else
+        {
             return this.widthTooNarrow && this.recipeBookGui.isVisible() ? true : super.mouseClicked(mouseX, mouseY, button);
         }
     }
@@ -120,16 +125,19 @@ public class SawmillScreen extends DisplayEffectsScreen<SawmillContainer> implem
         this.recipeBookGui.slotClicked(slotIn);
     }
 
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers)
+    {
         return this.recipeBookGui.keyPressed(keyCode, scanCode, modifiers) ? false : super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
-        boolean flag = mouseX < (double)guiLeftIn || mouseY < (double)guiTopIn || mouseX >= (double)(guiLeftIn + this.xSize) || mouseY >= (double)(guiTopIn + this.ySize);
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton)
+    {
+        boolean flag = mouseX < (double) guiLeftIn || mouseY < (double) guiTopIn || mouseX >= (double) (guiLeftIn + this.xSize) || mouseY >= (double) (guiTopIn + this.ySize);
         return this.recipeBookGui.func_195604_a(mouseX, mouseY, this.guiLeft, this.guiTop, this.xSize, this.ySize, mouseButton) && flag;
     }
 
-    public boolean charTyped(char codePoint, int modifiers) {
+    public boolean charTyped(char codePoint, int modifiers)
+    {
         return this.recipeBookGui.charTyped(codePoint, modifiers) ? true : super.charTyped(codePoint, modifiers);
     }
 

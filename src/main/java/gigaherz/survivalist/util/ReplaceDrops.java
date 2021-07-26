@@ -35,17 +35,17 @@ public class ReplaceDrops extends LootModifier
     {
         Random rnd = context.getRandom();
         List<ItemStack> outputs = Lists.newArrayList();
-        for(ItemStack input : generatedLoot)
+        for (ItemStack input : generatedLoot)
         {
             boolean replaced = false;
-            for(Replacement r : replacements)
+            for (Replacement r : replacements)
             {
                 if (r.input.test(input))
                 {
-                    for(Result out : r.outputs)
+                    for (Result out : r.outputs)
                     {
                         ItemStack output = out.stack.copy();
-                        int count = out.max > out.min ? rnd.nextInt(out.max-out.min)+out.min : out.min;
+                        int count = out.max > out.min ? rnd.nextInt(out.max - out.min) + out.min : out.min;
                         output.setCount(count);
                         if (output.getCount() > 0)
                         {
@@ -69,7 +69,7 @@ public class ReplaceDrops extends LootModifier
         {
             List<Replacement> replacements = Lists.newArrayList();
 
-            for(JsonElement e : JSONUtils.getJsonArray(json, "replacements"))
+            for (JsonElement e : JSONUtils.getJsonArray(json, "replacements"))
             {
                 JsonObject repl = e.getAsJsonObject();
 
@@ -88,7 +88,7 @@ public class ReplaceDrops extends LootModifier
                 }
                 else
                 {
-                    for(JsonElement ee : to.getAsJsonArray())
+                    for (JsonElement ee : to.getAsJsonArray())
                     {
                         results.add(parseResult(ee.getAsJsonObject()));
                     }
@@ -104,16 +104,17 @@ public class ReplaceDrops extends LootModifier
             JsonObject object = new JsonObject();
             {
                 JsonArray replacements = new JsonArray();
-                for(Replacement repl : instance.replacements)
+                for (Replacement repl : instance.replacements)
                 {
                     JsonObject replacement = new JsonObject();
                     replacement.add("input", repl.input.serialize());
                     JsonArray outputs = new JsonArray();
-                    for(Result r : repl.outputs)
+                    for (Result r : repl.outputs)
                     {
                         JsonObject result = new JsonObject();
                         result.addProperty("item", r.stack.getItem().getRegistryName().toString());
-                        if (r.stack.getCount() > 1) {
+                        if (r.stack.getCount() > 1)
+                        {
                             result.addProperty("count", r.stack.getCount());
                         }
                         if (r.max > 1 || r.min != r.max)
@@ -152,7 +153,7 @@ public class ReplaceDrops extends LootModifier
                     min = JSONUtils.getInt(qq, "min", 0);
                     max = JSONUtils.getInt(qq, "max", min);
                 }
-                else if(q.isJsonPrimitive())
+                else if (q.isJsonPrimitive())
                 {
                     min = max = q.getAsInt();
                 }
@@ -186,8 +187,8 @@ public class ReplaceDrops extends LootModifier
 
         public Result(int min, int max, ItemStack stack)
         {
-            this.min=min;
-            this.max=max;
+            this.min = min;
+            this.max = max;
             this.stack = stack;
         }
     }

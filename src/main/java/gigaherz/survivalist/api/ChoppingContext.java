@@ -1,9 +1,6 @@
 package gigaherz.survivalist.api;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.items.IItemHandlerModifiable;
 

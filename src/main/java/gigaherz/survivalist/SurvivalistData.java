@@ -6,10 +6,6 @@ import gigaherz.survivalist.chopblock.ChopblockMaterials;
 import gigaherz.survivalist.chopblock.ChoppingBlock;
 import gigaherz.survivalist.rocks.Nuggets;
 import gigaherz.survivalist.rocks.Rocks;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.block.Block;
 import net.minecraft.data.*;
 import net.minecraft.data.loot.BlockLootTables;
@@ -17,13 +13,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.loot.*;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.loot.*;
-import net.minecraftforge.common.crafting.ConditionalAdvancement;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
-import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -201,8 +195,6 @@ public class SurvivalistData
                     .add(Arrays.stream(ChopblockMaterials.values())
                             .flatMap(block -> Stream.of(block.getPristine(), block.getChipped(), block.getDamaged()).map(reg -> reg.get().asItem()))
                             .toArray(Item[]::new));
-
-
         }
     }
 

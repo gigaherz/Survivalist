@@ -1,9 +1,7 @@
 package gigaherz.survivalist;
 
-import com.google.common.base.Joiner;
 import gigaherz.survivalist.api.ChoppingRecipe;
 import gigaherz.survivalist.api.DryingRecipe;
-import gigaherz.survivalist.util.*;
 import gigaherz.survivalist.misc.StringEventHandling;
 import gigaherz.survivalist.rack.DryingRackBakedModel;
 import gigaherz.survivalist.rack.DryingRackContainer;
@@ -16,7 +14,7 @@ import gigaherz.survivalist.scraping.ScrapingEnchantment;
 import gigaherz.survivalist.scraping.ScrapingMessage;
 import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
-import net.minecraft.client.Minecraft;
+import gigaherz.survivalist.util.*;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -24,18 +22,11 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.RecipeBookCategory;
-import net.minecraft.resources.IPackFinder;
-import net.minecraft.resources.IPackNameDecorator;
-import net.minecraft.resources.ResourcePackInfo;
-import net.minecraft.resources.ResourcePackType;
+import net.minecraft.loot.conditions.LootConditionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.loot.conditions.LootConditionManager;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
@@ -51,13 +42,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
 @Mod(SurvivalistMod.MODID)

@@ -2,11 +2,11 @@ package gigaherz.survivalist.util;
 
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 

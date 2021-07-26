@@ -148,7 +148,7 @@ public class ConfigManager
             builder.comment("Settings for the chopping block").push("chopping");
             replacePlanksRecipes = builder
                     .comment("If enabled, the vanilla planks recipes will be disabled, using the log to craft choppingblock instead.",
-                             "If disabled, the chopping block uses an alternate recipe, instead of using a single log as an input.")
+                            "If disabled, the chopping block uses an alternate recipe, instead of using a single log as an input.")
                     .define("ReplacePlanksRecipes", true);
             builder.pop();
 
@@ -174,6 +174,7 @@ public class ConfigManager
     }
 
     private static final Set<String> warns = new HashSet<>();
+
     public static boolean getConfigBoolean(String spec, String... path)
     {
         ForgeConfigSpec spec1 = spec.equals("common") ? COMMON_SPEC : SERVER_SPEC;

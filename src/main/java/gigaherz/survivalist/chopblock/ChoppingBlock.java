@@ -34,8 +34,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 @Mod.EventBusSubscriber(modid = SurvivalistMod.MODID)
 public class ChoppingBlock extends Block
 {
