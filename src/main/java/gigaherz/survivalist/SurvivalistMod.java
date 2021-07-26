@@ -124,8 +124,6 @@ public class SurvivalistMod
 
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigManager.SERVER_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, ConfigManager.COMMON_SPEC);
-
-        Minecraft.getInstance().execute();
     }
 
     // This is its own method because I don't want SurvivalistData loaded all the time, I just need it loaded in the case where the event fires.
