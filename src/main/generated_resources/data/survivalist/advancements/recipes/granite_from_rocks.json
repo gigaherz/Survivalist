@@ -1,0 +1,89 @@
+{
+  "advancements": [
+    {
+      "conditions": [
+        {
+          "category": "rocks",
+          "key": "CobbleRequiresClay",
+          "type": "survivalist:configuration"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "minecraft:granite"
+          ]
+        },
+        "criteria": {
+          "has_rock": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "minecraft:granite"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "minecraft:granite"
+            }
+          }
+        },
+        "requirements": [
+          [
+            "has_rock",
+            "has_the_recipe"
+          ]
+        ]
+      }
+    },
+    {
+      "conditions": [
+        {
+          "value": {
+            "category": "rocks",
+            "key": "CobbleRequiresClay",
+            "type": "survivalist:configuration"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "rewards": {
+          "recipes": [
+            "survivalist:granite_from_rocks"
+          ]
+        },
+        "criteria": {
+          "has_rock": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+              "items": [
+                {
+                  "item": "minecraft:granite"
+                }
+              ]
+            }
+          },
+          "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+              "recipe": "survivalist:granite_from_rocks"
+            }
+          }
+        },
+        "requirements": [
+          [
+            "has_rock",
+            "has_the_recipe"
+          ]
+        ]
+      }
+    }
+  ]
+}

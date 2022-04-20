@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.+', changing: true
     }
 }
 
@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 
 repositories {
     maven {
-        url "http://dvs1.progwml6.com/files/maven/"
+        url "https://dvs1.progwml6.com/files/maven/"
     }
     maven {
         url "https://maven.tterrag.com/"
@@ -109,17 +109,17 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.23'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.1.3.19:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.1.3.19")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.1.152:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.1.152")
 
     implementation fg.deobf("dev.gigaherz.jsonmerger:JsonMerger-lite:1.0")
 
     //deobfCompile 'CraftTweaker2:CraftTweaker2-API:4.1.11.500'
     //deobfCompile 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.16.535'
 
-    runtimeOnly fg.deobf("curse.maven:immersive-engineering-231951:3233018")
+    //runtimeOnly fg.deobf("curse.maven:immersive-engineering-231951:3233018")
 
     //compile fileTree(dir: 'libs', include: '*.jar')
 }

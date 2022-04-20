@@ -4,9 +4,12 @@
     {
       "conditions": [
         {
-          "category": "chopping",
-          "key": "ReplacePlanksRecipes",
-          "type": "survivalist:configuration"
+          "value": {
+            "category": "chopping",
+            "key": "ReplacePlanksRecipes",
+            "type": "survivalist:configuration"
+          },
+          "type": "forge:not"
         }
       ],
       "recipe": {
@@ -24,12 +27,9 @@
     {
       "conditions": [
         {
-          "value": {
-            "category": "chopping",
-            "key": "ReplacePlanksRecipes",
-            "type": "survivalist:configuration"
-          },
-          "type": "forge:not"
+          "category": "chopping",
+          "key": "ReplacePlanksRecipes",
+          "type": "survivalist:configuration"
         }
       ],
       "recipe": {

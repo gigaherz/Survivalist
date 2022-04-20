@@ -16,6 +16,8 @@ import gigaherz.survivalist.slime.SlimeMerger;
 import gigaherz.survivalist.torchfire.TorchFireEventHandling;
 import gigaherz.survivalist.util.*;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
@@ -184,10 +186,12 @@ public class SurvivalistMod
 
     public void clientSetup(FMLClientSetupEvent event)
     {
-        ScreenManager.registerFactory(DryingRackContainer.TYPE, DryingRackScreen::new);
-        ScreenManager.registerFactory(SawmillContainer.TYPE, SawmillScreen::new);
+        event.enqueueWork(() -> {
+            ScreenManager.registerFactory(DryingRackContainer.TYPE, DryingRackScreen::new);
+            ScreenManager.registerFactory(SawmillContainer.TYPE, SawmillScreen::new);
 
-        //RenderTypeLookup.setRenderLayer(SurvivalistBlocks.RACK.get(), (layer) -> layer == RenderType.getSolid() || layer == RenderType.getCutout());
+            //RenderTypeLookup.setRenderLayer(SurvivalistBlocks.RACK.get(), (layer) -> layer == RenderType.getSolid() || layer == RenderType.getCutout());
+        });
     }
 
     private static <R extends T, T extends IForgeRegistryEntry<T>> R withName(R obj, ResourceLocation name)

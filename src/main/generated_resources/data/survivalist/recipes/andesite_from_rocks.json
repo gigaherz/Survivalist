@@ -1,27 +1,64 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "rrr",
-    "rcr",
-    "rrr"
-  ],
-  "key": {
-    "r": {
-      "item": "survivalist:andesite_rock"
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "category": "rocks",
+          "key": "CobbleRequiresClay",
+          "type": "survivalist:configuration"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "rrr",
+          "rcr",
+          "rrr"
+        ],
+        "key": {
+          "r": {
+            "item": "survivalist:andesite_rock"
+          },
+          "c": {
+            "item": "minecraft:clay_ball"
+          }
+        },
+        "result": {
+          "item": "minecraft:andesite"
+        }
+      }
     },
-    "c": {
-      "type": "survivalist:config_toggled_ingredient",
-      "category": "recipes",
-      "key": "CobbleRequiresClay",
-      "then": {
-        "item": "minecraft:clay_ball"
-      },
-      "else": {
-        "item": "survivalist:andesite_rock"
+    {
+      "conditions": [
+        {
+          "value": {
+            "category": "rocks",
+            "key": "CobbleRequiresClay",
+            "type": "survivalist:configuration"
+          },
+          "type": "forge:not"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "rrr",
+          "rcr",
+          "rrr"
+        ],
+        "key": {
+          "r": {
+            "item": "survivalist:andesite_rock"
+          },
+          "c": {
+            "item": "survivalist:andesite_rock"
+          }
+        },
+        "result": {
+          "item": "minecraft:andesite"
+        }
       }
     }
-  },
-  "result": {
-    "item": "minecraft:andesite"
-  }
+  ]
 }

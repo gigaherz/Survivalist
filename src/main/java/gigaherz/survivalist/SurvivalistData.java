@@ -18,6 +18,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -93,11 +94,10 @@ public class SurvivalistData
                                 )
                                 .addCondition(new ConfigurationCondition("chopping", "ReplacePlanksRecipes"))
                                 .addRecipe(
-                                        ShapedRecipeBuilder.shapedRecipe(result.get())
+                                        consumerIn -> ShapedRecipeBuilder.shapedRecipe(result.get())
                                                 .patternLine("ll")
                                                 .key('l', tag)
-                                                .addCriterion("has_log", hasItem(tag))
-                                                ::build
+                                                .addCriterion("has_log", hasItem(tag)).build(consumerIn, recipeId)
                                 )
                                 .generateAdvancement()
                                 .build(consumer, recipeId);
@@ -121,16 +121,26 @@ public class SurvivalistData
                         }
                         else
                         {
-                            ShapedRecipeBuilder.shapedRecipe(result.get())
-                                    .patternLine("rrr")
-                                    .patternLine("rcr")
-                                    .patternLine("rrr")
-                                    .key('r', rockItem.get())
-                                    .key('c', new ConfigToggledIngredientSerializer.ConfigToggledIngredient("rocks", "CobbleRequiresClay",
-                                            Ingredient.fromItems(Items.CLAY_BALL), Ingredient.fromItems(rockItem.get())))
-                                    .addCriterion("has_rock", hasItem(result.get()))
-                                    .build(consumer, new ResourceLocation("survivalist", result.get().getRegistryName().getPath() + "_from_rocks"));
-                            ;
+                            ResourceLocation recipeId = SurvivalistMod.location(result.get().getRegistryName().getPath() + "_from_rocks");
+                            ConditionalRecipe.builder()
+                                    .addCondition(new ConfigurationCondition("rocks", "CobbleRequiresClay"))
+                                    .addRecipe(c -> ShapedRecipeBuilder.shapedRecipe(result.get())
+                                                    .patternLine("rrr")
+                                                    .patternLine("rcr")
+                                                    .patternLine("rrr")
+                                                    .key('r', rockItem.get())
+                                                    .key('c', Items.CLAY_BALL)
+                                                    .addCriterion("has_rock", hasItem(result.get())).build(c))
+                                    .addCondition(new NotCondition(new ConfigurationCondition("rocks", "CobbleRequiresClay")))
+                                    .addRecipe(c -> ShapedRecipeBuilder.shapedRecipe(result.get())
+                                            .patternLine("rrr")
+                                            .patternLine("rcr")
+                                            .patternLine("rrr")
+                                            .key('r', rockItem.get())
+                                            .key('c', rockItem.get())
+                                            .addCriterion("has_rock", hasItem(result.get())).build(c, recipeId))
+                                    .generateAdvancement()
+                                    .build(consumer, recipeId);
                         }
                     }));
 
@@ -150,15 +160,14 @@ public class SurvivalistData
             ConditionalRecipe.builder()
                     .addCondition(new ConfigurationCondition("drying_rack", "EnableSaddleCrafting"))
                     .addRecipe(
-                            ShapedRecipeBuilder.shapedRecipe(Items.SADDLE, 1)
+                            consumerIn -> ShapedRecipeBuilder.shapedRecipe(Items.SADDLE, 1)
                                     .patternLine("ttt")
                                     .patternLine("tst")
                                     .patternLine("i i")
                                     .key('t', leatherTag)
                                     .key('s', Items.STRING)
                                     .key('i', Items.IRON_INGOT)
-                                    .addCriterion("has_leather", hasItem(leatherTag))
-                                    ::build
+                                    .addCriterion("has_leather", hasItem(leatherTag)).build(consumerIn, saddleRecipeId)
                     )
                     .generateAdvancement()
                     .build(consumer, saddleRecipeId);
